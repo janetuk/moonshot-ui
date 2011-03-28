@@ -1,26 +1,18 @@
 using Gtk;
 
-class MoonshotWindow
+class MainWindow : Window
 {
-    private Gtk.Window window;
-
-    public MoonshotWindow()
+    public MainWindow()
     {
-        window = new Gtk.Window();
-        window.destroy.connect(Gtk.main_quit);
-    }
-
-    public void show()
-    {
-        window.show();
+        destroy.connect(Gtk.main_quit);
     }
 
     public static int main(string[] args)
     {
         Gtk.init(ref args);
 
-        var window = new MoonshotWindow();
-        window.show ();
+        var window = new MainWindow();
+        window.show();
 
         Gtk.main();
 
