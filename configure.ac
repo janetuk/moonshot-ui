@@ -24,8 +24,16 @@ PKG_CHECK_MODULES(moonshot,[
         gtk+-2.0 >= 2.22
 ])
 
+# i18n stuff
+AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.18.1])
+
+AC_SUBST([GETTEXT_PACKAGE],[PACKAGE_TARNAME])
+AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package name.])
+
 AC_CONFIG_FILES([
         Makefile
+        po/Makefile.in
 ])
 
 AC_OUTPUT
