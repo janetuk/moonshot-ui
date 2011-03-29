@@ -48,7 +48,7 @@ class MainWindow : Window
         this.text_view.cursor_visible = true;
 
         var scroll = new ScrolledWindow (null, null);
-        scroll.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
+        scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.add (this.text_view);
 
         var button_add = new Button.from_stock ("gtk-add");
