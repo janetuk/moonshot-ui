@@ -3,6 +3,7 @@ using Gtk;
 class MainWindow : Window
 {
 
+    private Entry search_entry;
     private TextView text_view;
 
     public MainWindow()
@@ -15,6 +16,17 @@ class MainWindow : Window
         connect_signals();
     }
 
+    private void search_entry_icon_press_cb ()
+    {
+        print ("Search entry icon pressed\n");
+    }
+
+    private void search_entry_text_changed_cb ()
+    {
+        var has_text = this.search_entry.get_text_length () > 0;
+        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
+    }
+
     private void build_ui()
     {
         var toolbar = new Toolbar ();
@@ -22,6 +34,14 @@ class MainWindow : Window
         open_button.is_important = true;
         toolbar.add (open_button);
         //open_button.clicked.connect (on_open_clicked);
+
+        this.search_entry = new Entry();
+        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY, "system-search");
+        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+        this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
+                                                 "Search identity or service");
+        this.search_entry.icon_press.connect (search_entry_icon_press_cb);
+        this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
 
         this.text_view = new TextView ();
         this.text_view.editable = true;
