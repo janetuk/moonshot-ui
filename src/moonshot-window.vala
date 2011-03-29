@@ -51,8 +51,8 @@ class MainWindow : Window
         scroll.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
         scroll.add (this.text_view);
 
-        var button_add = new Button.with_label ("Add ...");
-        var button_remove = new Button.with_label ("Remove");
+        var button_add = new Button.from_stock ("gtk-add");
+        var button_remove = new Button.from_stock ("gtk-remove");
         var button_box = new HButtonBox ();
         button_box.set_layout (ButtonBoxStyle.SPREAD);
         button_box.pack_start (button_add, false, false, 0);
