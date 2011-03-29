@@ -30,8 +30,36 @@ class MainWindow : Window
     private void setup_identities_list ()
     {
         var listmodel = new ListStore (1, typeof (string)); //TODO
-
         this.identities_list.set_model (listmodel);
+
+        var cell = new CellRendererText ();
+        cell.set ("foreground_set", true);
+
+        this.identities_list.insert_column_with_attributes (-1, "Identities", cell, "text", 0);
+    }
+
+    private void add_identity_cb ()
+    {
+        ListStore listmodel;
+        TreeIter iter;
+
+        listmodel = (ListStore) this.identities_list.get_model ();
+
+        listmodel.append (out iter);
+        listmodel.set (iter, 0, "Identity 1");
+    }
+
+    private void remove_identity_cb ()
+    {
+        TreeModel model;
+        TreeIter iter;
+
+        var selection = identities_list.get_selection ();
+
+        if (selection.get_selected (out model, out iter))
+        {
+            ((ListStore) model).remove (iter);
+        }
     }
 
     private void build_ui()
@@ -60,7 +88,9 @@ class MainWindow : Window
         scroll.add (this.identities_list);
 
         var button_add = new Button.from_stock ("gtk-add");
+        button_add.clicked.connect (add_identity_cb);
         var button_remove = new Button.from_stock ("gtk-remove");
+        button_remove.clicked.connect (remove_identity_cb);
         var button_box = new HButtonBox ();
         button_box.set_layout (ButtonBoxStyle.SPREAD);
         button_box.pack_start (button_add, false, false, 0);
