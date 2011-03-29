@@ -31,9 +31,18 @@ class MainWindow : Window
         scroll.set_policy (PolicyType.AUTOMATIC, PolicyType.AUTOMATIC);
         scroll.add (this.text_view);
 
+        var button_add = new Button.with_label ("Add ...");
+        var button_remove = new Button.with_label ("Remove");
+        var button_box = new HButtonBox ();
+        button_box.set_layout (ButtonBoxStyle.SPREAD);
+        button_box.pack_start (button_add, false, false, 0);
+        button_box.pack_start (button_remove, false, false, 0);
+
         var vbox = new VBox (false, 0);
         vbox.pack_start (toolbar, false, true, 0);
+        vbox.pack_start (search_entry, false, true, 0);
         vbox.pack_start (scroll, true, true, 0);
+        vbox.pack_start (button_box, false, false, 0);
         add (vbox);
     }
 
