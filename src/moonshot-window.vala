@@ -4,7 +4,7 @@ class MainWindow : Window
 {
 
     private Entry search_entry;
-    private TextView text_view;
+    private TreeView identities_list;
 
     public MainWindow()
     {
@@ -27,6 +27,13 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
     }
 
+    private void setup_identities_list ()
+    {
+        var listmodel = new ListStore (1, typeof (string)); //TODO
+
+        this.identities_list.set_model (listmodel);
+    }
+
     private void build_ui()
     {
         var toolbar = new Toolbar ();
@@ -43,13 +50,14 @@ class MainWindow : Window
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
 
-        this.text_view = new TextView ();
-        this.text_view.editable = true;
-        this.text_view.cursor_visible = true;
+        this.identities_list = new TreeView ();
+        this.identities_list.set_headers_visible (false);
+        setup_identities_list ();
 
         var scroll = new ScrolledWindow (null, null);
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scroll.add (this.text_view);
+        scroll.set_shadow_type (ShadowType.IN);
+        scroll.add (this.identities_list);
 
         var button_add = new Button.from_stock ("gtk-add");
         var button_remove = new Button.from_stock ("gtk-remove");
