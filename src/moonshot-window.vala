@@ -111,7 +111,7 @@ class MainWindow : Window
                                             DialogFlags.DESTROY_WITH_PARENT,
                                             MessageType.INFO,
                                             Gtk.ButtonsType.YES_NO,
-                                            "Are you sure you want to delete this ID Card?");
+                                            _("Are you sure you want to delete this ID Card?"));
             var result = dialog.run ();
             switch (result) {
             case ResponseType.YES:
@@ -150,7 +150,7 @@ class MainWindow : Window
         this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY, "system-search");
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
-                                                 "Search identity or service");
+                                                 _("Search identity or service"));
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
 
@@ -178,14 +178,14 @@ class MainWindow : Window
         vbox_left.pack_start (scroll, true, true, 0);
         vbox_left.pack_start (button_toolbar, false, false, 0);
 
-        var login_vbox_title = new Label ("Login: ");
+        var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
         login_vbox_title.set_alignment (0, 0);
-        var username_label = new Label ("Username:");
+        var username_label = new Label (_("Username:"));
         var username_entry = new Entry ();
-        var password_label = new Label ("Password:");
+        var password_label = new Label (_("Password:"));
         var password_entry = new Entry ();
-        var remember_checkbutton = new CheckButton.with_label ("Remember password");
+        var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         var login_table = new Table (3, 3, false);
         login_table.set_col_spacings (6);
         login_table.attach_defaults (username_label, 0, 1, 0, 1);
@@ -200,12 +200,12 @@ class MainWindow : Window
         login_vbox.pack_start (login_vbox_title, false, true, 0);
         login_vbox.pack_start (login_vbox_alignment, false, true, 0);
 
-        var services_vbox_title = new Label ("Services:");
+        var services_vbox_title = new Label (_("Services:"));
         label_make_bold (services_vbox_title);
         services_vbox_title.set_alignment (0, 0);
-        var email_label = new Label ("Email");
+        var email_label = new Label (_("Email"));
         var email_remove_button = new Button.from_stock (Stock.REMOVE);
-        var im_label = new Label ("IM");
+        var im_label = new Label (_("IM"));
         var im_remove_button = new Button.from_stock (Stock.REMOVE);
         var services_table = new Table (2, 2, false);
         services_table.set_col_spacings (6);
