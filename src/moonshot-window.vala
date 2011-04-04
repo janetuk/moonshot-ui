@@ -6,6 +6,12 @@ class MainWindow : Window
     private Entry search_entry;
     private TreeView identities_list;
 
+    private enum Columns
+    {
+        NAME_COL,
+        N_COLUMNS
+    }
+
     public MainWindow()
     {
         this.title = "Moonshoot";
@@ -29,13 +35,14 @@ class MainWindow : Window
 
     private void setup_identities_list ()
     {
-        var listmodel = new ListStore (1, typeof (string)); //TODO
+        var listmodel = new ListStore (Columns.N_COLUMNS, typeof (string));
         this.identities_list.set_model (listmodel);
 
         var cell = new CellRendererText ();
         cell.set ("foreground_set", true);
 
-        this.identities_list.insert_column_with_attributes (-1, "Identities", cell, "text", 0);
+        this.identities_list.insert_column_with_attributes (-1, "Identities", cell,
+                                                            "text", Columns.NAME_COL);
     }
 
     private void add_identity_cb ()
@@ -46,7 +53,8 @@ class MainWindow : Window
         listmodel = (ListStore) this.identities_list.get_model ();
 
         listmodel.append (out iter);
-        listmodel.set (iter, 0, "Identity 1");
+        listmodel.set (iter,
+                       Columns.NAME_COL, "Identity 1");
     }
 
     private void remove_identity_cb ()
