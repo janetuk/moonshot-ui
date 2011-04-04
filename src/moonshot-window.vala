@@ -111,13 +111,10 @@ class MainWindow : Window
         button_toolbar.insert (button_add, 0);
         button_toolbar.insert (button_remove, 1);
 
-        var vbox_identities = new VBox (false, 0);
-        vbox_identities.pack_start (scroll, true, true, 0);
-        vbox_identities.pack_start (button_toolbar, false, false, 0);
-
-        var vbox_left = new VBox (false, 6);
-        vbox_left.pack_start (search_entry, false, false, 0);
-        vbox_left.pack_start (vbox_identities, true, true, 0);
+        var vbox_left = new VBox (false, 0);
+        vbox_left.pack_start (search_entry, false, false, 6);
+        vbox_left.pack_start (scroll, true, true, 0);
+        vbox_left.pack_start (button_toolbar, false, false, 0);
 
         var login_vbox_title = new Label ("Login: ");
         label_make_bold (login_vbox_title);
