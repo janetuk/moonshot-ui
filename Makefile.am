@@ -15,6 +15,7 @@ AM_VALAFLAGS = \
 	--pkg gtk+-2.0
 
 src_moonshot_SOURCES = \
+        src/moonshot-id.vala \
         src/moonshot-window.vala
 
 src_moonshot_LDADD = \
