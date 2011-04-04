@@ -107,12 +107,14 @@ class MainWindow : Window
         var username_entry = new Entry ();
         var password_label = new Label ("Password:");
         var password_entry = new Entry ();
-        var login_table = new Table (2, 2, false);
+        var remember_checkbutton = new CheckButton.with_label ("Remember password");
+        var login_table = new Table (3, 3, false);
         login_table.set_col_spacings (6);
         login_table.attach_defaults (username_label, 0, 1, 0, 1);
         login_table.attach_defaults (username_entry, 1, 2, 0, 1);
         login_table.attach_defaults (password_label, 0, 1, 1, 2);
         login_table.attach_defaults (password_entry, 1, 2, 1, 2);
+        login_table.attach_defaults (remember_checkbutton,  0, 2, 2, 3);
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);
