@@ -63,16 +63,64 @@ class MainWindow : Window
                        Columns.NAME_COL, id_card.name);
     }
 
-    private void remove_identity_cb ()
+    private IdCard* get_selected_idcard ()
     {
         TreeModel model;
         TreeIter iter;
+        IdCard id_card;
 
-        var selection = identities_list.get_selection ();
+        var selection = this.identities_list.get_selection ();
 
         if (selection.get_selected (out model, out iter))
         {
-            ((ListStore) model).remove (iter);
+            model.get (iter, Columns.CARDID_COL, out id_card);
+            return id_card;
+        }
+
+        return null;
+    }
+
+    private void remove_identity (IdCard id_card)
+    {
+        TreeModel model;
+        TreeIter iter;
+        IdCard id_card_list;
+
+        var selection = this.identities_list.get_selection ();
+
+        if (selection.get_selected (out model, out iter))
+        {
+            model.get (iter, Columns.CARDID_COL, out id_card_list);
+            if (id_card_list != null && id_card_list.name == id_card.name)
+            {
+                ((ListStore) model).remove (iter);
+            }
+        }
+    }
+
+    private void remove_identity_cb ()
+    {
+        var id_card = get_selected_idcard ();
+        if (id_card == null)
+        {
+            return;
+        }
+	else
+	{
+            var dialog = new MessageDialog (null,
+                                            DialogFlags.DESTROY_WITH_PARENT,
+                                            MessageType.INFO,
+                                            Gtk.ButtonsType.YES_NO,
+                                            "Are you sure you want to delete this ID Card?");
+            var result = dialog.run ();
+            switch (result) {
+            case ResponseType.YES:
+                remove_identity (id_card);
+                break;
+            default:
+                break;
+            }
+            dialog.destroy ();
         }
     }
 
