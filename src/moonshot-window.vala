@@ -149,9 +149,14 @@ class MainWindow : Window
         hbox.pack_start (vbox_left, true, true, 12);
         hbox.pack_start (vbox_rigth, true, true, 12);
 
+        var send_button = new Button.with_label ("Send");
+        var hbox_send_button = new HBox (false, 0);
+        hbox_send_button.pack_end (send_button, false, false, 12);
+
         var main_vbox = new VBox (false, 12);
         main_vbox.pack_start (toolbar, false, true, 0);
         main_vbox.pack_start (hbox, true, true, 0);
+        main_vbox.pack_start (hbox_send_button, false, false, 0);
         add (main_vbox);
     }
 
