@@ -62,6 +62,20 @@ class MainWindow : Window
         }
     }
 
+    private void label_make_bold (Label label)
+    {
+        var font_desc = new Pango.FontDescription ();
+
+        font_desc.set_weight (Pango.Weight.BOLD);
+
+        /* This will only affect the weight of the font, the rest is
+         * from the current state of the widget, which comes from the
+         * theme or user prefs, since the font desc only has the
+         * weight flag turned on.
+         */
+        label.modify_font (font_desc);
+    }
+
     private void build_ui()
     {
         var toolbar = new Toolbar ();
@@ -106,6 +120,7 @@ class MainWindow : Window
         vbox_left.pack_start (vbox_identities, true, true, 0);
 
         var login_vbox_title = new Label ("Login: ");
+        label_make_bold (login_vbox_title);
         login_vbox_title.set_alignment (0, 0);
         var username_label = new Label ("Username:");
         var username_entry = new Entry ();
@@ -127,6 +142,7 @@ class MainWindow : Window
         login_vbox.pack_start (login_vbox_alignment, false, true, 0);
 
         var services_vbox_title = new Label ("Services:");
+        label_make_bold (services_vbox_title);
         services_vbox_title.set_alignment (0, 0);
         var email_label = new Label ("Email");
         var email_remove_button = new Button.from_stock (Stock.REMOVE);
