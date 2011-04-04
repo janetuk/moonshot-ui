@@ -96,10 +96,13 @@ class MainWindow : Window
         button_box.pack_start (button_add, false, false, 0);
         button_box.pack_start (button_remove, false, false, 0);
 
-        var vbox_left = new VBox (false, 0);
-        vbox_left.pack_start (search_entry, false, true, 0);
-        vbox_left.pack_start (scroll, true, true, 0);
-        vbox_left.pack_start (button_box, false, false, 0);
+        var vbox_identities = new VBox (false, 0);
+        vbox_identities.pack_start (scroll, true, true, 0);
+        vbox_identities.pack_start (button_box, false, false, 0);
+
+        var vbox_left = new VBox (false, 6);
+        vbox_left.pack_start (search_entry, false, false, 0);
+        vbox_left.pack_start (vbox_identities, true, true, 0);
 
         var login_vbox_title = new Label ("Login: ");
         login_vbox_title.set_alignment (0, 0);
