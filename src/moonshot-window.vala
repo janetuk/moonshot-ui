@@ -96,12 +96,61 @@ class MainWindow : Window
         button_box.pack_start (button_add, false, false, 0);
         button_box.pack_start (button_remove, false, false, 0);
 
-        var vbox = new VBox (false, 0);
-        vbox.pack_start (toolbar, false, true, 0);
-        vbox.pack_start (search_entry, false, true, 0);
-        vbox.pack_start (scroll, true, true, 0);
-        vbox.pack_start (button_box, false, false, 0);
-        add (vbox);
+        var vbox_left = new VBox (false, 0);
+        vbox_left.pack_start (search_entry, false, true, 0);
+        vbox_left.pack_start (scroll, true, true, 0);
+        vbox_left.pack_start (button_box, false, false, 0);
+
+        var login_vbox_title = new Label ("Login: ");
+        login_vbox_title.set_alignment (0, 0);
+        var username_label = new Label ("Username:");
+        var username_entry = new Entry ();
+        var password_label = new Label ("Password:");
+        var password_entry = new Entry ();
+        var login_table = new Table (2, 2, false);
+        login_table.set_col_spacings (6);
+        login_table.attach_defaults (username_label, 0, 1, 0, 1);
+        login_table.attach_defaults (username_entry, 1, 2, 0, 1);
+        login_table.attach_defaults (password_label, 0, 1, 1, 2);
+        login_table.attach_defaults (password_entry, 1, 2, 1, 2);
+        var login_vbox_alignment = new Alignment (0, 0, 0, 0);
+        login_vbox_alignment.set_padding (0, 0, 12, 0);
+        login_vbox_alignment.add (login_table);
+        var login_vbox = new VBox (false, 6);
+        login_vbox.pack_start (login_vbox_title, false, true, 0);
+        login_vbox.pack_start (login_vbox_alignment, false, true, 0);
+
+        var services_vbox_title = new Label ("Services:");
+        services_vbox_title.set_alignment (0, 0);
+        var email_label = new Label ("Email");
+        var email_remove_button = new Button.from_stock (Stock.REMOVE);
+        var im_label = new Label ("IM");
+        var im_remove_button = new Button.from_stock (Stock.REMOVE);
+        var services_table = new Table (2, 2, false);
+        services_table.set_col_spacings (6);
+        services_table.attach_defaults (email_label, 0, 1, 0, 1);
+        services_table.attach_defaults (email_remove_button, 1, 2, 0, 1);
+        services_table.attach_defaults (im_label, 0, 1, 1, 2);
+        services_table.attach_defaults (im_remove_button, 1, 2, 1, 2);
+        var services_vbox_alignment = new Alignment (0, 0, 0, 0);
+        services_vbox_alignment.set_padding (0, 0, 12, 0);
+        services_vbox_alignment.add (services_table);
+        var services_vbox = new VBox (false, 6);
+        services_vbox.pack_start (services_vbox_title, false, true, 0);
+        services_vbox.pack_start (services_vbox_alignment, false, true, 0);
+
+        var vbox_rigth = new VBox (false, 18);
+        vbox_rigth.pack_start (login_vbox, false, true, 0);
+        vbox_rigth.pack_start (services_vbox, false, true, 0);
+
+        var hbox = new HBox (false, 0);
+        hbox.pack_start (vbox_left, true, true, 12);
+        hbox.pack_start (vbox_rigth, true, true, 12);
+
+        var main_vbox = new VBox (false, 12);
+        main_vbox.pack_start (toolbar, false, true, 0);
+        main_vbox.pack_start (hbox, true, true, 0);
+        add (main_vbox);
     }
 
     private void connect_signals()
