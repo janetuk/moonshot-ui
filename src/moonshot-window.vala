@@ -87,18 +87,19 @@ class MainWindow : Window
         scroll.set_shadow_type (ShadowType.IN);
         scroll.add (this.identities_list);
 
-        var button_add = new Button.from_stock ("gtk-add");
+        var button_add = new ToolButton (null, null);
+        button_add.set_icon_name ("gtk-add");
         button_add.clicked.connect (add_identity_cb);
-        var button_remove = new Button.from_stock ("gtk-remove");
+        var button_remove = new ToolButton (null, null);
+        button_remove.set_icon_name ("gtk-remove");
         button_remove.clicked.connect (remove_identity_cb);
-        var button_box = new HButtonBox ();
-        button_box.set_layout (ButtonBoxStyle.SPREAD);
-        button_box.pack_start (button_add, false, false, 0);
-        button_box.pack_start (button_remove, false, false, 0);
+        var button_toolbar = new Toolbar ();
+        button_toolbar.insert (button_add, 0);
+        button_toolbar.insert (button_remove, 1);
 
         var vbox_identities = new VBox (false, 0);
         vbox_identities.pack_start (scroll, true, true, 0);
-        vbox_identities.pack_start (button_box, false, false, 0);
+        vbox_identities.pack_start (button_toolbar, false, false, 0);
 
         var vbox_left = new VBox (false, 6);
         vbox_left.pack_start (search_entry, false, false, 0);
