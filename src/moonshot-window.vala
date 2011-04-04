@@ -8,6 +8,7 @@ class MainWindow : Window
 
     private enum Columns
     {
+        CARDID_COL,
         NAME_COL,
         N_COLUMNS
     }
@@ -35,7 +36,8 @@ class MainWindow : Window
 
     private void setup_identities_list ()
     {
-        var listmodel = new ListStore (Columns.N_COLUMNS, typeof (string));
+        var listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+                                                          typeof (string));
         this.identities_list.set_model (listmodel);
 
         var cell = new CellRendererText ();
@@ -53,8 +55,12 @@ class MainWindow : Window
         listmodel = (ListStore) this.identities_list.get_model ();
 
         listmodel.append (out iter);
+        var id_card = new IdCard ();
+        id_card.name = "University";
+        id_card.number = 123;
         listmodel.set (iter,
-                       Columns.NAME_COL, "Identity 1");
+                       Columns.CARDID_COL, id_card,
+                       Columns.NAME_COL, id_card.name);
     }
 
     private void remove_identity_cb ()
