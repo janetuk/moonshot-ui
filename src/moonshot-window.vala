@@ -67,6 +67,8 @@ class MainWindow : Window
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
         var password_entry = new Entry ();
+        password_entry.set_invisible_char ('*');
+        password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         var table = new Table (4, 4, false);
         table.set_col_spacings (10);
@@ -245,6 +247,8 @@ class MainWindow : Window
         var username_entry = new Entry ();
         var password_label = new Label (_("Password:"));
         var password_entry = new Entry ();
+        password_entry.set_invisible_char ('*');
+        password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         var login_table = new Table (3, 3, false);
         login_table.set_col_spacings (6);
