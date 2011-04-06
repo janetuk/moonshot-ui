@@ -254,12 +254,13 @@ class MainWindow : Window
         password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         var login_table = new Table (3, 3, false);
-        login_table.set_col_spacings (6);
+        login_table.set_col_spacings (10);
+        login_table.set_row_spacings (10);
         login_table.attach_defaults (username_label, 0, 1, 0, 1);
         login_table.attach_defaults (username_entry, 1, 2, 0, 1);
         login_table.attach_defaults (password_label, 0, 1, 1, 2);
         login_table.attach_defaults (password_entry, 1, 2, 1, 2);
-        login_table.attach_defaults (remember_checkbutton,  0, 2, 2, 3);
+        login_table.attach_defaults (remember_checkbutton,  1, 2, 2, 3);
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);
@@ -275,7 +276,8 @@ class MainWindow : Window
         var im_label = new Label (_("IM"));
         var im_remove_button = new Button.from_stock (Stock.REMOVE);
         var services_table = new Table (2, 2, false);
-        services_table.set_col_spacings (6);
+        services_table.set_col_spacings (10);
+        services_table.set_row_spacings (10);
         services_table.attach_defaults (email_label, 0, 1, 0, 1);
         services_table.attach_defaults (email_remove_button, 1, 2, 0, 1);
         services_table.attach_defaults (im_label, 0, 1, 1, 2);
