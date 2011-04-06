@@ -9,6 +9,7 @@ class MainWindow : Window
     private enum Columns
     {
         IDCARD_COL,
+        LOGO_COL,
         NAME_COL,
         N_COLUMNS
     }
@@ -37,14 +38,23 @@ class MainWindow : Window
     private void setup_identities_list ()
     {
         var listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+                                                          typeof (Gdk.Pixbuf),
                                                           typeof (string));
         this.identities_list.set_model (listmodel);
 
-        var cell = new CellRendererText ();
-        cell.set ("foreground_set", true);
+        var column = new TreeViewColumn ();
+        var cell_logo = new CellRendererPixbuf ();
+        column.pack_start (cell_logo, false);
+        column.add_attribute (cell_logo, "pixbuf", Columns.LOGO_COL);
+        cell_logo.set ("stock-size", IconSize.MENU);
 
-        this.identities_list.insert_column_with_attributes (-1, "Identities", cell,
-                                                            "text", Columns.NAME_COL);
+        var cell_name = new CellRendererText ();
+        column.pack_start (cell_name, false);
+        column.add_attribute (cell_name, "text", Columns.NAME_COL);
+        cell_name.set ("ellipsize", Pango.EllipsizeMode.END,
+                       "width-chars", 18);
+
+        this.identities_list.append_column (column);
     }
 
     private Dialog add_identity_dialog ()
@@ -99,14 +109,21 @@ class MainWindow : Window
         ListStore listmodel;
         TreeIter iter;
 
-        listmodel = (ListStore) this.identities_list.get_model ();
+        var icon_theme = IconTheme.get_default ();
 
-        listmodel.append (out iter);
+        var pixbuf = icon_theme.load_icon ("avatar-default",
+                                           48,
+                                           IconLookupFlags.FORCE_SIZE);
+
         var id_card = new IdCard ();
         id_card.name = "University";
         id_card.number = 123;
+
+        listmodel = (ListStore) this.identities_list.get_model ();
+        listmodel.append (out iter);
         listmodel.set (iter,
                        Columns.IDCARD_COL, id_card,
+                       Columns.LOGO_COL, pixbuf,
                        Columns.NAME_COL, id_card.name);
     }
 
