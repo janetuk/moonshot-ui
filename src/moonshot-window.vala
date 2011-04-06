@@ -224,10 +224,10 @@ class MainWindow : Window
         scroll.add (this.identities_list);
 
         var button_add = new ToolButton (null, null);
-        button_add.set_icon_name ("gtk-add");
+        button_add.set_icon_name ("list-add");
         button_add.clicked.connect (add_identity_cb);
         var button_remove = new ToolButton (null, null);
-        button_remove.set_icon_name ("gtk-remove");
+        button_remove.set_icon_name ("list-remove");
         button_remove.clicked.connect (remove_identity_cb);
         var button_toolbar = new Toolbar ();
         button_toolbar.insert (button_add, 0);
