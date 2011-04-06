@@ -8,7 +8,7 @@ class MainWindow : Window
 
     private enum Columns
     {
-        CARDID_COL,
+        IDCARD_COL,
         NAME_COL,
         N_COLUMNS
     }
@@ -104,7 +104,7 @@ class MainWindow : Window
         id_card.name = "University";
         id_card.number = 123;
         listmodel.set (iter,
-                       Columns.CARDID_COL, id_card,
+                       Columns.IDCARD_COL, id_card,
                        Columns.NAME_COL, id_card.name);
     }
 
@@ -133,7 +133,7 @@ class MainWindow : Window
 
         if (selection.get_selected (out model, out iter))
         {
-            model.get (iter, Columns.CARDID_COL, out id_card);
+            model.get (iter, Columns.IDCARD_COL, out id_card);
             return id_card;
         }
 
@@ -150,7 +150,7 @@ class MainWindow : Window
 
         if (selection.get_selected (out model, out iter))
         {
-            model.get (iter, Columns.CARDID_COL, out id_card_list);
+            model.get (iter, Columns.IDCARD_COL, out id_card_list);
             if (id_card_list != null && id_card_list.name == id_card.name)
             {
                 ((ListStore) model).remove (iter);
