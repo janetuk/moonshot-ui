@@ -209,7 +209,8 @@ class MainWindow : Window
         //open_button.clicked.connect (on_open_clicked);
 
         this.search_entry = new Entry();
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY, "system-search");
+        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY,
+                                                   "edit-find-symbolic");
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
                                                  _("Search identity or service"));
@@ -226,10 +227,10 @@ class MainWindow : Window
         scroll.add (this.identities_list);
 
         var button_add = new ToolButton (null, null);
-        button_add.set_icon_name ("list-add");
+        button_add.set_icon_name ("list-add-symbolic");
         button_add.clicked.connect (add_identity_cb);
         var button_remove = new ToolButton (null, null);
-        button_remove.set_icon_name ("list-remove");
+        button_remove.set_icon_name ("list-remove-symbolic");
         button_remove.clicked.connect (remove_identity_cb);
         var button_toolbar = new Toolbar ();
         button_toolbar.insert (button_add, 0);
