@@ -242,10 +242,12 @@ class MainWindow : Window
 
         var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
-        login_vbox_title.set_alignment (0, 0);
+        login_vbox_title.set_alignment (0, (float) 0.5);
         var username_label = new Label (_("Username:"));
+        username_label.set_alignment (1, (float) 0.5);
         var username_entry = new Entry ();
         var password_label = new Label (_("Password:"));
+        password_label.set_alignment (1, (float) 0.5);
         var password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
@@ -266,7 +268,7 @@ class MainWindow : Window
 
         var services_vbox_title = new Label (_("Services:"));
         label_make_bold (services_vbox_title);
-        services_vbox_title.set_alignment (0, 0);
+        services_vbox_title.set_alignment (0, (float) 0.5);
         var email_label = new Label (_("Email"));
         var email_remove_button = new Button.from_stock (Stock.REMOVE);
         var im_label = new Label (_("IM"));
