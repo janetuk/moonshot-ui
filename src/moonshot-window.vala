@@ -50,9 +50,9 @@ class MainWindow : Window
 
         var cell_name = new CellRendererText ();
         column.pack_start (cell_name, false);
-        column.add_attribute (cell_name, "text", Columns.NAME_COL);
-        cell_name.set ("ellipsize", Pango.EllipsizeMode.END,
-                       "width-chars", 18);
+        column.add_attribute (cell_name, "markup", Columns.NAME_COL);
+        cell_name.set ("wrap-width", 300,
+                       "wrap-mode", WrapMode.WORD);
 
         this.identities_list.append_column (column);
     }
