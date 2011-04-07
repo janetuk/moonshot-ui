@@ -108,13 +108,22 @@ class MainWindow : Window
     {
         ListStore listmodel;
         TreeIter iter;
+        Gdk.Pixbuf pixbuf;
         string services = "";
 
         var icon_theme = IconTheme.get_default ();
 
-        var pixbuf = icon_theme.load_icon ("avatar-default",
+        try
+        {
+            pixbuf = icon_theme.load_icon ("avatar-default",
                                            48,
                                            IconLookupFlags.FORCE_SIZE);
+        }
+        catch (Error e)
+        {
+            pixbuf = null;
+            stdout.printf("Error: %s\n", e.message);
+        }
 
         var id_card = new IdCard ();
         id_card.name = "University";
