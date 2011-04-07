@@ -108,6 +108,7 @@ class MainWindow : Window
     {
         ListStore listmodel;
         TreeIter iter;
+        string services = "";
 
         var icon_theme = IconTheme.get_default ();
 
@@ -117,14 +118,25 @@ class MainWindow : Window
 
         var id_card = new IdCard ();
         id_card.name = "University";
+        id_card.services = new string[3];
+        id_card.services[0] = "Sending emails";
+        id_card.services[1] = "Connect to IRC";
+        id_card.services[2] = "Connect to jabber";
         id_card.number = 123;
+
+        for (int i = 0; i < id_card.services.length - 1; i++)
+        {
+            services = services + "<i>" + id_card.services[i] + "</i>, ";
+        }
+        services = services + "<i>" + id_card.services[id_card.services.length - 1] + "</i>";
+        var text = "<b>" + id_card.name + "</b>\n" + services;
 
         listmodel = (ListStore) this.identities_list.get_model ();
         listmodel.append (out iter);
         listmodel.set (iter,
                        Columns.IDCARD_COL, id_card,
                        Columns.LOGO_COL, pixbuf,
-                       Columns.NAME_COL, id_card.name);
+                       Columns.NAME_COL, text);
     }
 
     private void add_identity_cb ()
