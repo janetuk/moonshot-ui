@@ -44,6 +44,16 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
     }
 
+    private bool search_entry_key_press_event_cb (Gdk.EventKey e)
+    {
+        if(Gdk.keyval_name(e.keyval) == "Escape")
+           this.search_entry.set_text("");
+
+        // Continue processing this event, since the
+        // text entry functionality needs to see it too.
+        return false;
+    }
+
     private void selected_idcard_changed (TreeSelection selection)
     {
         this.vbox_rigth.show ();
@@ -280,6 +290,7 @@ class MainWindow : Window
 
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
+        this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
 
         this.identities_list = new TreeView ();
         this.identities_list.set_headers_visible (false);
