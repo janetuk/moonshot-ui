@@ -25,14 +25,22 @@ class MainWindow : Window
         connect_signals();
     }
 
-    private void search_entry_icon_press_cb ()
+    private void search_entry_icon_press_cb (EntryIconPosition pos, Gdk.Event event)
     {
-        print ("Search entry icon pressed\n");
+	if (pos == EntryIconPosition.PRIMARY)
+        {
+            print ("Search entry icon pressed\n");
+        }
+        else
+        {
+            this.search_entry.set_text ("");
+        }
     }
 
     private void search_entry_text_changed_cb ()
     {
         var has_text = this.search_entry.get_text_length () > 0;
+        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
     }
 
@@ -257,11 +265,19 @@ class MainWindow : Window
         //open_button.clicked.connect (on_open_clicked);
 
         this.search_entry = new Entry();
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY,
+
+        this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
                                                    "edit-find-symbolic");
+        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
+        this.search_entry.set_icon_tooltip_text (EntryIconPosition.PRIMARY,
+                                                 _("Search identity or service"));
+
+        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY,
+                                                   "edit-clear-symbolic");
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
-                                                 _("Search identity or service"));
+                                                 _("Clear the current search"));
+
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
 
