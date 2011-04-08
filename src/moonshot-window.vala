@@ -5,6 +5,7 @@ class MainWindow : Window
 
     private Entry search_entry;
     private TreeView identities_list;
+    private VBox vbox_rigth;
 
     private enum Columns
     {
@@ -35,6 +36,11 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
     }
 
+    private void selected_idcard_changed (TreeSelection selection)
+    {
+        this.vbox_rigth.show ();
+    }
+
     private void setup_identities_list ()
     {
         var listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
@@ -55,6 +61,10 @@ class MainWindow : Window
                        "wrap-mode", WrapMode.WORD);
 
         this.identities_list.append_column (column);
+
+        var selection = this.identities_list.get_selection ();
+        selection.set_mode (SelectionMode.BROWSE);
+        selection.changed.connect (selected_idcard_changed);
     }
 
     private Dialog add_identity_dialog ()
@@ -327,7 +337,7 @@ class MainWindow : Window
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
 
-        var vbox_rigth = new VBox (false, 18);
+        this.vbox_rigth = new VBox (false, 18);
         vbox_rigth.pack_start (login_vbox, false, true, 0);
         vbox_rigth.pack_start (services_vbox, false, true, 0);
 
@@ -345,6 +355,9 @@ class MainWindow : Window
         main_vbox.pack_start (hbox_send_button, false, false, 0);
         main_vbox.set_border_width (12);
         add (main_vbox);
+
+        main_vbox.show_all();
+        this.vbox_rigth.hide ();
     }
 
     private void connect_signals()
@@ -361,7 +374,7 @@ class MainWindow : Window
         Intl.textdomain (Config.GETTEXT_PACKAGE);
 
         var window = new MainWindow();
-        window.show_all();
+        window.show ();
 
         Gtk.main();
 
