@@ -16,6 +16,7 @@ AM_VALAFLAGS = \
 
 src_moonshot_SOURCES = \
         src/moonshot-id.vala \
+        src/moonshot-add-dialog.vala \
         src/moonshot-window.vala
 
 src_moonshot_LDADD = \

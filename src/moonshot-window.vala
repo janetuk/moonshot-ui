@@ -85,53 +85,6 @@ class MainWindow : Window
         selection.changed.connect (selected_idcard_changed);
     }
 
-    private Dialog add_identity_dialog ()
-    {
-        var dialog = new Dialog.with_buttons (_("Add ID Card"),
-                                              null,
-                                              DialogFlags.MODAL | DialogFlags.DESTROY_WITH_PARENT,
-                                              _("Add ID Card"), ResponseType.OK,
-                                              Stock.CANCEL, ResponseType.CANCEL);
-
-        var content_area = dialog.get_content_area ();
-        ((Box) content_area).set_spacing (12);
-
-        var issuer_label = new Label (_("Issuer:"));
-        issuer_label.set_alignment (1, (float) 0.5);
-        var issuer_entry = new Entry ();
-        var username_label = new Label (_("Username:"));
-        username_label.set_alignment (1, (float) 0.5);
-        var username_entry = new Entry ();
-        var password_label = new Label (_("Password:"));
-        password_label.set_alignment (1, (float) 0.5);
-        var password_entry = new Entry ();
-        password_entry.set_invisible_char ('*');
-        password_entry.set_visibility (false);
-        var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
-        var table = new Table (4, 4, false);
-        table.set_col_spacings (10);
-        table.set_row_spacings (10);
-        table.attach_defaults (issuer_label, 0, 1, 0, 1);
-        table.attach_defaults (issuer_entry, 1, 2, 0, 1);
-        table.attach_defaults (username_label, 0, 1, 1, 2);
-        table.attach_defaults (username_entry, 1, 2, 1, 2);
-        table.attach_defaults (password_label, 0, 1, 2, 3);
-        table.attach_defaults (password_entry, 1, 2, 2, 3);
-        table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
-
-        var vbox = new VBox (false, 0);
-        vbox.set_border_width (6);
-        vbox.pack_start (table, false, false, 0);
-
-        ((Container) content_area).add (vbox);
-
-        dialog.set_border_width (6);
-        dialog.set_resizable (false);
-        dialog.show_all ();
-
-        return dialog;
-    }
-
     private void add_identity ()
     {
         ListStore listmodel;
@@ -178,7 +131,7 @@ class MainWindow : Window
 
     private void add_identity_cb ()
     {
-        var dialog = add_identity_dialog ();
+        var dialog = new AddIdentityDialog ();
         var result = dialog.run ();
 
         switch (result) {
