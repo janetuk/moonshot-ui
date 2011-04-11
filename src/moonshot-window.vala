@@ -107,7 +107,7 @@ class MainWindow : Window
         }
 
         var id_card = new IdCard ();
-        id_card.name = "University";
+        id_card.issuer = "University";
         id_card.services = new string[3];
         id_card.services[0] = "Sending emails";
         id_card.services[1] = "Connect to IRC";
@@ -119,7 +119,7 @@ class MainWindow : Window
             services = services + "<i>" + id_card.services[i] + "</i>, ";
         }
         services = services + "<i>" + id_card.services[id_card.services.length - 1] + "</i>";
-        var text = "<b>" + id_card.name + "</b>\n" + services;
+        var text = "<b>" + id_card.issuer + "</b>\n" + services;
 
         listmodel = (ListStore) this.identities_list.get_model ();
         listmodel.append (out iter);
@@ -172,7 +172,7 @@ class MainWindow : Window
         if (selection.get_selected (out model, out iter))
         {
             model.get (iter, Columns.IDCARD_COL, out id_card_list);
-            if (id_card_list != null && id_card_list.name == id_card.name)
+            if (id_card_list != null && id_card_list.issuer == id_card.issuer)
             {
                 ((ListStore) model).remove (iter);
             }
