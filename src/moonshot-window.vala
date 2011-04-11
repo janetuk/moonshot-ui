@@ -85,7 +85,7 @@ class MainWindow : Window
         selection.changed.connect (selected_idcard_changed);
     }
 
-    private void add_identity ()
+    private void add_identity (AddIdentityDialog dialog)
     {
         ListStore listmodel;
         TreeIter iter;
@@ -107,7 +107,7 @@ class MainWindow : Window
         }
 
         var id_card = new IdCard ();
-        id_card.issuer = "University";
+        id_card.issuer = dialog.issuer;
         id_card.services = new string[3];
         id_card.services[0] = "Sending emails";
         id_card.services[1] = "Connect to IRC";
@@ -136,7 +136,7 @@ class MainWindow : Window
 
         switch (result) {
         case ResponseType.OK:
-            add_identity ();
+            add_identity (dialog);
             break;
         default:
             break;
