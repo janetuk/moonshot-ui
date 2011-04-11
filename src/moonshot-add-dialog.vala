@@ -2,9 +2,21 @@ using Gtk;
 
 class AddIdentityDialog : Dialog
 {
-    public string issuer { get; set; default = null; }
-    public string username { get; set; default = null; }
-    public string password { get; set; default = null; }
+    private Entry issuer_entry;
+    private Entry username_entry;
+    private Entry password_entry;
+
+    public string issuer {
+        get { return issuer_entry.get_text (); }
+    }
+
+     public string username {
+        get { return username_entry.get_text (); }
+    }
+
+    public string password {
+        get { return password_entry.get_text (); }
+    }
 
     public AddIdentityDialog ()
     {
@@ -19,13 +31,13 @@ class AddIdentityDialog : Dialog
 
         var issuer_label = new Label (_("Issuer:"));
         issuer_label.set_alignment (1, (float) 0.5);
-        var issuer_entry = new Entry ();
+        this.issuer_entry = new Entry ();
         var username_label = new Label (_("Username:"));
         username_label.set_alignment (1, (float) 0.5);
-        var username_entry = new Entry ();
+        this.username_entry = new Entry ();
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
-        var password_entry = new Entry ();
+        this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
