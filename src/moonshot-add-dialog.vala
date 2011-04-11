@@ -41,6 +41,11 @@ class AddIdentityDialog : Dialog
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
+
+        set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
+
         var table = new Table (4, 4, false);
         table.set_col_spacings (10);
         table.set_row_spacings (10);
@@ -61,5 +66,13 @@ class AddIdentityDialog : Dialog
         this.set_border_width (6);
         this.set_resizable (false);
         this.show_all ();
+    }
+
+    private void set_atk_relation (Widget widget, Widget target_widget, Atk.RelationType relationship)
+    {
+        var atk_widget = widget.get_accessible ();
+        var atk_target_widget = target_widget.get_accessible ();
+
+        atk_widget.add_relationship (relationship, atk_target_widget);
     }
 }
