@@ -221,12 +221,6 @@ class MainWindow : Window
 
     private void build_ui()
     {
-        var toolbar = new Toolbar ();
-        var open_button = new ToolButton (null, "Open"); //.from_stock (Stock.OPEN);
-        open_button.is_important = true;
-        toolbar.add (open_button);
-        //open_button.clicked.connect (on_open_clicked);
-
         this.search_entry = new Entry();
 
         this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
@@ -330,7 +324,6 @@ class MainWindow : Window
         hbox_send_button.pack_end (send_button, false, false, 0);
 
         var main_vbox = new VBox (false, 12);
-        main_vbox.pack_start (toolbar, false, true, 0);
         main_vbox.pack_start (hbox, true, true, 0);
         main_vbox.pack_start (hbox_send_button, false, false, 0);
         main_vbox.set_border_width (12);
