@@ -5,6 +5,7 @@ class MainWindow : Window
 
     private Entry search_entry;
     private VBox vbox_rigth;
+    private VBox custom_vbox;
 
     private enum Columns
     {
@@ -55,37 +56,11 @@ class MainWindow : Window
 
     private void add_identity (AddIdentityDialog dialog)
     {
-        Gdk.Pixbuf pixbuf;
-        string services = "";
+        print ("add_identity");
 
-        var icon_theme = IconTheme.get_default ();
+        var id_card_widget = new IdCardWidget ();
 
-        try
-        {
-            pixbuf = icon_theme.load_icon ("avatar-default",
-                                           48,
-                                           IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
-
-        var id_card = new IdCard ();
-        id_card.issuer = dialog.issuer;
-        id_card.services = new string[3];
-        id_card.services[0] = "Sending emails";
-        id_card.services[1] = "Connect to IRC";
-        id_card.services[2] = "Connect to jabber";
-        id_card.number = 123;
-
-        for (int i = 0; i < id_card.services.length - 1; i++)
-        {
-            services = services + "<i>" + id_card.services[i] + "</i>, ";
-        }
-        services = services + "<i>" + id_card.services[id_card.services.length - 1] + "</i>";
-        var text = "<b>" + id_card.issuer + "</b>\n" + services;
+        this.custom_vbox.add (id_card_widget);
 
     }
 
@@ -173,9 +148,12 @@ class MainWindow : Window
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
         this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
 
+        this.custom_vbox = new VBox (false, 6);
+
         var scroll = new ScrolledWindow (null, null);
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_shadow_type (ShadowType.IN);
+        scroll.add_with_viewport (custom_vbox);
 
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");

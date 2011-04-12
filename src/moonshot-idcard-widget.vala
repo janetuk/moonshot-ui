@@ -60,7 +60,7 @@ class IdCardWidget : Box
         event_box.button_press_event.connect (button_press_cb);
         add (event_box);
 
-        event_box.show_all ();
+        this.show_all ();
         this.hbutton_box.hide ();
     }
 }
