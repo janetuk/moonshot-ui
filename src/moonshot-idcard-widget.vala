@@ -1,6 +1,6 @@
 using Gtk;
 
-class IdCard : Window
+class IdCardWidget : Box
 {
     private VBox main_vbox;
     private Table table;
@@ -13,13 +13,9 @@ class IdCard : Window
         return false;
     }
 
-    public IdCard ()
+    public IdCardWidget ()
     {
         Gdk.Pixbuf pixbuf;
-
-        this.title = "ID Card";
-        this.position = WindowPosition.CENTER;
-        set_default_size (400, 200);
 
         var icon_theme = IconTheme.get_default ();
         try
@@ -66,17 +62,5 @@ class IdCard : Window
 
         event_box.show_all ();
         this.hbutton_box.hide ();
-    }
-
-    public static int main(string[] args)
-    {
-        Gtk.init(ref args);
-
-        var IdCard = new IdCard ();
-        IdCard.show ();
-
-        Gtk.main();
-
-        return 0;
     }
 }
