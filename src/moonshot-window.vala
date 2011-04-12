@@ -4,7 +4,6 @@ class MainWindow : Window
 {
 
     private Entry search_entry;
-    private TreeView identities_list;
     private VBox vbox_rigth;
 
     private enum Columns
@@ -54,41 +53,8 @@ class MainWindow : Window
         return false;
     }
 
-    private void selected_idcard_changed (TreeSelection selection)
-    {
-        this.vbox_rigth.show ();
-    }
-
-    private void setup_identities_list ()
-    {
-        var listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
-                                                          typeof (Gdk.Pixbuf),
-                                                          typeof (string));
-        this.identities_list.set_model (listmodel);
-
-        var column = new TreeViewColumn ();
-        var cell_logo = new CellRendererPixbuf ();
-        column.pack_start (cell_logo, false);
-        column.add_attribute (cell_logo, "pixbuf", Columns.LOGO_COL);
-        cell_logo.set ("stock-size", IconSize.MENU);
-
-        var cell_name = new CellRendererText ();
-        column.pack_start (cell_name, false);
-        column.add_attribute (cell_name, "markup", Columns.NAME_COL);
-        cell_name.set ("wrap-width", 300,
-                       "wrap-mode", WrapMode.WORD);
-
-        this.identities_list.append_column (column);
-
-        var selection = this.identities_list.get_selection ();
-        selection.set_mode (SelectionMode.BROWSE);
-        selection.changed.connect (selected_idcard_changed);
-    }
-
     private void add_identity (AddIdentityDialog dialog)
     {
-        ListStore listmodel;
-        TreeIter iter;
         Gdk.Pixbuf pixbuf;
         string services = "";
 
@@ -121,12 +87,6 @@ class MainWindow : Window
         services = services + "<i>" + id_card.services[id_card.services.length - 1] + "</i>";
         var text = "<b>" + id_card.issuer + "</b>\n" + services;
 
-        listmodel = (ListStore) this.identities_list.get_model ();
-        listmodel.append (out iter);
-        listmodel.set (iter,
-                       Columns.IDCARD_COL, id_card,
-                       Columns.LOGO_COL, pixbuf,
-                       Columns.NAME_COL, text);
     }
 
     private void add_identity_cb ()
@@ -146,37 +106,11 @@ class MainWindow : Window
 
     private IdCard* get_selected_idcard ()
     {
-        TreeModel model;
-        TreeIter iter;
-        IdCard id_card;
-
-        var selection = this.identities_list.get_selection ();
-
-        if (selection.get_selected (out model, out iter))
-        {
-            model.get (iter, Columns.IDCARD_COL, out id_card);
-            return id_card;
-        }
-
         return null;
     }
 
     private void remove_identity (IdCard id_card)
     {
-        TreeModel model;
-        TreeIter iter;
-        IdCard id_card_list;
-
-        var selection = this.identities_list.get_selection ();
-
-        if (selection.get_selected (out model, out iter))
-        {
-            model.get (iter, Columns.IDCARD_COL, out id_card_list);
-            if (id_card_list != null && id_card_list.issuer == id_card.issuer)
-            {
-                ((ListStore) model).remove (iter);
-            }
-        }
     }
 
     private void remove_identity_cb ()
@@ -239,14 +173,9 @@ class MainWindow : Window
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
         this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
 
-        this.identities_list = new TreeView ();
-        this.identities_list.set_headers_visible (false);
-        setup_identities_list ();
-
         var scroll = new ScrolledWindow (null, null);
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_shadow_type (ShadowType.IN);
-        scroll.add (this.identities_list);
 
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");
