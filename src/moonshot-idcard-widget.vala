@@ -4,6 +4,9 @@ class IdCardWidget : Box
 {
     private VBox main_vbox;
     private Table table;
+    public Button delete_button { get; private set; default = null; }
+    public Button details_button { get; private set; default = null; }
+    public Button send_button { get; private set; default = null; }
     private HButtonBox hbutton_box;
 
     private bool button_press_cb ()
@@ -42,9 +45,9 @@ class IdCardWidget : Box
         table.attach_defaults (image, 0, 1, 0, 1);
         table.attach_defaults (id_data_label, 1, 2, 0, 1);
 
-        var delete_button = new Button.with_label ("Delete");
-        var details_button = new Button.with_label ("View details");
-        var send_button = new Button.with_label ("Send");
+        this.delete_button = new Button.with_label ("Delete");
+        this.details_button = new Button.with_label ("View details");
+        this.send_button = new Button.with_label ("Send");
         this.hbutton_box = new HButtonBox ();
         hbutton_box.pack_end (delete_button);
         hbutton_box.pack_end (details_button);
