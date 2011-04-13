@@ -54,12 +54,18 @@ class MainWindow : Window
         return false;
     }
 
+    private void details_button_clicked_cb ()
+    {
+       this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
+    }
+
     private void add_identity (AddIdentityDialog dialog)
     {
         var id_card_widget = new IdCardWidget ();
 
         this.custom_vbox.pack_start (id_card_widget, false, false);
 
+        id_card_widget.details_button.clicked.connect (details_button_clicked_cb);
     }
 
     private void add_identity_cb ()
