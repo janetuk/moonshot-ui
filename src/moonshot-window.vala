@@ -56,11 +56,9 @@ class MainWindow : Window
 
     private void add_identity (AddIdentityDialog dialog)
     {
-        print ("add_identity");
-
         var id_card_widget = new IdCardWidget ();
 
-        this.custom_vbox.add (id_card_widget);
+        this.custom_vbox.pack_start (id_card_widget, false, false);
 
     }
 
