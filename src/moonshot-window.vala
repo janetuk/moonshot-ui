@@ -2,6 +2,8 @@ using Gtk;
 
 class MainWindow : Window
 {
+    private const int WINDOW_WIDTH = 400;
+    private const int WINDOW_HEIGHT = 500;
 
     private Entry search_entry;
     private VBox vbox_rigth;
@@ -19,7 +21,7 @@ class MainWindow : Window
     {
         this.title = "Moonshoot";
         this.position = WindowPosition.CENTER;
-        set_default_size (400, 500);
+        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
 
         build_ui();
         connect_signals();
@@ -57,6 +59,10 @@ class MainWindow : Window
     private void details_button_clicked_cb ()
     {
        this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
+
+       if (this.vbox_rigth.get_visible () == false) {
+           this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
+       }
     }
 
     private void add_identity (AddIdentityDialog dialog)
@@ -173,6 +179,7 @@ class MainWindow : Window
         vbox_left.pack_start (search_entry, false, false, 6);
         vbox_left.pack_start (scroll, true, true, 0);
         vbox_left.pack_start (button_toolbar, false, false, 0);
+        vbox_left.set_size_request (WINDOW_WIDTH, 0);
 
         var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
@@ -227,8 +234,8 @@ class MainWindow : Window
         vbox_rigth.pack_start (services_vbox, false, true, 0);
 
         var hbox = new HBox (false, 12);
-        hbox.pack_start (vbox_left, true, true, 0);
-        hbox.pack_start (vbox_rigth, true, true, 0);
+        hbox.pack_start (vbox_left, false, false, 0);
+        hbox.pack_start (vbox_rigth, false, false, 0);
 
         var main_vbox = new VBox (false, 12);
         main_vbox.pack_start (hbox, true, true, 0);
