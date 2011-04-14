@@ -72,6 +72,7 @@ class MainWindow : Window
         this.custom_vbox.pack_start (id_card_widget, false, false);
 
         id_card_widget.details_button.clicked.connect (details_button_clicked_cb);
+        id_card_widget.delete_button.clicked.connect (remove_identity_cb);
     }
 
     private void add_identity_cb ()
@@ -89,39 +90,26 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    private IdCard* get_selected_idcard ()
-    {
-        return null;
-    }
-
-    private void remove_identity (IdCard id_card)
+    private void remove_identity ()
     {
     }
 
     private void remove_identity_cb ()
     {
-        var id_card = get_selected_idcard ();
-        if (id_card == null)
-        {
-            return;
+        var dialog = new MessageDialog (null,
+                                        DialogFlags.DESTROY_WITH_PARENT,
+                                        MessageType.INFO,
+                                        Gtk.ButtonsType.YES_NO,
+                                        _("Are you sure you want to delete this ID Card?"));
+        var result = dialog.run ();
+        switch (result) {
+        case ResponseType.YES:
+            remove_identity ();
+            break;
+        default:
+            break;
         }
-	else
-	{
-            var dialog = new MessageDialog (null,
-                                            DialogFlags.DESTROY_WITH_PARENT,
-                                            MessageType.INFO,
-                                            Gtk.ButtonsType.YES_NO,
-                                            _("Are you sure you want to delete this ID Card?"));
-            var result = dialog.run ();
-            switch (result) {
-            case ResponseType.YES:
-                remove_identity (id_card);
-                break;
-            default:
-                break;
-            }
-            dialog.destroy ();
-        }
+        dialog.destroy ();
     }
 
     private void label_make_bold (Label label)
@@ -168,12 +156,8 @@ class MainWindow : Window
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");
         button_add.clicked.connect (add_identity_cb);
-        var button_remove = new ToolButton (null, null);
-        button_remove.set_icon_name ("list-remove-symbolic");
-        button_remove.clicked.connect (remove_identity_cb);
         var button_toolbar = new Toolbar ();
         button_toolbar.insert (button_add, 0);
-        button_toolbar.insert (button_remove, 1);
 
         var vbox_left = new VBox (false, 0);
         vbox_left.pack_start (search_entry, false, false, 6);
