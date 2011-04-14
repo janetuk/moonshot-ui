@@ -61,7 +61,7 @@ class IdCardWidget : Box
         var event_box = new EventBox ();
         event_box.add (main_vbox);
         event_box.button_press_event.connect (button_press_cb);
-        add (event_box);
+        this.pack_start (event_box, true, true);
 
         this.show_all ();
         this.hbutton_box.hide ();
