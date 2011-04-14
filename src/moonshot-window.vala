@@ -44,6 +44,9 @@ class MainWindow : Window
         var has_text = this.search_entry.get_text_length () > 0;
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
+
+        this.vbox_rigth.set_visible (false);
+        this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     private bool search_entry_key_press_event_cb (Gdk.EventKey e)
