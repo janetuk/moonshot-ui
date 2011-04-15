@@ -9,6 +9,9 @@ class MainWindow : Window
     private VBox vbox_rigth;
     private VBox custom_vbox;
 
+    private Entry username_entry;
+    private Entry password_entry;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -61,6 +64,9 @@ class MainWindow : Window
 
     private void details_button_clicked_cb ()
     {
+       this.username_entry.set_text ("username");
+       this.password_entry.set_text ("password");
+
        this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
 
        if (this.vbox_rigth.get_visible () == false) {
@@ -180,10 +186,10 @@ class MainWindow : Window
         login_vbox_title.set_alignment (0, (float) 0.5);
         var username_label = new Label (_("Username:"));
         username_label.set_alignment (1, (float) 0.5);
-        var username_entry = new Entry ();
+        this.username_entry = new Entry ();
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
-        var password_entry = new Entry ();
+        this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
