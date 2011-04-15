@@ -65,7 +65,7 @@ class MainWindow : Window
     private IdCard get_id_card ()
     {
         var id_card = new IdCard ();
-        id_card.issue = "University";
+        id_card.issuer = "University";
         id_card.username = "username";
         id_card.password = "password";
 
@@ -93,6 +93,16 @@ class MainWindow : Window
        show_details (id_card);
     }
 
+    private void set_idcard_color (IdCardWidget id_card_widget)
+    {
+        var color = Gdk.Color ();
+        color.red = 65535;
+        color.green = 65535;
+        color.blue = 65535;
+        var state = id_card_widget.get_state ();
+        id_card_widget.event_box.modify_bg (state, color);
+    }
+
     private void add_identity (AddIdentityDialog dialog)
     {
         var id_card_widget = new IdCardWidget ();
@@ -101,8 +111,9 @@ class MainWindow : Window
         id_card.issuer = dialog.issuer;
         id_card.username = dialog.username;
         id_card.password = dialog.password;
-
         id_card_widget.id_card = id_card;
+
+        set_idcard_color (id_card_widget);
 
         this.custom_vbox.pack_start (id_card_widget, false, false);
 

@@ -10,6 +10,7 @@ class IdCardWidget : Box
     public Button details_button { get; private set; default = null; }
     public Button send_button { get; private set; default = null; }
     private HButtonBox hbutton_box;
+    public EventBox event_box;
 
     private bool button_press_cb ()
     {
@@ -60,7 +61,7 @@ class IdCardWidget : Box
         main_vbox.pack_start (hbutton_box, false, false, 0);
         main_vbox.set_border_width (12);
 
-        var event_box = new EventBox ();
+        event_box = new EventBox ();
         event_box.add (main_vbox);
         event_box.button_press_event.connect (button_press_cb);
         this.pack_start (event_box, true, true);
