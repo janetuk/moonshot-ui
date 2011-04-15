@@ -2,6 +2,8 @@ using Gtk;
 
 class IdCardWidget : Box
 {
+    public IdCard id_card { get; set; default = null; }
+
     private VBox main_vbox;
     private Table table;
     public Button delete_button { get; private set; default = null; }
