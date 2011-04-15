@@ -62,16 +62,35 @@ class MainWindow : Window
         return false;
     }
 
-    private void details_button_clicked_cb ()
+    private IdCard get_id_card ()
     {
-       this.username_entry.set_text ("username");
-       this.password_entry.set_text ("password");
+        var id_card = new IdCard ();
+        id_card.issue = "University";
+        id_card.username = "username";
+        id_card.password = "password";
 
+        return id_card;
+    }
+
+    private void show_details (IdCard id_card)
+    {
        this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
 
-       if (this.vbox_rigth.get_visible () == false) {
+       if (this.vbox_rigth.get_visible () == false)
+       {
            this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
        }
+       else
+       {
+           this.username_entry.set_text (id_card.username);
+           this.password_entry.set_text (id_card.password);
+       }
+    }
+
+    private void details_button_clicked_cb ()
+    {
+       var id_card = get_id_card ();
+       show_details (id_card);
     }
 
     private void add_identity (AddIdentityDialog dialog)
