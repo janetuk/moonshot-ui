@@ -194,10 +194,14 @@ class MainWindow : Window
 
         this.custom_vbox = new VBox (false, 6);
 
+        var viewport = new Viewport (null, null);
+        viewport.set_border_width (6);
+        viewport.set_shadow_type (ShadowType.NONE);
+        viewport.add (custom_vbox);
         var scroll = new ScrolledWindow (null, null);
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_shadow_type (ShadowType.IN);
-        scroll.add_with_viewport (custom_vbox);
+        scroll.add_with_viewport (viewport);
 
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");
