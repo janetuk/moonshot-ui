@@ -62,6 +62,13 @@ class MainWindow : Window
         return false;
     }
 
+    private void fill_details (IdCardWidget id_card_widget)
+    {
+       var id_card = id_card_widget.id_card;
+       this.username_entry.set_text (id_card.username);
+       this.password_entry.set_text (id_card.password);
+    }
+
     private void show_details (IdCard id_card)
     {
        this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
@@ -70,15 +77,11 @@ class MainWindow : Window
        {
            this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
        }
-       else
-       {
-           this.username_entry.set_text (id_card.username);
-           this.password_entry.set_text (id_card.password);
-       }
     }
 
     private void details_identity_cb (IdCardWidget id_card_widget)
     {
+       fill_details (id_card_widget);
        show_details (id_card_widget.id_card);
     }
 
@@ -97,6 +100,7 @@ class MainWindow : Window
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
+        id_card_widget.expanded.connect (fill_details);
     }
 
     private void add_identity_cb ()
