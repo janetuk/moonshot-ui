@@ -53,8 +53,10 @@ class IdCardWidget : Box
         this.event_box.modify_bg (state, color);
     }
 
-    public IdCardWidget ()
+    public IdCardWidget (IdCard id_card)
     {
+        this.id_card = id_card;
+
         Gdk.Pixbuf pixbuf;
 
         var icon_theme = IconTheme.get_default ();
@@ -71,7 +73,7 @@ class IdCardWidget : Box
         }
         var image = new Image.from_pixbuf (pixbuf);
 
-        var issuer = Markup.printf_escaped ("<b>%s</b>", "University");
+        var issuer = Markup.printf_escaped ("<b>%s</b>", this.id_card.issuer);
         var services = Markup.printf_escaped ("<i>%s</i>", "Send Email, Connect to jabber");
         var text = issuer + "\n" + services;
 
