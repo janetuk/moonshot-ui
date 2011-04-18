@@ -7,7 +7,7 @@ class MainWindow : Window
 
     private Entry search_entry;
     private VBox vbox_rigth;
-    private VBox custom_vbox;
+    private CustomVBox custom_vbox;
 
     private Entry username_entry;
     private Entry password_entry;
@@ -180,7 +180,7 @@ class MainWindow : Window
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
         this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
 
-        this.custom_vbox = new VBox (false, 6);
+        this.custom_vbox = new CustomVBox (false, 6);
 
         var viewport = new Viewport (null, null);
         viewport.set_border_width (6);
