@@ -62,16 +62,6 @@ class MainWindow : Window
         return false;
     }
 
-    private IdCard get_id_card ()
-    {
-        var id_card = new IdCard ();
-        id_card.issuer = "University";
-        id_card.username = "username";
-        id_card.password = "password";
-
-        return id_card;
-    }
-
     private void show_details (IdCard id_card)
     {
        this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
@@ -87,10 +77,9 @@ class MainWindow : Window
        }
     }
 
-    private void details_button_clicked_cb ()
+    private void details_identity_cb (IdCardWidget id_card_widget)
     {
-       var id_card = get_id_card ();
-       show_details (id_card);
+       show_details (id_card_widget.id_card);
     }
 
     private void add_identity (AddIdentityDialog dialog)
@@ -105,7 +94,7 @@ class MainWindow : Window
 
         this.custom_vbox.pack_start (id_card_widget, false, false);
 
-        id_card_widget.details_button.clicked.connect (details_button_clicked_cb);
+        id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
     }

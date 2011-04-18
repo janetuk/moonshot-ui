@@ -14,6 +14,7 @@ class IdCardWidget : Box
 
     public signal void expanded ();
     public signal void remove_id ();
+    public signal void details_id ();
 
     public void collapse ()
     {
@@ -37,6 +38,11 @@ class IdCardWidget : Box
     private void delete_button_cb ()
     {
        this.remove_id ();
+    }
+
+    private void details_button_cb ()
+    {
+       this.details_id ();
     }
 
     private void set_idcard_color ()
@@ -99,6 +105,7 @@ class IdCardWidget : Box
         hbutton_box.pack_end (send_button);
 
         delete_button.clicked.connect (delete_button_cb);
+        details_button.clicked.connect (details_button_cb);
 
         this.main_vbox = new VBox (false, 12);
         main_vbox.pack_start (table, true, true, 0);
