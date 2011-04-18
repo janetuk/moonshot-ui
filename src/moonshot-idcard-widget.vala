@@ -10,13 +10,35 @@ class IdCardWidget : Box
     public Button details_button { get; private set; default = null; }
     public Button send_button { get; private set; default = null; }
     private HButtonBox hbutton_box;
-    public EventBox event_box;
+    private EventBox event_box;
 
     private bool button_press_cb ()
     {
         this.hbutton_box.set_visible (!hbutton_box.get_visible ());
 
+        set_idcard_color ();
+
         return false;
+    }
+
+    private void set_idcard_color ()
+    {
+        var color = Gdk.Color ();
+
+        if (hbutton_box.get_visible () == false)
+        {
+            color.red = 65535;
+            color.green = 65535;
+            color.blue = 65535;
+        }
+        else
+        {
+            color.red = 33333;
+            color.green = 33333;
+            color.blue = 60000;
+        }
+        var state = this.get_state ();
+        this.event_box.modify_bg (state, color);
     }
 
     public IdCardWidget ()
@@ -68,5 +90,7 @@ class IdCardWidget : Box
 
         this.show_all ();
         this.hbutton_box.hide ();
+
+        set_idcard_color ();
     }
 }
