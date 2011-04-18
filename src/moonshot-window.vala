@@ -107,6 +107,7 @@ class MainWindow : Window
 
         id_card_widget.details_button.clicked.connect (details_button_clicked_cb);
         id_card_widget.delete_button.clicked.connect (remove_identity_cb);
+        id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
     }
 
     private void add_identity_cb ()

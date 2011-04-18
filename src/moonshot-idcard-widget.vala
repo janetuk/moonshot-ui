@@ -12,11 +12,23 @@ class IdCardWidget : Box
     private HButtonBox hbutton_box;
     private EventBox event_box;
 
+    public signal void expanded ();
+
+    public void collapse ()
+    {
+        this.hbutton_box.set_visible (false);
+
+        set_idcard_color ();
+    }
+
     private bool button_press_cb ()
     {
         this.hbutton_box.set_visible (!hbutton_box.get_visible ());
 
         set_idcard_color ();
+
+        if (hbutton_box.get_visible () == true)
+          this.expanded ();
 
         return false;
     }
