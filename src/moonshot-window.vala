@@ -106,7 +106,7 @@ class MainWindow : Window
         this.custom_vbox.pack_start (id_card_widget, false, false);
 
         id_card_widget.details_button.clicked.connect (details_button_clicked_cb);
-        id_card_widget.delete_button.clicked.connect (remove_identity_cb);
+        id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
     }
 
@@ -125,21 +125,24 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    private void remove_identity ()
+    private void remove_identity (IdCardWidget id_card_widget)
     {
+        custom_vbox.remove (id_card_widget);
     }
 
-    private void remove_identity_cb ()
+    private void remove_identity_cb (IdCardWidget id_card_widget)
     {
+        var id_card = id_card_widget.id_card;
+
         var dialog = new MessageDialog (null,
                                         DialogFlags.DESTROY_WITH_PARENT,
                                         MessageType.INFO,
                                         Gtk.ButtonsType.YES_NO,
-                                        _("Are you sure you want to delete this ID Card?"));
+                                        _("Are you sure you want to delete %s ID Card?"), id_card.issuer);
         var result = dialog.run ();
         switch (result) {
         case ResponseType.YES:
-            remove_identity ();
+            remove_identity (id_card_widget);
             break;
         default:
             break;
