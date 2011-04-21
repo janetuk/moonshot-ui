@@ -85,13 +85,33 @@ class MainWindow : Window
        show_details (id_card_widget.id_card);
     }
 
-    private void add_identity (AddIdentityDialog dialog)
+    private IdCard get_id_card_data (AddIdentityDialog dialog)
     {
         var id_card = new IdCard ();
 
         id_card.issuer = dialog.issuer;
         id_card.username = dialog.username;
         id_card.password = dialog.password;
+
+        var icon_theme = IconTheme.get_default ();
+        try
+        {
+            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
+                                                   48,
+                                                   IconLookupFlags.FORCE_SIZE);
+        }
+        catch (Error e)
+        {
+            id_card.pixbuf = null;
+            stdout.printf("Error: %s\n", e.message);
+        }
+
+        return id_card;
+    }
+
+    private void add_identity (AddIdentityDialog dialog)
+    {
+        var id_card = get_id_card_data (dialog);
 
         var id_card_widget = new IdCardWidget (id_card);
 

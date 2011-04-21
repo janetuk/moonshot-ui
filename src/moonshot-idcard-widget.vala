@@ -69,21 +69,7 @@ class IdCardWidget : Box
     {
         this.id_card = id_card;
 
-        Gdk.Pixbuf pixbuf;
-
-        var icon_theme = IconTheme.get_default ();
-        try
-        {
-            pixbuf = icon_theme.load_icon ("avatar-default",
-                                           48,
-                                           IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
-        var image = new Image.from_pixbuf (pixbuf);
+        var image = new Image.from_pixbuf (id_card.pixbuf);
 
         var issuer = Markup.printf_escaped ("<b>%s</b>", this.id_card.issuer);
         var services = Markup.printf_escaped ("<i>%s</i>", "Send Email, Connect to jabber");
