@@ -12,11 +12,15 @@ class MainWindow : Window
     private Entry username_entry;
     private Entry password_entry;
 
+    private ListStore listmodel;
+
     private enum Columns
     {
         IDCARD_COL,
         LOGO_COL,
-        NAME_COL,
+        ISSUER_COL,
+        USERNAME_COL,
+        PASSWORD_COL,
         N_COLUMNS
     }
 
@@ -27,6 +31,7 @@ class MainWindow : Window
         set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
 
         build_ui();
+        setup_identities_list();
         connect_signals();
     }
 
@@ -60,6 +65,15 @@ class MainWindow : Window
         // Continue processing this event, since the
         // text entry functionality needs to see it too.
         return false;
+    }
+
+    private void setup_identities_list ()
+    {
+        this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+                                                           typeof (Gdk.Pixbuf),
+                                                           typeof (string),
+                                                           typeof (string),
+                                                           typeof (string));
     }
 
     private void fill_details (IdCardWidget id_card_widget)
@@ -113,6 +127,8 @@ class MainWindow : Window
 
     private void add_identity (AddIdentityDialog dialog)
     {
+        TreeIter iter;
+
         var id_card = get_id_card_data (dialog);
 
         var id_card_widget = new IdCardWidget (id_card);
@@ -123,6 +139,14 @@ class MainWindow : Window
         id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
+
+        this.listmodel.append (out iter);
+        listmodel.set (iter,
+                       Columns.IDCARD_COL, id_card,
+                       Columns.LOGO_COL, id_card.pixbuf,
+                       Columns.ISSUER_COL, id_card.issuer,
+                       Columns.USERNAME_COL, id_card.username,
+                       Columns.PASSWORD_COL, id_card.password);
     }
 
     private void add_identity_cb ()
@@ -142,7 +166,26 @@ class MainWindow : Window
 
     private void remove_identity (IdCardWidget id_card_widget)
     {
+        TreeIter iter;
+        string issuer;
+
         custom_vbox.remove (id_card_widget);
+
+        if (listmodel.get_iter_first (out iter))
+        {
+            do
+            {
+                listmodel.get (iter,
+                               Columns.ISSUER_COL, out issuer);
+
+                if (id_card_widget.id_card.issuer == issuer)
+                {
+                    listmodel.remove (iter);
+                    break;
+                }
+            }
+            while (listmodel.iter_next (ref iter));
+        }
     }
 
     private void remove_identity_cb (IdCardWidget id_card_widget)
