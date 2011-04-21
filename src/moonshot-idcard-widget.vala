@@ -81,6 +81,7 @@ class IdCardWidget : Box
 
         var id_data_label = new Label (null);
         id_data_label.set_markup (text);
+        id_data_label.set_alignment ((float) 0, (float) 0.5);
 
         this.table = new Table (1, 2, false);
         table.attach_defaults (image, 0, 1, 0, 1);
