@@ -67,13 +67,17 @@ class IdCardWidget : Box
 
     public IdCardWidget (IdCard id_card)
     {
+        string services_text = "";
         this.id_card = id_card;
 
         var image = new Image.from_pixbuf (id_card.pixbuf);
 
         var issuer = Markup.printf_escaped ("<b>%s</b>", this.id_card.issuer);
-        var services = Markup.printf_escaped ("<i>%s</i>", "Send Email, Connect to jabber");
-        var text = issuer + "\n" + services;
+        foreach (string service in id_card.services)
+        {
+            services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
+        }
+        var text = issuer + "\n" + services_text;
 
         var id_data_label = new Label (null);
         id_data_label.set_markup (text);

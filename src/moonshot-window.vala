@@ -106,6 +106,8 @@ class MainWindow : Window
             stdout.printf("Error: %s\n", e.message);
         }
 
+        id_card.services = {"email","jabber","irc"};
+
         return id_card;
     }
 
