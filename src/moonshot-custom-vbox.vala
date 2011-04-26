@@ -28,6 +28,9 @@ class CustomVBox : VBox
         model.get (iter,
                    Columns.ISSUER_COL, out issuer);
 
+        if (issuer == null || this.search_text == null)
+            return false;
+
         issuer_casefold = issuer.casefold ();
         search_text_casefold = search_text.casefold ();
 
