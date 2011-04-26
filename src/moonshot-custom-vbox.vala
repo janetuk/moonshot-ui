@@ -5,6 +5,7 @@ class CustomVBox : VBox
     public IdCardWidget current_idcard { get; set; default = null; }
 
     private ListStore listmodel;
+    private TreeModelFilter filter;
 
     private enum Columns
     {
@@ -16,6 +17,25 @@ class CustomVBox : VBox
         N_COLUMNS
     }
 
+    private bool visible_func (TreeModel model, TreeIter iter)
+    {
+        string search_text;
+        string issuer;
+        string issuer_casefold;
+        string search_text_casefold;
+
+        model.get (iter,
+                   Columns.ISSUER_COL, out issuer);
+
+        issuer_casefold = issuer.casefold ();
+        search_text_casefold = search_text.casefold ();
+
+        if (issuer_casefold.contains (search_text_casefold))
+            return true;
+
+        return false;
+    }
+
     private void setup_identities_list ()
     {
        this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
@@ -23,6 +43,9 @@ class CustomVBox : VBox
                                                           typeof (string),
                                                           typeof (string),
                                                           typeof (string));
+      this.filter = new TreeModelFilter (listmodel, null);
+
+      filter.set_visible_func (visible_func);
     }
 
     public CustomVBox (bool homogeneous, int spacing)
