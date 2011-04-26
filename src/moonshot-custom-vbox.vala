@@ -7,6 +7,8 @@ class CustomVBox : VBox
     private ListStore listmodel;
     private TreeModelFilter filter;
 
+    private string search_text;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -19,7 +21,6 @@ class CustomVBox : VBox
 
     private bool visible_func (TreeModel model, TreeIter iter)
     {
-        string search_text;
         string issuer;
         string issuer_casefold;
         string search_text_casefold;
@@ -54,6 +55,13 @@ class CustomVBox : VBox
         this.set_spacing (spacing);
 
         setup_identities_list();
+    }
+
+    public void new_text_in_search_entry (string search_text)
+    {
+        this.search_text = search_text;
+
+        filter.refilter ();
     }
 
     public void receive_expanded_event (IdCardWidget id_card_widget)

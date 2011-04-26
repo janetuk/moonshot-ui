@@ -53,6 +53,8 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
 
+        this.custom_vbox.new_text_in_search_entry (search_entry.get_text ());
+
         this.vbox_rigth.set_visible (false);
         this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
