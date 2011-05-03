@@ -8,9 +8,12 @@ class IdentitiesManager : Object {
     {
         var key_file = new KeyFile ();
 
+        var path = get_data_dir ();
+        var filename = Path.build_filename (path, FILE_NAME);
+
         try
         {
-            key_file.load_from_file (FILE_NAME, KeyFileFlags.NONE);
+            key_file.load_from_file (filename, KeyFileFlags.NONE);
         }
         catch (Error e)
         {
@@ -54,7 +57,9 @@ class IdentitiesManager : Object {
 
         try
         {
-            FileUtils.set_contents (FILE_NAME, text, -1);
+            var path = get_data_dir ();
+            var filename = Path.build_filename (path, FILE_NAME);
+            FileUtils.set_contents (filename, text, -1);
         }
         catch (Error e)
         {
@@ -62,4 +67,17 @@ class IdentitiesManager : Object {
         }
     }
 
+    private string get_data_dir()
+    {
+        string path;
+
+        path = Path.build_filename (Environment.get_user_data_dir (),
+                                    Config.PACKAGE_TARNAME);
+        if (!FileUtils.test (path, FileTest.EXISTS))
+        {
+            DirUtils.create (path, 0700);
+        }
+
+        return path;
+    }
 }
