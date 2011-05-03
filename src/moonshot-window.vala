@@ -177,9 +177,19 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    private void remove_identity (IdCardWidget id_card_widget)
+    private void remove_id_card_widget (IdCardWidget id_card_widget)
     {
         this.custom_vbox.remove_id_card_widget (id_card_widget);
+    }
+
+    private void remove_identity (IdCardWidget id_card_widget)
+    {
+        var id_card = id_card_widget.id_card;
+
+        this.identities_manager.id_card_list.remove (id_card);
+        this.identities_manager.store_id_cards ();
+
+        remove_id_card_widget (id_card_widget);
     }
 
     private void remove_identity_cb (IdCardWidget id_card_widget)
