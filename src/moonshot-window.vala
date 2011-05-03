@@ -13,6 +13,7 @@ class MainWindow : Window
     private Entry password_entry;
 
     private ListStore listmodel;
+    private TreeModelFilter filter;
 
     private IdentitiesManager identities_manager;
 
@@ -38,6 +39,41 @@ class MainWindow : Window
         connect_signals();
     }
 
+    private bool visible_func (TreeModel model, TreeIter iter)
+    {
+        string issuer;
+        string search_text;
+        string issuer_casefold;
+        string search_text_casefold;
+
+        model.get (iter,
+                   Columns.ISSUER_COL, out issuer);
+        search_text = this.search_entry.get_text ();
+
+        if (issuer == null || search_text == null)
+            return false;
+
+        issuer_casefold = issuer.casefold ();
+        search_text_casefold = search_text.casefold ();
+
+        if (issuer_casefold.contains (search_text_casefold))
+            return true;
+
+        return false;
+    }
+
+    private void setup_identities_list ()
+    {
+       this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+                                                          typeof (Gdk.Pixbuf),
+                                                          typeof (string),
+                                                          typeof (string),
+                                                          typeof (string));
+      this.filter = new TreeModelFilter (listmodel, null);
+
+      filter.set_visible_func (visible_func);
+    }
+
     private void search_entry_icon_press_cb (EntryIconPosition pos, Gdk.Event event)
     {
 	if (pos == EntryIconPosition.PRIMARY)
@@ -52,11 +88,11 @@ class MainWindow : Window
 
     private void search_entry_text_changed_cb ()
     {
+        this.filter.refilter ();
+
         var has_text = this.search_entry.get_text_length () > 0;
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
-
-        this.custom_vbox.new_text_in_search_entry (search_entry.get_text ());
 
         this.vbox_rigth.set_visible (false);
         this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -70,15 +106,6 @@ class MainWindow : Window
         // Continue processing this event, since the
         // text entry functionality needs to see it too.
         return false;
-    }
-
-    private void setup_identities_list ()
-    {
-        this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
-                                                           typeof (Gdk.Pixbuf),
-                                                           typeof (string),
-                                                           typeof (string),
-                                                           typeof (string));
     }
 
     private void load_id_cards ()
@@ -140,8 +167,45 @@ class MainWindow : Window
         return id_card;
     }
 
+    private void add_id_card_data (IdCard id_card)
+    {
+        TreeIter iter;
+
+        this.listmodel.append (out iter);
+        listmodel.set (iter,
+                       Columns.IDCARD_COL, id_card,
+                       Columns.LOGO_COL, id_card.pixbuf,
+                       Columns.ISSUER_COL, id_card.issuer,
+                       Columns.USERNAME_COL, id_card.username,
+                       Columns.PASSWORD_COL, id_card.password);
+    }
+
+    private void remove_id_card_data (IdCard id_card)
+    {
+        TreeIter iter;
+        string issuer;
+
+        if (listmodel.get_iter_first (out iter))
+        {
+            do
+            {
+                listmodel.get (iter,
+                               Columns.ISSUER_COL, out issuer);
+
+                if (id_card.issuer == issuer)
+                {
+                    listmodel.remove (iter);
+                    break;
+                }
+            }
+            while (listmodel.iter_next (ref iter));
+        }
+    }
+
     private void add_id_card_widget (IdCard id_card)
     {
+        add_id_card_data (id_card);
+
         var id_card_widget = new IdCardWidget (id_card);
 
         this.custom_vbox.add_id_card_widget (id_card_widget);
@@ -179,6 +243,8 @@ class MainWindow : Window
 
     private void remove_id_card_widget (IdCardWidget id_card_widget)
     {
+        remove_id_card_data (id_card_widget.id_card);
+
         this.custom_vbox.remove_id_card_widget (id_card_widget);
     }
 
