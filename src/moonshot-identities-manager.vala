@@ -50,9 +50,16 @@ class IdentitiesManager : Object {
             key_file.set_string_list (id_card.issuer, "Services", id_card.services);
         }
 
-        var output = FileStream.open (FILE_NAME, "w+");
-        output.puts (key_file.to_data ());
-        key_file.to_data ();
+        var text = key_file.to_data (null);
+
+        try
+        {
+            FileUtils.set_contents (FILE_NAME, text, -1);
+        }
+        catch (Error e)
+        {
+            stdout.printf ("Error:  %s\n", e.message);
+        }
     }
 
 }
