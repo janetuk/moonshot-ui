@@ -89,6 +89,7 @@ class MainWindow : Window
     private void search_entry_text_changed_cb ()
     {
         this.filter.refilter ();
+        redraw_id_card_widgets ();
 
         var has_text = this.search_entry.get_text_length () > 0;
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
@@ -114,6 +115,7 @@ class MainWindow : Window
 
         foreach (IdCard id_card in identities_manager.id_card_list)
         {
+            add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
     }
@@ -204,8 +206,6 @@ class MainWindow : Window
 
     private void add_id_card_widget (IdCard id_card)
     {
-        add_id_card_data (id_card);
-
         var id_card_widget = new IdCardWidget (id_card);
 
         this.custom_vbox.add_id_card_widget (id_card_widget);
@@ -223,6 +223,7 @@ class MainWindow : Window
         this.identities_manager.id_card_list.prepend (id_card);
         this.identities_manager.store_id_cards ();
 
+        add_id_card_data (id_card);
         add_id_card_widget (id_card);
     }
 
@@ -256,6 +257,28 @@ class MainWindow : Window
         this.identities_manager.store_id_cards ();
 
         remove_id_card_widget (id_card_widget);
+    }
+
+    private void redraw_id_card_widgets ()
+    {
+        TreeIter iter;
+        IdCard id_card;
+
+        var children = this.custom_vbox.get_children ();
+        foreach (var id_card_widget in children)
+            id_card_widget.destroy();
+
+        if (filter.get_iter_first (out iter))
+        {
+            do
+            {
+                filter.get (iter,
+                            Columns.IDCARD_COL, out id_card);
+
+                add_id_card_widget (id_card);
+            }
+            while (filter.iter_next (ref iter));
+        }
     }
 
     private void remove_identity_cb (IdCardWidget id_card_widget)
