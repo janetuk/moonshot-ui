@@ -19,6 +19,7 @@ src_moonshot_SOURCES = \
         src/moonshot-add-dialog.vala \
         src/moonshot-idcard-widget.vala \
         src/moonshot-custom-vbox.vala \
+	src/moonshot-identities-manager.vala \
         src/moonshot-window.vala
 
 src_moonshot_LDADD = \
