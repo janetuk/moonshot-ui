@@ -38,11 +38,11 @@ class IdentitiesManager : Object {
         }
     }
 
-    public void store_id_cards (SList<IdCard> id_card_list)
+    public void store_id_cards ()
     {
         var key_file = new KeyFile ();
 
-        foreach (IdCard id_card in id_card_list)
+        foreach (IdCard id_card in this.id_card_list)
         {
             key_file.set_string (id_card.issuer, "Issuer", id_card.issuer);
             key_file.set_string (id_card.issuer, "Username", id_card.username);

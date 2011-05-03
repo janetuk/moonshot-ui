@@ -14,6 +14,8 @@ class MainWindow : Window
 
     private ListStore listmodel;
 
+    private IdentitiesManager identities_manager;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -81,7 +83,7 @@ class MainWindow : Window
 
     private void load_id_cards ()
     {
-        var identities_manager = new IdentitiesManager ();
+        this.identities_manager = new IdentitiesManager ();
 
         foreach (IdCard id_card in identities_manager.id_card_list)
         {
@@ -153,6 +155,9 @@ class MainWindow : Window
     private void add_identity (AddIdentityDialog dialog)
     {
         var id_card = get_id_card_data (dialog);
+
+        this.identities_manager.id_card_list.prepend (id_card);
+        this.identities_manager.store_id_cards ();
 
         add_id_card_widget (id_card);
     }
