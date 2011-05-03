@@ -32,6 +32,7 @@ class MainWindow : Window
 
         build_ui();
         setup_identities_list();
+        load_id_cards();
         connect_signals();
     }
 
@@ -76,6 +77,16 @@ class MainWindow : Window
                                                            typeof (string),
                                                            typeof (string),
                                                            typeof (string));
+    }
+
+    private void load_id_cards ()
+    {
+        var identities_manager = new IdentitiesManager ();
+
+        foreach (IdCard id_card in identities_manager.id_card_list)
+        {
+            add_id_card_widget (id_card);
+        }
     }
 
     private void fill_details (IdCardWidget id_card_widget)
@@ -127,10 +138,8 @@ class MainWindow : Window
         return id_card;
     }
 
-    private void add_identity (AddIdentityDialog dialog)
+    private void add_id_card_widget (IdCard id_card)
     {
-        var id_card = get_id_card_data (dialog);
-
         var id_card_widget = new IdCardWidget (id_card);
 
         this.custom_vbox.add_id_card_widget (id_card_widget);
@@ -139,6 +148,13 @@ class MainWindow : Window
         id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
+    }
+
+    private void add_identity (AddIdentityDialog dialog)
+    {
+        var id_card = get_id_card_data (dialog);
+
+        add_id_card_widget (id_card);
     }
 
     private void add_identity_cb ()
