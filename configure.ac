@@ -22,7 +22,7 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.26
         gobject-2.0 >= 2.26
-        gtk+-2.0 >= 2.22
+        gtk+-2.0 >= 2.20
 ])
 
 # i18n stuff
