@@ -80,4 +80,64 @@ class IdentitiesManager : Object {
 
         return path;
     }
+
+    public IdCard? load_gss_eap_id_file ()
+    {
+        IdCard id_card = new IdCard();
+        string text;
+        string id_card_data[2];
+
+        var filename = Path.build_filename (Environment.get_home_dir (),
+                                            ".gss_eap_id");
+        try {
+            FileUtils.get_contents (filename, out text, null);
+        }
+        catch (Error e)
+        {
+            return null;
+        }
+
+        if (text == "")
+            return null;
+
+        id_card_data = text.split ("\n", 2);
+        id_card.issuer = "Issuer";
+        id_card.username = id_card_data[0];
+        id_card.password = id_card_data[1];
+        id_card.services = {"email","jabber","irc"};
+
+        var icon_theme = Gtk.IconTheme.get_default ();
+        try
+        {
+            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
+                                                   48,
+                                                   Gtk.IconLookupFlags.FORCE_SIZE);
+        }
+        catch (Error e)
+        {
+            id_card.pixbuf = null;
+            stdout.printf("Error: %s\n", e.message);
+        }
+
+        return id_card;
+    }
+
+    public void store_gss_eap_id_file (IdCard ?id_card)
+    {
+        string text = "";
+
+        if (id_card != null)
+            text = id_card.username + "\n" + id_card.password;
+
+        var filename = Path.build_filename (Environment.get_home_dir (),
+                                            ".gss_eap_id");
+        try
+        {
+            FileUtils.set_contents (filename, text, -1);
+        }
+        catch (Error e)
+        {
+            stdout.printf ("Error:  %s\n", e.message);
+        }
+    }
 }

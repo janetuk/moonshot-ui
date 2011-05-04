@@ -35,7 +35,8 @@ class MainWindow : Window
 
         build_ui();
         setup_identities_list();
-        load_id_cards();
+        load_gss_eap_id_file();
+        //load_id_cards();
         connect_signals();
     }
 
@@ -107,6 +108,20 @@ class MainWindow : Window
         // Continue processing this event, since the
         // text entry functionality needs to see it too.
         return false;
+    }
+
+    private void load_gss_eap_id_file ()
+    {
+        IdCard id_card;
+
+        this.identities_manager = new IdentitiesManager ();
+
+        id_card = this.identities_manager.load_gss_eap_id_file ();
+        if (id_card != null)
+        {
+            add_id_card_data (id_card);
+            add_id_card_widget (id_card);
+        }
     }
 
     private void load_id_cards ()
@@ -225,6 +240,7 @@ class MainWindow : Window
 
         this.identities_manager.id_card_list.prepend (id_card);
         this.identities_manager.store_id_cards ();
+        this.identities_manager.store_gss_eap_id_file (id_card);
 
         add_id_card_data (id_card);
         add_id_card_widget (id_card);
@@ -258,6 +274,7 @@ class MainWindow : Window
 
         this.identities_manager.id_card_list.remove (id_card);
         this.identities_manager.store_id_cards ();
+        this.identities_manager.store_gss_eap_id_file (null);
 
         remove_id_card_widget (id_card_widget);
     }
