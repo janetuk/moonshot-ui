@@ -148,6 +148,9 @@ class MainWindow : Window
         var id_card = new IdCard ();
 
         id_card.issuer = dialog.issuer;
+        id_card.issuer = "Issuer"; //FIXME
+        if (id_card.issuer == "")
+            id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
 
