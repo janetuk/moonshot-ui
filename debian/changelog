@@ -1,0 +1,5 @@
+moonshot-ui (0.0.1+20110504-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 04 May 2011 13:28:57 -0400
