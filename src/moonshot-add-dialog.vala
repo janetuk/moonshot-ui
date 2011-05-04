@@ -24,7 +24,11 @@ class AddIdentityDialog : Dialog
         this.set_modal (true);
 
         this.add_buttons (_("Add ID Card"), ResponseType.OK,
+#if VALA_0_12
                           Stock.CANCEL, ResponseType.CANCEL);
+#else
+                          STOCK_CANCEL, ResponseType.CANCEL);
+#endif
 
         var content_area = this.get_content_area ();
         ((Box) content_area).set_spacing (12);
