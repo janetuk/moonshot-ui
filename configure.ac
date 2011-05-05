@@ -20,8 +20,8 @@ AM_PROG_VALAC([0.9])
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
-        glib-2.0 >= 2.26
-        gobject-2.0 >= 2.26
+        glib-2.0 >= 2.24
+        gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
 ])
 
