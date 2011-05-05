@@ -90,6 +90,9 @@ class IdCardWidget : Box
         this.delete_button = new Button.with_label ("Delete");
         this.details_button = new Button.with_label ("View details");
         this.send_button = new Button.with_label ("Send");
+        set_atk_name_description (delete_button, "Delete", "Delete this ID Card");
+        set_atk_name_description (details_button, "Details", "View the details of this ID Card");
+        set_atk_name_description (send_button, "Send", "Send this ID Card");
         this.hbutton_box = new HButtonBox ();
         hbutton_box.pack_end (delete_button);
         hbutton_box.pack_end (details_button);
@@ -112,5 +115,13 @@ class IdCardWidget : Box
         this.hbutton_box.hide ();
 
         set_idcard_color ();
+    }
+
+    private void set_atk_name_description (Widget widget, string name, string description)
+    {
+       var atk_widget = widget.get_accessible ();
+
+       atk_widget.set_name (name);
+       atk_widget.set_description (description);
     }
 }
