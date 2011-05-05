@@ -22,12 +22,12 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.26
         gobject-2.0 >= 2.26
-        gtk+-2.0 >= 2.22
+        gtk+-2.0 >= 2.20
 ])
 
 # i18n stuff
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.18.1])
+AM_GNU_GETTEXT_VERSION([0.17])
 
 AC_SUBST([GETTEXT_PACKAGE],[PACKAGE_TARNAME])
 AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package name.])

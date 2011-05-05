@@ -409,9 +409,17 @@ class MainWindow : Window
         label_make_bold (services_vbox_title);
         services_vbox_title.set_alignment (0, (float) 0.5);
         var email_label = new Label (_("Email"));
+#if VALA_0_12
         var email_remove_button = new Button.from_stock (Stock.REMOVE);
+#else
+        var email_remove_button = new Button.from_stock (STOCK_REMOVE);
+#endif
         var im_label = new Label (_("IM"));
+#if VALA_0_12
         var im_remove_button = new Button.from_stock (Stock.REMOVE);
+#else
+        var im_remove_button = new Button.from_stock (STOCK_REMOVE);
+#endif
         var services_table = new Table (2, 2, false);
         services_table.set_col_spacings (10);
         services_table.set_row_spacings (10);
