@@ -163,7 +163,6 @@ class MainWindow : Window
         var id_card = new IdCard ();
 
         id_card.issuer = dialog.issuer;
-        id_card.issuer = "Issuer"; //FIXME
         if (id_card.issuer == "")
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
@@ -339,6 +338,7 @@ class MainWindow : Window
     {
         this.search_entry = new Entry();
 
+        set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
         this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
                                                    "edit-find-symbolic");
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
@@ -368,6 +368,7 @@ class MainWindow : Window
 
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");
+        set_atk_name_description (button_add, _("Add"), _("Add new ID Card"));
         button_add.clicked.connect (add_identity_cb);
         var button_toolbar = new Toolbar ();
         button_toolbar.insert (button_add, 0);
@@ -449,6 +450,14 @@ class MainWindow : Window
 
         main_vbox.show_all();
         this.vbox_rigth.hide ();
+    }
+
+    private void set_atk_name_description (Widget widget, string name, string description)
+    {
+       var atk_widget = widget.get_accessible ();
+
+       atk_widget.set_name (name);
+       atk_widget.set_description (description);
     }
 
     private void connect_signals()
