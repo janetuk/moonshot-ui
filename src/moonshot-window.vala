@@ -338,6 +338,7 @@ class MainWindow : Window
     {
         this.search_entry = new Entry();
 
+        set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
         this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
                                                    "edit-find-symbolic");
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
