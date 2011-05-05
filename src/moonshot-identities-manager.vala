@@ -101,9 +101,10 @@ class IdentitiesManager : Object {
             return null;
 
         id_card_data = text.split ("\n", 2);
-        id_card.issuer = "Issuer";
-        id_card.username = id_card_data[0];
         id_card.password = id_card_data[1];
+        id_card_data = id_card_data[0].split ("@", 2);
+        id_card.username = id_card_data[0];
+        id_card.issuer = id_card_data[1];
         id_card.services = {"email","jabber","irc"};
 
         var icon_theme = Gtk.IconTheme.get_default ();
@@ -127,7 +128,7 @@ class IdentitiesManager : Object {
         string text = "";
 
         if (id_card != null)
-            text = id_card.username + "\n" + id_card.password;
+            text = id_card.username + "@" + id_card.issuer + "\n" + id_card.password;
 
         var filename = Path.build_filename (Environment.get_home_dir (),
                                             ".gss_eap_id");
