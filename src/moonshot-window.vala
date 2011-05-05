@@ -367,6 +367,7 @@ class MainWindow : Window
 
         var button_add = new ToolButton (null, null);
         button_add.set_icon_name ("list-add-symbolic");
+        set_atk_name_description (button_add, _("Add"), _("Add new ID Card"));
         button_add.clicked.connect (add_identity_cb);
         var button_toolbar = new Toolbar ();
         button_toolbar.insert (button_add, 0);
@@ -448,6 +449,14 @@ class MainWindow : Window
 
         main_vbox.show_all();
         this.vbox_rigth.hide ();
+    }
+
+    private void set_atk_name_description (Widget widget, string name, string description)
+    {
+       var atk_widget = widget.get_accessible ();
+
+       atk_widget.set_name (name);
+       atk_widget.set_description (description);
     }
 
     private void connect_signals()
