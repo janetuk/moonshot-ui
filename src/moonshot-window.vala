@@ -17,6 +17,8 @@ class MainWindow : Window
 
     private IdentitiesManager identities_manager;
 
+    private MoonshotServer dbus_server;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -38,6 +40,7 @@ class MainWindow : Window
         load_gss_eap_id_file();
         //load_id_cards();
         connect_signals();
+        init_dbus_server();
     }
 
     private bool visible_func (TreeModel model, TreeIter iter)
@@ -463,6 +466,28 @@ class MainWindow : Window
     private void connect_signals()
     {
         this.destroy.connect (Gtk.main_quit);
+    }
+
+    private void init_dbus_server ()
+    {
+        try {
+            var conn = DBus.Bus.get (DBus.BusType.SESSION);
+            dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
+                                                       "/org/freedesktop/DBus",
+                                                       "org.freedesktop.DBus");
+
+            // try to register service in session bus
+            uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
+            assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
+
+            this.dbus_server = new MoonshotServer ();
+            conn.register_object ("/org/janet/moonshot", dbus_server);
+
+        }
+        catch (DBus.Error e)
+        {
+            stderr.printf ("%s\n", e.message);
+        }
     }
 
     public static int main(string[] args)

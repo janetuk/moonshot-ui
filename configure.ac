@@ -23,6 +23,7 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
+        dbus-glib-1
 ])
 
 # i18n stuff
