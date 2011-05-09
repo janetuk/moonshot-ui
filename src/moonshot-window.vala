@@ -19,6 +19,8 @@ class MainWindow : Window
 
     private MoonshotServer dbus_server;
 
+    public IdCardWidget selected_id_card_widget;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -232,6 +234,7 @@ class MainWindow : Window
 
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
+        id_card_widget.send_id.connect (send_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
     }
@@ -321,6 +324,11 @@ class MainWindow : Window
             break;
         }
         dialog.destroy ();
+    }
+
+    public void send_identity_cb (IdCardWidget id_card_widget)
+    {
+        this.selected_id_card_widget = id_card_widget;
     }
 
     private void label_make_bold (Label label)
@@ -480,7 +488,7 @@ class MainWindow : Window
             uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
             assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
 
-            this.dbus_server = new MoonshotServer ();
+            this.dbus_server = new MoonshotServer (this);
             conn.register_object ("/org/janet/moonshot", dbus_server);
 
         }
