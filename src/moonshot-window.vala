@@ -21,6 +21,8 @@ class MainWindow : Window
 
     public IdCardWidget selected_id_card_widget;
 
+    private SourceFunc callback;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -326,9 +328,15 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
+    public void set_callback (SourceFunc callback)
+    {
+        this.callback = callback;
+    }
+
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
         this.selected_id_card_widget = id_card_widget;
+        this.callback ();
     }
 
     private void label_make_bold (Label label)

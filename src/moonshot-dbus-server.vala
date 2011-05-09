@@ -14,11 +14,14 @@ public class MoonshotServer : Object {
         return counter++;
     }
 
-    public string[] get_identity (string identity,
+    public async string[] get_identity (string identity,
                                   string password,
                                   string service)
     {
         string[3] information = new string[3];
+
+        main_window.set_callback (get_identity.callback);
+        yield;
 
         var id_card = this.main_window.selected_id_card_widget.id_card;
 
