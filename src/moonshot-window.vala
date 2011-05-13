@@ -8,6 +8,7 @@ class MainWindow : Window
     private Entry search_entry;
     private VBox vbox_rigth;
     private CustomVBox custom_vbox;
+    private VBox services_internal_vbox;
 
     private Entry username_entry;
     private Entry password_entry;
@@ -147,6 +148,11 @@ class MainWindow : Window
        var id_card = id_card_widget.id_card;
        this.username_entry.set_text (id_card.username);
        this.password_entry.set_text (id_card.password);
+
+       var children = this.services_internal_vbox.get_children ();
+       foreach (var hbox in children)
+           hbox.destroy();
+       fill_services_vbox (id_card_widget.id_card);
     }
 
     private void show_details (IdCard id_card)
@@ -353,6 +359,24 @@ class MainWindow : Window
         label.modify_font (font_desc);
     }
 
+    private void fill_services_vbox (IdCard id_card)
+    {
+        foreach (string service in id_card.services)
+        {
+            var label = new Label (service);
+#if VALA_0_12
+            var remove_button = new Button.from_stock (Stock.REMOVE);
+#else
+            var remove_button = new Button.from_stock (STOCK_REMOVE);
+#endif
+            var hbox = new HBox (false, 6);
+            hbox.pack_start (label, false, true, 0);
+            hbox.pack_start (remove_button, false, true, 0);
+            this.services_internal_vbox.pack_start (hbox, false, true, 0);
+        }
+        this.services_internal_vbox.show_all ();
+    }
+
     private void build_ui()
     {
         this.search_entry = new Entry();
@@ -428,28 +452,10 @@ class MainWindow : Window
         var services_vbox_title = new Label (_("Services:"));
         label_make_bold (services_vbox_title);
         services_vbox_title.set_alignment (0, (float) 0.5);
-        var email_label = new Label (_("Email"));
-#if VALA_0_12
-        var email_remove_button = new Button.from_stock (Stock.REMOVE);
-#else
-        var email_remove_button = new Button.from_stock (STOCK_REMOVE);
-#endif
-        var im_label = new Label (_("IM"));
-#if VALA_0_12
-        var im_remove_button = new Button.from_stock (Stock.REMOVE);
-#else
-        var im_remove_button = new Button.from_stock (STOCK_REMOVE);
-#endif
-        var services_table = new Table (2, 2, false);
-        services_table.set_col_spacings (10);
-        services_table.set_row_spacings (10);
-        services_table.attach_defaults (email_label, 0, 1, 0, 1);
-        services_table.attach_defaults (email_remove_button, 1, 2, 0, 1);
-        services_table.attach_defaults (im_label, 0, 1, 1, 2);
-        services_table.attach_defaults (im_remove_button, 1, 2, 1, 2);
         var services_vbox_alignment = new Alignment (0, 0, 0, 0);
         services_vbox_alignment.set_padding (0, 0, 12, 0);
-        services_vbox_alignment.add (services_table);
+        this.services_internal_vbox = new VBox (true, 6);
+        services_vbox_alignment.add (services_internal_vbox);
         var services_vbox = new VBox (false, 6);
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
