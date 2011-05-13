@@ -361,6 +361,14 @@ class MainWindow : Window
 
     private void fill_services_vbox (IdCard id_card)
     {
+        int i = 0;
+        var n_columns = id_card.services.length;
+
+        var services_table = new Table (n_columns, 2, false);
+        services_table.set_col_spacings (10);
+        services_table.set_row_spacings (10);
+        this.services_internal_vbox.add (services_table);
+
         foreach (string service in id_card.services)
         {
             var label = new Label (service);
@@ -369,10 +377,9 @@ class MainWindow : Window
 #else
             var remove_button = new Button.from_stock (STOCK_REMOVE);
 #endif
-            var hbox = new HBox (false, 6);
-            hbox.pack_start (label, false, true, 0);
-            hbox.pack_start (remove_button, false, true, 0);
-            this.services_internal_vbox.pack_start (hbox, false, true, 0);
+            services_table.attach_defaults (label, 0, 1, i, i+1);
+            services_table.attach_defaults (remove_button, 1, 2, i, i+1);
+            i++;
         }
         this.services_internal_vbox.show_all ();
     }
