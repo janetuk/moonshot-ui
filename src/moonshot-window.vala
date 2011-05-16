@@ -372,6 +372,7 @@ class MainWindow : Window
         foreach (string service in id_card.services)
         {
             var label = new Label (service);
+            label.set_alignment (0, (float) 0.5);
 #if VALA_0_12
             var remove_button = new Button.from_stock (Stock.REMOVE);
 #else
