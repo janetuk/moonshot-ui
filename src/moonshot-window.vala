@@ -403,6 +403,39 @@ class MainWindow : Window
 
     private void on_about_action ()
     {
+        string[] authors = {
+            "Javier Jardón <jjardon@codethink.co.uk>",
+            null
+        };
+
+        const string copyright = "Copyright 2011 JANET";
+
+        const string license =
+"
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+";
+
+        Gtk.show_about_dialog (this,
+            "comments", _("Moonshot project UI"),
+            "copyright", copyright,
+            "website", "http://www.project-moonshot.org/",
+            "license", license,
+            "website-label", _("Visit the Moonshot project web site"),
+            "authors", authors,
+            "translator-credits", _("translator-credits"),
+            null
+        );
     }
 
     private Gtk.ActionEntry[] create_actions() {
