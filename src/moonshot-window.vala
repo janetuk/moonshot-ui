@@ -19,7 +19,7 @@ class MainWindow : Window
 
     private IdentitiesManager identities_manager;
 
-    private MoonshotServer dbus_server;
+    private MoonshotServer ipc_server;
 
     public IdCardWidget selected_id_card_widget;
 
@@ -61,7 +61,7 @@ class MainWindow : Window
         load_gss_eap_id_file();
         //load_id_cards();
         connect_signals();
-        init_dbus_server();
+        init_ipc_server();
     }
 
     private bool visible_func (TreeModel model, TreeIter iter)
@@ -617,8 +617,15 @@ class MainWindow : Window
         this.destroy.connect (Gtk.main_quit);
     }
 
-    private void init_dbus_server ()
+    private void init_ipc_server ()
     {
+#if IPC_MSRPC
+        /* Errors will currently be sent via g_log - ie. to an
+         * obtrusive message box, on Windows
+         */
+        this.ipc_server = MoonshotServer.get_instance ();
+        MoonshotServer.start (this);
+#else
         try {
             var conn = DBus.Bus.get (DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
@@ -629,14 +636,15 @@ class MainWindow : Window
             uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
             assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
 
-            this.dbus_server = new MoonshotServer (this);
-            conn.register_object ("/org/janet/moonshot", dbus_server);
+            this.ipc_server = new MoonshotServer (this);
+            conn.register_object ("/org/janet/moonshot", ipc_server);
 
         }
         catch (DBus.Error e)
         {
             stderr.printf ("%s\n", e.message);
         }
+#endif
     }
 
     public static int main(string[] args)

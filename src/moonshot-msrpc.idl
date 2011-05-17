@@ -1,0 +1,20 @@
+[
+    uuid(15aea4d8-222c-4b42-9225-63a7277811ae),
+    version(1.0)
+]
+interface moonshot
+{
+    int moonshot_ping ([in, string] const char *message);
+
+    /* The DBus API returns the 3 output parameters as an array. MSRPC
+     * and Vala combine to make this very difficult; easier to use
+     * output parameters.
+     */
+    void moonshot_get_identity ([in, string] const char *in_identity,
+                                [in, string] const char *in_password,
+                                [in, string] const char *in_service,
+                                [out, string] char **out_identity,
+                                [out, string] char **out_password,
+                                [out, string] char **out_service);
+}
+

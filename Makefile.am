@@ -2,8 +2,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = po
 
-bin_PROGRAMS = src/moonshot src/dbus-client
-
+bin_PROGRAMS = src/moonshot
 
 AM_CPPFLAGS = \
 	-include config.h \
@@ -12,22 +11,57 @@ AM_CPPFLAGS = \
 
 AM_VALAFLAGS = \
 	config.vapi \
-	--pkg gtk+-2.0 --pkg dbus-glib-1
+	--pkg gtk+-2.0
 
 src_moonshot_SOURCES = \
         src/moonshot-id.vala \
         src/moonshot-add-dialog.vala \
         src/moonshot-idcard-widget.vala \
         src/moonshot-custom-vbox.vala \
-	src/moonshot-identities-manager.vala \
-        src/moonshot-dbus-server.vala \
+        src/moonshot-identities-manager.vala \
         src/moonshot-window.vala
-
-src_dbus_client_SOURCES = \
-        src/dbus-client.vala
 
 src_moonshot_LDADD = \
         $(moonshot_LIBS)
 
+if IPC_MSRPC
+
+AM_CPPFLAGS += -Isrc
+
+AM_VALAFLAGS += \
+	--pkg msrpc-1.0 \
+	--define=IPC_MSRPC
+
+noinst_HEADERS = src/moonshot-msrpc.h
+
+src_moonshot_SOURCES += \
+        src/moonshot-msrpc-server.vala \
+        src/moonshot-msrpc_s.c \
+        src/moonshot-msrpc.vapi
+
+BUILT_SOURCES = src/moonshot-msrpc.h src/moonshot-msrpc_s.c src/moonshot-msrpc_c.c
+
+DISTCLEANFILES = ${BUILT_SOURCES}
+
+src/moonshot-msrpc.h: src/moonshot-msrpc.idl src/moonshot-msrpc.acf
+	${AM_V_GEN} ${MIDL_WRAPPER} -o src -m "${MIDL}" $^
+
+src/moonshot-msrpc_s.c: src/moonshot-msrpc.h
+
+else
+
+# IPC_DBUS
+
+AM_VALAFLAGS += --pkg dbus-glib-1
+
+src_moonshot_SOURCES += src/moonshot-dbus-server.vala
+
+bin_PROGRAMS += src/dbus-client
+
+src_dbus_client_SOURCES = \
+        src/dbus-client.vala
+
 src_dbus_client_LDADD = \
         $(moonshot_LIBS)
+
+endif

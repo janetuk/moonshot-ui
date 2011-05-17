@@ -17,13 +17,43 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
+# Platform-specific checks
+AC_CANONICAL_HOST
+
+case "$host" in
+  *-*-mingw*)
+    AC_PATH_MSRPC_MINGW([0.1.0], :,
+      AC_MSG_ERROR([
+*** msrpc-mingw 0.1.0 or better is required.]))
+
+
+    AC_PATH_PROG([MIDL], [midl], no)
+    if test "$MIDL" = "no"; then
+       AC_MSG_ERROR([
+*** Could not find the Microsoft interface compiler MIDL.EXE.
+*** This program is available as part of the MS Windows SDK, in
+*** the Win32 Development Tools package.])
+    fi
+
+    IPC="msrpc-glib2-1.0"
+    ;;
+  *)
+    IPC="dbus-glib"
+    ;;
+esac
+
+AC_SUBST(MIDL)
+
+AM_CONDITIONAL([IPC_MSRPC], [test "$IPC" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$IPC" = "dbus-glib"])
+
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
-        dbus-glib-1
+        $IPC
 ])
 
 # i18n stuff
