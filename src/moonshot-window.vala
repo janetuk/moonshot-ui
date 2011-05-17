@@ -39,6 +39,7 @@ class MainWindow : Window
 "
 <menubar name='MenuBar'>
         <menu name='FileMenu' action='FileMenuAction'>
+            <menuitem name='AddIdCard' action='AddIdCardAction' />
             <separator />
             <menuitem name='Quit' action='QuitAction' />
         </menu>
@@ -412,7 +413,13 @@ class MainWindow : Window
                                      N_("_File"),
                                      null, null, null };
         actions += filemenu;
-
+        Gtk.ActionEntry add = { "AddIdCardAction",
+                                Stock.ADD,
+                                N_("Add ID Card"),
+                                null,
+                                N_("Add a new ID Card"),
+                                add_identity_cb };
+        actions += add;
         Gtk.ActionEntry quit = { "QuitAction",
                                  Stock.QUIT,
                                  N_("Quit"),
@@ -488,17 +495,9 @@ class MainWindow : Window
         scroll.set_shadow_type (ShadowType.IN);
         scroll.add_with_viewport (viewport);
 
-        var button_add = new ToolButton (null, null);
-        button_add.set_icon_name ("list-add-symbolic");
-        set_atk_name_description (button_add, _("Add"), _("Add new ID Card"));
-        button_add.clicked.connect (add_identity_cb);
-        var button_toolbar = new Toolbar ();
-        button_toolbar.insert (button_add, 0);
-
         var vbox_left = new VBox (false, 0);
         vbox_left.pack_start (search_entry, false, false, 6);
         vbox_left.pack_start (scroll, true, true, 0);
-        vbox_left.pack_start (button_toolbar, false, false, 0);
         vbox_left.set_size_request (WINDOW_WIDTH, 0);
 
         var login_vbox_title = new Label (_("Login: "));
