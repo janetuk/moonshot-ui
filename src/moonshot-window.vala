@@ -5,6 +5,7 @@ class MainWindow : Window
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
 
+    private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private VBox vbox_rigth;
     private CustomVBox custom_vbox;
@@ -33,6 +34,20 @@ class MainWindow : Window
         PASSWORD_COL,
         N_COLUMNS
     }
+
+    private const string layout =
+"
+<menubar name='MenuBar'>
+        <menu name='FileMenu' action='FileMenuAction'>
+            <separator />
+            <menuitem name='Quit' action='QuitAction' />
+        </menu>
+
+        <menu name='HelpMenu' action='HelpMenuAction'>
+             <menuitem name='About' action='AboutAction' />
+        </menu>
+</menubar>
+";
 
     public MainWindow()
     {
@@ -385,8 +400,64 @@ class MainWindow : Window
         this.services_internal_vbox.show_all ();
     }
 
+    private void on_about_action ()
+    {
+    }
+
+    private Gtk.ActionEntry[] create_actions() {
+        Gtk.ActionEntry[] actions = new Gtk.ActionEntry[0];
+
+        Gtk.ActionEntry filemenu = { "FileMenuAction",
+                                     null,
+                                     N_("_File"),
+                                     null, null, null };
+        actions += filemenu;
+
+        Gtk.ActionEntry quit = { "QuitAction",
+                                 Stock.QUIT,
+                                 N_("Quit"),
+                                 "<control>Q",
+                                 N_("Quit the application"),
+                                 Gtk.main_quit };
+        actions += quit;
+
+        Gtk.ActionEntry helpmenu = { "HelpMenuAction",
+                                     null,
+                                     N_("_Help"),
+                                     null, null, null };
+        actions += helpmenu;
+        Gtk.ActionEntry about = { "AboutAction",
+                                  Stock.ABOUT,
+                                  N_("About"),
+                                  null,
+                                  N_("About this application"),
+                                  on_about_action };
+        actions += about;
+
+        return actions;
+    }
+
+
+    private void create_ui_manager ()
+    {
+        Gtk.ActionGroup action_group = new Gtk.ActionGroup ("GeneralActionGroup");
+        action_group.add_actions (create_actions (), this);
+        ui_manager.insert_action_group (action_group, 0);
+        try
+        {
+            ui_manager.add_ui_from_string (layout, -1);
+        }
+        catch (Error e)
+        {
+            stderr.printf ("%s\n", e.message);
+        }
+        ui_manager.ensure_update ();
+    }
+
     private void build_ui()
     {
+        create_ui_manager ();
+
         this.search_entry = new Entry();
 
         set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
@@ -476,9 +547,11 @@ class MainWindow : Window
         hbox.pack_start (vbox_left, false, false, 0);
         hbox.pack_start (vbox_rigth, false, false, 0);
 
-        var main_vbox = new VBox (false, 12);
-        main_vbox.pack_start (hbox, true, true, 0);
+        var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
+        var menubar = this.ui_manager.get_widget ("/MenuBar");
+        main_vbox.pack_start (menubar, false, false, 0);
+        main_vbox.pack_start (hbox, true, true, 0);
         add (main_vbox);
 
         main_vbox.show_all();
