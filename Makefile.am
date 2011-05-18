@@ -37,7 +37,19 @@ noinst_HEADERS = src/moonshot-msrpc.h
 src_moonshot_SOURCES += \
         src/moonshot-msrpc-server.vala \
         src/moonshot-msrpc_s.c \
+        src/moonshot-msrpc-vala.c \
         src/moonshot-msrpc.vapi
+
+bin_PROGRAMS += src/msrpc-client
+
+src_msrpc_client_SOURCES = \
+        src/msrpc-client.vala \
+        src/moonshot-msrpc_c.c \
+        src/moonshot-msrpc-vala.c \
+        src/moonshot-msrpc.vapi
+
+src_msrpc_client_LDADD = \
+        $(moonshot_LIBS)
 
 BUILT_SOURCES = src/moonshot-msrpc.h src/moonshot-msrpc_s.c src/moonshot-msrpc_c.c
 

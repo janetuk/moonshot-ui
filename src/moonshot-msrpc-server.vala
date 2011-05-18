@@ -8,25 +8,22 @@ using MoonshotRpcInterface;
 public class IdentityRequest : Object {
     private Rpc.AsyncCall call;
     private MainWindow main_window;
-    private char **p_identity;
-    private char **p_password;
-    private char **p_service;
+    private Identity **result;
 
     public IdentityRequest (Rpc.AsyncCall _call,
                             Gtk.Window window,
-                            char **_p_identity,
-                            char **_p_password,
-                            char **_p_service)
+                            Identity **_result)
     {
         call = _call;
-        p_identity = _p_identity;
-        p_password = _p_password;
-        p_service = _p_service;
+        main_window = (MainWindow)window;
+        result = _result;
     }
 
     public bool main_loop_cb ()
     {
-        main_window.set_callback (id_card_selected_cb);
+        // Execution is passed from the RPC get_identity() call to
+        // here, where we are inside the main loop thread.
+        main_window.set_callback (this.id_card_selected_cb);
         return false;
     }
 
@@ -34,9 +31,16 @@ public class IdentityRequest : Object {
     {
         var id_card = this.main_window.selected_id_card_widget.id_card;
 
-        *p_identity = "identity";
-        *p_password = id_card.password;
-        *p_service = "certificate";
+        *result = new Identity();
+
+        (*result)->identity = "identity";
+        (*result)->password = id_card.password;
+        (*result)->service = "certificate";
+
+        call.return (null);
+
+        //delete result;
+
         return false;
     }
 }
@@ -49,7 +53,6 @@ public class IdentityRequest : Object {
  * Shutdown is automatically done by the RPC runtime when the
  * process ends
  */
-
 public class MoonshotServer : Object {
     private static int counter;
     private static MainWindow main_window;
@@ -85,15 +88,9 @@ public class MoonshotServer : Object {
                                               string in_identity,
                                               string in_password,
                                               string in_service,
-                                              char **out_identity,
-                                              char **out_password,
-                                              char **out_service)
+                                              Identity **result)
     {
-        IdentityRequest request = new IdentityRequest (call,
-                                                       main_window,
-                                                       out_identity,
-                                                       out_password,
-                                                       out_service);
+        IdentityRequest request = new IdentityRequest (call, main_window, result);
 
         // Pass execution to the main loop thread
         Idle.add (request.main_loop_cb);
