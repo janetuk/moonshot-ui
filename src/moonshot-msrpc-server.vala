@@ -42,8 +42,6 @@ public class IdentityRequest : Object {
         (*result)->password = id_card.password;
         (*result)->service = "certificate";
 
-        print ("Result %x, *%x - strs %x, %x, %x\n", (uint)result, (uint)(*result), (uint)((*result)->identity), (uint)((*result)->password), (uint)((*result)->service));
-
         cond.signal ();
         mutex.unlock ();
 
