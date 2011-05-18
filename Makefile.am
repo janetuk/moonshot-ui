@@ -52,7 +52,9 @@ else
 
 # IPC_DBUS
 
-AM_VALAFLAGS += --pkg dbus-glib-1
+AM_VALAFLAGS += \
+	--pkg dbus-glib-1
+	--define=IPC_DBUS
 
 src_moonshot_SOURCES += src/moonshot-dbus-server.vala
 
