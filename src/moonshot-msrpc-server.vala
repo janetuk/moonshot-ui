@@ -5,18 +5,22 @@ using MoonshotRpcInterface;
  * to the GLib main loop thread; we need to be executing inside the main
  * loop before we can access any state or make any Gtk+ calls.
  */
+/* Fixme: can you make *this* an async callback? */
 public class IdentityRequest : Object {
-    private Rpc.AsyncCall call;
     private MainWindow main_window;
     private Identity **result;
+    private unowned Mutex mutex;
+    private unowned Cond cond;
 
-    public IdentityRequest (Rpc.AsyncCall _call,
-                            Gtk.Window window,
-                            Identity **_result)
+    public IdentityRequest (Gtk.Window window,
+                            Identity **_result,
+                            Mutex _mutex,
+                            Cond _cond)
     {
-        call = _call;
         main_window = (MainWindow)window;
         result = _result;
+        mutex = _mutex;
+        cond = _cond;
     }
 
     public bool main_loop_cb ()
@@ -31,15 +35,19 @@ public class IdentityRequest : Object {
     {
         var id_card = this.main_window.selected_id_card_widget.id_card;
 
+        mutex.lock ();
         *result = new Identity();
 
         (*result)->identity = "identity";
         (*result)->password = id_card.password;
         (*result)->service = "certificate";
 
-        call.return (null);
+        print ("Result %x, *%x - strs %x, %x, %x\n", (uint)result, (uint)(*result), (uint)((*result)->identity), (uint)((*result)->password), (uint)((*result)->service));
 
-        //delete result;
+        cond.signal ();
+        mutex.unlock ();
+
+        // 'result' is freed by the RPC runtime
 
         return false;
     }
@@ -90,9 +98,21 @@ public class MoonshotServer : Object {
                                               string in_service,
                                               Identity **result)
     {
-        IdentityRequest request = new IdentityRequest (call, main_window, result);
+        Mutex mutex = new Mutex ();
+        Cond cond = new Cond ();
 
-        // Pass execution to the main loop thread
+        mutex.lock ();
+
+        *result = null;
+        IdentityRequest request = new IdentityRequest (main_window, result, mutex, cond);
+
+        // Pass execution to the main loop thread and wait for
+        // the 'send' action to be signalled.
         Idle.add (request.main_loop_cb);
+        while (*result == null)
+            cond.wait (mutex);
+        mutex.unlock ();
+
+        call.return (null);
     }
 }
