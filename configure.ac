@@ -26,13 +26,14 @@ case "$host" in
       AC_MSG_ERROR([
 *** msrpc-mingw 0.1.0 or better is required.]))
 
-
     AC_PATH_PROG([MIDL], [midl], no)
     if test "$MIDL" = "no"; then
        AC_MSG_ERROR([
 *** Could not find the Microsoft interface compiler MIDL.EXE.
 *** This program is available as part of the MS Windows SDK, in
-*** the Win32 Development Tools package.])
+*** the Win32 Development Tools package. If it is not in the PATH
+*** you may set the 'MIDL' environment variable to point to its
+*** location and rerun configure.])
     fi
 
     IPC="msrpc-glib2-1.0"
