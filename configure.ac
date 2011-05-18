@@ -18,6 +18,15 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
+# Dependencies
+PKG_CHECK_MODULES(moonshot,[
+        atk >= 1.20
+        glib-2.0 >= 2.24
+        gobject-2.0 >= 2.24
+        gtk+-2.0 >= 2.20
+        $IPC
+])
+
 # Platform-specific checks
 AC_CANONICAL_HOST
 
@@ -37,26 +46,22 @@ case "$host" in
 *** location and rerun configure.])
     fi
 
-    IPC="msrpc-glib2-1.0"
+    IPC_MODULE="msrpc-glib2-1.0"
+    PKG_CHECK_MODULES(IPC, [msrpc-glib2-1.0])
     ;;
   *)
-    IPC="dbus-glib"
+    IPC_MODULE="dbus-glib-1"
+    PKG_CHECK_MODULES(IPC, [dbus-glib-1])
     ;;
 esac
 
 AC_SUBST(MIDL)
 
-AM_CONDITIONAL([IPC_MSRPC], [test "$IPC" = "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS], [test "$IPC" = "dbus-glib"])
+AM_CONDITIONAL([IPC_MSRPC], [test "$IPC_MODULE" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$IPC_MODULE" = "dbus-glib-1"])
 
-# Dependencies
-PKG_CHECK_MODULES(moonshot,[
-        atk >= 1.20
-        glib-2.0 >= 2.24
-        gobject-2.0 >= 2.24
-        gtk+-2.0 >= 2.20
-        $IPC
-])
+moonshot_CFLAGS="$moonshot_CFLAGS $IPC_CFLAGS"
+moonshot_LIBS="$moonshot_LIBS $IPC_LIBS"
 
 # i18n stuff
 AM_GNU_GETTEXT([external])
