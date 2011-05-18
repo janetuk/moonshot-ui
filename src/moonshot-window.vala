@@ -351,9 +351,9 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    public void set_callback (SourceFunc callback)
+    public void set_callback (owned SourceFunc callback)
     {
-        this.callback = callback;
+        this.callback = (owned) callback;
     }
 
     public void send_identity_cb (IdCardWidget id_card_widget)
