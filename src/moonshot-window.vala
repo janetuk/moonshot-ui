@@ -196,6 +196,7 @@ class MainWindow : Window
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
+        id_card.nai = id_card.username + "@" + id_card.issuer;
 
         var icon_theme = IconTheme.get_default ();
         try
