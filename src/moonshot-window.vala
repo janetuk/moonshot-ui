@@ -53,7 +53,7 @@ class MainWindow : Window
     public MainWindow()
     {
         this.title = "Moonshoot";
-        this.position = WindowPosition.CENTER;
+        this.set_position (WindowPosition.CENTER);
         set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
 
         build_ui();
