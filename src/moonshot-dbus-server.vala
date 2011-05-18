@@ -14,9 +14,9 @@ public class MoonshotServer : Object {
         return counter++;
     }
 
-    public async string[] get_identity (string identity,
-                                  string password,
-                                  string service)
+    public async string[] get_identity (string nai,
+                                        string password,
+                                        string service)
     {
         string[3] information = new string[3];
 
@@ -25,9 +25,12 @@ public class MoonshotServer : Object {
 
         var id_card = this.main_window.selected_id_card_widget.id_card;
 
-        information[0] = "identity";
-        information[1] = id_card.password;
-        information[2] = "certificate";
+        if (id_card.nai == nai || id_card.password == password)
+        {
+            information[0] = id_card.nai;
+            information[1] = id_card.password;
+            information[2] = "certificate";
+        }
 
         return information;
     }
