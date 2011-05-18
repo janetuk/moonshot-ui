@@ -11,6 +11,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 
 AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz])
 AM_SILENT_RULES([yes])
+AM_MAINTAINER_MODE([enable])
 
 # Checks for programs.
 AC_PROG_CC
