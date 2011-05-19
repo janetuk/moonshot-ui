@@ -18,7 +18,7 @@ public class MoonshotServer : Object {
                                         string password,
                                         string service)
     {
-        string[3] information = new string[3];
+        string[3] information = {"", "", ""};
 
         main_window.set_callback (get_identity.callback);
         yield;
