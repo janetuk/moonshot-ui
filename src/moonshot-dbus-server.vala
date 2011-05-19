@@ -1,17 +1,11 @@
 [DBus (name = "org.janet.Moonshot")]
 public class MoonshotServer : Object {
-    private int counter;
+
     private MainWindow main_window;
 
     public MoonshotServer (Gtk.Window window)
     {
         this.main_window = (MainWindow) window;
-    }
-
-    public int ping (string msg)
-    {
-        stdout.printf ("%s\n", msg);
-        return counter++;
     }
 
     public async string[] get_identity (string nai,
