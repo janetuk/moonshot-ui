@@ -22,6 +22,8 @@ void main () {
     else
         stdout.printf ("%s %s %s\n", id->identity, id->password, id->service);
 
+    delete id;
+
     Rpc.client_unbind (ref MoonshotRpcInterface.binding_handle);
 }
 
