@@ -46,10 +46,12 @@ case "$host" in
 *** location and rerun configure.])
     fi
 
+    win32=yes
     IPC_MODULE="msrpc-glib2-1.0"
     PKG_CHECK_MODULES(IPC, [msrpc-glib2-1.0])
     ;;
   *)
+    win32=no
     IPC_MODULE="dbus-glib-1"
     PKG_CHECK_MODULES(IPC, [dbus-glib-1])
     ;;
@@ -57,6 +59,7 @@ esac
 
 AC_SUBST(MIDL)
 
+AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
 AM_CONDITIONAL([IPC_MSRPC], [test "$IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$IPC_MODULE" = "dbus-glib-1"])
 

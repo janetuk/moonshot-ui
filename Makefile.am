@@ -4,6 +4,8 @@ SUBDIRS = po
 
 bin_PROGRAMS = src/moonshot
 
+AM_CFLAGS =
+
 AM_CPPFLAGS = \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
@@ -23,6 +25,11 @@ src_moonshot_SOURCES = \
 
 src_moonshot_LDADD = \
         $(moonshot_LIBS)
+
+if OS_WIN32
+AM_CFLAGS += -mwindows
+AM_VALAFLAGS += --define=OS_WIN32
+endif
 
 if IPC_MSRPC
 
