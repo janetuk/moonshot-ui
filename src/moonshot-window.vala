@@ -358,6 +358,7 @@ class MainWindow : Window
 
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
+        this.hide ();
         this.selected_id_card_widget = id_card_widget;
         this.callback ();
     }
