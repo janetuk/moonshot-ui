@@ -449,14 +449,22 @@ class MainWindow : Window
                                      null, null, null };
         actions += filemenu;
         Gtk.ActionEntry add = { "AddIdCardAction",
+#if VALA_0_12
                                 Stock.ADD,
+#else
+                                STOCK.ADD,
+#endif
                                 N_("Add ID Card"),
                                 null,
                                 N_("Add a new ID Card"),
                                 add_identity_cb };
         actions += add;
         Gtk.ActionEntry quit = { "QuitAction",
+#if VALA_0_12
                                  Stock.QUIT,
+#else
+                                 STOCK.QUIT,
+#endif
                                  N_("Quit"),
                                  "<control>Q",
                                  N_("Quit the application"),
@@ -469,7 +477,11 @@ class MainWindow : Window
                                      null, null, null };
         actions += helpmenu;
         Gtk.ActionEntry about = { "AboutAction",
+#if VALA_0_12
                                   Stock.ABOUT,
+#else
+                                  STOCK.ABOUT,
+#endif
                                   N_("About"),
                                   null,
                                   N_("About this application"),
