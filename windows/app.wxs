@@ -1,0 +1,67 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <?include .\config.wxi ?>
+
+  <Product Id='$(var.ProductGuid)'
+           Language='1033'
+           Manufacturer='$(var.Manufacturer)'
+           Name='$(var.ProductName)'
+           Version='$(var.ProductVersion)'
+           UpgradeCode='$(var.UpgradeGuid)'>
+
+    <Package Id="*"
+             Description='$(var.PackageDescription)'
+             Keywords='$(var.PackageKeywords)'
+             Manufacturer='$(var.Manufacturer)'
+             Platform='$(var.PackagePlatform)'
+             InstallerVersion='200'
+             Compressed='yes' />
+
+    <Media Id='1' Cabinet='app.cab' EmbedCab='yes' />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='INSTALLDIR' Name='Moonshot'>
+
+          <Directory Id='BINDIR' Name='bin'>
+            <Component Id='MainExe' Guid='$(var.MainExeGuid)'>
+              <File Id='MainExe'
+                    Name='$(var.MainExeFile)'
+                    DiskId='1'
+                    Source='$(var.MainExeSource)'
+                    KeyPath='yes'>
+                <Shortcut Id='startmenu'
+                          Directory='ProgramMenuDir'
+                          Name='$(var.ProductName)'
+                          WorkingDirectory='INSTALLDIR'
+                          Advertise='yes' />
+                <Shortcut Id='desktop'
+                          Directory='DesktopFolder'
+                          Name='$(var.ProductName)'
+                          WorkingDirectory='INSTALLDIR'
+                          Advertise='yes' />
+              </File>
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id='ProgramMenuFolder' Name='Programs'>
+        <Directory Id='ProgramMenuDir' Name='$(var.ProductName)'>
+          <Component Id='ProgramMenuDir' Guid='$(var.ProgramMenuDirGuid)'>
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\Moonshot' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id='DesktopFolder' Name='Desktop'>
+      </Directory>
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+        <ComponentRef Id='MainExe' />
+        <ComponentRef Id='ProgramMenuDir' />
+    </Feature>
+  </Product>
+</Wix>
