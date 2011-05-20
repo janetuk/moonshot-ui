@@ -197,20 +197,7 @@ class MainWindow : Window
         id_card.username = dialog.username;
         id_card.password = dialog.password;
         id_card.nai = id_card.username + "@" + id_card.issuer;
-
-        var icon_theme = IconTheme.get_default ();
-        try
-        {
-            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
-                                                   48,
-                                                   IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            id_card.pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
-
+        id_card.pixbuf = find_icon ("avatar-default", 48);
         id_card.services = {"email","jabber","irc"};
 
         return id_card;
@@ -515,17 +502,18 @@ class MainWindow : Window
         this.search_entry = new Entry();
 
         set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
-                                                   "edit-find-symbolic");
-        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
+        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.PRIMARY,
+                                                find_icon_sized ("edit-find-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.PRIMARY,
                                                  _("Search identity or service"));
+        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
 
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY,
-                                                   "edit-clear-symbolic");
-        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.SECONDARY,
+                                                find_icon_sized ("edit-clear-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
                                                  _("Clear the current search"));
+        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+
 
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
@@ -655,7 +643,6 @@ class MainWindow : Window
         // Force specific theme settings on Windows without requiring a gtkrc file
         Gtk.Settings settings = Gtk.Settings.get_default ();
         settings.set_string_property ("gtk-theme-name", "ms-windows", "moonshot");
-        settings.set_string_property ("gtk-icon-theme-name", "Gnome", "moonshot");
         settings.set_long_property ("gtk-menu-images", 0, "moonshot");
 #endif
 

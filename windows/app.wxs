@@ -109,21 +109,12 @@
               </Directory>
             </Directory>
 
-            <!-- FIXME: there *must* be a better way to do this ... surely?? -->
             <Directory Id="ICONS" Name="icons">
-              <Directory Id="GNOME" Name="gnome">
-                <Component Id="IconsGnomeIndex" Guid="A54365DE-A0A8-4568-B977-A5A266A1D16E">
-                  <File Id="INDEX.THEME" Name="index.theme" Source="share\icons\gnome\index.theme" />
-                </Component>
-
-                <Directory Id="_48x48" Name="48x48">
-                  <Directory Id="status" Name="status">
-                    <Component Id="IconsGnome48Status" Guid="7E14FF90-DF0B-4AD1-B983-0F1DB8892EE3">
-                      <File Id="AVATAR_DEFAULT" Name="avatar.default.png" Source="share\icons\gnome\48x48\status\avatar-default.png" />
-                    </Component>
-                  </Directory>
-                </Directory>
-              </Directory>
+              <Component Id="Icons" Guid="413C032F-002A-4E81-B320-9EF64248E22D">
+                <File Id="AVATAR_DEFAULT" Name="avatar-default.png" Source="share\icons\avatar-default.png" />
+                <File Id="EDIT_CLEAR_SYMBOLIC" Name="edit-clear-symbolic.png" Source="share\icons\edit-clear-symbolic.png" />
+                <File Id="EDIT_FIND_SYMBOLIC" Name="edit-find-symbolic.png" Source="share\icons\edit-find-symbolic.png" />
+              </Component>
             </Directory>
           </Directory>
         </Directory>
@@ -147,8 +138,7 @@
       <ComponentRef Id='Gtk2BinFiles' />
       <ComponentRef Id='Gtk2ThemeEngineFiles' />
       <ComponentRef Id='Gtk2ThemeRcFiles' />
-      <ComponentRef Id='IconsGnomeIndex' />
-      <ComponentRef Id='IconsGnome48Status' />
+      <ComponentRef Id='Icons' />
     </Feature>
   </Product>
 </Wix>

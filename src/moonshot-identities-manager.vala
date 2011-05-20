@@ -108,19 +108,7 @@ class IdentitiesManager : Object {
         id_card.issuer = id_card_data[1];
         id_card.services = {"email","jabber","irc"};
         id_card.nai = id_card.username + "@" + id_card.issuer;
-
-        var icon_theme = Gtk.IconTheme.get_default ();
-        try
-        {
-            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
-                                                   48,
-                                                   Gtk.IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            id_card.pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
+        id_card.pixbuf = find_icon ("avatar-default", 48);
 
         return id_card;
     }
