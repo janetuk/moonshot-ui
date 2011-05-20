@@ -8,12 +8,13 @@ public class MoonshotServer : Object {
         this.main_window = (MainWindow) window;
     }
 
-    public async string[] get_identity (string nai,
-                                        string password,
-                                        string service)
+    public async bool get_identity (string nai,
+                                    string password,
+                                    string service,
+                                    out string nai_out,
+                                    out string password_out,
+                                    out string certificate_out)
     {
-        string[3] information = {"", "", ""};
-
         main_window.set_callback (get_identity.callback);
         yield;
 
@@ -21,11 +22,13 @@ public class MoonshotServer : Object {
 
         if (id_card.nai == nai || id_card.password == password)
         {
-            information[0] = id_card.nai;
-            information[1] = id_card.password;
-            information[2] = "certificate";
+            nai_out = id_card.nai;
+            password_out = id_card.password;
+            certificate_out = "certificate";
+
+            return true;
         }
 
-        return information;
+        return false;
     }
 }
