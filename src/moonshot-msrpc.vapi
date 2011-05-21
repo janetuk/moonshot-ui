@@ -2,7 +2,7 @@
 
 using Rpc;
 
-[CCode (cheader_filename = "moonshot-msrpc-vala.h")]
+[CCode (cheader_filename = "moonshot-msrpc.h")]
 namespace MoonshotRpcInterface {
     [CCode (cname = "moonshot_v1_0_s_ifspec")]
     public const InterfaceHandle spec;
@@ -10,22 +10,12 @@ namespace MoonshotRpcInterface {
     [CCode (cname = "moonshot_binding_handle")]
     public BindingHandle binding_handle;
 
-    [CCode (cname = "MoonshotRpcInterfaceIdentity")]
-    [Compact]
-    public class Identity {
-        public Identity() {}
-        public string identity;
-        public string password;
-        public string service;
-    }
-
-    [CCode (cname = "moonshot_ping")]
-    public extern int ping (string message);
-
     [CCode (cname = "moonshot_get_identity")]
     public extern void get_identity (Rpc.AsyncCall call,
-                                     string in_identity,
-                                     string in_password,
-                                     string in_service,
-                                     MoonshotRpcInterface.Identity **identity);
+                                     string nai,
+                                     string password,
+                                     string service,
+                                     char **nai_out,
+                                     char **password_out,
+                                     char **certificate_out);
 }

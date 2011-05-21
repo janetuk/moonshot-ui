@@ -28,7 +28,7 @@ src_moonshot_LDADD = \
         $(moonshot_LIBS)
 
 if OS_WIN32
-AM_CFLAGS += -mwindows
+src_moonshot_CFLAGS = -mwindows
 AM_VALAFLAGS += --define=OS_WIN32
 endif
 
@@ -45,7 +45,6 @@ noinst_HEADERS = src/moonshot-msrpc.h
 src_moonshot_SOURCES += \
         src/moonshot-msrpc-server.vala \
         src/moonshot-msrpc_s.c \
-        src/moonshot-msrpc-vala.c \
         src/moonshot-msrpc.vapi
 
 bin_PROGRAMS += src/msrpc-client
@@ -53,7 +52,6 @@ bin_PROGRAMS += src/msrpc-client
 src_msrpc_client_SOURCES = \
         src/msrpc-client.vala \
         src/moonshot-msrpc_c.c \
-        src/moonshot-msrpc-vala.c \
         src/moonshot-msrpc.vapi
 
 src_msrpc_client_LDADD = \

@@ -4,25 +4,23 @@ using MoonshotRpcInterface;
 void main () {
     Rpc.client_bind (ref MoonshotRpcInterface.binding_handle, "/org/janet/Moonshot");
 
-    int pong = ping ("Hello from Vala");
-    stdout.printf ("%d\n", pong);
+    char *nai_out = null;
+    char *password_out = null;
+    char *certificate_out = null;
+    bool result = false;
 
-    Identity *id = null;
     Rpc.AsyncCall call = Rpc.AsyncCall();
-    get_identity (call, "identity", "username", "pass", &id);
+    get_identity (call, "username@issuer", "pass", "service", &nai_out, &password_out, &certificate_out);
+    result = call.complete_bool ();
 
-    call.complete ();
-
-    if (id == null)
-        /* FIXME: this is happening when moonshot crashes instead
-         * of returning a result - surely RpcAsyncCompleteCall should
-         * *tell* us that the call failed !
-         */
-        error ("Call failed but error was not raised\n");
+    if (result == false)
+        error ("The nai, password or service does not match the selected identity\n");
     else
-        stdout.printf ("%s %s %s\n", id->identity, id->password, id->service);
+        stdout.printf ("%s %s %s\n", (string)nai_out, (string)password_out, (string)certificate_out);
 
-    delete id;
+    delete nai_out;
+    delete password_out;
+    delete certificate_out;
 
     Rpc.client_unbind (ref MoonshotRpcInterface.binding_handle);
 }

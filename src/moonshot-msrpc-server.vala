@@ -1,6 +1,10 @@
 using Rpc;
 using MoonshotRpcInterface;
 
+/* Apologies in advance */
+[CCode (cname = "g_strdup")]
+public extern char *strdup (string str);
+
 /* This class is the closure when we pass execution from the RPC thread
  * to the GLib main loop thread; we need to be executing inside the main
  * loop before we can access any state or make any Gtk+ calls.
@@ -8,17 +12,16 @@ using MoonshotRpcInterface;
 /* Fixme: can you make *this* an async callback? */
 public class IdentityRequest : Object {
     private MainWindow main_window;
-    private Identity **result;
     private unowned Mutex mutex;
     private unowned Cond cond;
 
+    internal IdCard? id_card = null;
+
     public IdentityRequest (Gtk.Window window,
-                            Identity **_result,
                             Mutex _mutex,
                             Cond _cond)
     {
         main_window = (MainWindow)window;
-        result = _result;
         mutex = _mutex;
         cond = _cond;
     }
@@ -33,19 +36,15 @@ public class IdentityRequest : Object {
 
     public bool id_card_selected_cb ()
     {
-        var id_card = this.main_window.selected_id_card_widget.id_card;
+        this.id_card = this.main_window.selected_id_card_widget.id_card;
 
         mutex.lock ();
-        *result = new Identity();
-
-        (*result)->identity = "identity";
-        (*result)->password = id_card.password;
-        (*result)->service = "certificate";
-
         cond.signal ();
-        mutex.unlock ();
 
-        // 'result' is freed by the RPC runtime
+        // Block the mainloop until the ID card details have been read and
+        // sent, to prevent races
+        cond.wait (mutex);
+        mutex.unlock ();
 
         return false;
     }
@@ -60,7 +59,6 @@ public class IdentityRequest : Object {
  * process ends
  */
 public class MoonshotServer : Object {
-    private static int counter;
     private static MainWindow main_window;
 
     private static MoonshotServer instance = null;
@@ -78,39 +76,48 @@ public class MoonshotServer : Object {
         return instance;
     }
 
-    /* Note that these RPC callbacks execute outside the GLib main loop,
-     * in threads owned by the RPC runtime
-     */
-
-    [CCode (cname = "moonshot_ping")]
-    public static int ping (string msg)
-    {
-        stdout.printf ("%s\n", msg);
-        return counter ++;
-    }
-
     [CCode (cname = "moonshot_get_identity")]
     public static void moonshot_get_identity (Rpc.AsyncCall call,
-                                              string in_identity,
-                                              string in_password,
-                                              string in_service,
-                                              Identity **result)
+                                              string nai,
+                                              string password,
+                                              string service,
+                                              char **nai_out,
+                                              char **password_out,
+                                              char **certificate_out)
     {
         Mutex mutex = new Mutex ();
         Cond cond = new Cond ();
+        bool result;
 
         mutex.lock ();
 
-        *result = null;
-        IdentityRequest request = new IdentityRequest (main_window, result, mutex, cond);
+        IdentityRequest request = new IdentityRequest (main_window, mutex, cond);
 
         // Pass execution to the main loop thread and wait for
         // the 'send' action to be signalled.
         Idle.add (request.main_loop_cb);
-        while (*result == null)
+        while (request.id_card == null)
             cond.wait (mutex);
-        mutex.unlock ();
 
-        call.return (null);
+        // Send back the results. Memory is freed by the RPC runtime.
+        if (request.id_card.nai == nai || request.id_card.password == password)
+        {
+            *nai_out = strdup (request.id_card.nai);
+            *password_out = strdup (request.id_card.password);
+            *certificate_out = strdup ("certificate");
+            result = true;
+        }
+        else
+        {
+            *nai_out = null;
+            *password_out = null;
+            *certificate_out = null;
+            result = false;
+        }
+
+        call.return (&result);
+
+        cond.signal ();
+        mutex.unlock ();
     }
 }

@@ -4,23 +4,11 @@
 ]
 interface moonshot
 {
-    int moonshot_ping ([in, string] const char *message);
-
-    /* Returning arrays in MSRPC is difficult, because it's hard to
-     * get it to understand the size of the array and still have the
-     * C code bindable in Vala. A struct is more practical.
-     * Output parameters are also much more practical than function
-     * return values.
-     */
-    typedef struct {
-        [ref, string] char *identity;
-        [ref, string] char *password;
-        [ref, string] char *service;
-    } MoonshotRpcInterfaceIdentity;
-
-    void moonshot_get_identity ([in, string] const char *identity,
-                                [in, string] const char *password,
-                                [in, string] const char *service,
-                                [out] MoonshotRpcInterfaceIdentity **result);
+    int moonshot_get_identity ([in, string] const char *nai,
+                               [in, string] const char *password,
+                               [in, string] const char *certificate,
+                               [out, string] char **nai_out,
+                               [out, string] char **password_out,
+                               [out, string] char **certificate_out);
 }
 
