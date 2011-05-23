@@ -30,7 +30,7 @@ public Gdk.Pixbuf? find_icon (string name, int size)
         return new Gdk.Pixbuf.from_file_at_size (filename, size, size);
 #else
         var icon_theme = Gtk.IconTheme.get_default ();
-        return icon_theme.load_icon (name, icon_size, Gtk.IconLookupFlags.FORCE_SIZE);
+        return icon_theme.load_icon (name, size, Gtk.IconLookupFlags.FORCE_SIZE);
 #endif
     }
     catch (Error e)
