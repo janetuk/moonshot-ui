@@ -1,15 +1,10 @@
 using Rpc;
 using MoonshotRpcInterface;
 
-/* Apologies in advance */
-[CCode (cname = "g_strdup")]
-public extern char *strdup (string str);
-
 /* This class is the closure when we pass execution from the RPC thread
  * to the GLib main loop thread; we need to be executing inside the main
  * loop before we can access any state or make any Gtk+ calls.
  */
-/* Fixme: can you make *this* an async callback? */
 public class IdentityRequest : Object {
     private MainWindow main_window;
     private unowned Mutex mutex;
@@ -81,9 +76,9 @@ public class MoonshotServer : Object {
                                               string nai,
                                               string password,
                                               string service,
-                                              char **nai_out,
-                                              char **password_out,
-                                              char **certificate_out)
+                                              ref string nai_out,
+                                              ref string password_out,
+                                              ref string certificate_out)
     {
         Mutex mutex = new Mutex ();
         Cond cond = new Cond ();
@@ -102,19 +97,20 @@ public class MoonshotServer : Object {
         // Send back the results. Memory is freed by the RPC runtime.
         if (request.id_card.nai == nai || request.id_card.password == password)
         {
-            *nai_out = strdup (request.id_card.nai);
-            *password_out = strdup (request.id_card.password);
-            *certificate_out = strdup ("certificate");
+            nai_out = request.id_card.nai;
+            password_out = request.id_card.password;
+            certificate_out = "certificate";
             result = true;
         }
         else
         {
-            *nai_out = null;
-            *password_out = null;
-            *certificate_out = null;
             result = false;
         }
 
+        // The outputs must be set before this function is called. For this
+        // reason they are 'ref' not 'out' parameters - Vala assigns to the
+        // 'out' parameters only at the end of the function, which is too
+        // late.
         call.return (&result);
 
         cond.signal ();
