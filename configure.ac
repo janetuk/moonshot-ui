@@ -13,6 +13,8 @@ AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
+PKG_PROG_PKG_CONFIG([0.24])
+
 # Platform checks
 AC_CANONICAL_HOST
 
@@ -80,13 +82,8 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
-        $IPC
+        $IPC_MODULE
 ])
-
-PKG_CHECK_MODULES(IPC, $IPC_MODULE)
-
-moonshot_CFLAGS="$moonshot_CFLAGS $IPC_CFLAGS"
-moonshot_LIBS="$moonshot_LIBS $IPC_LIBS"
 
 # i18n stuff
 AM_GNU_GETTEXT([external])
