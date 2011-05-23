@@ -66,5 +66,3 @@ of any component:
 
 # Sometimes TMP is set and this breaks some of the tools
 export TMP=
-
-# Make
