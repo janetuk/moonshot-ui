@@ -99,18 +99,20 @@ if OS_WIN32
 icons:
 	mkdir -p share/icons
 	cp c:/build/share/icons/gnome/48x48/status/avatar-default.png share/icons
-	c:/tools/ImageMagick/convert.exe -background none c:/build/share/icons/gnome/scalable/actions/edit-clear-symbolic.svg -size 13x13 share/icons/edit-clear-symbolic.png
-	c:/tools/ImageMagick/convert.exe -background none c:/build/share/icons/gnome/scalable/actions/edit-find-symbolic.svg -size 13x13 share/icons/edit-find-symbolic.png
+	"${IMAGEMAGICK_CONVERT}" -background none c:/build/share/icons/gnome/scalable/actions/edit-clear-symbolic.svg -size 13x13 share/icons/edit-clear-symbolic.png
+	"${IMAGEMAGICK_CONVERT}" -background none c:/build/share/icons/gnome/scalable/actions/edit-find-symbolic.svg -size 13x13 share/icons/edit-find-symbolic.png
 
 
 ## 2. Installer. You must have the Windows Installer XML toolkit version 3.5
 ##    installed in its default path. Note that this requires at least .NET
-##    runtime with service packs 1 and 2.
+##    runtime with service packs 1 and 2. The installer picks up files from
+##    the build prefix and mingw dir; you must change these if you have them
+##    in different locations I'm afraid.
 
 installer: moonshot.msi
 
 moonshot.msi: windows/app.wxs
-	candle $<
-	light -b c:/build -b c:/tools/mingw -o moonshot.msi app.wixobj
+	"${WIX_CANDLE}" $<
+	"${WIX_LIGHT}" -b c:/build -b c:/tools/mingw -o moonshot.msi app.wixobj
 
 endif
