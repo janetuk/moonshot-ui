@@ -15,7 +15,7 @@ namespace MoonshotRpcInterface {
                                      string nai,
                                      string password,
                                      string service,
-                                     char **nai_out,
-                                     char **password_out,
-                                     char **certificate_out);
+                                     ref string nai_out,
+                                     ref string password_out,
+                                     ref string certificate_out);
 }
