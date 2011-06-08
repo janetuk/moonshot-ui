@@ -345,9 +345,29 @@ class MainWindow : Window
 
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
-        this.hide ();
         this.selected_id_card_widget = id_card_widget;
-        this.callback ();
+
+        if (id_card_widget.id_card.password == null)
+        {
+            var dialog = new AddPasswordDialog ();
+            var result = dialog.run ();
+
+            switch (result) {
+            case ResponseType.OK:
+                this.hide ();
+                this.callback ();
+                break;
+            default:
+                this.hide ();
+                break;
+            }
+            dialog.destroy ();
+        }
+        else
+        {
+          this.hide ();
+          this.callback ();
+        }
     }
 
     private void label_make_bold (Label label)

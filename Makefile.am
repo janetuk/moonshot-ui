@@ -22,6 +22,7 @@ src_moonshot_SOURCES = \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
         src/moonshot-window.vala \
+        src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
 
 src_moonshot_LDADD = \

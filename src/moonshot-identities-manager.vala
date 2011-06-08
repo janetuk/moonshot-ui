@@ -102,7 +102,8 @@ class IdentitiesManager : Object {
             return null;
 
         id_card_data = text.split ("\n", 2);
-        id_card.password = id_card_data[1];
+        if (id_card_data[1] != "")
+            id_card.password = id_card_data[1];
         id_card_data = id_card_data[0].split ("@", 2);
         id_card.username = id_card_data[0];
         id_card.issuer = id_card_data[1];
