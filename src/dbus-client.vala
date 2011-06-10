@@ -10,7 +10,7 @@ void main () {
 
         var conn = DBus.Bus.get (DBus.BusType.SESSION);
         var demo = (Moonshot) conn.get_object ("org.janet.Moonshot",
-                                               "/org/janet/moonshot");
+                                               "/org/janet/Moonshot");
 
         if (demo.get_identity ("username@issuer", "pass", "service", out nai_out, out password_out, out certificate_out))
         {

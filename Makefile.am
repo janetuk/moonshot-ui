@@ -71,6 +71,15 @@ else
 
 # IPC_DBUS
 
+# DBus service file
+dbusservicedir = $(datadir)/dbus-1/services
+dbusservice_in_files = org.janet.Moonshot.service.in
+dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
+
+# Rule to make the service file with bindir expanded
+$(dbusservice_DATA): $(dbusservice_in_files) Makefile
+	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+
 AM_VALAFLAGS += \
 	--pkg dbus-glib-1
 	--define=IPC_DBUS
@@ -84,6 +93,9 @@ src_dbus_client_SOURCES = \
 
 src_dbus_client_LDADD = \
         $(moonshot_LIBS)
+
+CLEANFILES = $(dbusservice_DATA)
+EXTRA_DIST = $(dbusservice_in_files)
 
 endif
 
