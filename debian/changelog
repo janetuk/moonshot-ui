@@ -1,3 +1,9 @@
+moonshot-ui (0.0.2+20110613-1) unstable; urgency=low
+
+  * New Upstream release
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 13 Jun 2011 08:06:34 -0400
+
 moonshot-ui (0.0.1+20110504-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
