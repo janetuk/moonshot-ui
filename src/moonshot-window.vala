@@ -477,7 +477,7 @@ SUCH DAMAGE.
 #if VALA_0_12
                                 Stock.ADD,
 #else
-                                STOCK.ADD,
+                                STOCK_ADD,
 #endif
                                 N_("Add ID Card"),
                                 null,
@@ -488,7 +488,7 @@ SUCH DAMAGE.
 #if VALA_0_12
                                  Stock.QUIT,
 #else
-                                 STOCK.QUIT,
+                                 STOCK_QUIT,
 #endif
                                  N_("Quit"),
                                  "<control>Q",
@@ -505,7 +505,7 @@ SUCH DAMAGE.
 #if VALA_0_12
                                   Stock.ABOUT,
 #else
-                                  STOCK.ABOUT,
+                                  STOCK_ABOUT,
 #endif
                                   N_("About"),
                                   null,
