@@ -414,6 +414,7 @@ class MainWindow : Window
     {
         string[] authors = {
             "Javier Jardón <jjardon@codethink.co.uk>",
+            "Sam Thursfield <samthursfield@codethink.co.uk>",
             null
         };
 
