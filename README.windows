@@ -1,0 +1,68 @@
+How to compile moonshot-ui from git on MS Windows using mingw and MSYS
+----------------------------------------------------------------------
+
+I recommend you set up a build environment according to the following page:
+
+  http://afuera.me.uk/jhbuild-windows/
+
+However, use the configuration file in the source tree at ./windows/jhbuildrc
+instead of creating a new one. You can tell jhbuild to use that file by running
+
+  jhbuild -f jhbuildrc <...>
+
+You will also need to install the following extras:
+
+  * MS Windows Platform SDK v7.0 and .NET framework 3.5:
+
+      https://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en
+
+    You need the 'Win32 Developer Tools' component for MIDL.EXE, the rest are
+    not important.
+
+  * Windows Installer XML 3.5:
+
+      http://wix.codeplex.com/releases/view/60102
+
+  * ImageMagick (for converting .svg icons to .png in 'make icons'):
+
+     http://www.imagemagick.org/download/binaries/ImageMagick-6.6.9-10-Q16-windows-dll.exe
+
+I suggest you put all these things in their default locations, the installers
+seem to mostly ignore attempts to install them in other places.
+
+You currently also need a patched version of the w32api mingw package, to
+expose some RPC functions. This is on the mingw issue tracker here:
+
+  https://sourceforge.net/tracker/?func=detail&aid=3302807&group_id=2435&atid=302435
+
+Until the fix gets merged, download the following patched version and simply
+extract into c:\tools\mingw:
+
+  http://afuera.me.uk/junk/w32api-3.17-2-mingw-patch3302807-dev.tar.lzma
+
+(Alternately you can fetch the source for the w32api package from
+ www.sourceforge.net/projects/mingw and apply the patch yourself)
+
+You will need to compile and install the msrpc-mingw package.
+
+You can then build moonshot from the MSYS shell:
+
+  ACLOCAL="aclocal -I/c/build/share/aclocal" PKG_CONFIG_PATH=/c/build/lib/pkgconfig \
+  ./autogen.sh --prefix=/c/build --disable-maintainer-mode
+  make
+  make icons
+  make installer
+
+
+Weird things that might go wrong
+--------------------------------
+
+MSYS is a little fragile, here are some things to try if you get weird failures
+of any component:
+
+# Make sure your PATH looks like this:
+#   /c/build/bin:/c/tools/python:/usr/local/bin:/mingw/bin:/bin
+# so that there are no entries before these that might override a shell tool.
+
+# Sometimes TMP is set and this breaks some of the tools
+export TMP=

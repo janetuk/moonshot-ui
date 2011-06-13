@@ -1,0 +1,144 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+  <?include .\config.wxi ?>
+
+  <Product Id='$(var.ProductGuid)'
+           Language='1033'
+           Manufacturer='$(var.Manufacturer)'
+           Name='$(var.ProductName)'
+           Version='$(var.ProductVersion)'
+           UpgradeCode='$(var.UpgradeGuid)'>
+
+    <Package Id="*"
+             Description='$(var.PackageDescription)'
+             Keywords='$(var.PackageKeywords)'
+             Manufacturer='$(var.Manufacturer)'
+             Platform='$(var.PackagePlatform)'
+             InstallerVersion='200'
+             Compressed='yes' />
+
+    <Media Id='1' Cabinet='app.cab' EmbedCab='yes' />
+
+    <Directory Id='TARGETDIR' Name='SourceDir'>
+      <Directory Id='ProgramFilesFolder' Name='PFiles'>
+        <Directory Id='INSTALLDIR' Name='Moonshot'>
+          <Directory Id='BINDIR' Name='bin'>
+            <Component Id='MainExe' Guid='$(var.MainExeGuid)'>
+              <File Id='MainExe'
+                    Name='$(var.MainExeFile)'
+                    DiskId='1'
+                    Source='$(var.MainExeSource)'
+                    KeyPath='yes'>
+                <Shortcut Id='startmenu'
+                          Directory='ProgramMenuDir'
+                          Name='$(var.ProductName)'
+                          WorkingDirectory='INSTALLDIR'
+                          Advertise='yes' />
+                <Shortcut Id='desktop'
+                          Directory='DesktopFolder'
+                          Name='$(var.ProductName)'
+                          WorkingDirectory='INSTALLDIR'
+                          Advertise='yes' />
+              </File>
+            </Component>
+
+            <!-- Gtk+ runtime - /bin -->
+            <Component Id='Gtk2BinFiles' Guid='DB587042-E204-4D76-9372-8B6B03642377'>
+              <!-- Included in mingw -->
+              <File Id="LIBEXPAT_1.DLL" Name="libexpat-1.dll" Source="bin\libexpat-1.dll"/>
+              <File Id="LIBINTL_8.DLL" Name="libintl-8.dll" Source="bin\libintl-8.dll" />
+              <File Id="LIBICONV_2.DLL" Name="libiconv-2.dll" Source="bin\libiconv-2.dll" />
+
+              <!-- From Gtk+ binary packages, etc. -->
+
+              <File Id="FREETYPE6.DLL" Name="freetype6.dll" Source="bin\freetype6.dll"/>
+              <File Id="GDK_PIXBUF_QUERY_LOADERS.EXE" Name="gdk-pixbuf-query-loaders.exe" Source="bin\gdk-pixbuf-query-loaders.exe" />
+              <File Id="GSPAWN_WIN32_HELPER_CONSOLE.EXE" Name="gspawn-win32-helper-console.exe" Source="bin\gspawn-win32-helper-console.exe" />
+              <File Id="GSPAWN_WIN32_HELPER.EXE" Name="gspawn-win32-helper.exe" Source="bin\gspawn-win32-helper.exe" />
+              <File Id="GTK_QUERY_IMMODULES_2.0.EXE" Name="gtk-query-immodules-2.0.exe" Source="bin\gtk-query-immodules-2.0.exe" />
+              <File Id="INTL.DLL" Name="intl.dll" Source="bin\intl.dll" />
+              <File Id="LIBATK_1.0_0.DLL" Name="libatk-1.0-0.dll" Source="bin\libatk-1.0-0.dll" />
+              <File Id="LIBCAIRO_2.DLL" Name="libcairo-2.dll" Source="bin\libcairo-2.dll" />
+              <File Id="LIBCAIRO_GOBJECT_2.DLL" Name="libcairo-gobject-2.dll" Source="bin\libcairo-gobject-2.dll" />
+              <File Id="LIBCAIRO_SCRIPT_INTERPRETER_2.DLL" Name="libcairo-script-interpreter-2.dll" Source="bin\libcairo-script-interpreter-2.dll" />
+              <File Id="LIBFONTCONFIG_1.DLL" Name="libfontconfig-1.dll" Source="bin\libfontconfig-1.dll" />
+              <File Id="LIBGAILUTIL_18.DLL" Name="libgailutil-18.dll" Source="bin\libgailutil-18.dll" />
+              <File Id="LIBGDK_WIN32_2.0_0.DLL" Name="libgdk-win32-2.0-0.dll" Source="bin\libgdk-win32-2.0-0.dll" />
+              <File Id="LIBGDK_PIXBUF_2.0_0.DLL" Name="libgdk_pixbuf-2.0-0.dll" Source="bin\libgdk_pixbuf-2.0-0.dll" />
+              <File Id="LIBGIO_2.0_0.DLL" Name="libgio-2.0-0.dll" Source="bin\libgio-2.0-0.dll" />
+              <File Id="LIBGLIB_2.0_0.DLL" Name="libglib-2.0-0.dll" Source="bin\libglib-2.0-0.dll" />
+              <File Id="LIBGMODULE_2.0_0.DLL" Name="libgmodule-2.0-0.dll" Source="bin\libgmodule-2.0-0.dll" />
+              <File Id="LIBGOBJECT_2.0_0.DLL" Name="libgobject-2.0-0.dll" Source="bin\libgobject-2.0-0.dll" />
+              <File Id="LIBGTHREAD_2.0_0.DLL" Name="libgthread-2.0-0.dll" Source="bin\libgthread-2.0-0.dll" />
+              <File Id="LIBGTK_WIN32_2.0_0.DLL" Name="libgtk-win32-2.0-0.dll" Source="bin\libgtk-win32-2.0-0.dll" />
+              <File Id="LIBPANGO_1.0_0.DLL" Name="libpango-1.0-0.dll" Source="bin\libpango-1.0-0.dll" />
+              <File Id="LIBPANGOCAIRO_1.0_0.DLL" Name="libpangocairo-1.0-0.dll" Source="bin\libpangocairo-1.0-0.dll" />
+              <File Id="LIBPANGOFT2_1.0_0.DLL" Name="libpangoft2-1.0-0.dll" Source="bin\libpangoft2-1.0-0.dll" />
+              <File Id="LIBPANGOWIN32_1.0_0.DLL" Name="libpangowin32-1.0-0.dll" Source="bin\libpangowin32-1.0-0.dll" />
+              <File Id="LIBPNG14_14.DLL" Name="libpng14-14.dll" Source="bin\libpng14-14.dll" />
+              <File Id="PANGO_QUERYMODULES.EXE" Name="pango-querymodules.exe" Source="bin\pango-querymodules.exe" />
+              <File Id="ZLIB1.DLL" Name="zlib1.dll" Source="bin\zlib1.dll" />
+
+              <!-- FIXME: need to use this and then delete it -->
+              <File Id="GTK_UPDATE_ICON_CACHE.EXE" Name="gtk-update-icon-cache.exe" Source="bin\gtk-update-icon-cache.exe" />
+
+            </Component>
+          </Directory>
+
+          <Directory Id="LIB" Name="lib">
+            <Directory Id="ENGINES_GTK_2.0" Name="gtk-2.0">
+              <Directory Id="ENGINES_2.10.0" Name="2.10.0">
+                <Directory Id="ENGINES" Name="engines">
+                  <Component Id="Gtk2ThemeEngineFiles" Guid='4AC288CB-882E-42A7-8FE7-A7019632F490'>
+                    <File Id="LIBPIXMAP.DLL" Name="libpixmap.dll" Source="lib\gtk-2.0\2.10.0\engines\libpixmap.dll" />
+                    <File Id="LIBWIMP.DLL" Name="libwimp.dll" Source="lib\gtk-2.0\2.10.0\engines\libwimp.dll" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+          </Directory>
+
+          <Directory Id="SHARE" Name="share">
+            <Directory Id="THEMES" Name="themes">
+              <Directory Id="MS_WINDOWS" Name="MS-Windows">
+                <Directory Id="THEMES_GTK_2.0" Name="gtk-2.0">
+                  <Component Id="Gtk2ThemeRcFiles" Guid="045EAADC-162A-42B3-BD8D-2521AB2F0B0F">
+                    <File Id="THEMES_GTKRC" Name="gtkrc" Source="share\themes\MS-Windows\gtk-2.0\gtkrc" />
+                  </Component>
+                </Directory>
+              </Directory>
+            </Directory>
+
+            <Directory Id="ICONS" Name="icons">
+              <Component Id="Icons" Guid="413C032F-002A-4E81-B320-9EF64248E22D">
+                <File Id="AVATAR_DEFAULT" Name="avatar-default.png" Source="share\icons\avatar-default.png" />
+                <File Id="EDIT_CLEAR_SYMBOLIC" Name="edit-clear-symbolic.png" Source="share\icons\edit-clear-symbolic.png" />
+                <File Id="EDIT_FIND_SYMBOLIC" Name="edit-find-symbolic.png" Source="share\icons\edit-find-symbolic.png" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+
+      <Directory Id='ProgramMenuFolder' Name='Programs'>
+        <Directory Id='ProgramMenuDir' Name='$(var.ProductName)'>
+          <Component Id='ProgramMenuDir' Guid='$(var.ProgramMenuDirGuid)'>
+            <RemoveFolder Id='ProgramMenuDir' On='uninstall' />
+            <RegistryValue Root='HKCU' Key='Software\Moonshot' Type='string' Value='' KeyPath='yes' />
+          </Component>
+        </Directory>
+      </Directory>
+
+      <Directory Id='DesktopFolder' Name='Desktop' />
+    </Directory>
+
+    <Feature Id='Complete' Level='1'>
+      <ComponentRef Id='MainExe' />
+      <ComponentRef Id='ProgramMenuDir' />
+      <ComponentRef Id='Gtk2BinFiles' />
+      <ComponentRef Id='Gtk2ThemeEngineFiles' />
+      <ComponentRef Id='Gtk2ThemeRcFiles' />
+      <ComponentRef Id='Icons' />
+    </Feature>
+  </Product>
+</Wix>

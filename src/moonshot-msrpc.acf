@@ -1,0 +1,9 @@
+[
+  implicit_handle (handle_t moonshot_binding_handle)
+
+]
+interface moonshot
+{
+	[async] moonshot_get_identity();
+}
+

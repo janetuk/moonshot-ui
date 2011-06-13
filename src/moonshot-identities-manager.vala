@@ -31,6 +31,7 @@ class IdentitiesManager : Object {
                 id_card.username = key_file.get_string (identity, "Username");
                 id_card.password = key_file.get_string (identity, "Password");
                 id_card.services = key_file.get_string_list (identity, "Services");
+                id_card.nai = id_card.username + "@" + id_card.issuer;
 
                 id_card_list.prepend (id_card);
             }
@@ -101,24 +102,14 @@ class IdentitiesManager : Object {
             return null;
 
         id_card_data = text.split ("\n", 2);
-        id_card.password = id_card_data[1];
+        if (id_card_data[1] != "")
+            id_card.password = id_card_data[1];
         id_card_data = id_card_data[0].split ("@", 2);
         id_card.username = id_card_data[0];
         id_card.issuer = id_card_data[1];
         id_card.services = {"email","jabber","irc"};
-
-        var icon_theme = Gtk.IconTheme.get_default ();
-        try
-        {
-            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
-                                                   48,
-                                                   Gtk.IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            id_card.pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
+        id_card.nai = id_card.username + "@" + id_card.issuer;
+        id_card.pixbuf = find_icon ("avatar-default", 48);
 
         return id_card;
     }

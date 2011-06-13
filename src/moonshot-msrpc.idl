@@ -1,0 +1,14 @@
+[
+    uuid(15aea4d8-222c-4b42-9225-63a7277811ae),
+    version(1.0)
+]
+interface moonshot
+{
+    int moonshot_get_identity ([in, string] const char *nai,
+                               [in, string] const char *password,
+                               [in, string] const char *certificate,
+                               [out, string] char **nai_out,
+                               [out, string] char **password_out,
+                               [out, string] char **certificate_out);
+}
+

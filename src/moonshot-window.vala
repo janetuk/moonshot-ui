@@ -5,9 +5,11 @@ class MainWindow : Window
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
 
+    private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private VBox vbox_rigth;
     private CustomVBox custom_vbox;
+    private VBox services_internal_vbox;
 
     private Entry username_entry;
     private Entry password_entry;
@@ -16,6 +18,12 @@ class MainWindow : Window
     private TreeModelFilter filter;
 
     private IdentitiesManager identities_manager;
+
+    private MoonshotServer ipc_server;
+
+    public IdCardWidget selected_id_card_widget;
+
+    private SourceFunc callback;
 
     private enum Columns
     {
@@ -27,10 +35,25 @@ class MainWindow : Window
         N_COLUMNS
     }
 
+    private const string layout =
+"
+<menubar name='MenuBar'>
+        <menu name='FileMenu' action='FileMenuAction'>
+            <menuitem name='AddIdCard' action='AddIdCardAction' />
+            <separator />
+            <menuitem name='Quit' action='QuitAction' />
+        </menu>
+
+        <menu name='HelpMenu' action='HelpMenuAction'>
+             <menuitem name='About' action='AboutAction' />
+        </menu>
+</menubar>
+";
+
     public MainWindow()
     {
         this.title = "Moonshoot";
-        this.position = WindowPosition.CENTER;
+        this.set_position (WindowPosition.CENTER);
         set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
 
         build_ui();
@@ -38,6 +61,7 @@ class MainWindow : Window
         load_gss_eap_id_file();
         //load_id_cards();
         connect_signals();
+        init_ipc_server();
     }
 
     private bool visible_func (TreeModel model, TreeIter iter)
@@ -140,6 +164,11 @@ class MainWindow : Window
        var id_card = id_card_widget.id_card;
        this.username_entry.set_text (id_card.username);
        this.password_entry.set_text (id_card.password);
+
+       var children = this.services_internal_vbox.get_children ();
+       foreach (var hbox in children)
+           hbox.destroy();
+       fill_services_vbox (id_card_widget.id_card);
     }
 
     private void show_details (IdCard id_card)
@@ -167,20 +196,8 @@ class MainWindow : Window
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
-
-        var icon_theme = IconTheme.get_default ();
-        try
-        {
-            id_card.pixbuf = icon_theme.load_icon ("avatar-default",
-                                                   48,
-                                                   IconLookupFlags.FORCE_SIZE);
-        }
-        catch (Error e)
-        {
-            id_card.pixbuf = null;
-            stdout.printf("Error: %s\n", e.message);
-        }
-
+        id_card.nai = id_card.username + "@" + id_card.issuer;
+        id_card.pixbuf = find_icon ("avatar-default", 48);
         id_card.services = {"email","jabber","irc"};
 
         return id_card;
@@ -229,6 +246,7 @@ class MainWindow : Window
 
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
+        id_card_widget.send_id.connect (send_identity_cb);
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
     }
@@ -320,6 +338,38 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
+    public void set_callback (owned SourceFunc callback)
+    {
+        this.callback = (owned) callback;
+    }
+
+    public void send_identity_cb (IdCardWidget id_card_widget)
+    {
+        this.selected_id_card_widget = id_card_widget;
+
+        if (id_card_widget.id_card.password == null)
+        {
+            var dialog = new AddPasswordDialog ();
+            var result = dialog.run ();
+
+            switch (result) {
+            case ResponseType.OK:
+                this.hide ();
+                this.callback ();
+                break;
+            default:
+                this.hide ();
+                break;
+            }
+            dialog.destroy ();
+        }
+        else
+        {
+          this.hide ();
+          this.callback ();
+        }
+    }
+
     private void label_make_bold (Label label)
     {
         var font_desc = new Pango.FontDescription ();
@@ -334,22 +384,156 @@ class MainWindow : Window
         label.modify_font (font_desc);
     }
 
+    private void fill_services_vbox (IdCard id_card)
+    {
+        int i = 0;
+        var n_columns = id_card.services.length;
+
+        var services_table = new Table (n_columns, 2, false);
+        services_table.set_col_spacings (10);
+        services_table.set_row_spacings (10);
+        this.services_internal_vbox.add (services_table);
+
+        foreach (string service in id_card.services)
+        {
+            var label = new Label (service);
+            label.set_alignment (0, (float) 0.5);
+#if VALA_0_12
+            var remove_button = new Button.from_stock (Stock.REMOVE);
+#else
+            var remove_button = new Button.from_stock (STOCK_REMOVE);
+#endif
+            services_table.attach_defaults (label, 0, 1, i, i+1);
+            services_table.attach_defaults (remove_button, 1, 2, i, i+1);
+            i++;
+        }
+        this.services_internal_vbox.show_all ();
+    }
+
+    private void on_about_action ()
+    {
+        string[] authors = {
+            "Javier Jardón <jjardon@codethink.co.uk>",
+            null
+        };
+
+        const string copyright = "Copyright 2011 JANET";
+
+        const string license =
+"
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+";
+
+        Gtk.show_about_dialog (this,
+            "comments", _("Moonshot project UI"),
+            "copyright", copyright,
+            "website", "http://www.project-moonshot.org/",
+            "license", license,
+            "website-label", _("Visit the Moonshot project web site"),
+            "authors", authors,
+            "translator-credits", _("translator-credits"),
+            null
+        );
+    }
+
+    private Gtk.ActionEntry[] create_actions() {
+        Gtk.ActionEntry[] actions = new Gtk.ActionEntry[0];
+
+        Gtk.ActionEntry filemenu = { "FileMenuAction",
+                                     null,
+                                     N_("_File"),
+                                     null, null, null };
+        actions += filemenu;
+        Gtk.ActionEntry add = { "AddIdCardAction",
+#if VALA_0_12
+                                Stock.ADD,
+#else
+                                STOCK.ADD,
+#endif
+                                N_("Add ID Card"),
+                                null,
+                                N_("Add a new ID Card"),
+                                add_identity_cb };
+        actions += add;
+        Gtk.ActionEntry quit = { "QuitAction",
+#if VALA_0_12
+                                 Stock.QUIT,
+#else
+                                 STOCK.QUIT,
+#endif
+                                 N_("Quit"),
+                                 "<control>Q",
+                                 N_("Quit the application"),
+                                 Gtk.main_quit };
+        actions += quit;
+
+        Gtk.ActionEntry helpmenu = { "HelpMenuAction",
+                                     null,
+                                     N_("_Help"),
+                                     null, null, null };
+        actions += helpmenu;
+        Gtk.ActionEntry about = { "AboutAction",
+#if VALA_0_12
+                                  Stock.ABOUT,
+#else
+                                  STOCK.ABOUT,
+#endif
+                                  N_("About"),
+                                  null,
+                                  N_("About this application"),
+                                  on_about_action };
+        actions += about;
+
+        return actions;
+    }
+
+
+    private void create_ui_manager ()
+    {
+        Gtk.ActionGroup action_group = new Gtk.ActionGroup ("GeneralActionGroup");
+        action_group.add_actions (create_actions (), this);
+        ui_manager.insert_action_group (action_group, 0);
+        try
+        {
+            ui_manager.add_ui_from_string (layout, -1);
+        }
+        catch (Error e)
+        {
+            stderr.printf ("%s\n", e.message);
+        }
+        ui_manager.ensure_update ();
+    }
+
     private void build_ui()
     {
+        create_ui_manager ();
+
         this.search_entry = new Entry();
 
         set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.PRIMARY,
-                                                   "edit-find-symbolic");
-        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
+        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.PRIMARY,
+                                                find_icon_sized ("edit-find-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.PRIMARY,
                                                  _("Search identity or service"));
+        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
 
-        this.search_entry.set_icon_from_icon_name (EntryIconPosition.SECONDARY,
-                                                   "edit-clear-symbolic");
-        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.SECONDARY,
+                                                find_icon_sized ("edit-clear-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
                                                  _("Clear the current search"));
+        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+
 
         this.search_entry.icon_press.connect (search_entry_icon_press_cb);
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
@@ -366,17 +550,9 @@ class MainWindow : Window
         scroll.set_shadow_type (ShadowType.IN);
         scroll.add_with_viewport (viewport);
 
-        var button_add = new ToolButton (null, null);
-        button_add.set_icon_name ("list-add-symbolic");
-        set_atk_name_description (button_add, _("Add"), _("Add new ID Card"));
-        button_add.clicked.connect (add_identity_cb);
-        var button_toolbar = new Toolbar ();
-        button_toolbar.insert (button_add, 0);
-
         var vbox_left = new VBox (false, 0);
         vbox_left.pack_start (search_entry, false, false, 6);
         vbox_left.pack_start (scroll, true, true, 0);
-        vbox_left.pack_start (button_toolbar, false, false, 0);
         vbox_left.set_size_request (WINDOW_WIDTH, 0);
 
         var login_vbox_title = new Label (_("Login: "));
@@ -409,28 +585,10 @@ class MainWindow : Window
         var services_vbox_title = new Label (_("Services:"));
         label_make_bold (services_vbox_title);
         services_vbox_title.set_alignment (0, (float) 0.5);
-        var email_label = new Label (_("Email"));
-#if VALA_0_12
-        var email_remove_button = new Button.from_stock (Stock.REMOVE);
-#else
-        var email_remove_button = new Button.from_stock (STOCK_REMOVE);
-#endif
-        var im_label = new Label (_("IM"));
-#if VALA_0_12
-        var im_remove_button = new Button.from_stock (Stock.REMOVE);
-#else
-        var im_remove_button = new Button.from_stock (STOCK_REMOVE);
-#endif
-        var services_table = new Table (2, 2, false);
-        services_table.set_col_spacings (10);
-        services_table.set_row_spacings (10);
-        services_table.attach_defaults (email_label, 0, 1, 0, 1);
-        services_table.attach_defaults (email_remove_button, 1, 2, 0, 1);
-        services_table.attach_defaults (im_label, 0, 1, 1, 2);
-        services_table.attach_defaults (im_remove_button, 1, 2, 1, 2);
         var services_vbox_alignment = new Alignment (0, 0, 0, 0);
         services_vbox_alignment.set_padding (0, 0, 12, 0);
-        services_vbox_alignment.add (services_table);
+        this.services_internal_vbox = new VBox (true, 6);
+        services_vbox_alignment.add (services_internal_vbox);
         var services_vbox = new VBox (false, 6);
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
@@ -443,9 +601,11 @@ class MainWindow : Window
         hbox.pack_start (vbox_left, false, false, 0);
         hbox.pack_start (vbox_rigth, false, false, 0);
 
-        var main_vbox = new VBox (false, 12);
-        main_vbox.pack_start (hbox, true, true, 0);
+        var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
+        var menubar = this.ui_manager.get_widget ("/MenuBar");
+        main_vbox.pack_start (menubar, false, false, 0);
+        main_vbox.pack_start (hbox, true, true, 0);
         add (main_vbox);
 
         main_vbox.show_all();
@@ -465,9 +625,46 @@ class MainWindow : Window
         this.destroy.connect (Gtk.main_quit);
     }
 
+    private void init_ipc_server ()
+    {
+#if IPC_MSRPC
+        /* Errors will currently be sent via g_log - ie. to an
+         * obtrusive message box, on Windows
+         */
+        this.ipc_server = MoonshotServer.get_instance ();
+        MoonshotServer.start (this);
+#else
+        try {
+            var conn = DBus.Bus.get (DBus.BusType.SESSION);
+            dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
+                                                       "/org/freedesktop/DBus",
+                                                       "org.freedesktop.DBus");
+
+            // try to register service in session bus
+            uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
+            assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
+
+            this.ipc_server = new MoonshotServer (this);
+            conn.register_object ("/org/janet/moonshot", ipc_server);
+
+        }
+        catch (DBus.Error e)
+        {
+            stderr.printf ("%s\n", e.message);
+        }
+#endif
+    }
+
     public static int main(string[] args)
     {
         Gtk.init(ref args);
+
+#if OS_WIN32
+        // Force specific theme settings on Windows without requiring a gtkrc file
+        Gtk.Settings settings = Gtk.Settings.get_default ();
+        settings.set_string_property ("gtk-theme-name", "ms-windows", "moonshot");
+        settings.set_long_property ("gtk-menu-images", 0, "moonshot");
+#endif
 
         Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
         Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
