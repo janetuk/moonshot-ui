@@ -2,8 +2,8 @@ Source: moonshot-ui
 Section: non-free/net
 Priority: optional
 Maintainer: Sam Hartman <hartmans@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), valac,
-    libatk1.0-dev (>= 1.20), libglib2.0-dev (>= 2.26), libgtk2.0-dev,
+Build-Depends: debhelper (>= 7.0.50~), 
+    libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
         gettext, autotools-dev
 Standards-Version: 3.9.1
 Homepage: http://www.project-moonshot.org/
