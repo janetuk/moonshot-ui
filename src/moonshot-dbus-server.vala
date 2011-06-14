@@ -8,6 +8,22 @@ public class MoonshotServer : Object {
         this.main_window = (MainWindow) window;
     }
 
+    /**
+     * This is the function used by the GSS mechanism to get the NAI,
+     * password and certificate of the ID card for the specificated service.
+     *
+     * The function will block until the user choose the ID card.
+     *
+     * @param nai NAI of the ID Card (optional)
+     * @param password Password of the ID Card (optional)
+     * @param service Service application request an ID Card for
+     * @param nai_out NAI stored in the ID Card
+     * @param password_out Password stored in the ID Card
+     * @param certificate Certificate stored in th ID Card
+     *
+     * @return true if the user choose a correct ID card for that service,
+     *         false otherwise.
+     */
     public async bool get_identity (string nai,
                                     string password,
                                     string service,
