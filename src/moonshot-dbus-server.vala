@@ -17,6 +17,10 @@ public class MoonshotServer : Object {
     {
         bool has_service = false;
 
+        nai_out = "";
+        password_out = "";
+        certificate_out = "";
+
         main_window.set_callback (get_identity.callback);
         yield;
 
