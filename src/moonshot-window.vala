@@ -340,7 +340,11 @@ class MainWindow : Window
 
     public void set_callback (owned SourceFunc callback)
     {
+#if VALA_0_12
         this.callback = (owned) callback;
+#else
+        this.callback = () => callback ();
+#endif
     }
 
     public void send_identity_cb (IdCardWidget id_card_widget)
