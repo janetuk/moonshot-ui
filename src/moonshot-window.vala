@@ -358,6 +358,7 @@ class MainWindow : Window
 
             switch (result) {
             case ResponseType.OK:
+                selected_id_card_widget.id_card.password = dialog.password;
                 this.hide ();
                 this.callback ();
                 break;
