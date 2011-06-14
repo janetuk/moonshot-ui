@@ -15,12 +15,20 @@ public class MoonshotServer : Object {
                                     out string password_out,
                                     out string certificate_out)
     {
+        bool has_service = false;
+
         main_window.set_callback (get_identity.callback);
         yield;
 
         var id_card = this.main_window.selected_id_card_widget.id_card;
 
-        if (id_card.nai == nai || id_card.password == password)
+        foreach (string id_card_service in id_card.services)
+        {
+            if (id_card_service == service)
+                has_service = true;
+        }
+
+        if (has_service)
         {
             nai_out = id_card.nai;
             password_out = id_card.password;
