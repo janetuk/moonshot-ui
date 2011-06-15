@@ -165,7 +165,7 @@ class MainWindow : Window
     {
        var id_card = id_card_widget.id_card;
        this.username_entry.set_text (id_card.username);
-       this.password_entry.set_text (id_card.password);
+       this.password_entry.set_text (id_card.password ?? "");
 
        var children = this.services_internal_vbox.get_children ();
        foreach (var hbox in children)
