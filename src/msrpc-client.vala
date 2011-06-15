@@ -2,7 +2,9 @@ using Rpc;
 using MoonshotRpcInterface;
 
 void main () {
-    Rpc.client_bind (ref MoonshotRpcInterface.binding_handle, "/org/janet/Moonshot");
+    Rpc.client_bind (ref MoonshotRpcInterface.binding_handle,
+                     "/org/janet/Moonshot",
+                     Rpc.Flags.PER_USER);
 
     string nai = null, password = null, certificate = null;
     bool result = false;
@@ -18,4 +20,3 @@ void main () {
 
     Rpc.client_unbind (ref MoonshotRpcInterface.binding_handle);
 }
-

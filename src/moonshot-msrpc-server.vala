@@ -37,10 +37,6 @@ public class MoonshotServer : Object {
                                               ref string certificate_out)
     {
         bool result = false;
-        Mutex mutex = new Mutex ();
-        Cond cond = new Cond ();
-
-        mutex.lock ();
 
         var request = new IdentityRequest (main_window,
                                            nai,
@@ -48,19 +44,22 @@ public class MoonshotServer : Object {
                                            service);
 
         // Pass execution to the main loop and block the RPC thread
-        request.set_data ("mutex", mutex);
-        request.set_data ("cond", cond);
-        request.set_return_identity_callback (this.return_identity_cb);
+        request.mutex = new Mutex ();
+        request.cond = new Cond ();
+        request.set_return_identity_callback (return_identity_cb);
+
+        request.mutex.lock ();
         Idle.add (request.execute);
 
         while (request.complete == false)
-            cond.wait (mutex);
+            request.cond.wait (request.mutex);
 
         nai_out = "";
         password_out = "";
         certificate_out = "";
 
         var id_card = request.id_card;
+        bool has_service = false;
 
         if (id_card == null) {
             foreach (string id_card_service in id_card.services)
@@ -86,23 +85,20 @@ public class MoonshotServer : Object {
         // late.
         call.return (&result);
 
-        cond.signal ();
-        mutex.unlock ();
+        request.cond.signal ();
+        request.mutex.unlock ();
     }
 
     // Called from the main loop thread when an identity has
     // been selected
-    public void return_identity_cb (IdentityRequest request) {
-        Mutex mutex = request.get_data ("mutex");
-        Cond cond = request.get_data ("cond");
-
+    static void return_identity_cb (IdentityRequest request) {
         // Notify the RPC thread that the request is complete
-        mutex.lock ();
-        cond.signal ();
+        request.mutex.lock ();
+        request.cond.signal ();
 
         // Block the main loop until the RPC call has returned
         // to avoid any races
-        cond.wait (mutex);
-        mutex.unlock ();
+        request.cond.wait (request.mutex);
+        request.mutex.unlock ();
     }
 }

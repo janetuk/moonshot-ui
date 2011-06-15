@@ -43,8 +43,13 @@ class IdentityRequest : Object {
 #endif
     }
 
-    public void execute () {
+    public bool execute () {
         main_window.select_identity (this);
+
+        /* This function works as a GSourceFunc, so it can be passed to
+         * the main loop from other threads
+         */
+        return false;
     }
 
     public void return_identity (IdCard? id_card) {
@@ -58,4 +63,13 @@ class IdentityRequest : Object {
         else
             warn_if_reached ();
     }
+
+#if OS_WIN32
+    /* For synchronisation between RPC thread and main loop. Because
+     * these objects are not refcounted, it's best to tie them to the
+     * lifecycle of the IdentityRequest object.
+     */
+    public Mutex mutex;
+    public Cond cond;
+#endif
 }
