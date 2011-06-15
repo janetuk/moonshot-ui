@@ -1,50 +1,6 @@
 using Rpc;
 using MoonshotRpcInterface;
 
-/* This class is the closure when we pass execution from the RPC thread
- * to the GLib main loop thread; we need to be executing inside the main
- * loop before we can access any state or make any Gtk+ calls.
- */
-public class IdentityRequest : Object {
-    private MainWindow main_window;
-    private unowned Mutex mutex;
-    private unowned Cond cond;
-
-    internal IdCard? id_card = null;
-
-    public IdentityRequest (Gtk.Window window,
-                            Mutex _mutex,
-                            Cond _cond)
-    {
-        main_window = (MainWindow)window;
-        mutex = _mutex;
-        cond = _cond;
-    }
-
-    public bool main_loop_cb ()
-    {
-        // Execution is passed from the RPC get_identity() call to
-        // here, where we are inside the main loop thread.
-        main_window.set_callback (this.id_card_selected_cb);
-        return false;
-    }
-
-    public bool id_card_selected_cb ()
-    {
-        this.id_card = this.main_window.selected_id_card_widget.id_card;
-
-        mutex.lock ();
-        cond.signal ();
-
-        // Block the mainloop until the ID card details have been read and
-        // sent, to prevent races
-        cond.wait (mutex);
-        mutex.unlock ();
-
-        return false;
-    }
-}
-
 /* This class must be a singleton, because we use a global RPC
  * binding handle. I cannot picture a situation where more than
  * one instance of the same interface would be needed so this
@@ -80,31 +36,48 @@ public class MoonshotServer : Object {
                                               ref string password_out,
                                               ref string certificate_out)
     {
+        bool result = false;
         Mutex mutex = new Mutex ();
         Cond cond = new Cond ();
-        bool result;
 
         mutex.lock ();
 
-        IdentityRequest request = new IdentityRequest (main_window, mutex, cond);
+        var request = new IdentityRequest (main_window,
+                                           nai,
+                                           password,
+                                           service);
 
-        // Pass execution to the main loop thread and wait for
-        // the 'send' action to be signalled.
-        Idle.add (request.main_loop_cb);
-        while (request.id_card == null)
+        // Pass execution to the main loop and block the RPC thread
+        request.set_data ("mutex", mutex);
+        request.set_data ("cond", cond);
+        request.set_return_identity_callback (this.return_identity_cb);
+        Idle.add (request.execute);
+
+        while (request.complete == false)
             cond.wait (mutex);
 
-        // Send back the results. Memory is freed by the RPC runtime.
-        if (request.id_card.nai == nai || request.id_card.password == password)
-        {
-            nai_out = request.id_card.nai;
-            password_out = request.id_card.password;
-            certificate_out = "certificate";
-            result = true;
-        }
-        else
-        {
-            result = false;
+        nai_out = "";
+        password_out = "";
+        certificate_out = "";
+
+        var id_card = request.id_card;
+
+        if (id_card == null) {
+            foreach (string id_card_service in id_card.services)
+            {
+                if (id_card_service == service)
+                    has_service = true;
+            }
+
+            if (has_service)
+            {
+                // The strings are freed by the RPC runtime
+                nai_out = id_card.nai;
+                password_out = id_card.password;
+                certificate_out = "certificate";
+
+                result = true;
+            }
         }
 
         // The outputs must be set before this function is called. For this
@@ -114,6 +87,22 @@ public class MoonshotServer : Object {
         call.return (&result);
 
         cond.signal ();
+        mutex.unlock ();
+    }
+
+    // Called from the main loop thread when an identity has
+    // been selected
+    public void return_identity_cb (IdentityRequest request) {
+        Mutex mutex = request.get_data ("mutex");
+        Cond cond = request.get_data ("cond");
+
+        // Notify the RPC thread that the request is complete
+        mutex.lock ();
+        cond.signal ();
+
+        // Block the main loop until the RPC call has returned
+        // to avoid any races
+        cond.wait (mutex);
         mutex.unlock ();
     }
 }

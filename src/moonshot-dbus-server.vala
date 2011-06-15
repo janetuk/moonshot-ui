@@ -33,28 +33,35 @@ public class MoonshotServer : Object {
     {
         bool has_service = false;
 
+        var request = new IdentityRequest (main_window,
+                                           nai,
+                                           password,
+                                           service);
+        request.set_source_func_callback (get_identity.callback);
+        request.execute ();
+        yield;
+
         nai_out = "";
         password_out = "";
         certificate_out = "";
 
-        main_window.set_callback (get_identity.callback);
-        yield;
+        var id_card = request.id_card;
 
-        var id_card = this.main_window.selected_id_card_widget.id_card;
+        if (id_card != null) {
+            foreach (string id_card_service in id_card.services)
+            {
+                if (id_card_service == service)
+                    has_service = true;
+            }
 
-        foreach (string id_card_service in id_card.services)
-        {
-            if (id_card_service == service)
-                has_service = true;
-        }
+            if (has_service)
+            {
+                nai_out = id_card.nai;
+                password_out = id_card.password;
+                certificate_out = "certificate";
 
-        if (has_service)
-        {
-            nai_out = id_card.nai;
-            password_out = id_card.password;
-            certificate_out = "certificate";
-
-            return true;
+                return true;
+            }
         }
 
         return false;
