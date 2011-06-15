@@ -353,9 +353,11 @@ class MainWindow : Window
     {
         return_if_fail (request_queue.length > 0);
 
+        this.selected_id_card_widget = id_card_widget;
+
         var request = this.request_queue.pop_head ();
         var identity = id_card_widget.id_card;
-        this.selected_id_card_widget = id_card_widget;
+        bool reset_password = false;
 
         if (identity.password == null)
         {
@@ -365,6 +367,7 @@ class MainWindow : Window
             switch (result) {
             case ResponseType.OK:
                 identity.password = dialog.password;
+                reset_password = ! dialog.remember;
                 break;
             default:
                 identity = null;
@@ -378,6 +381,9 @@ class MainWindow : Window
             this.hide ();
 
         request.return_identity (identity);
+
+        if (reset_password)
+            identity.password = null;
     }
 
     private void label_make_bold (Label label)

@@ -3,9 +3,14 @@ using Gtk;
 class AddPasswordDialog : Dialog
 {
     private Entry password_entry;
+    private CheckButton remember_checkbutton;
 
     public string password {
         get { return password_entry.get_text (); }
+    }
+
+    public bool remember {
+        get { return remember_checkbutton.get_active (); }
     }
 
     public AddPasswordDialog ()
@@ -24,7 +29,7 @@ class AddPasswordDialog : Dialog
         this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
-        var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
+        remember_checkbutton = new CheckButton.with_label (_("Remember password"));
 
         set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
