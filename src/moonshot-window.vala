@@ -23,7 +23,7 @@ class MainWindow : Window
 
     public IdCardWidget selected_id_card_widget;
 
-    private SourceFunc callback;
+    private Queue<IdentityRequest> request_queue;
 
     private enum Columns
     {
@@ -52,6 +52,8 @@ class MainWindow : Window
 
     public MainWindow()
     {
+        request_queue = new Queue<IdentityRequest>();
+
         this.title = "Moonshoot";
         this.set_position (WindowPosition.CENTER);
         set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -338,41 +340,42 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    public void set_callback (owned SourceFunc callback)
+    public void select_identity (IdentityRequest request)
     {
-#if VALA_0_12
-        this.callback = (owned) callback;
-#else
-        this.callback = () => callback ();
-#endif
+        /* Automatic service matching rules can go here */
+
+        /* Resort to manual selection */
+        this.request_queue.push_tail (request);
+        this.show ();
     }
 
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
+        var request = this.request_queue.pop_head ();
+        var identity = id_card_widget.id_card;
         this.selected_id_card_widget = id_card_widget;
 
-        if (id_card_widget.id_card.password == null)
+        if (identity.password == null)
         {
             var dialog = new AddPasswordDialog ();
             var result = dialog.run ();
 
             switch (result) {
             case ResponseType.OK:
-                selected_id_card_widget.id_card.password = dialog.password;
-                this.hide ();
-                this.callback ();
+                identity.password = dialog.password;
                 break;
             default:
-                this.hide ();
+                identity = null;
                 break;
             }
+
             dialog.destroy ();
         }
-        else
-        {
-          this.hide ();
-          this.callback ();
-        }
+
+        if (this.request_queue.is_empty())
+            this.hide ();
+
+        request.return_identity (identity);
     }
 
     private void label_make_bold (Label label)
