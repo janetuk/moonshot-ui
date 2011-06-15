@@ -17,7 +17,7 @@ public class MoonshotServer : Object {
     public static void start (Gtk.Window window)
     {
         main_window = (MainWindow) window;
-        Rpc.server_start (MoonshotRpcInterface.spec, "/org/janet/Moonshot");
+        Rpc.server_start (MoonshotRpcInterface.spec, "/org/janet/Moonshot", Rpc.Flags.PER_USER);
     }
 
     public static MoonshotServer get_instance ()
