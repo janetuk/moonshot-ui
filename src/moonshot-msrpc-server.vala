@@ -46,7 +46,7 @@ public class MoonshotServer : Object {
         // Pass execution to the main loop and block the RPC thread
         request.mutex = new Mutex ();
         request.cond = new Cond ();
-        request.set_return_identity_callback (return_identity_cb);
+        request.set_callback (return_identity_cb);
 
         request.mutex.lock ();
         Idle.add (request.execute);

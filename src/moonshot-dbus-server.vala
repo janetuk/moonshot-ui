@@ -37,7 +37,7 @@ public class MoonshotServer : Object {
                                            nai,
                                            password,
                                            service);
-        request.set_source_func_callback (get_identity.callback);
+        request.set_callback ((IdentityRequest) => get_identity.callback());
         request.execute ();
         yield;
 
