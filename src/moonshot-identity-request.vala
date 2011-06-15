@@ -30,7 +30,7 @@ class IdentityRequest : Object {
 #if VALA_0_12
         this.return_identity_cb = ((owned) cb);
 #else
-        this.return_identity_cb = (() => cb ());
+        this.return_identity_cb = ((IdCard) => cb (IdCard));
 #endif
     }
 
