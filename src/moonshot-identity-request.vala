@@ -9,10 +9,7 @@ class IdentityRequest : Object {
     private string password;
     private string certificate;
 
-    // Only one of these is used, we must support two types for
-    // the DBus and MSRPC servers.
-    ReturnIdentityCallback return_identity_cb = null;
-    SourceFunc source_func_cb = null;
+    ReturnIdentityCallback callback = null;
 
     public IdentityRequest (MainWindow                   main_window,
                             string                       nai,
@@ -25,21 +22,12 @@ class IdentityRequest : Object {
         this.certificate = certificate;
     }
 
-    public void set_return_identity_callback (owned ReturnIdentityCallback cb)
+    public void set_callback (owned ReturnIdentityCallback cb)
     {
 #if VALA_0_12
-        this.return_identity_cb = ((owned) cb);
+        this.callback = ((owned) cb);
 #else
-        this.return_identity_cb = ((IdCard) => cb (IdCard));
-#endif
-    }
-
-    public void set_source_func_callback (owned SourceFunc cb)
-    {
-#if VALA_0_12
-        this.source_func_cb = ((owned) cb);
-#else
-        this.source_func_cb = (() => cb ());
+        this.callback = ((IdCard) => cb (IdCard));
 #endif
     }
 
@@ -53,15 +41,12 @@ class IdentityRequest : Object {
     }
 
     public void return_identity (IdCard? id_card) {
+        return_if_fail (callback != null);
+
         this.id_card = id_card;
         this.complete = true;
 
-        if (return_identity_cb != null)
-            return_identity_cb (this);
-        else if (source_func_cb != null)
-            source_func_cb ();
-        else
-            warn_if_reached ();
+        callback (this);
     }
 
 #if OS_WIN32
