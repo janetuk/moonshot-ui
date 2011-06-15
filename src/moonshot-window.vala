@@ -351,6 +351,8 @@ class MainWindow : Window
 
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
+        return_if_fail (request_queue.length > 0);
+
         var request = this.request_queue.pop_head ();
         var identity = id_card_widget.id_card;
         this.selected_id_card_widget = id_card_widget;
