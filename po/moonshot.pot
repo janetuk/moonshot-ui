@@ -1,0 +1,75 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: moonshot 0.0.1\n"
+"Report-Msgid-Bugs-To: BUG-REPORT-ADDRESS\n"
+"POT-Creation-Date: 2011-05-05 19:38+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/moonshot-window.vala:311
+#, c-format
+msgid "Are you sure you want to delete %s ID Card?"
+msgstr ""
+
+#: src/moonshot-window.vala:341
+msgid "Search entry"
+msgstr ""
+
+#: src/moonshot-window.vala:341
+msgid "Search for a specific ID Card"
+msgstr ""
+
+#: src/moonshot-window.vala:346
+msgid "Search identity or service"
+msgstr ""
+
+#: src/moonshot-window.vala:352
+msgid "Clear the current search"
+msgstr ""
+
+#: src/moonshot-window.vala:371
+msgid "Add"
+msgstr ""
+
+#: src/moonshot-window.vala:371
+msgid "Add new ID Card"
+msgstr ""
+
+#: src/moonshot-window.vala:382
+msgid "Login: "
+msgstr ""
+
+#: src/moonshot-window.vala:385
+msgid "Username:"
+msgstr ""
+
+#: src/moonshot-window.vala:388
+msgid "Password:"
+msgstr ""
+
+#: src/moonshot-window.vala:393
+msgid "Remember password"
+msgstr ""
+
+#: src/moonshot-window.vala:409
+msgid "Services:"
+msgstr ""
+
+#: src/moonshot-window.vala:412
+msgid "Email"
+msgstr ""
+
+#: src/moonshot-window.vala:418
+msgid "IM"
+msgstr ""
