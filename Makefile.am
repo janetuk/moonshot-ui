@@ -21,6 +21,7 @@ src_moonshot_SOURCES = \
         src/moonshot-idcard-widget.vala \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
+        src/moonshot-identity-request.vala \
         src/moonshot-window.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
@@ -81,7 +82,7 @@ $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 AM_VALAFLAGS += \
-	--pkg dbus-glib-1
+	--pkg dbus-glib-1 \
 	--define=IPC_DBUS
 
 src_moonshot_SOURCES += src/moonshot-dbus-server.vala

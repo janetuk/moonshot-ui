@@ -48,7 +48,7 @@ You will need to compile and install the msrpc-mingw package.
 You can then build moonshot from the MSYS shell:
 
   ACLOCAL="aclocal -I/c/build/share/aclocal" PKG_CONFIG_PATH=/c/build/lib/pkgconfig \
-  ./autogen.sh --prefix=/c/build --disable-maintainer-mode
+  ./autogen.sh --disable-maintainer-mode
   make
   make icons
   make installer

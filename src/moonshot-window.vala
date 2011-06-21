@@ -23,7 +23,7 @@ class MainWindow : Window
 
     public IdCardWidget selected_id_card_widget;
 
-    private SourceFunc callback;
+    private Queue<IdentityRequest> request_queue;
 
     private enum Columns
     {
@@ -52,6 +52,8 @@ class MainWindow : Window
 
     public MainWindow()
     {
+        request_queue = new Queue<IdentityRequest>();
+
         this.title = "Moonshoot";
         this.set_position (WindowPosition.CENTER);
         set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -163,7 +165,7 @@ class MainWindow : Window
     {
        var id_card = id_card_widget.id_card;
        this.username_entry.set_text (id_card.username);
-       this.password_entry.set_text (id_card.password);
+       this.password_entry.set_text (id_card.password ?? "");
 
        var children = this.services_internal_vbox.get_children ();
        foreach (var hbox in children)
@@ -338,36 +340,50 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    public void set_callback (owned SourceFunc callback)
+    public void select_identity (IdentityRequest request)
     {
-        this.callback = (owned) callback;
+        /* Automatic service matching rules can go here */
+
+        /* Resort to manual selection */
+        this.request_queue.push_tail (request);
+        this.show ();
     }
 
     public void send_identity_cb (IdCardWidget id_card_widget)
     {
+        return_if_fail (request_queue.length > 0);
+
         this.selected_id_card_widget = id_card_widget;
 
-        if (id_card_widget.id_card.password == null)
+        var request = this.request_queue.pop_head ();
+        var identity = id_card_widget.id_card;
+        bool reset_password = false;
+
+        if (identity.password == null)
         {
             var dialog = new AddPasswordDialog ();
             var result = dialog.run ();
 
             switch (result) {
             case ResponseType.OK:
-                this.hide ();
-                this.callback ();
+                identity.password = dialog.password;
+                reset_password = ! dialog.remember;
                 break;
             default:
-                this.hide ();
+                identity = null;
                 break;
             }
+
             dialog.destroy ();
         }
-        else
-        {
-          this.hide ();
-          this.callback ();
-        }
+
+        if (this.request_queue.is_empty())
+            this.hide ();
+
+        request.return_identity (identity);
+
+        if (reset_password)
+            identity.password = null;
     }
 
     private void label_make_bold (Label label)
@@ -414,26 +430,44 @@ class MainWindow : Window
     {
         string[] authors = {
             "Javier Jardón <jjardon@codethink.co.uk>",
+            "Sam Thursfield <samthursfield@codethink.co.uk>",
             null
         };
 
-        const string copyright = "Copyright 2011 JANET";
+        string copyright = "Copyright 2011 JANET";
 
-        const string license =
-"
-    This program is free software: you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+        string license =
+"""
+Copyright (c) 2011, JANET(UK)
+All rights reserved.
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
 
-    You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-";
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+3. Neither the name of JANET(UK) nor the names of its contributors
+   may be used to endorse or promote products derived from this software
+   without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+""";
 
         Gtk.show_about_dialog (this,
             "comments", _("Moonshot project UI"),
@@ -459,7 +493,7 @@ class MainWindow : Window
 #if VALA_0_12
                                 Stock.ADD,
 #else
-                                STOCK.ADD,
+                                STOCK_ADD,
 #endif
                                 N_("Add ID Card"),
                                 null,
@@ -470,7 +504,7 @@ class MainWindow : Window
 #if VALA_0_12
                                  Stock.QUIT,
 #else
-                                 STOCK.QUIT,
+                                 STOCK_QUIT,
 #endif
                                  N_("Quit"),
                                  "<control>Q",
@@ -487,7 +521,7 @@ class MainWindow : Window
 #if VALA_0_12
                                   Stock.ABOUT,
 #else
-                                  STOCK.ABOUT,
+                                  STOCK_ABOUT,
 #endif
                                   N_("About"),
                                   null,
