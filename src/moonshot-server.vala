@@ -163,6 +163,64 @@ public class MoonshotServer : Object {
         request.mutex.unlock ();
     }
 
+    [CCode (cname = "moonshot_get_default_identity")]
+    public static void get_default_identity (Rpc.AsyncCall call,
+                                             ref string nai_out,
+                                             ref string password_out)
+    {
+        bool result = false;
+
+        var request = new IdentityRequest.default (main_window);
+
+        // This is really a lot of work to get a default identity.
+        // However, it's really best to do so in the main loop to avoid
+        // races (the alternative is add a mutex to the ID card data,
+        // but this is the only place it would be used).
+        request.mutex = new Mutex ();
+        request.cond = new Cond ();
+        request.set_callback (return_identity_cb);
+
+        request.mutex.lock ();
+        Idle.add (request.execute);
+
+        while (request.complete == false)
+            request.cond.wait (request.mutex);
+
+        nai_out = "";
+        password_out = "";
+        certificate_out = "";
+
+        var id_card = request.id_card;
+        bool has_service = false;
+
+        if (id_card == null) {
+            foreach (string id_card_service in id_card.services)
+            {
+                if (id_card_service == service)
+                    has_service = true;
+            }
+
+            if (has_service)
+            {
+                // The strings are freed by the RPC runtime
+                nai_out = id_card.nai;
+                password_out = id_card.password;
+                certificate_out = "certificate";
+
+                result = true;
+            }
+        }
+
+        // The outputs must be set before this function is called. For this
+        // reason they are 'ref' not 'out' parameters - Vala assigns to the
+        // 'out' parameters only at the end of the function, which is too
+        // late.
+        call.return (&result);
+
+        request.cond.signal ();
+        request.mutex.unlock ();
+    }
+
     // Called from the main loop thread when an identity has
     // been selected
     static void return_identity_cb (IdentityRequest request) {
