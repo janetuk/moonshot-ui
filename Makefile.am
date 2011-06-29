@@ -68,9 +68,9 @@ src/moonshot-msrpc.h: src/moonshot-msrpc.idl src/moonshot-msrpc.acf
 
 src/moonshot-msrpc_s.c: src/moonshot-msrpc.h
 
-else
+endif
 
-# IPC_DBUS
+if IPC_DBUS
 
 # DBus service file
 dbusservicedir = $(datadir)/dbus-1/services
