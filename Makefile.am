@@ -45,7 +45,7 @@ AM_VALAFLAGS += \
 noinst_HEADERS = src/moonshot-msrpc.h
 
 src_moonshot_SOURCES += \
-        src/moonshot-msrpc-server.vala \
+        src/moonshot-server-msrpc.vala \
         src/moonshot-msrpc_s.c \
         src/moonshot-msrpc.vapi
 
@@ -85,7 +85,7 @@ AM_VALAFLAGS += \
 	--pkg dbus-glib-1 \
 	--define=IPC_DBUS
 
-src_moonshot_SOURCES += src/moonshot-dbus-server.vala
+src_moonshot_SOURCES += src/moonshot-server-dbus.vala
 
 bin_PROGRAMS += src/dbus-client
 
