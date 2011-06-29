@@ -29,12 +29,11 @@ src/moonshot-id.c
 src/moonshot-idcard-widget.c
 src/moonshot-identity-request.c
 src/moonshot-identities-manager.c
-src/moonshot-msrpc-server.c
 src/moonshot-msrpc.h
 src/moonshot-msrpc_c.c
 src/moonshot-msrpc_s.c
 src/moonshot-password-dialog.c
-src/moonshot-server-dbus.c
+src/moonshot-server.c
 src/moonshot-utils.c
 src/moonshot-window.c
 src/msrpc-client.c

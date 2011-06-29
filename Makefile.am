@@ -22,6 +22,7 @@ src_moonshot_SOURCES = \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
+        src/moonshot-server.vala \
         src/moonshot-window.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
@@ -42,19 +43,18 @@ AM_VALAFLAGS += \
 	--pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
-noinst_HEADERS = src/moonshot-msrpc.h
-
 src_moonshot_SOURCES += \
-        src/moonshot-server-msrpc.vala \
-        src/moonshot-msrpc_s.c \
         src/moonshot-msrpc.vapi
+
+nodist_src_moonshot_SOURCES = \
+        src/moonshot-msrpc_s.c
 
 bin_PROGRAMS += src/msrpc-client
 
-src_msrpc_client_SOURCES = \
+nodist_src_msrpc_client_SOURCES = \
         src/msrpc-client.vala \
-        src/moonshot-msrpc_c.c \
-        src/moonshot-msrpc.vapi
+        src/moonshot-msrpc.vapi \
+        src/moonshot-msrpc_c.c
 
 src_msrpc_client_LDADD = \
         $(moonshot_LIBS)
@@ -84,8 +84,6 @@ $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 AM_VALAFLAGS += \
 	--pkg dbus-glib-1 \
 	--define=IPC_DBUS
-
-src_moonshot_SOURCES += src/moonshot-server-dbus.vala
 
 bin_PROGRAMS += src/dbus-client
 
