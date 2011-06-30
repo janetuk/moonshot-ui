@@ -20,8 +20,8 @@ class IdentitiesManager : Object {
             stdout.printf("Error: %s\n", e.message);
         }
 
-	var identities_uris = key_file.get_groups ();
-	foreach (string identity in identities_uris)
+        var identities_uris = key_file.get_groups ();
+        foreach (string identity in identities_uris)
         {
             try
             {
