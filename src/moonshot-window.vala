@@ -7,7 +7,7 @@ class MainWindow : Window
 
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
-    private VBox vbox_rigth;
+    private VBox vbox_right;
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
 
@@ -122,7 +122,7 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
 
-        this.vbox_rigth.set_visible (false);
+        this.vbox_right.set_visible (false);
         this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
@@ -175,9 +175,9 @@ class MainWindow : Window
 
     private void show_details (IdCard id_card)
     {
-       this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
+       this.vbox_right.set_visible (!vbox_right.get_visible ());
 
-       if (this.vbox_rigth.get_visible () == false)
+       if (this.vbox_right.get_visible () == false)
        {
            this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
        }
@@ -627,13 +627,13 @@ SUCH DAMAGE.
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
 
-        this.vbox_rigth = new VBox (false, 18);
-        vbox_rigth.pack_start (login_vbox, false, true, 0);
-        vbox_rigth.pack_start (services_vbox, false, true, 0);
+        this.vbox_right = new VBox (false, 18);
+        vbox_right.pack_start (login_vbox, false, true, 0);
+        vbox_right.pack_start (services_vbox, false, true, 0);
 
         var hbox = new HBox (false, 12);
         hbox.pack_start (vbox_left, false, false, 0);
-        hbox.pack_start (vbox_rigth, false, false, 0);
+        hbox.pack_start (vbox_right, false, false, 0);
 
         var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
@@ -643,7 +643,7 @@ SUCH DAMAGE.
         add (main_vbox);
 
         main_vbox.show_all();
-        this.vbox_rigth.hide ();
+        this.vbox_right.hide ();
     }
 
     private void set_atk_name_description (Widget widget, string name, string description)
