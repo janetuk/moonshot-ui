@@ -62,8 +62,46 @@ public class MoonshotServer : Object {
                 password_out = id_card.password;
                 certificate_out = "certificate";
 
+                // User should have been prompted if there was no p/w.
+                return_if_fail (nai_out != null);
+                return_if_fail (password_out != null);
+
                 return true;
             }
+        }
+
+        return false;
+    }
+
+    /**
+     * Returns the default identity - most recently used.
+     *
+     * @param nai_out NAI stored in the ID card
+     * @param password_out Password stored in the ID card
+     *
+     * @return true on success, false if no identities are stored
+     */
+    public async bool get_default_identity (out string nai_out,
+                                            out string password_out)
+    {
+        var request = new IdentityRequest.default (main_window);
+        request.set_callback ((IdentityRequest) => get_default_identity.callback());
+        request.execute ();
+        yield;
+
+        nai_out = "";
+        password_out = "";
+
+        if (request.id_card != null)
+        {
+            nai_out = request.id_card.nai;
+            password_out = request.id_card.password;
+
+            // User should have been prompted if there was no p/w.
+            return_val_if_fail (nai_out != null, false);
+            return_val_if_fail (password_out != null, false);
+
+            return true;
         }
 
         return false;
@@ -102,13 +140,13 @@ public class MoonshotServer : Object {
     }
 
     [CCode (cname = "moonshot_get_identity")]
-    public static void moonshot_get_identity (Rpc.AsyncCall call,
-                                              string nai,
-                                              string password,
-                                              string service,
-                                              ref string nai_out,
-                                              ref string password_out,
-                                              ref string certificate_out)
+    public static void get_identity (Rpc.AsyncCall call,
+                                     string nai,
+                                     string password,
+                                     string service,
+                                     ref string nai_out,
+                                     ref string password_out,
+                                     ref string certificate_out)
     {
         bool result = false;
 
@@ -149,6 +187,9 @@ public class MoonshotServer : Object {
                 password_out = id_card.password;
                 certificate_out = "certificate";
 
+                return_if_fail (nai_out != null);
+                return_if_fail (password_out != null);
+
                 result = true;
             }
         }
@@ -168,14 +209,9 @@ public class MoonshotServer : Object {
                                              ref string nai_out,
                                              ref string password_out)
     {
-        bool result = false;
+        bool result;
 
         var request = new IdentityRequest.default (main_window);
-
-        // This is really a lot of work to get a default identity.
-        // However, it's really best to do so in the main loop to avoid
-        // races (the alternative is add a mutex to the ID card data,
-        // but this is the only place it would be used).
         request.mutex = new Mutex ();
         request.cond = new Cond ();
         request.set_callback (return_identity_cb);
@@ -188,33 +224,22 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
-        certificate_out = "";
 
-        var id_card = request.id_card;
-        bool has_service = false;
+        if (request.id_card != null)
+        {
+            nai_out = request.id_card.nai;
+            password_out = request.id_card.password;
 
-        if (id_card == null) {
-            foreach (string id_card_service in id_card.services)
-            {
-                if (id_card_service == service)
-                    has_service = true;
-            }
+            return_if_fail (nai_out != null);
+            return_if_fail (password_out != null);
 
-            if (has_service)
-            {
-                // The strings are freed by the RPC runtime
-                nai_out = id_card.nai;
-                password_out = id_card.password;
-                certificate_out = "certificate";
-
-                result = true;
-            }
+            result = true;
+        }
+        else
+        {
+            result = false;
         }
 
-        // The outputs must be set before this function is called. For this
-        // reason they are 'ref' not 'out' parameters - Vala assigns to the
-        // 'out' parameters only at the end of the function, which is too
-        // late.
         call.return (&result);
 
         request.cond.signal ();

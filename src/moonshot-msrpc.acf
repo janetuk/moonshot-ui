@@ -4,6 +4,7 @@
 ]
 interface moonshot
 {
-	[async] moonshot_get_identity();
+    [async] moonshot_get_identity();
+    [async] moonshot_get_default_identity();
 }
 

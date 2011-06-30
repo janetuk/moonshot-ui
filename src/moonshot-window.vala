@@ -21,8 +21,7 @@ class MainWindow : Window
 
     private MoonshotServer ipc_server;
 
-    public IdCardWidget selected_id_card_widget;
-
+    private IdCard default_id_card;
     private Queue<IdentityRequest> request_queue;
 
     private enum Columns
@@ -148,6 +147,8 @@ class MainWindow : Window
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
+
+        this.default_id_card = id_card;
     }
 
     private void load_id_cards ()
@@ -159,6 +160,8 @@ class MainWindow : Window
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
+
+        this.default_id_card = identities_manager.id_card_list.data;
     }
 
     private void fill_details (IdCardWidget id_card_widget)
@@ -248,7 +251,7 @@ class MainWindow : Window
 
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
-        id_card_widget.send_id.connect (send_identity_cb);
+        id_card_widget.send_id.connect ((w) => send_identity_cb (w.id_card));
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
     }
@@ -342,21 +345,36 @@ class MainWindow : Window
 
     public void select_identity (IdentityRequest request)
     {
+        IdCard identity = null;
+
+        this.request_queue.push_tail (request);
+
+        if (request.select_default)
+        {
+            identity = this.default_id_card;
+        }
+
         /* Automatic service matching rules can go here */
 
-        /* Resort to manual selection */
-        this.request_queue.push_tail (request);
-        this.show ();
+        if (identity == null)
+        {
+            // Resort to manual selection
+            this.show ();
+        }
+        else
+        {
+            // Send back the identity (we can't directly run the
+            // callback because we may be being called from a 'yield')
+            Idle.add (() => { send_identity_cb (identity); return false; });
+            return;
+        }
     }
 
-    public void send_identity_cb (IdCardWidget id_card_widget)
+    public void send_identity_cb (IdCard identity)
     {
         return_if_fail (request_queue.length > 0);
 
-        this.selected_id_card_widget = id_card_widget;
-
         var request = this.request_queue.pop_head ();
-        var identity = id_card_widget.id_card;
         bool reset_password = false;
 
         if (identity.password == null)
@@ -379,6 +397,9 @@ class MainWindow : Window
 
         if (this.request_queue.is_empty())
             this.hide ();
+
+        if (identity != null)
+            this.default_id_card = identity;
 
         request.return_identity (identity);
 

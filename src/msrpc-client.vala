@@ -9,6 +9,17 @@ void main () {
     string nai = null, password = null, certificate = null;
     bool result = false;
 
+    /* Get default identity */
+    Rpc.AsyncCall call = Rpc.AsyncCall();
+    get_default_identity (call, ref nai, ref password);
+    result = call.complete_bool ();
+
+    if (result == false)
+        error ("Unable to get default identity");
+    else
+        stdout.printf ("default: %s %s\n", nai, password);
+
+    /* Prompt for identity */
     Rpc.AsyncCall call = Rpc.AsyncCall();
     get_identity (call, "username@issuer", "pass", "service", ref nai, ref password, ref certificate);
     result = call.complete_bool ();

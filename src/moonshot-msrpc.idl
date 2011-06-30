@@ -10,5 +10,8 @@ interface moonshot
                                [out, string] char **nai_out,
                                [out, string] char **password_out,
                                [out, string] char **certificate_out);
+
+    int moonshot_get_default_identity ([out, string] char **nai_out,
+                                       [out, string] char **password_out);
 }
 

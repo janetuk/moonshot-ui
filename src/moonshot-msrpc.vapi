@@ -18,4 +18,9 @@ namespace MoonshotRpcInterface {
                                      ref string nai_out,
                                      ref string password_out,
                                      ref string certificate_out);
+
+    [CCode (cname = "moonshot_get_default_identity")]
+    public extern void get_default_identity (Rpc.AsyncCall call,
+                                             ref string nai_out,
+                                             ref string password_out);
 }

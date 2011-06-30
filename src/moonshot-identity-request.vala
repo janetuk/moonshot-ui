@@ -3,6 +3,7 @@ delegate void ReturnIdentityCallback (IdentityRequest request);
 class IdentityRequest : Object {
     public IdCard? id_card = null;
     public bool complete = false;
+    public bool select_default = false;
 
     private MainWindow main_window;
     private string nai;
@@ -20,6 +21,12 @@ class IdentityRequest : Object {
         this.nai = nai;
         this.password = password;
         this.certificate = certificate;
+    }
+
+    public IdentityRequest.default (MainWindow main_window)
+    {
+        this.main_window = main_window;
+        this.select_default = true;
     }
 
     public void set_callback (owned ReturnIdentityCallback cb)
