@@ -24,7 +24,7 @@ void main () {
         }
 
 
-        if (demo.get_identity ("username@issuer", "pass", "service", out nai_out, out password_out, out certificate_out))
+        if (demo.get_identity ("username@issuer", "pass", "", out nai_out, out password_out, out certificate_out))
         {
             stdout.printf ("%s %s %s\n", nai_out, password_out, certificate_out);
         }

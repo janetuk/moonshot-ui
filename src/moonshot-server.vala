@@ -18,7 +18,7 @@ public class MoonshotServer : Object {
      *
      * @param nai NAI of the ID Card (optional)
      * @param password Password of the ID Card (optional)
-     * @param service Service application request an ID Card for
+     * @param service Service application request an ID Card for (optional)
      * @param nai_out NAI stored in the ID Card
      * @param password_out Password stored in the ID Card
      * @param certificate Certificate stored in th ID Card
@@ -33,8 +33,6 @@ public class MoonshotServer : Object {
                                     out string password_out,
                                     out string certificate_out)
     {
-        bool has_service = false;
-
         var request = new IdentityRequest (main_window,
                                            nai,
                                            password,
@@ -50,24 +48,15 @@ public class MoonshotServer : Object {
         var id_card = request.id_card;
 
         if (id_card != null) {
-            foreach (string id_card_service in id_card.services)
-            {
-                if (id_card_service == service)
-                    has_service = true;
-            }
+            nai_out = id_card.nai;
+            password_out = id_card.password;
+            certificate_out = "certificate";
 
-            if (has_service)
-            {
-                nai_out = id_card.nai;
-                password_out = id_card.password;
-                certificate_out = "certificate";
+            // User should have been prompted if there was no p/w.
+            return_if_fail (nai_out != null);
+            return_if_fail (password_out != null);
 
-                // User should have been prompted if there was no p/w.
-                return_if_fail (nai_out != null);
-                return_if_fail (password_out != null);
-
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -171,27 +160,17 @@ public class MoonshotServer : Object {
         certificate_out = "";
 
         var id_card = request.id_card;
-        bool has_service = false;
 
         if (id_card == null) {
-            foreach (string id_card_service in id_card.services)
-            {
-                if (id_card_service == service)
-                    has_service = true;
-            }
+            // The strings are freed by the RPC runtime
+            nai_out = id_card.nai;
+            password_out = id_card.password;
+            certificate_out = "certificate";
 
-            if (has_service)
-            {
-                // The strings are freed by the RPC runtime
-                nai_out = id_card.nai;
-                password_out = id_card.password;
-                certificate_out = "certificate";
+            return_if_fail (nai_out != null);
+            return_if_fail (password_out != null);
 
-                return_if_fail (nai_out != null);
-                return_if_fail (password_out != null);
-
-                result = true;
-            }
+            result = true;
         }
 
         // The outputs must be set before this function is called. For this
