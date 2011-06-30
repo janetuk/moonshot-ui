@@ -21,7 +21,7 @@ void main () {
         stdout.printf ("default: %s %s\n", nai, password);
 
     /* Prompt for identity */
-    Rpc.AsyncCall call = Rpc.AsyncCall();
+    call = Rpc.AsyncCall();
     get_identity (call,
                   "username@issuer",
                   "pass",
