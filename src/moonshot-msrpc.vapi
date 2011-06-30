@@ -17,7 +17,10 @@ namespace MoonshotRpcInterface {
                                      string service,
                                      ref string nai_out,
                                      ref string password_out,
-                                     ref string certificate_out);
+                                     ref string server_certificate_hash,
+                                     ref string ca_certificate,
+                                     ref string subject_name_constraint,
+                                     ref string subject_alt_name_constraint);
 
     [CCode (cname = "moonshot_get_default_identity")]
     public extern void get_default_identity (Rpc.AsyncCall call,

@@ -16,12 +16,20 @@ public class MoonshotServer : Object {
      *
      * The function will block until the user choose the ID card.
      *
+     * There are two types of trust anchor that may be returned. If
+     * server_certificate_hash is non-empty, the remaining parameters
+     * will be empty. Otherwise, the ca_certificate paramater and the
+     * subject name constraints will be returned.
+     *
      * @param nai NAI of the ID Card (optional)
      * @param password Password of the ID Card (optional)
      * @param service Service application request an ID Card for (optional)
      * @param nai_out NAI stored in the ID Card
      * @param password_out Password stored in the ID Card
-     * @param certificate Certificate stored in th ID Card
+     * @param server_certificate_hash Hash of the identity server's certificate
+     * @param ca_certificate Base64-encoded CA certificate
+     * @param subject_name_constraint Subject name constraint
+     * @param subject_alt_name_constraint Subject alternative name constraint
      *
      * @return true if the user choose a correct ID card for that service,
      *         false otherwise.
@@ -31,7 +39,10 @@ public class MoonshotServer : Object {
                                     string service,
                                     out string nai_out,
                                     out string password_out,
-                                    out string certificate_out)
+                                    out string server_certificate_hash,
+                                    out string ca_certificate,
+                                    out string subject_name_constraint,
+                                    out string subject_alt_name_constraint)
     {
         var request = new IdentityRequest (main_window,
                                            nai,
@@ -43,14 +54,18 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
-        certificate_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         var id_card = request.id_card;
 
         if (id_card != null) {
             nai_out = id_card.nai;
             password_out = id_card.password;
-            certificate_out = "certificate";
+
+            server_certificate_hash = "certificate";
 
             // User should have been prompted if there was no p/w.
             return_if_fail (nai_out != null);
@@ -135,7 +150,10 @@ public class MoonshotServer : Object {
                                      string service,
                                      ref string nai_out,
                                      ref string password_out,
-                                     ref string certificate_out)
+                                     ref string server_certificate_hash,
+                                     ref string ca_certificate,
+                                     ref string subject_name_constraint,
+                                     ref string subject_alt_name_constraint)
     {
         bool result = false;
 
@@ -157,7 +175,10 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
-        certificate_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         var id_card = request.id_card;
 
@@ -165,7 +186,7 @@ public class MoonshotServer : Object {
             // The strings are freed by the RPC runtime
             nai_out = id_card.nai;
             password_out = id_card.password;
-            certificate_out = "certificate";
+            server_certificate_hash = "certificate";
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);

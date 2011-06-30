@@ -7,6 +7,7 @@ void main () {
                      Rpc.Flags.PER_USER);
 
     string nai = null, password = null, certificate = null;
+    string a = null, b = null, c = null;
     bool result = false;
 
     /* Get default identity */
@@ -21,7 +22,16 @@ void main () {
 
     /* Prompt for identity */
     Rpc.AsyncCall call = Rpc.AsyncCall();
-    get_identity (call, "username@issuer", "pass", "service", ref nai, ref password, ref certificate);
+    get_identity (call,
+                  "username@issuer",
+                  "pass",
+                  "service",
+                  ref nai,
+                  ref password,
+                  ref certificate,
+                  ref a,
+                  ref b,
+                  ref c);
     result = call.complete_bool ();
 
     if (result == false)
