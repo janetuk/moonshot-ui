@@ -10,30 +10,6 @@ public class MoonshotServer : Object {
         this.main_window = (MainWindow) window;
     }
 
-    /**
-     * This is the function used by the GSS mechanism to get the NAI,
-     * password and certificate of the ID card for the specificated service.
-     *
-     * The function will block until the user choose the ID card.
-     *
-     * There are two types of trust anchor that may be returned. If
-     * server_certificate_hash is non-empty, the remaining parameters
-     * will be empty. Otherwise, the ca_certificate paramater and the
-     * subject name constraints will be returned.
-     *
-     * @param nai NAI of the ID Card (optional)
-     * @param password Password of the ID Card (optional)
-     * @param service Service application request an ID Card for (optional)
-     * @param nai_out NAI stored in the ID Card
-     * @param password_out Password stored in the ID Card
-     * @param server_certificate_hash Hash of the identity server's certificate
-     * @param ca_certificate Base64-encoded CA certificate
-     * @param subject_name_constraint Subject name constraint
-     * @param subject_alt_name_constraint Subject alternative name constraint
-     *
-     * @return true if the user choose a correct ID card for that service,
-     *         false otherwise.
-     */
     public async bool get_identity (string nai,
                                     string password,
                                     string service,
@@ -77,14 +53,6 @@ public class MoonshotServer : Object {
         return false;
     }
 
-    /**
-     * Returns the default identity - most recently used.
-     *
-     * @param nai_out NAI stored in the ID card
-     * @param password_out Password stored in the ID card
-     *
-     * @return true on success, false if no identities are stored
-     */
     public async bool get_default_identity (out string nai_out,
                                             out string password_out)
     {
