@@ -111,7 +111,7 @@ public class MoonshotServer : Object {
         return instance;
     }
 
-    [CCode (cname = "moonshot_get_identity")]
+    [CCode (cname = "moonshot_get_identity_rpc")]
     public static void get_identity (Rpc.AsyncCall call,
                                      string nai,
                                      string password,
@@ -172,7 +172,7 @@ public class MoonshotServer : Object {
         request.mutex.unlock ();
     }
 
-    [CCode (cname = "moonshot_get_default_identity")]
+    [CCode (cname = "moonshot_get_default_identity_rpc")]
     public static void get_default_identity (Rpc.AsyncCall call,
                                              ref string nai_out,
                                              ref string password_out)

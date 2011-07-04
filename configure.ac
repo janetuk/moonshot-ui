@@ -13,6 +13,9 @@ AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
+LT_PREREQ([2.2])
+LT_INIT([win32-dll])
+
 PKG_PROG_PKG_CONFIG([0.24])
 
 # Platform checks
@@ -82,6 +85,10 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
+        $IPC_MODULE
+])
+
+PKG_CHECK_MODULES(libmoonshot,[
         $IPC_MODULE
 ])
 

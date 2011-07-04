@@ -2,18 +2,32 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = po
 
+
+lib_LTLIBRARIES = libmoonshot/libmoonshot.la
+
 bin_PROGRAMS = src/moonshot
+
 
 AM_CFLAGS =
 
 AM_CPPFLAGS = \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	$(moonshot_CFLAGS)
+	-I$(top_srcdir)/libmoonshot
 
 AM_VALAFLAGS = \
 	config.vapi \
 	--pkg gtk+-2.0
+
+
+libmoonshot_libmoonshot_la_CPPFLAGS = \
+        $(libmoonshot_CFLAGS) \
+        $(AM_CPPFLAGS)
+
+libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
+
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
+
 
 src_moonshot_SOURCES = \
         src/moonshot-id.vala \
@@ -30,10 +44,22 @@ src_moonshot_SOURCES = \
 src_moonshot_LDADD = \
         $(moonshot_LIBS)
 
+src_moonshot_CPPFLAGS = \
+        $(moonshot_CFLAGS) \
+        $(AM_CPPFLAGS)
+
+
 if OS_WIN32
+
+libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined
+
 src_moonshot_CFLAGS = -mwindows
+
+AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
+
 endif
+
 
 if IPC_MSRPC
 
@@ -43,30 +69,36 @@ AM_VALAFLAGS += \
 	--pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
+BUILT_SOURCES = libmoonshot/moonshot-msrpc.h \
+                libmoonshot/moonshot-msrpc_s.c \
+                libmoonshot/moonshot-msrpc_c.c
+
+DISTCLEANFILES = ${BUILT_SOURCES}
+
+libmoonshot/moonshot-msrpc.h: libmoonshot/moonshot-msrpc.idl libmoonshot/moonshot-msrpc.acf
+	${AM_V_GEN} ${MIDL_WRAPPER} -o libmoonshot -m "${MIDL}" $^
+
+libmoonshot/moonshot-msrpc_s.c: libmoonshot/moonshot-msrpc.h
+libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
+
+libmoonshot_libmoonshot_la_SOURCES += \
+        libmoonshot/libmoonshot-msrpc.c \
+        libmoonshot/moonshot-msrpc_c.c
+
 src_moonshot_SOURCES += \
         src/moonshot-msrpc.vapi
 
 nodist_src_moonshot_SOURCES = \
-        src/moonshot-msrpc_s.c
+        libmoonshot/moonshot-msrpc_s.c
 
 bin_PROGRAMS += src/msrpc-client
 
 nodist_src_msrpc_client_SOURCES = \
         src/msrpc-client.vala \
         src/moonshot-msrpc.vapi \
-        src/moonshot-msrpc_c.c
+        libmoonshot/moonshot-msrpc_c.c
 
-src_msrpc_client_LDADD = \
-        $(moonshot_LIBS)
-
-BUILT_SOURCES = src/moonshot-msrpc.h src/moonshot-msrpc_s.c src/moonshot-msrpc_c.c
-
-DISTCLEANFILES = ${BUILT_SOURCES}
-
-src/moonshot-msrpc.h: src/moonshot-msrpc.idl src/moonshot-msrpc.acf
-	${AM_V_GEN} ${MIDL_WRAPPER} -o src -m "${MIDL}" $^
-
-src/moonshot-msrpc_s.c: src/moonshot-msrpc.h
+src_msrpc_client_LDADD = $(moonshot_LIBS)
 
 endif
 
@@ -84,6 +116,8 @@ $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 AM_VALAFLAGS += \
 	--pkg dbus-glib-1 \
 	--define=IPC_DBUS
+
+libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 bin_PROGRAMS += src/dbus-client
 
@@ -120,6 +154,14 @@ if OS_WIN32
 moonshot_webp_CFLAGS = -mwindows
 AM_VALAFLAGS += --define=OS_WIN32
 endif
+
+
+noinst_PROGRAMS = tests/basic
+
+
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
+tests_basic_SOURCES = tests/basic.c
+
 
 if OS_WIN32
 
