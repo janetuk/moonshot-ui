@@ -7,7 +7,7 @@ class MainWindow : Window
 
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
-    private VBox vbox_rigth;
+    private VBox vbox_right;
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
 
@@ -21,8 +21,7 @@ class MainWindow : Window
 
     private MoonshotServer ipc_server;
 
-    public IdCardWidget selected_id_card_widget;
-
+    private IdCard default_id_card;
     private Queue<IdentityRequest> request_queue;
 
     private enum Columns
@@ -122,7 +121,7 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
 
-        this.vbox_rigth.set_visible (false);
+        this.vbox_right.set_visible (false);
         this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
@@ -148,6 +147,8 @@ class MainWindow : Window
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
+
+        this.default_id_card = id_card;
     }
 
     private void load_id_cards ()
@@ -159,6 +160,8 @@ class MainWindow : Window
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
+
+        this.default_id_card = identities_manager.id_card_list.data;
     }
 
     private void fill_details (IdCardWidget id_card_widget)
@@ -175,9 +178,9 @@ class MainWindow : Window
 
     private void show_details (IdCard id_card)
     {
-       this.vbox_rigth.set_visible (!vbox_rigth.get_visible ());
+       this.vbox_right.set_visible (!vbox_right.get_visible ());
 
-       if (this.vbox_rigth.get_visible () == false)
+       if (this.vbox_right.get_visible () == false)
        {
            this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
        }
@@ -248,7 +251,7 @@ class MainWindow : Window
 
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
-        id_card_widget.send_id.connect (send_identity_cb);
+        id_card_widget.send_id.connect ((w) => send_identity_cb (w.id_card));
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
     }
@@ -342,21 +345,36 @@ class MainWindow : Window
 
     public void select_identity (IdentityRequest request)
     {
+        IdCard identity = null;
+
+        this.request_queue.push_tail (request);
+
+        if (request.select_default)
+        {
+            identity = this.default_id_card;
+        }
+
         /* Automatic service matching rules can go here */
 
-        /* Resort to manual selection */
-        this.request_queue.push_tail (request);
-        this.show ();
+        if (identity == null)
+        {
+            // Resort to manual selection
+            this.show ();
+        }
+        else
+        {
+            // Send back the identity (we can't directly run the
+            // callback because we may be being called from a 'yield')
+            Idle.add (() => { send_identity_cb (identity); return false; });
+            return;
+        }
     }
 
-    public void send_identity_cb (IdCardWidget id_card_widget)
+    public void send_identity_cb (IdCard identity)
     {
         return_if_fail (request_queue.length > 0);
 
-        this.selected_id_card_widget = id_card_widget;
-
         var request = this.request_queue.pop_head ();
-        var identity = id_card_widget.id_card;
         bool reset_password = false;
 
         if (identity.password == null)
@@ -379,6 +397,9 @@ class MainWindow : Window
 
         if (this.request_queue.is_empty())
             this.hide ();
+
+        if (identity != null)
+            this.default_id_card = identity;
 
         request.return_identity (identity);
 
@@ -627,13 +648,13 @@ SUCH DAMAGE.
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
 
-        this.vbox_rigth = new VBox (false, 18);
-        vbox_rigth.pack_start (login_vbox, false, true, 0);
-        vbox_rigth.pack_start (services_vbox, false, true, 0);
+        this.vbox_right = new VBox (false, 18);
+        vbox_right.pack_start (login_vbox, false, true, 0);
+        vbox_right.pack_start (services_vbox, false, true, 0);
 
         var hbox = new HBox (false, 12);
         hbox.pack_start (vbox_left, false, false, 0);
-        hbox.pack_start (vbox_rigth, false, false, 0);
+        hbox.pack_start (vbox_right, false, false, 0);
 
         var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
@@ -643,7 +664,7 @@ SUCH DAMAGE.
         add (main_vbox);
 
         main_vbox.show_all();
-        this.vbox_rigth.hide ();
+        this.vbox_right.hide ();
     }
 
     private void set_atk_name_description (Widget widget, string name, string description)
