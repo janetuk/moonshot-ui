@@ -33,11 +33,6 @@ namespace WebProvisioning
     }*/
   }
   
-  public void parser_error (MarkupParseContext context,
-                            Error              error)
-  {
-    debug ("error");
-  }
 
   public static int main (string[] args)
   {
@@ -66,7 +61,18 @@ namespace WebProvisioning
       error ("Could not retreive file size");
     }
     
-    MarkupParser parser = {start_element_func, end_element_func, text_element_func, null, parser_error};
+    MarkupParser parser = {start_element_func, end_element_func, text_element_func, null, null};
+    
+    var ctx = new MarkupParseContext(parser, 0, null, null);
+    
+    try
+    {
+      ctx.parse (text, text.length);
+    }
+    catch (Error e)
+    {
+      error ("Could not parse %s, invalid content", args[1]);
+    }
     
     
     return 0;
