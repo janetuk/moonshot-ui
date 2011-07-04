@@ -130,6 +130,15 @@
       </Directory>
 
       <Directory Id='DesktopFolder' Name='Desktop' />
+
+      <Component Id='RegistryEntries' Guid='7251DB79-DC03-4868-9855-41104164E5BA'>
+        <RegistryKey Root='HKLM'
+                     Key='Software\Moonshot'
+                     Action='createAndRemoveOnUninstall'>
+          <RegistryValue Type="string" Value="[BINDIR]$(var.MainExeFile)" />
+        </RegistryKey>
+      </Component>
+
     </Directory>
 
     <Feature Id='Complete' Level='1'>
@@ -139,6 +148,7 @@
       <ComponentRef Id='Gtk2ThemeEngineFiles' />
       <ComponentRef Id='Gtk2ThemeRcFiles' />
       <ComponentRef Id='Icons' />
+      <ComponentRef Id='RegistryEntries' />
     </Feature>
   </Product>
 </Wix>
