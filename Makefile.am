@@ -101,7 +101,7 @@ endif
 
 bin_PROGRAMS += src/moonshot-webp
 
-src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala
+src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala src/moonshot-id.vala
 src_moonshot_webp_LDADD = $(moonshot_LIBS)
 
 if IPC_DBUS
