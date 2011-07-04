@@ -16,7 +16,6 @@
 @SET_MAKE@
 
 
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -44,32 +43,27 @@ bin_PROGRAMS = src/moonshot$(EXEEXT) $(am__EXEEXT_1) $(am__EXEEXT_2)
 @IPC_MSRPC_TRUE@	--define=IPC_MSRPC
 
 @IPC_MSRPC_TRUE@am__append_4 = \
-@IPC_MSRPC_TRUE@        src/moonshot-msrpc-server.vala \
-@IPC_MSRPC_TRUE@        src/moonshot-msrpc_s.c \
 @IPC_MSRPC_TRUE@        src/moonshot-msrpc.vapi
 
 @IPC_MSRPC_TRUE@am__append_5 = src/msrpc-client
-@IPC_MSRPC_FALSE@am__append_6 = \
-@IPC_MSRPC_FALSE@	--pkg dbus-glib-1 \
-@IPC_MSRPC_FALSE@	--define=IPC_DBUS
+@IPC_DBUS_TRUE@am__append_6 = \
+@IPC_DBUS_TRUE@	--pkg dbus-glib-1 \
+@IPC_DBUS_TRUE@	--define=IPC_DBUS
 
-@IPC_MSRPC_FALSE@am__append_7 = src/moonshot-dbus-server.vala
-@IPC_MSRPC_FALSE@am__append_8 = src/dbus-client
+@IPC_DBUS_TRUE@am__append_7 = src/dbus-client
 subdir = .
-DIST_COMMON = $(am__configure_deps) $(am__noinst_HEADERS_DIST) \
-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
-	$(srcdir)/config.h.in $(top_srcdir)/configure ABOUT-NLS \
-	ChangeLog build-aux/compile build-aux/config.guess \
-	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
-	build-aux/install-sh build-aux/missing src/dbus-client.c \
-	src/moonshot-add-dialog.c src/moonshot-custom-vbox.c \
-	src/moonshot-dbus-server.c src/moonshot-id.c \
+DIST_COMMON = $(am__configure_deps) $(srcdir)/Makefile.am \
+	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
+	$(top_srcdir)/configure ABOUT-NLS ChangeLog build-aux/compile \
+	build-aux/config.guess build-aux/config.rpath \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/missing src/dbus-client.c src/moonshot-add-dialog.c \
+	src/moonshot-custom-vbox.c src/moonshot-id.c \
 	src/moonshot-idcard-widget.c src/moonshot-identities-manager.c \
-	src/moonshot-identity-request.c src/moonshot-msrpc-server.c \
-	src/moonshot-password-dialog.c src/moonshot-utils.c \
-	src/moonshot-window.c src/msrpc-client.c \
-	src_dbus_client_vala.stamp src_moonshot_vala.stamp \
-	src_msrpc_client_vala.stamp
+	src/moonshot-identity-request.c src/moonshot-password-dialog.c \
+	src/moonshot-server.c src/moonshot-utils.c \
+	src/moonshot-window.c src_dbus_client_vala.stamp \
+	src_moonshot_vala.stamp src_msrpc_client_vala.stamp
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
 	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intlmacosx.m4 \
@@ -87,47 +81,44 @@ CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 @IPC_MSRPC_TRUE@am__EXEEXT_1 = src/msrpc-client$(EXEEXT)
-@IPC_MSRPC_FALSE@am__EXEEXT_2 = src/dbus-client$(EXEEXT)
+@IPC_DBUS_TRUE@am__EXEEXT_2 = src/dbus-client$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(dbusservicedir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__src_dbus_client_SOURCES_DIST = src/dbus-client.vala
 am__dirstamp = $(am__leading_dot)dirstamp
-@IPC_MSRPC_FALSE@am_src_dbus_client_OBJECTS =  \
-@IPC_MSRPC_FALSE@	src/dbus-client.$(OBJEXT)
+@IPC_DBUS_TRUE@am_src_dbus_client_OBJECTS = src/dbus-client.$(OBJEXT)
 src_dbus_client_OBJECTS = $(am_src_dbus_client_OBJECTS)
 am__DEPENDENCIES_1 =
-@IPC_MSRPC_FALSE@src_dbus_client_DEPENDENCIES = $(am__DEPENDENCIES_1)
+@IPC_DBUS_TRUE@src_dbus_client_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__src_moonshot_SOURCES_DIST = src/moonshot-id.vala \
 	src/moonshot-add-dialog.vala src/moonshot-idcard-widget.vala \
 	src/moonshot-custom-vbox.vala \
 	src/moonshot-identities-manager.vala \
-	src/moonshot-identity-request.vala src/moonshot-window.vala \
-	src/moonshot-password-dialog.vala src/moonshot-utils.vala \
-	src/moonshot-msrpc-server.vala src/moonshot-msrpc_s.c \
-	src/moonshot-msrpc.vapi src/moonshot-dbus-server.vala
-@IPC_MSRPC_TRUE@am__objects_1 = src/src_moonshot-moonshot-msrpc-server.$(OBJEXT) \
-@IPC_MSRPC_TRUE@	src/src_moonshot-moonshot-msrpc_s.$(OBJEXT)
-@IPC_MSRPC_FALSE@am__objects_2 = src/src_moonshot-moonshot-dbus-server.$(OBJEXT)
+	src/moonshot-identity-request.vala src/moonshot-server.vala \
+	src/moonshot-window.vala src/moonshot-password-dialog.vala \
+	src/moonshot-utils.vala src/moonshot-msrpc.vapi
+am__objects_1 =
 am_src_moonshot_OBJECTS = src/src_moonshot-moonshot-id.$(OBJEXT) \
 	src/src_moonshot-moonshot-add-dialog.$(OBJEXT) \
 	src/src_moonshot-moonshot-idcard-widget.$(OBJEXT) \
 	src/src_moonshot-moonshot-custom-vbox.$(OBJEXT) \
 	src/src_moonshot-moonshot-identities-manager.$(OBJEXT) \
 	src/src_moonshot-moonshot-identity-request.$(OBJEXT) \
+	src/src_moonshot-moonshot-server.$(OBJEXT) \
 	src/src_moonshot-moonshot-window.$(OBJEXT) \
 	src/src_moonshot-moonshot-password-dialog.$(OBJEXT) \
-	src/src_moonshot-moonshot-utils.$(OBJEXT) $(am__objects_1) \
-	$(am__objects_2)
-src_moonshot_OBJECTS = $(am_src_moonshot_OBJECTS)
+	src/src_moonshot-moonshot-utils.$(OBJEXT) $(am__objects_1)
+@IPC_MSRPC_TRUE@nodist_src_moonshot_OBJECTS =  \
+@IPC_MSRPC_TRUE@	src/src_moonshot-moonshot-msrpc_s.$(OBJEXT)
+src_moonshot_OBJECTS = $(am_src_moonshot_OBJECTS) \
+	$(nodist_src_moonshot_OBJECTS)
 src_moonshot_DEPENDENCIES = $(am__DEPENDENCIES_1)
 src_moonshot_LINK = $(CCLD) $(src_moonshot_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-am__src_msrpc_client_SOURCES_DIST = src/msrpc-client.vala \
-	src/moonshot-msrpc_c.c src/moonshot-msrpc.vapi
-@IPC_MSRPC_TRUE@am_src_msrpc_client_OBJECTS =  \
+@IPC_MSRPC_TRUE@nodist_src_msrpc_client_OBJECTS =  \
 @IPC_MSRPC_TRUE@	src/msrpc-client.$(OBJEXT) \
 @IPC_MSRPC_TRUE@	src/moonshot-msrpc_c.$(OBJEXT)
-src_msrpc_client_OBJECTS = $(am_src_msrpc_client_OBJECTS)
+src_msrpc_client_OBJECTS = $(nodist_src_msrpc_client_OBJECTS)
 @IPC_MSRPC_TRUE@src_msrpc_client_DEPENDENCIES = $(am__DEPENDENCIES_1)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
@@ -157,10 +148,10 @@ AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(src_dbus_client_SOURCES) $(src_moonshot_SOURCES) \
-	$(src_msrpc_client_SOURCES)
+	$(nodist_src_moonshot_SOURCES) \
+	$(nodist_src_msrpc_client_SOURCES)
 DIST_SOURCES = $(am__src_dbus_client_SOURCES_DIST) \
-	$(am__src_moonshot_SOURCES_DIST) \
-	$(am__src_msrpc_client_SOURCES_DIST)
+	$(am__src_moonshot_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -190,8 +181,6 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 DATA = $(dbusservice_DATA)
-am__noinst_HEADERS_DIST = src/moonshot-msrpc.h
-HEADERS = $(noinst_HEADERS)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -374,18 +363,20 @@ src_moonshot_SOURCES = src/moonshot-id.vala \
 	src/moonshot-add-dialog.vala src/moonshot-idcard-widget.vala \
 	src/moonshot-custom-vbox.vala \
 	src/moonshot-identities-manager.vala \
-	src/moonshot-identity-request.vala src/moonshot-window.vala \
-	src/moonshot-password-dialog.vala src/moonshot-utils.vala \
-	$(am__append_4) $(am__append_7)
+	src/moonshot-identity-request.vala src/moonshot-server.vala \
+	src/moonshot-window.vala src/moonshot-password-dialog.vala \
+	src/moonshot-utils.vala $(am__append_4)
 src_moonshot_LDADD = \
         $(moonshot_LIBS)
 
 @OS_WIN32_TRUE@src_moonshot_CFLAGS = -mwindows
-@IPC_MSRPC_TRUE@noinst_HEADERS = src/moonshot-msrpc.h
-@IPC_MSRPC_TRUE@src_msrpc_client_SOURCES = \
+@IPC_MSRPC_TRUE@nodist_src_moonshot_SOURCES = \
+@IPC_MSRPC_TRUE@        src/moonshot-msrpc_s.c
+
+@IPC_MSRPC_TRUE@nodist_src_msrpc_client_SOURCES = \
 @IPC_MSRPC_TRUE@        src/msrpc-client.vala \
-@IPC_MSRPC_TRUE@        src/moonshot-msrpc_c.c \
-@IPC_MSRPC_TRUE@        src/moonshot-msrpc.vapi
+@IPC_MSRPC_TRUE@        src/moonshot-msrpc.vapi \
+@IPC_MSRPC_TRUE@        src/moonshot-msrpc_c.c
 
 @IPC_MSRPC_TRUE@src_msrpc_client_LDADD = \
 @IPC_MSRPC_TRUE@        $(moonshot_LIBS)
@@ -393,20 +384,18 @@ src_moonshot_LDADD = \
 @IPC_MSRPC_TRUE@BUILT_SOURCES = src/moonshot-msrpc.h src/moonshot-msrpc_s.c src/moonshot-msrpc_c.c
 @IPC_MSRPC_TRUE@DISTCLEANFILES = ${BUILT_SOURCES}
 
-# IPC_DBUS
-
 # DBus service file
-@IPC_MSRPC_FALSE@dbusservicedir = $(datadir)/dbus-1/services
-@IPC_MSRPC_FALSE@dbusservice_in_files = org.janet.Moonshot.service.in
-@IPC_MSRPC_FALSE@dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
-@IPC_MSRPC_FALSE@src_dbus_client_SOURCES = \
-@IPC_MSRPC_FALSE@        src/dbus-client.vala
+@IPC_DBUS_TRUE@dbusservicedir = $(datadir)/dbus-1/services
+@IPC_DBUS_TRUE@dbusservice_in_files = org.janet.Moonshot.service.in
+@IPC_DBUS_TRUE@dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
+@IPC_DBUS_TRUE@src_dbus_client_SOURCES = \
+@IPC_DBUS_TRUE@        src/dbus-client.vala
 
-@IPC_MSRPC_FALSE@src_dbus_client_LDADD = \
-@IPC_MSRPC_FALSE@        $(moonshot_LIBS)
+@IPC_DBUS_TRUE@src_dbus_client_LDADD = \
+@IPC_DBUS_TRUE@        $(moonshot_LIBS)
 
-@IPC_MSRPC_FALSE@CLEANFILES = $(dbusservice_DATA)
-@IPC_MSRPC_FALSE@EXTRA_DIST = $(dbusservice_in_files)
+@IPC_DBUS_TRUE@CLEANFILES = $(dbusservice_DATA)
+@IPC_DBUS_TRUE@EXTRA_DIST = $(dbusservice_in_files)
 all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -523,17 +512,15 @@ src/src_moonshot-moonshot-identities-manager.$(OBJEXT):  \
 	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-identity-request.$(OBJEXT):  \
 	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/src_moonshot-moonshot-server.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-window.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-password-dialog.$(OBJEXT):  \
 	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-utils.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/src_moonshot-moonshot-msrpc-server.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-msrpc_s.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/src_moonshot-moonshot-dbus-server.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/moonshot$(EXEEXT): $(src_moonshot_OBJECTS) $(src_moonshot_DEPENDENCIES) src/$(am__dirstamp)
 	@rm -f src/moonshot$(EXEEXT)
@@ -553,14 +540,13 @@ mostlyclean-compile:
 	-rm -f src/msrpc-client.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-add-dialog.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-custom-vbox.$(OBJEXT)
-	-rm -f src/src_moonshot-moonshot-dbus-server.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-id.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-idcard-widget.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-identities-manager.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-identity-request.$(OBJEXT)
-	-rm -f src/src_moonshot-moonshot-msrpc-server.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-msrpc_s.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-password-dialog.$(OBJEXT)
+	-rm -f src/src_moonshot-moonshot-server.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-utils.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-window.$(OBJEXT)
 
@@ -572,14 +558,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/msrpc-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-add-dialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-custom-vbox.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-id.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-idcard-widget.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-identities-manager.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-identity-request.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-msrpc_s.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-password-dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-window.Po@am__quote@
 
@@ -697,6 +682,22 @@ src/src_moonshot-moonshot-identity-request.obj: src/moonshot-identity-request.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-identity-request.obj `if test -f 'src/moonshot-identity-request.c'; then $(CYGPATH_W) 'src/moonshot-identity-request.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-identity-request.c'; fi`
 
+src/src_moonshot-moonshot-server.o: src/moonshot-server.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-server.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-server.Tpo -c -o src/src_moonshot-moonshot-server.o `test -f 'src/moonshot-server.c' || echo '$(srcdir)/'`src/moonshot-server.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-server.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-server.c' object='src/src_moonshot-moonshot-server.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-server.o `test -f 'src/moonshot-server.c' || echo '$(srcdir)/'`src/moonshot-server.c
+
+src/src_moonshot-moonshot-server.obj: src/moonshot-server.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-server.obj -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-server.Tpo -c -o src/src_moonshot-moonshot-server.obj `if test -f 'src/moonshot-server.c'; then $(CYGPATH_W) 'src/moonshot-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-server.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-server.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-server.c' object='src/src_moonshot-moonshot-server.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-server.obj `if test -f 'src/moonshot-server.c'; then $(CYGPATH_W) 'src/moonshot-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-server.c'; fi`
+
 src/src_moonshot-moonshot-window.o: src/moonshot-window.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-window.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-window.Tpo -c -o src/src_moonshot-moonshot-window.o `test -f 'src/moonshot-window.c' || echo '$(srcdir)/'`src/moonshot-window.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-window.Tpo src/$(DEPDIR)/src_moonshot-moonshot-window.Po
@@ -745,22 +746,6 @@ src/src_moonshot-moonshot-utils.obj: src/moonshot-utils.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-utils.obj `if test -f 'src/moonshot-utils.c'; then $(CYGPATH_W) 'src/moonshot-utils.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-utils.c'; fi`
 
-src/src_moonshot-moonshot-msrpc-server.o: src/moonshot-msrpc-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-msrpc-server.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Tpo -c -o src/src_moonshot-moonshot-msrpc-server.o `test -f 'src/moonshot-msrpc-server.c' || echo '$(srcdir)/'`src/moonshot-msrpc-server.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-msrpc-server.c' object='src/src_moonshot-moonshot-msrpc-server.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-msrpc-server.o `test -f 'src/moonshot-msrpc-server.c' || echo '$(srcdir)/'`src/moonshot-msrpc-server.c
-
-src/src_moonshot-moonshot-msrpc-server.obj: src/moonshot-msrpc-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-msrpc-server.obj -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Tpo -c -o src/src_moonshot-moonshot-msrpc-server.obj `if test -f 'src/moonshot-msrpc-server.c'; then $(CYGPATH_W) 'src/moonshot-msrpc-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-msrpc-server.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-msrpc-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-msrpc-server.c' object='src/src_moonshot-moonshot-msrpc-server.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-msrpc-server.obj `if test -f 'src/moonshot-msrpc-server.c'; then $(CYGPATH_W) 'src/moonshot-msrpc-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-msrpc-server.c'; fi`
-
 src/src_moonshot-moonshot-msrpc_s.o: src/moonshot-msrpc_s.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-msrpc_s.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-msrpc_s.Tpo -c -o src/src_moonshot-moonshot-msrpc_s.o `test -f 'src/moonshot-msrpc_s.c' || echo '$(srcdir)/'`src/moonshot-msrpc_s.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-msrpc_s.Tpo src/$(DEPDIR)/src_moonshot-moonshot-msrpc_s.Po
@@ -776,27 +761,6 @@ src/src_moonshot-moonshot-msrpc_s.obj: src/moonshot-msrpc_s.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-msrpc_s.c' object='src/src_moonshot-moonshot-msrpc_s.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-msrpc_s.obj `if test -f 'src/moonshot-msrpc_s.c'; then $(CYGPATH_W) 'src/moonshot-msrpc_s.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-msrpc_s.c'; fi`
-
-src/src_moonshot-moonshot-dbus-server.o: src/moonshot-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-dbus-server.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Tpo -c -o src/src_moonshot-moonshot-dbus-server.o `test -f 'src/moonshot-dbus-server.c' || echo '$(srcdir)/'`src/moonshot-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-dbus-server.c' object='src/src_moonshot-moonshot-dbus-server.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-dbus-server.o `test -f 'src/moonshot-dbus-server.c' || echo '$(srcdir)/'`src/moonshot-dbus-server.c
-
-src/src_moonshot-moonshot-dbus-server.obj: src/moonshot-dbus-server.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-dbus-server.obj -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Tpo -c -o src/src_moonshot-moonshot-dbus-server.obj `if test -f 'src/moonshot-dbus-server.c'; then $(CYGPATH_W) 'src/moonshot-dbus-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-dbus-server.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Tpo src/$(DEPDIR)/src_moonshot-moonshot-dbus-server.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-dbus-server.c' object='src/src_moonshot-moonshot-dbus-server.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-dbus-server.obj `if test -f 'src/moonshot-dbus-server.c'; then $(CYGPATH_W) 'src/moonshot-dbus-server.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-dbus-server.c'; fi`
-$(srcdir)/src/msrpc-client.c: $(srcdir)/src_msrpc_client_vala.stamp
-	@if test -f $@; then :; else \
-	  rm -f $(srcdir)/src_msrpc_client_vala.stamp; \
-	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_msrpc_client_vala.stamp; \
-	fi
 src_msrpc_client_vala.stamp: $(src_msrpc_client_SOURCES)
 	$(AM_V_VALAC)$(VALAC) $(AM_VALAFLAGS) $(VALAFLAGS) -C $(src_msrpc_client_SOURCES)
 	$(AM_V_at)touch $@
@@ -830,6 +794,11 @@ $(srcdir)/src/moonshot-identity-request.c: $(srcdir)/src_moonshot_vala.stamp
 	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
 	fi
+$(srcdir)/src/moonshot-server.c: $(srcdir)/src_moonshot_vala.stamp
+	@if test -f $@; then :; else \
+	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
+	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
+	fi
 $(srcdir)/src/moonshot-window.c: $(srcdir)/src_moonshot_vala.stamp
 	@if test -f $@; then :; else \
 	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
@@ -841,16 +810,6 @@ $(srcdir)/src/moonshot-password-dialog.c: $(srcdir)/src_moonshot_vala.stamp
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
 	fi
 $(srcdir)/src/moonshot-utils.c: $(srcdir)/src_moonshot_vala.stamp
-	@if test -f $@; then :; else \
-	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
-	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
-	fi
-$(srcdir)/src/moonshot-msrpc-server.c: $(srcdir)/src_moonshot_vala.stamp
-	@if test -f $@; then :; else \
-	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
-	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
-	fi
-$(srcdir)/src/moonshot-dbus-server.c: $(srcdir)/src_moonshot_vala.stamp
 	@if test -f $@; then :; else \
 	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
@@ -1199,7 +1158,7 @@ distcleancheck: distclean
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-recursive
-all-am: Makefile $(PROGRAMS) $(DATA) $(HEADERS) config.h
+all-am: Makefile $(PROGRAMS) $(DATA) config.h
 installdirs: installdirs-recursive
 installdirs-am:
 	for dir in "$(DESTDIR)$(bindir)" "$(DESTDIR)$(dbusservicedir)"; do \
@@ -1238,13 +1197,12 @@ maintainer-clean-generic:
 	-rm -f src/dbus-client.c
 	-rm -f src/moonshot-add-dialog.c
 	-rm -f src/moonshot-custom-vbox.c
-	-rm -f src/moonshot-dbus-server.c
 	-rm -f src/moonshot-id.c
 	-rm -f src/moonshot-idcard-widget.c
 	-rm -f src/moonshot-identities-manager.c
 	-rm -f src/moonshot-identity-request.c
-	-rm -f src/moonshot-msrpc-server.c
 	-rm -f src/moonshot-password-dialog.c
+	-rm -f src/moonshot-server.c
 	-rm -f src/moonshot-utils.c
 	-rm -f src/moonshot-window.c
 	-rm -f src/msrpc-client.c
@@ -1353,8 +1311,8 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dbusserviceDATA
 @IPC_MSRPC_TRUE@src/moonshot-msrpc_s.c: src/moonshot-msrpc.h
 
 # Rule to make the service file with bindir expanded
-@IPC_MSRPC_FALSE@$(dbusservice_DATA): $(dbusservice_in_files) Makefile
-@IPC_MSRPC_FALSE@	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+@IPC_DBUS_TRUE@$(dbusservice_DATA): $(dbusservice_in_files) Makefile
+@IPC_DBUS_TRUE@	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
 @OS_WIN32_TRUE@icons:
 @OS_WIN32_TRUE@	mkdir -p share/icons

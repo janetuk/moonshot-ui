@@ -29,7 +29,8 @@ typedef DBusGProxyClass MoonshotDBusProxyClass;
 
 struct _MoonshotIface {
 	GTypeInterface parent_iface;
-	gboolean (*get_identity) (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** certificate_out, GError** error);
+	gboolean (*get_identity) (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint, GError** error);
+	gboolean (*get_default_identity) (Moonshot* self, char** nai_out, char** password_out, GError** error);
 };
 
 struct _DBusObjectVTable {
@@ -45,7 +46,8 @@ struct _MoonshotDBusProxy {
 
 Moonshot* moonshot_dbus_proxy_new (DBusGConnection* connection, const char* name, const char* path);
 GType moonshot_get_type (void) G_GNUC_CONST;
-gboolean moonshot_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** certificate_out, GError** error);
+gboolean moonshot_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint, GError** error);
+gboolean moonshot_get_default_identity (Moonshot* self, char** nai_out, char** password_out, GError** error);
 static void _vala_dbus_register_object (DBusConnection* connection, const char* path, void* object);
 static void _vala_dbus_unregister_object (gpointer connection, GObject* object);
 void moonshot_dbus_register_object (DBusConnection* connection, const char* path, void* object);
@@ -54,12 +56,14 @@ DBusHandlerResult moonshot_dbus_message (DBusConnection* connection, DBusMessage
 static DBusHandlerResult _dbus_moonshot_introspect (Moonshot* self, DBusConnection* connection, DBusMessage* message);
 static DBusHandlerResult _dbus_moonshot_property_get_all (Moonshot* self, DBusConnection* connection, DBusMessage* message);
 static DBusHandlerResult _dbus_moonshot_get_identity (Moonshot* self, DBusConnection* connection, DBusMessage* message);
+static DBusHandlerResult _dbus_moonshot_get_default_identity (Moonshot* self, DBusConnection* connection, DBusMessage* message);
 GType moonshot_dbus_proxy_get_type (void) G_GNUC_CONST;
 DBusHandlerResult moonshot_dbus_proxy_filter (DBusConnection* connection, DBusMessage* message, void* user_data);
 enum  {
 	MOONSHOT_DBUS_PROXY_DUMMY_PROPERTY
 };
-static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** certificate_out, GError** error);
+static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint, GError** error);
+static gboolean moonshot_dbus_proxy_get_default_identity (Moonshot* self, char** nai_out, char** password_out, GError** error);
 static void moonshot_dbus_proxy_moonshot__interface_init (MoonshotIface* iface);
 static void moonshot_dbus_proxy_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void moonshot_dbus_proxy_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
@@ -69,8 +73,13 @@ static const DBusObjectPathVTable _moonshot_dbus_path_vtable = {_moonshot_dbus_u
 static const _DBusObjectVTable _moonshot_dbus_vtable = {moonshot_dbus_register_object};
 
 
-gboolean moonshot_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** certificate_out, GError** error) {
-	return MOONSHOT_GET_INTERFACE (self)->get_identity (self, nai, password, service, nai_out, password_out, certificate_out, error);
+gboolean moonshot_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint, GError** error) {
+	return MOONSHOT_GET_INTERFACE (self)->get_identity (self, nai, password, service, nai_out, password_out, server_certificate_hash, ca_certificate, subject_name_constraint, subject_alt_name_constraint, error);
+}
+
+
+gboolean moonshot_get_default_identity (Moonshot* self, char** nai_out, char** password_out, GError** error) {
+	return MOONSHOT_GET_INTERFACE (self)->get_default_identity (self, nai_out, password_out, error);
 }
 
 
@@ -106,7 +115,7 @@ static DBusHandlerResult _dbus_moonshot_introspect (Moonshot* self, DBusConnecti
 	reply = dbus_message_new_method_return (message);
 	dbus_message_iter_init_append (reply, &iter);
 	xml_data = g_string_new ("<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" \"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n");
-	g_string_append (xml_data, "<node>\n<interface name=\"org.freedesktop.DBus.Introspectable\">\n  <method name=\"Introspect\">\n    <arg name=\"data\" direction=\"out\" type=\"s\"/>\n  </method>\n</interface>\n<interface name=\"org.freedesktop.DBus.Properties\">\n  <method name=\"Get\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"out\" type=\"v\"/>\n  </method>\n  <method name=\"Set\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"in\" type=\"v\"/>\n  </method>\n  <method name=\"GetAll\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"props\" direction=\"out\" type=\"a{sv}\"/>\n  </method>\n</interface>\n<interface name=\"org.janet.Moonshot\">\n  <method name=\"GetIdentity\">\n    <arg name=\"nai\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"service\" type=\"s\" direction=\"in\"/>\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"certificate_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n</interface>\n");
+	g_string_append (xml_data, "<node>\n<interface name=\"org.freedesktop.DBus.Introspectable\">\n  <method name=\"Introspect\">\n    <arg name=\"data\" direction=\"out\" type=\"s\"/>\n  </method>\n</interface>\n<interface name=\"org.freedesktop.DBus.Properties\">\n  <method name=\"Get\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"out\" type=\"v\"/>\n  </method>\n  <method name=\"Set\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"in\" type=\"v\"/>\n  </method>\n  <method name=\"GetAll\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"props\" direction=\"out\" type=\"a{sv}\"/>\n  </method>\n</interface>\n<interface name=\"org.janet.Moonshot\">\n  <method name=\"GetIdentity\">\n    <arg name=\"nai\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"service\" type=\"s\" direction=\"in\"/>\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"GetDefaultIdentity\">\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n</interface>\n");
 	dbus_connection_list_registered (connection, g_object_get_data ((GObject *) self, "dbus_object_path"), &children);
 	for (i = 0; children[i]; i++) {
 		g_string_append_printf (xml_data, "<node name=\"%s\"/>\n", children[i]);
@@ -168,13 +177,19 @@ static DBusHandlerResult _dbus_moonshot_get_identity (Moonshot* self, DBusConnec
 	const char* _tmp3_;
 	char* nai_out = NULL;
 	char* password_out = NULL;
-	char* certificate_out = NULL;
+	char* server_certificate_hash = NULL;
+	char* ca_certificate = NULL;
+	char* subject_name_constraint = NULL;
+	char* subject_alt_name_constraint = NULL;
 	gboolean result;
 	DBusMessage* reply;
 	const char* _tmp4_;
 	const char* _tmp5_;
 	const char* _tmp6_;
-	dbus_bool_t _tmp7_;
+	const char* _tmp7_;
+	const char* _tmp8_;
+	const char* _tmp9_;
+	dbus_bool_t _tmp10_;
 	error = NULL;
 	if (strcmp (dbus_message_get_signature (message), "sss")) {
 		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
@@ -189,7 +204,7 @@ static DBusHandlerResult _dbus_moonshot_get_identity (Moonshot* self, DBusConnec
 	dbus_message_iter_get_basic (&iter, &_tmp3_);
 	dbus_message_iter_next (&iter);
 	service = g_strdup (_tmp3_);
-	result = moonshot_get_identity (self, nai, password, service, &nai_out, &password_out, &certificate_out, &error);
+	result = moonshot_get_identity (self, nai, password, service, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint, &error);
 	if (error) {
 		if (error->domain == DBUS_GERROR) {
 			switch (error->code) {
@@ -309,11 +324,164 @@ static DBusHandlerResult _dbus_moonshot_get_identity (Moonshot* self, DBusConnec
 	_tmp5_ = password_out;
 	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp5_);
 	_g_free0 (password_out);
-	_tmp6_ = certificate_out;
+	_tmp6_ = server_certificate_hash;
 	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp6_);
-	_g_free0 (certificate_out);
-	_tmp7_ = result;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp7_);
+	_g_free0 (server_certificate_hash);
+	_tmp7_ = ca_certificate;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp7_);
+	_g_free0 (ca_certificate);
+	_tmp8_ = subject_name_constraint;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp8_);
+	_g_free0 (subject_name_constraint);
+	_tmp9_ = subject_alt_name_constraint;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp9_);
+	_g_free0 (subject_alt_name_constraint);
+	_tmp10_ = result;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp10_);
+	if (reply) {
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	} else {
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	}
+}
+
+
+static DBusHandlerResult _dbus_moonshot_get_default_identity (Moonshot* self, DBusConnection* connection, DBusMessage* message) {
+	DBusMessageIter iter;
+	GError* error;
+	char* nai_out = NULL;
+	char* password_out = NULL;
+	gboolean result;
+	DBusMessage* reply;
+	const char* _tmp11_;
+	const char* _tmp12_;
+	dbus_bool_t _tmp13_;
+	error = NULL;
+	if (strcmp (dbus_message_get_signature (message), "")) {
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	}
+	dbus_message_iter_init (message, &iter);
+	result = moonshot_get_default_identity (self, &nai_out, &password_out, &error);
+	if (error) {
+		if (error->domain == DBUS_GERROR) {
+			switch (error->code) {
+				case DBUS_GERROR_FAILED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Failed", error->message);
+				break;
+				case DBUS_GERROR_NO_MEMORY:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NoMemory", error->message);
+				break;
+				case DBUS_GERROR_SERVICE_UNKNOWN:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.ServiceUnknown", error->message);
+				break;
+				case DBUS_GERROR_NAME_HAS_NO_OWNER:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NameHasNoOwner", error->message);
+				break;
+				case DBUS_GERROR_NO_REPLY:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NoReply", error->message);
+				break;
+				case DBUS_GERROR_IO_ERROR:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.IOError", error->message);
+				break;
+				case DBUS_GERROR_BAD_ADDRESS:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.BadAddress", error->message);
+				break;
+				case DBUS_GERROR_NOT_SUPPORTED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NotSupported", error->message);
+				break;
+				case DBUS_GERROR_LIMITS_EXCEEDED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.LimitsExceeded", error->message);
+				break;
+				case DBUS_GERROR_ACCESS_DENIED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.AccessDenied", error->message);
+				break;
+				case DBUS_GERROR_AUTH_FAILED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.AuthFailed", error->message);
+				break;
+				case DBUS_GERROR_NO_SERVER:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NoServer", error->message);
+				break;
+				case DBUS_GERROR_TIMEOUT:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Timeout", error->message);
+				break;
+				case DBUS_GERROR_NO_NETWORK:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.NoNetwork", error->message);
+				break;
+				case DBUS_GERROR_ADDRESS_IN_USE:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.AddressInUse", error->message);
+				break;
+				case DBUS_GERROR_DISCONNECTED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Disconnected", error->message);
+				break;
+				case DBUS_GERROR_INVALID_ARGS:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.InvalidArgs", error->message);
+				break;
+				case DBUS_GERROR_FILE_NOT_FOUND:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.FileNotFound", error->message);
+				break;
+				case DBUS_GERROR_FILE_EXISTS:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.FileExists", error->message);
+				break;
+				case DBUS_GERROR_UNKNOWN_METHOD:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.UnknownMethod", error->message);
+				break;
+				case DBUS_GERROR_TIMED_OUT:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.TimedOut", error->message);
+				break;
+				case DBUS_GERROR_MATCH_RULE_NOT_FOUND:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.MatchRuleNotFound", error->message);
+				break;
+				case DBUS_GERROR_MATCH_RULE_INVALID:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.MatchRuleInvalid", error->message);
+				break;
+				case DBUS_GERROR_SPAWN_EXEC_FAILED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Spawn.ExecFailed", error->message);
+				break;
+				case DBUS_GERROR_SPAWN_FORK_FAILED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Spawn.ForkFailed", error->message);
+				break;
+				case DBUS_GERROR_SPAWN_CHILD_EXITED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Spawn.ChildExited", error->message);
+				break;
+				case DBUS_GERROR_SPAWN_CHILD_SIGNALED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Spawn.ChildSignaled", error->message);
+				break;
+				case DBUS_GERROR_SPAWN_FAILED:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.Spawn.Failed", error->message);
+				break;
+				case DBUS_GERROR_UNIX_PROCESS_ID_UNKNOWN:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.UnixProcessIdUnknown", error->message);
+				break;
+				case DBUS_GERROR_INVALID_SIGNATURE:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.InvalidSignature", error->message);
+				break;
+				case DBUS_GERROR_INVALID_FILE_CONTENT:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.InvalidFileContent", error->message);
+				break;
+				case DBUS_GERROR_SELINUX_SECURITY_CONTEXT_UNKNOWN:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.SELinuxSecurityContextUnknown", error->message);
+				break;
+				case DBUS_GERROR_REMOTE_EXCEPTION:
+				reply = dbus_message_new_error (message, "org.freedesktop.DBus.Error.RemoteException", error->message);
+				break;
+			}
+		}
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	}
+	reply = dbus_message_new_method_return (message);
+	dbus_message_iter_init_append (reply, &iter);
+	_tmp11_ = nai_out;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp11_);
+	_g_free0 (nai_out);
+	_tmp12_ = password_out;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp12_);
+	_g_free0 (password_out);
+	_tmp13_ = result;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp13_);
 	if (reply) {
 		dbus_connection_send (connection, reply, NULL);
 		dbus_message_unref (reply);
@@ -333,6 +501,8 @@ DBusHandlerResult moonshot_dbus_message (DBusConnection* connection, DBusMessage
 		result = _dbus_moonshot_property_get_all (object, connection, message);
 	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "GetIdentity")) {
 		result = _dbus_moonshot_get_identity (object, connection, message);
+	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "GetDefaultIdentity")) {
+		result = _dbus_moonshot_get_default_identity (object, connection, message);
 	}
 	if (result == DBUS_HANDLER_RESULT_HANDLED) {
 		return result;
@@ -431,7 +601,7 @@ static void moonshot_dbus_proxy_init (MoonshotDBusProxy* self) {
 }
 
 
-static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** certificate_out, GError** error) {
+static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* nai, const char* password, const char* service, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint, GError** error) {
 	DBusError _dbus_error;
 	DBusGConnection *_connection;
 	DBusMessage *_message, *_reply;
@@ -443,10 +613,16 @@ static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* na
 	const char* _tmp3_;
 	char* _password_out;
 	const char* _tmp4_;
-	char* _certificate_out;
+	char* _server_certificate_hash;
 	const char* _tmp5_;
+	char* _ca_certificate;
+	const char* _tmp6_;
+	char* _subject_name_constraint;
+	const char* _tmp7_;
+	char* _subject_alt_name_constraint;
+	const char* _tmp8_;
 	gboolean _result;
-	dbus_bool_t _tmp6_;
+	dbus_bool_t _tmp9_;
 	if (((MoonshotDBusProxy*) self)->disposed) {
 		g_set_error (error, DBUS_GERROR, DBUS_GERROR_DISCONNECTED, "%s", "Connection is closed");
 		return FALSE;
@@ -468,74 +644,74 @@ static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* na
 		GQuark _edomain = 0;
 		gint _ecode = 0;
 		if (strstr (_dbus_error.name, "org.freedesktop.DBus.Error") == _dbus_error.name) {
-			const char* _tmp7_;
+			const char* _tmp10_;
 			_edomain = DBUS_GERROR;
-			_tmp7_ = _dbus_error.name + 27;
-			if (strcmp (_tmp7_, "Failed") == 0) {
+			_tmp10_ = _dbus_error.name + 27;
+			if (strcmp (_tmp10_, "Failed") == 0) {
 				_ecode = DBUS_GERROR_FAILED;
-			} else if (strcmp (_tmp7_, "NoMemory") == 0) {
+			} else if (strcmp (_tmp10_, "NoMemory") == 0) {
 				_ecode = DBUS_GERROR_NO_MEMORY;
-			} else if (strcmp (_tmp7_, "ServiceUnknown") == 0) {
+			} else if (strcmp (_tmp10_, "ServiceUnknown") == 0) {
 				_ecode = DBUS_GERROR_SERVICE_UNKNOWN;
-			} else if (strcmp (_tmp7_, "NameHasNoOwner") == 0) {
+			} else if (strcmp (_tmp10_, "NameHasNoOwner") == 0) {
 				_ecode = DBUS_GERROR_NAME_HAS_NO_OWNER;
-			} else if (strcmp (_tmp7_, "NoReply") == 0) {
+			} else if (strcmp (_tmp10_, "NoReply") == 0) {
 				_ecode = DBUS_GERROR_NO_REPLY;
-			} else if (strcmp (_tmp7_, "IOError") == 0) {
+			} else if (strcmp (_tmp10_, "IOError") == 0) {
 				_ecode = DBUS_GERROR_IO_ERROR;
-			} else if (strcmp (_tmp7_, "BadAddress") == 0) {
+			} else if (strcmp (_tmp10_, "BadAddress") == 0) {
 				_ecode = DBUS_GERROR_BAD_ADDRESS;
-			} else if (strcmp (_tmp7_, "NotSupported") == 0) {
+			} else if (strcmp (_tmp10_, "NotSupported") == 0) {
 				_ecode = DBUS_GERROR_NOT_SUPPORTED;
-			} else if (strcmp (_tmp7_, "LimitsExceeded") == 0) {
+			} else if (strcmp (_tmp10_, "LimitsExceeded") == 0) {
 				_ecode = DBUS_GERROR_LIMITS_EXCEEDED;
-			} else if (strcmp (_tmp7_, "AccessDenied") == 0) {
+			} else if (strcmp (_tmp10_, "AccessDenied") == 0) {
 				_ecode = DBUS_GERROR_ACCESS_DENIED;
-			} else if (strcmp (_tmp7_, "AuthFailed") == 0) {
+			} else if (strcmp (_tmp10_, "AuthFailed") == 0) {
 				_ecode = DBUS_GERROR_AUTH_FAILED;
-			} else if (strcmp (_tmp7_, "NoServer") == 0) {
+			} else if (strcmp (_tmp10_, "NoServer") == 0) {
 				_ecode = DBUS_GERROR_NO_SERVER;
-			} else if (strcmp (_tmp7_, "Timeout") == 0) {
+			} else if (strcmp (_tmp10_, "Timeout") == 0) {
 				_ecode = DBUS_GERROR_TIMEOUT;
-			} else if (strcmp (_tmp7_, "NoNetwork") == 0) {
+			} else if (strcmp (_tmp10_, "NoNetwork") == 0) {
 				_ecode = DBUS_GERROR_NO_NETWORK;
-			} else if (strcmp (_tmp7_, "AddressInUse") == 0) {
+			} else if (strcmp (_tmp10_, "AddressInUse") == 0) {
 				_ecode = DBUS_GERROR_ADDRESS_IN_USE;
-			} else if (strcmp (_tmp7_, "Disconnected") == 0) {
+			} else if (strcmp (_tmp10_, "Disconnected") == 0) {
 				_ecode = DBUS_GERROR_DISCONNECTED;
-			} else if (strcmp (_tmp7_, "InvalidArgs") == 0) {
+			} else if (strcmp (_tmp10_, "InvalidArgs") == 0) {
 				_ecode = DBUS_GERROR_INVALID_ARGS;
-			} else if (strcmp (_tmp7_, "FileNotFound") == 0) {
+			} else if (strcmp (_tmp10_, "FileNotFound") == 0) {
 				_ecode = DBUS_GERROR_FILE_NOT_FOUND;
-			} else if (strcmp (_tmp7_, "FileExists") == 0) {
+			} else if (strcmp (_tmp10_, "FileExists") == 0) {
 				_ecode = DBUS_GERROR_FILE_EXISTS;
-			} else if (strcmp (_tmp7_, "UnknownMethod") == 0) {
+			} else if (strcmp (_tmp10_, "UnknownMethod") == 0) {
 				_ecode = DBUS_GERROR_UNKNOWN_METHOD;
-			} else if (strcmp (_tmp7_, "TimedOut") == 0) {
+			} else if (strcmp (_tmp10_, "TimedOut") == 0) {
 				_ecode = DBUS_GERROR_TIMED_OUT;
-			} else if (strcmp (_tmp7_, "MatchRuleNotFound") == 0) {
+			} else if (strcmp (_tmp10_, "MatchRuleNotFound") == 0) {
 				_ecode = DBUS_GERROR_MATCH_RULE_NOT_FOUND;
-			} else if (strcmp (_tmp7_, "MatchRuleInvalid") == 0) {
+			} else if (strcmp (_tmp10_, "MatchRuleInvalid") == 0) {
 				_ecode = DBUS_GERROR_MATCH_RULE_INVALID;
-			} else if (strcmp (_tmp7_, "Spawn.ExecFailed") == 0) {
+			} else if (strcmp (_tmp10_, "Spawn.ExecFailed") == 0) {
 				_ecode = DBUS_GERROR_SPAWN_EXEC_FAILED;
-			} else if (strcmp (_tmp7_, "Spawn.ForkFailed") == 0) {
+			} else if (strcmp (_tmp10_, "Spawn.ForkFailed") == 0) {
 				_ecode = DBUS_GERROR_SPAWN_FORK_FAILED;
-			} else if (strcmp (_tmp7_, "Spawn.ChildExited") == 0) {
+			} else if (strcmp (_tmp10_, "Spawn.ChildExited") == 0) {
 				_ecode = DBUS_GERROR_SPAWN_CHILD_EXITED;
-			} else if (strcmp (_tmp7_, "Spawn.ChildSignaled") == 0) {
+			} else if (strcmp (_tmp10_, "Spawn.ChildSignaled") == 0) {
 				_ecode = DBUS_GERROR_SPAWN_CHILD_SIGNALED;
-			} else if (strcmp (_tmp7_, "Spawn.Failed") == 0) {
+			} else if (strcmp (_tmp10_, "Spawn.Failed") == 0) {
 				_ecode = DBUS_GERROR_SPAWN_FAILED;
-			} else if (strcmp (_tmp7_, "UnixProcessIdUnknown") == 0) {
+			} else if (strcmp (_tmp10_, "UnixProcessIdUnknown") == 0) {
 				_ecode = DBUS_GERROR_UNIX_PROCESS_ID_UNKNOWN;
-			} else if (strcmp (_tmp7_, "InvalidSignature") == 0) {
+			} else if (strcmp (_tmp10_, "InvalidSignature") == 0) {
 				_ecode = DBUS_GERROR_INVALID_SIGNATURE;
-			} else if (strcmp (_tmp7_, "InvalidFileContent") == 0) {
+			} else if (strcmp (_tmp10_, "InvalidFileContent") == 0) {
 				_ecode = DBUS_GERROR_INVALID_FILE_CONTENT;
-			} else if (strcmp (_tmp7_, "SELinuxSecurityContextUnknown") == 0) {
+			} else if (strcmp (_tmp10_, "SELinuxSecurityContextUnknown") == 0) {
 				_ecode = DBUS_GERROR_SELINUX_SECURITY_CONTEXT_UNKNOWN;
-			} else if (strcmp (_tmp7_, "RemoteException") == 0) {
+			} else if (strcmp (_tmp10_, "RemoteException") == 0) {
 				_ecode = DBUS_GERROR_REMOTE_EXCEPTION;
 			}
 		}
@@ -543,8 +719,8 @@ static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* na
 		dbus_error_free (&_dbus_error);
 		return FALSE;
 	}
-	if (strcmp (dbus_message_get_signature (_reply), "sssb")) {
-		g_set_error (error, DBUS_GERROR, DBUS_GERROR_INVALID_SIGNATURE, "Invalid signature, expected \"%s\", got \"%s\"", "sssb", dbus_message_get_signature (_reply));
+	if (strcmp (dbus_message_get_signature (_reply), "ssssssb")) {
+		g_set_error (error, DBUS_GERROR, DBUS_GERROR_INVALID_SIGNATURE, "Invalid signature, expected \"%s\", got \"%s\"", "ssssssb", dbus_message_get_signature (_reply));
 		dbus_message_unref (_reply);
 		return FALSE;
 	}
@@ -559,11 +735,146 @@ static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* na
 	*password_out = _password_out;
 	dbus_message_iter_get_basic (&_iter, &_tmp5_);
 	dbus_message_iter_next (&_iter);
-	_certificate_out = g_strdup (_tmp5_);
-	*certificate_out = _certificate_out;
+	_server_certificate_hash = g_strdup (_tmp5_);
+	*server_certificate_hash = _server_certificate_hash;
 	dbus_message_iter_get_basic (&_iter, &_tmp6_);
 	dbus_message_iter_next (&_iter);
-	_result = _tmp6_;
+	_ca_certificate = g_strdup (_tmp6_);
+	*ca_certificate = _ca_certificate;
+	dbus_message_iter_get_basic (&_iter, &_tmp7_);
+	dbus_message_iter_next (&_iter);
+	_subject_name_constraint = g_strdup (_tmp7_);
+	*subject_name_constraint = _subject_name_constraint;
+	dbus_message_iter_get_basic (&_iter, &_tmp8_);
+	dbus_message_iter_next (&_iter);
+	_subject_alt_name_constraint = g_strdup (_tmp8_);
+	*subject_alt_name_constraint = _subject_alt_name_constraint;
+	dbus_message_iter_get_basic (&_iter, &_tmp9_);
+	dbus_message_iter_next (&_iter);
+	_result = _tmp9_;
+	dbus_message_unref (_reply);
+	return _result;
+}
+
+
+static gboolean moonshot_dbus_proxy_get_default_identity (Moonshot* self, char** nai_out, char** password_out, GError** error) {
+	DBusError _dbus_error;
+	DBusGConnection *_connection;
+	DBusMessage *_message, *_reply;
+	DBusMessageIter _iter;
+	char* _nai_out;
+	const char* _tmp11_;
+	char* _password_out;
+	const char* _tmp12_;
+	gboolean _result;
+	dbus_bool_t _tmp13_;
+	if (((MoonshotDBusProxy*) self)->disposed) {
+		g_set_error (error, DBUS_GERROR, DBUS_GERROR_DISCONNECTED, "%s", "Connection is closed");
+		return FALSE;
+	}
+	_message = dbus_message_new_method_call (dbus_g_proxy_get_bus_name ((DBusGProxy*) self), dbus_g_proxy_get_path ((DBusGProxy*) self), "org.janet.Moonshot", "GetDefaultIdentity");
+	dbus_message_iter_init_append (_message, &_iter);
+	g_object_get (self, "connection", &_connection, NULL);
+	dbus_error_init (&_dbus_error);
+	_reply = dbus_connection_send_with_reply_and_block (dbus_g_connection_get_connection (_connection), _message, -1, &_dbus_error);
+	dbus_g_connection_unref (_connection);
+	dbus_message_unref (_message);
+	if (dbus_error_is_set (&_dbus_error)) {
+		GQuark _edomain = 0;
+		gint _ecode = 0;
+		if (strstr (_dbus_error.name, "org.freedesktop.DBus.Error") == _dbus_error.name) {
+			const char* _tmp14_;
+			_edomain = DBUS_GERROR;
+			_tmp14_ = _dbus_error.name + 27;
+			if (strcmp (_tmp14_, "Failed") == 0) {
+				_ecode = DBUS_GERROR_FAILED;
+			} else if (strcmp (_tmp14_, "NoMemory") == 0) {
+				_ecode = DBUS_GERROR_NO_MEMORY;
+			} else if (strcmp (_tmp14_, "ServiceUnknown") == 0) {
+				_ecode = DBUS_GERROR_SERVICE_UNKNOWN;
+			} else if (strcmp (_tmp14_, "NameHasNoOwner") == 0) {
+				_ecode = DBUS_GERROR_NAME_HAS_NO_OWNER;
+			} else if (strcmp (_tmp14_, "NoReply") == 0) {
+				_ecode = DBUS_GERROR_NO_REPLY;
+			} else if (strcmp (_tmp14_, "IOError") == 0) {
+				_ecode = DBUS_GERROR_IO_ERROR;
+			} else if (strcmp (_tmp14_, "BadAddress") == 0) {
+				_ecode = DBUS_GERROR_BAD_ADDRESS;
+			} else if (strcmp (_tmp14_, "NotSupported") == 0) {
+				_ecode = DBUS_GERROR_NOT_SUPPORTED;
+			} else if (strcmp (_tmp14_, "LimitsExceeded") == 0) {
+				_ecode = DBUS_GERROR_LIMITS_EXCEEDED;
+			} else if (strcmp (_tmp14_, "AccessDenied") == 0) {
+				_ecode = DBUS_GERROR_ACCESS_DENIED;
+			} else if (strcmp (_tmp14_, "AuthFailed") == 0) {
+				_ecode = DBUS_GERROR_AUTH_FAILED;
+			} else if (strcmp (_tmp14_, "NoServer") == 0) {
+				_ecode = DBUS_GERROR_NO_SERVER;
+			} else if (strcmp (_tmp14_, "Timeout") == 0) {
+				_ecode = DBUS_GERROR_TIMEOUT;
+			} else if (strcmp (_tmp14_, "NoNetwork") == 0) {
+				_ecode = DBUS_GERROR_NO_NETWORK;
+			} else if (strcmp (_tmp14_, "AddressInUse") == 0) {
+				_ecode = DBUS_GERROR_ADDRESS_IN_USE;
+			} else if (strcmp (_tmp14_, "Disconnected") == 0) {
+				_ecode = DBUS_GERROR_DISCONNECTED;
+			} else if (strcmp (_tmp14_, "InvalidArgs") == 0) {
+				_ecode = DBUS_GERROR_INVALID_ARGS;
+			} else if (strcmp (_tmp14_, "FileNotFound") == 0) {
+				_ecode = DBUS_GERROR_FILE_NOT_FOUND;
+			} else if (strcmp (_tmp14_, "FileExists") == 0) {
+				_ecode = DBUS_GERROR_FILE_EXISTS;
+			} else if (strcmp (_tmp14_, "UnknownMethod") == 0) {
+				_ecode = DBUS_GERROR_UNKNOWN_METHOD;
+			} else if (strcmp (_tmp14_, "TimedOut") == 0) {
+				_ecode = DBUS_GERROR_TIMED_OUT;
+			} else if (strcmp (_tmp14_, "MatchRuleNotFound") == 0) {
+				_ecode = DBUS_GERROR_MATCH_RULE_NOT_FOUND;
+			} else if (strcmp (_tmp14_, "MatchRuleInvalid") == 0) {
+				_ecode = DBUS_GERROR_MATCH_RULE_INVALID;
+			} else if (strcmp (_tmp14_, "Spawn.ExecFailed") == 0) {
+				_ecode = DBUS_GERROR_SPAWN_EXEC_FAILED;
+			} else if (strcmp (_tmp14_, "Spawn.ForkFailed") == 0) {
+				_ecode = DBUS_GERROR_SPAWN_FORK_FAILED;
+			} else if (strcmp (_tmp14_, "Spawn.ChildExited") == 0) {
+				_ecode = DBUS_GERROR_SPAWN_CHILD_EXITED;
+			} else if (strcmp (_tmp14_, "Spawn.ChildSignaled") == 0) {
+				_ecode = DBUS_GERROR_SPAWN_CHILD_SIGNALED;
+			} else if (strcmp (_tmp14_, "Spawn.Failed") == 0) {
+				_ecode = DBUS_GERROR_SPAWN_FAILED;
+			} else if (strcmp (_tmp14_, "UnixProcessIdUnknown") == 0) {
+				_ecode = DBUS_GERROR_UNIX_PROCESS_ID_UNKNOWN;
+			} else if (strcmp (_tmp14_, "InvalidSignature") == 0) {
+				_ecode = DBUS_GERROR_INVALID_SIGNATURE;
+			} else if (strcmp (_tmp14_, "InvalidFileContent") == 0) {
+				_ecode = DBUS_GERROR_INVALID_FILE_CONTENT;
+			} else if (strcmp (_tmp14_, "SELinuxSecurityContextUnknown") == 0) {
+				_ecode = DBUS_GERROR_SELINUX_SECURITY_CONTEXT_UNKNOWN;
+			} else if (strcmp (_tmp14_, "RemoteException") == 0) {
+				_ecode = DBUS_GERROR_REMOTE_EXCEPTION;
+			}
+		}
+		g_set_error (error, _edomain, _ecode, "%s", _dbus_error.message);
+		dbus_error_free (&_dbus_error);
+		return FALSE;
+	}
+	if (strcmp (dbus_message_get_signature (_reply), "ssb")) {
+		g_set_error (error, DBUS_GERROR, DBUS_GERROR_INVALID_SIGNATURE, "Invalid signature, expected \"%s\", got \"%s\"", "ssb", dbus_message_get_signature (_reply));
+		dbus_message_unref (_reply);
+		return FALSE;
+	}
+	dbus_message_iter_init (_reply, &_iter);
+	dbus_message_iter_get_basic (&_iter, &_tmp11_);
+	dbus_message_iter_next (&_iter);
+	_nai_out = g_strdup (_tmp11_);
+	*nai_out = _nai_out;
+	dbus_message_iter_get_basic (&_iter, &_tmp12_);
+	dbus_message_iter_next (&_iter);
+	_password_out = g_strdup (_tmp12_);
+	*password_out = _password_out;
+	dbus_message_iter_get_basic (&_iter, &_tmp13_);
+	dbus_message_iter_next (&_iter);
+	_result = _tmp13_;
 	dbus_message_unref (_reply);
 	return _result;
 }
@@ -571,6 +882,7 @@ static gboolean moonshot_dbus_proxy_get_identity (Moonshot* self, const char* na
 
 static void moonshot_dbus_proxy_moonshot__interface_init (MoonshotIface* iface) {
 	iface->get_identity = moonshot_dbus_proxy_get_identity;
+	iface->get_default_identity = moonshot_dbus_proxy_get_default_identity;
 }
 
 
@@ -588,6 +900,9 @@ void _vala_main (void) {
 		char* nai_out;
 		char* password_out;
 		char* certificate_out;
+		char* a;
+		char* b;
+		char* c;
 		DBusGConnection* conn;
 		Moonshot* demo;
 		char* _tmp0_ = NULL;
@@ -596,21 +911,46 @@ void _vala_main (void) {
 		char* _tmp3_ = NULL;
 		gboolean _tmp4_;
 		char* _tmp5_;
-		char* _tmp6_ = NULL;
-		gboolean _tmp7_;
-		char* _tmp8_;
-		gboolean _tmp9_;
+		gboolean _tmp6_;
+		char* _tmp7_ = NULL;
+		gboolean _tmp8_;
+		char* _tmp9_;
+		char* _tmp10_ = NULL;
+		gboolean _tmp11_;
+		char* _tmp12_;
+		char* _tmp13_ = NULL;
+		gboolean _tmp14_;
+		char* _tmp15_;
+		char* _tmp16_ = NULL;
+		gboolean _tmp17_;
+		char* _tmp18_;
+		char* _tmp19_ = NULL;
+		gboolean _tmp20_;
+		char* _tmp21_;
+		char* _tmp22_ = NULL;
+		gboolean _tmp23_;
+		char* _tmp24_;
+		gboolean _tmp25_;
 		nai_out = NULL;
 		password_out = NULL;
 		certificate_out = NULL;
+		a = NULL;
+		b = NULL;
+		c = NULL;
 		conn = dbus_g_bus_get (DBUS_BUS_SESSION, &_inner_error_);
 		if (_inner_error_ != NULL) {
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
 			_g_free0 (certificate_out);
 			_g_free0 (password_out);
 			_g_free0 (nai_out);
 			if (_inner_error_->domain == DBUS_GERROR) {
 				goto __catch0_dbus_gerror;
 			}
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
 			_g_free0 (certificate_out);
 			_g_free0 (password_out);
 			_g_free0 (nai_out);
@@ -619,10 +959,13 @@ void _vala_main (void) {
 			return;
 		}
 		demo = moonshot_dbus_proxy_new (conn, "org.janet.Moonshot", "/org/janet/moonshot");
-		_tmp9_ = (_tmp7_ = (_tmp4_ = (_tmp1_ = moonshot_get_identity (demo, "username@issuer", "pass", "service", &_tmp0_, &_tmp3_, &_tmp6_, &_inner_error_), nai_out = (_tmp2_ = _tmp0_, _g_free0 (nai_out), _tmp2_), _tmp1_), password_out = (_tmp5_ = _tmp3_, _g_free0 (password_out), _tmp5_), _tmp4_), certificate_out = (_tmp8_ = _tmp6_, _g_free0 (certificate_out), _tmp8_), _tmp7_);
+		_tmp6_ = (_tmp4_ = (_tmp1_ = moonshot_get_default_identity (demo, &_tmp0_, &_tmp3_, &_inner_error_), nai_out = (_tmp2_ = _tmp0_, _g_free0 (nai_out), _tmp2_), _tmp1_), password_out = (_tmp5_ = _tmp3_, _g_free0 (password_out), _tmp5_), _tmp4_);
 		if (_inner_error_ != NULL) {
 			_g_object_unref0 (demo);
 			_dbus_g_connection_unref0 (conn);
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
 			_g_free0 (certificate_out);
 			_g_free0 (password_out);
 			_g_free0 (nai_out);
@@ -631,6 +974,9 @@ void _vala_main (void) {
 			}
 			_g_object_unref0 (demo);
 			_dbus_g_connection_unref0 (conn);
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
 			_g_free0 (certificate_out);
 			_g_free0 (password_out);
 			_g_free0 (nai_out);
@@ -638,13 +984,46 @@ void _vala_main (void) {
 			g_clear_error (&_inner_error_);
 			return;
 		}
-		if (_tmp9_) {
+		if (_tmp6_) {
+			fprintf (stdout, "default identity: %s %s\n", nai_out, password_out);
+		} else {
+			fprintf (stdout, "Unable to get default identity.\n");
+		}
+		_tmp25_ = (_tmp23_ = (_tmp20_ = (_tmp17_ = (_tmp14_ = (_tmp11_ = (_tmp8_ = moonshot_get_identity (demo, "username@issuer", "pass", "", &_tmp7_, &_tmp10_, &_tmp13_, &_tmp16_, &_tmp19_, &_tmp22_, &_inner_error_), nai_out = (_tmp9_ = _tmp7_, _g_free0 (nai_out), _tmp9_), _tmp8_), password_out = (_tmp12_ = _tmp10_, _g_free0 (password_out), _tmp12_), _tmp11_), certificate_out = (_tmp15_ = _tmp13_, _g_free0 (certificate_out), _tmp15_), _tmp14_), a = (_tmp18_ = _tmp16_, _g_free0 (a), _tmp18_), _tmp17_), b = (_tmp21_ = _tmp19_, _g_free0 (b), _tmp21_), _tmp20_), c = (_tmp24_ = _tmp22_, _g_free0 (c), _tmp24_), _tmp23_);
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (demo);
+			_dbus_g_connection_unref0 (conn);
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
+			_g_free0 (certificate_out);
+			_g_free0 (password_out);
+			_g_free0 (nai_out);
+			if (_inner_error_->domain == DBUS_GERROR) {
+				goto __catch0_dbus_gerror;
+			}
+			_g_object_unref0 (demo);
+			_dbus_g_connection_unref0 (conn);
+			_g_free0 (c);
+			_g_free0 (b);
+			_g_free0 (a);
+			_g_free0 (certificate_out);
+			_g_free0 (password_out);
+			_g_free0 (nai_out);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return;
+		}
+		if (_tmp25_) {
 			fprintf (stdout, "%s %s %s\n", nai_out, password_out, certificate_out);
 		} else {
 			fprintf (stdout, "The nai, password or service doesnt match the selected id_card\n");
 		}
 		_g_object_unref0 (demo);
 		_dbus_g_connection_unref0 (conn);
+		_g_free0 (c);
+		_g_free0 (b);
+		_g_free0 (a);
 		_g_free0 (certificate_out);
 		_g_free0 (password_out);
 		_g_free0 (nai_out);

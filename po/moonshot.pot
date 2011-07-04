@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: moonshot 0.0.1\n"
 "Report-Msgid-Bugs-To: BUG-REPORT-ADDRESS\n"
-"POT-Creation-Date: 2011-05-05 19:38+0000\n"
+"POT-Creation-Date: 2011-07-04 06:52-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,59 +17,87 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/moonshot-window.vala:311
+#: src/moonshot-window.vala:334
 #, c-format
 msgid "Are you sure you want to delete %s ID Card?"
 msgstr ""
 
-#: src/moonshot-window.vala:341
+#: src/moonshot-window.vala:494
+msgid "Moonshot project UI"
+msgstr ""
+
+#: src/moonshot-window.vala:498
+msgid "Visit the Moonshot project web site"
+msgstr ""
+
+#: src/moonshot-window.vala:500
+msgid "translator-credits"
+msgstr ""
+
+#: src/moonshot-window.vala:510
+msgid "_File"
+msgstr ""
+
+#: src/moonshot-window.vala:519
+msgid "Add ID Card"
+msgstr ""
+
+#: src/moonshot-window.vala:521
+msgid "Add a new ID Card"
+msgstr ""
+
+#: src/moonshot-window.vala:530
+msgid "Quit"
+msgstr ""
+
+#: src/moonshot-window.vala:532
+msgid "Quit the application"
+msgstr ""
+
+#: src/moonshot-window.vala:538
+msgid "_Help"
+msgstr ""
+
+#: src/moonshot-window.vala:547
+msgid "About"
+msgstr ""
+
+#: src/moonshot-window.vala:549
+msgid "About this application"
+msgstr ""
+
+#: src/moonshot-window.vala:579
 msgid "Search entry"
 msgstr ""
 
-#: src/moonshot-window.vala:341
+#: src/moonshot-window.vala:579
 msgid "Search for a specific ID Card"
 msgstr ""
 
-#: src/moonshot-window.vala:346
+#: src/moonshot-window.vala:583
 msgid "Search identity or service"
 msgstr ""
 
-#: src/moonshot-window.vala:352
+#: src/moonshot-window.vala:589
 msgid "Clear the current search"
 msgstr ""
 
-#: src/moonshot-window.vala:371
-msgid "Add"
-msgstr ""
-
-#: src/moonshot-window.vala:371
-msgid "Add new ID Card"
-msgstr ""
-
-#: src/moonshot-window.vala:382
+#: src/moonshot-window.vala:613
 msgid "Login: "
 msgstr ""
 
-#: src/moonshot-window.vala:385
+#: src/moonshot-window.vala:616
 msgid "Username:"
 msgstr ""
 
-#: src/moonshot-window.vala:388
+#: src/moonshot-window.vala:619
 msgid "Password:"
 msgstr ""
 
-#: src/moonshot-window.vala:393
+#: src/moonshot-window.vala:624
 msgid "Remember password"
 msgstr ""
 
-#: src/moonshot-window.vala:409
+#: src/moonshot-window.vala:640
 msgid "Services:"
-msgstr ""
-
-#: src/moonshot-window.vala:412
-msgid "Email"
-msgstr ""
-
-#: src/moonshot-window.vala:418
-msgid "IM"
 msgstr ""

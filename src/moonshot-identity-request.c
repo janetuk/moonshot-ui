@@ -49,6 +49,7 @@ struct _IdentityRequest {
 	IdentityRequestPrivate * priv;
 	IdCard* id_card;
 	gboolean complete;
+	gboolean select_default;
 };
 
 struct _IdentityRequestClass {
@@ -85,6 +86,8 @@ enum  {
 };
 IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* certificate);
 IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* certificate);
+IdentityRequest* identity_request_new_default (MainWindow* main_window);
+IdentityRequest* identity_request_construct_default (GType object_type, MainWindow* main_window);
 void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallback cb, void* cb_target, GDestroyNotify cb_target_destroy_notify);
 static void _lambda0_ (IdentityRequest* IdCard, Block1Data* _data1_);
 static void __lambda0__return_identity_callback (IdentityRequest* request, gpointer self);
@@ -123,6 +126,22 @@ IdentityRequest* identity_request_construct (GType object_type, MainWindow* main
 
 IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* certificate) {
 	return identity_request_construct (TYPE_IDENTITY_REQUEST, main_window, nai, password, certificate);
+}
+
+
+IdentityRequest* identity_request_construct_default (GType object_type, MainWindow* main_window) {
+	IdentityRequest * self = NULL;
+	MainWindow* _tmp0_;
+	g_return_val_if_fail (main_window != NULL, NULL);
+	self = (IdentityRequest*) g_object_new (object_type, NULL);
+	self->priv->main_window = (_tmp0_ = _g_object_ref0 (main_window), _g_object_unref0 (self->priv->main_window), _tmp0_);
+	self->select_default = TRUE;
+	return self;
+}
+
+
+IdentityRequest* identity_request_new_default (MainWindow* main_window) {
+	return identity_request_construct_default (TYPE_IDENTITY_REQUEST, main_window);
 }
 
 
@@ -202,6 +221,7 @@ static void identity_request_instance_init (IdentityRequest * self) {
 	self->priv = IDENTITY_REQUEST_GET_PRIVATE (self);
 	self->id_card = NULL;
 	self->complete = FALSE;
+	self->select_default = FALSE;
 	self->priv->callback = NULL;
 }
 
