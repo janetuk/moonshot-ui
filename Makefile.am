@@ -8,6 +8,7 @@ lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 bin_PROGRAMS = src/moonshot
 
 
+
 AM_CFLAGS =
 
 AM_CPPFLAGS = \
@@ -91,15 +92,6 @@ src_moonshot_SOURCES += \
 nodist_src_moonshot_SOURCES = \
         libmoonshot/moonshot-msrpc_s.c
 
-bin_PROGRAMS += src/msrpc-client
-
-nodist_src_msrpc_client_SOURCES = \
-        src/msrpc-client.vala \
-        src/moonshot-msrpc.vapi \
-        libmoonshot/moonshot-msrpc_c.c
-
-src_msrpc_client_LDADD = $(moonshot_LIBS)
-
 endif
 
 if IPC_DBUS
@@ -119,12 +111,6 @@ AM_VALAFLAGS += \
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
-bin_PROGRAMS += src/dbus-client
-
-src_dbus_client_SOURCES = src/dbus-client.vala
-src_dbus_client_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_dbus_client_LDADD = $(moonshot_LIBS)
-
 CLEANFILES = $(dbusservice_DATA)
 EXTRA_DIST = $(dbusservice_in_files)
 
@@ -142,11 +128,17 @@ moonshot_webp_CFLAGS = -mwindows
 endif
 
 
-noinst_PROGRAMS = tests/basic
+noinst_PROGRAMS = \
+        examples/client \
+        tests/basic
+
+examples_client_SOURCES = examples/client.c
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
-tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 
 if OS_WIN32

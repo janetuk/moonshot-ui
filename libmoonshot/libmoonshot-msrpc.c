@@ -60,9 +60,9 @@ static void launch_server (MoonshotError **error) {
                            &key);
 
     if (status != 0) {
-        *error = _moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
-                                      "Unable to read registry key HKLM\\%s",
-                                      MOONSHOT_INSTALL_PATH_KEY);
+        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
+                                     "Unable to read registry key HKLM\\%s",
+                                     MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
@@ -70,19 +70,19 @@ static void launch_server (MoonshotError **error) {
     status = RegQueryValueEx (key, NULL, NULL, &value_type, exe_path, &length);
 
     if (value_type != REG_SZ) {
-        *error = _moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
-                                      "Value of registry key HKLM\\%s is invalid. "
-                                      "Please set it to point to the location of "
-                                      "moonshot.exe",
-                                      MOONSHOT_INSTALL_PATH_KEY);
+        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
+                                     "Value of registry key HKLM\\%s is invalid. "
+                                     "Please set it to point to the location of "
+                                     "moonshot.exe",
+                                     MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
 
     if (status != 0) {
-        *error = _moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
-                                      "Unable to read value of registry key HKLM\\%s",
-                                      MOONSHOT_INSTALL_PATH_KEY);
+        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
+                                     "Unable to read value of registry key HKLM\\%s",
+                                     MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
@@ -95,9 +95,9 @@ static void launch_server (MoonshotError **error) {
                             &startup_info, &process_info);
 
     if (status != 0) {
-        *error = _moonshot_error_new (MOONSHOT_ERROR_UNABLE_TO_START_SERVICE,
-                                      "Unable to spawn the moonshot server at '%s'",
-                                      exe_path);
+        *error = moonshot_error_new (MOONSHOT_ERROR_UNABLE_TO_START_SERVICE,
+                                     "Unable to spawn the moonshot server at '%s'",
+                                     exe_path);
         return;
     }
 }
@@ -233,11 +233,19 @@ int moonshot_get_identity (const char     *nai,
 }*/
 
 
-    /**
-     * Returns the default identity - most recently used.
-     *
-     * @param nai_out NAI stored in the ID card
-     * @param password_out Password stored in the ID card
-     *
-     * @return true on success, false if no identities are stored
-     */
+int moonshot_get_default_identity (char          **nai_out,
+                                   char          **password_out,
+                                   char          **server_certificate_hash_out,
+                                   char          **ca_certificate_out,
+                                   char          **subject_name_constraint_out,
+                                   char          **subject_alt_name_constraint_out,
+                                   MoonshotError **error)
+{
+    int status;
+
+    status = rpc_client_bind (&moonshot_binding_handle,
+                              MOONSHOT_ENDPOINT_NAME,
+                              RPC_PER_USER);
+
+    printf ("RPC status: %i\n", status);
+};
