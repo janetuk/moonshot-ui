@@ -52,8 +52,6 @@
  * waiting for calls.
  */
 
-static DBusGProxy *moonshot_dbus_proxy = NULL;
-
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {
     DBusConnection  *connection;
@@ -148,6 +146,24 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     return g_proxy; 
 }
 
+static DBusGProxy *get_dbus_proxy (MoonshotError **error)
+{
+    static DBusGProxy    *dbus_proxy = NULL;
+    static GStaticMutex   init_lock = G_STATIC_MUTEX_INIT;
+
+    g_static_mutex_lock (&init_lock);
+
+    if (dbus_proxy == NULL)
+        dbus_proxy = dbus_connect (error);
+
+    if (dbus_proxy != NULL)
+        g_object_ref (dbus_proxy);
+
+    g_static_mutex_unlock (&init_lock);
+
+    return dbus_proxy;
+}
+
 int moonshot_get_identity (const char     *nai,
                            const char     *password,
                            const char     *service,
@@ -159,18 +175,18 @@ int moonshot_get_identity (const char     *nai,
                            char          **subject_alt_name_constraint_out,
                            MoonshotError **error)
 {
-    GError   *g_error = NULL;
-    int success;
+    GError     *g_error = NULL;
+    DBusGProxy *dbus_proxy;
+    int         success;
 
-    if (moonshot_dbus_proxy == NULL)
-        moonshot_dbus_proxy = dbus_connect (error);
+    dbus_proxy = get_dbus_proxy (error);
 
     if (*error != NULL)
         return;
 
-    g_return_if_fail (DBUS_IS_G_PROXY (moonshot_dbus_proxy));
+    g_return_if_fail (DBUS_IS_G_PROXY (dbus_proxy));
 
-    dbus_g_proxy_call (moonshot_dbus_proxy,
+    dbus_g_proxy_call (dbus_proxy,
                        "GetIdentity",
                        &g_error,
                        G_TYPE_STRING, nai,
@@ -185,6 +201,8 @@ int moonshot_get_identity (const char     *nai,
                        G_TYPE_STRING, subject_alt_name_constraint_out,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);
+
+    g_object_unref (dbus_proxy);
 
     if (g_error != NULL) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
@@ -202,13 +220,52 @@ int moonshot_get_identity (const char     *nai,
     return TRUE;
 }
 
+int moonshot_get_default_identity (char          **nai_out,
+                                   char          **password_out,
+                                   char          **server_certificate_hash_out,
+                                   char          **ca_certificate_out,
+                                   char          **subject_name_constraint_out,
+                                   char          **subject_alt_name_constraint_out,
+                                   MoonshotError **error)
+{
+    GError     *g_error = NULL;
+    DBusGProxy *dbus_proxy;
+    int         success = FALSE;
 
+    dbus_proxy = get_dbus_proxy (error);
 
-    /**
-     * Returns the default identity - most recently used.
-     *
-     * @param nai_out NAI stored in the ID card
-     * @param password_out Password stored in the ID card
-     *
-     * @return true on success, false if no identities are stored
-     */
+    if (*error != NULL)
+        return FALSE;
+
+    g_return_if_fail (DBUS_IS_G_PROXY (dbus_proxy));
+
+    dbus_g_proxy_call (dbus_proxy,
+                       "GetDefaultIdentity",
+                       &g_error,
+                       G_TYPE_INVALID,
+                       G_TYPE_STRING, nai_out,
+                       G_TYPE_STRING, password_out,
+                       G_TYPE_STRING, server_certificate_hash_out,
+                       G_TYPE_STRING, ca_certificate_out,
+                       G_TYPE_STRING, subject_name_constraint_out,
+                       G_TYPE_STRING, subject_alt_name_constraint_out,
+                       G_TYPE_BOOLEAN, &success,
+                       G_TYPE_INVALID);
+
+    g_object_unref (dbus_proxy);
+
+    if (g_error != NULL) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                     g_error->message);
+        return FALSE;
+    }
+
+    if (success == FALSE) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
+                                     "No identity was returned by the Moonshot "
+                                     "user interface.");
+        return FALSE;
+    }
+
+    return TRUE;
+}

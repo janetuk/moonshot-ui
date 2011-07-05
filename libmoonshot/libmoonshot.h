@@ -55,10 +55,10 @@ void moonshot_error_free (MoonshotError *error);
  * @password: Password for the identity, or %NULL.
  * @service: Service constraint for the required identity, or %NULL.
  * @nai_out: A pointer to a string which receives the name and issuer of the
- *       selected identity.
+ *           selected identity.
  * @password_out: A pointer to a string which receives the password.
  * @server_certificate_hash_out: Receives a hash of the identity server's
- *                           certificate, or %NULL.
+ *                               certificate, or %NULL.
  * @ca_certificate_out: The CA certificate, if @server_certificate_hash was
  *                      %NULL.
  * @subject_name_constraint_out: Set if @ca_certificate is set, otherwise %NULL.
@@ -93,5 +93,33 @@ int moonshot_get_identity (const char     *nai,
                            char          **subject_name_constraint_out,
                            char          **subject_alt_name_constraint_out,
                            MoonshotError **error);
+
+/**
+ * moonshot_get_default_identity:
+ * @nai_out: A pointer to a string which receives the name and issuer of the
+ *           identity.
+ * @password_out: A pointer to a string which receives the password.
+ * @server_certificate_hash_out: Receives a hash of the identity server's
+ *                               certificate, or %NULL.
+ * @ca_certificate_out: The CA certificate, if @server_certificate_hash was
+ *                      %NULL.
+ * @subject_name_constraint_out: Set if @ca_certificate is set, otherwise %NULL.
+ * @subject_alt_name_constraint_out: Set if @ca_certificate is set, otherwise
+ *                                   %NULL.
+ * @error: Return location for a #MoonshotError, or %NULL.
+ *
+ * This function calls the Moonshot server to request the default identity
+ * (the one most recently used). Its semantics are otherwise the same as
+ * moonshot_get_identity().
+ *
+ * Return value: %TRUE if an identity was available, otherwise %FALSE.
+ */
+int moonshot_default_get_identity (char          **nai_out,
+                                   char          **password_out,
+                                   char          **server_certificate_hash_out,
+                                   char          **ca_certificate_out,
+                                   char          **subject_name_constraint_out,
+                                   char          **subject_alt_name_constraint_out,
+                                   MoonshotError **error);
 
 #endif

@@ -54,7 +54,11 @@ public class MoonshotServer : Object {
     }
 
     public async bool get_default_identity (out string nai_out,
-                                            out string password_out)
+                                            out string password_out,
+                                            out string server_certificate_hash,
+                                            out string ca_certificate,
+                                            out string subject_name_constraint,
+                                            out string subject_alt_name_constraint)
     {
         var request = new IdentityRequest.default (main_window);
         request.set_callback ((IdentityRequest) => get_default_identity.callback());
@@ -63,11 +67,17 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         if (request.id_card != null)
         {
             nai_out = request.id_card.nai;
             password_out = request.id_card.password;
+
+            server_certificate_hash = "certificate";
 
             // User should have been prompted if there was no p/w.
             return_val_if_fail (nai_out != null, false);

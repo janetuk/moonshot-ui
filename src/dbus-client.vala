@@ -3,7 +3,8 @@ interface Moonshot : Object {
     public abstract bool get_identity (string nai, string password, string service,
                                        out string nai_out, out string password_out,
                                        out string server_certificate_hash, out string ca_certificate, out string subject_name_constraint, out string subject_alt_name_constraint) throws DBus.Error;
-    public abstract bool get_default_identity (out string nai_out, out string password_out) throws DBus.Error;
+    public abstract bool get_default_identity (out string nai_out, out string password_out,
+                                               out string server_certificate_hash, out string ca_certificate, out string subject_name_constraint, out string subject_alt_name_constraint) throws DBus.Error;
 }
 
 void main () {
@@ -16,7 +17,12 @@ void main () {
                                                "/org/janet/moonshot");
 
 
-        if (demo.get_default_identity (out nai_out, out password_out))
+        if (demo.get_default_identity (out nai_out,
+                                       out password_out,
+                                       out certificate_out,
+                                       out a,
+                                       out b,
+                                       out c))
         {
             stdout.printf ("default identity: %s %s\n", nai_out, password_out);
         }
