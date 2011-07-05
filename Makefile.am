@@ -121,11 +121,9 @@ libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 bin_PROGRAMS += src/dbus-client
 
-src_dbus_client_SOURCES = \
-        src/dbus-client.vala
-
-src_dbus_client_LDADD = \
-        $(moonshot_LIBS)
+src_dbus_client_SOURCES = src/dbus-client.vala
+src_dbus_client_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_dbus_client_LDADD = $(moonshot_LIBS)
 
 CLEANFILES = $(dbusservice_DATA)
 EXTRA_DIST = $(dbusservice_in_files)
@@ -136,31 +134,19 @@ endif
 bin_PROGRAMS += src/moonshot-webp
 
 src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS)
-
-if IPC_DBUS
-AM_VALAFLAGS += \
-	--pkg dbus-glib-1 \
-	--define=IPC_DBUS
-endif
-
-if IPC_MSRPC
-AM_VALAFLAGS += \
-	--pkg msrpc-1.0 \
-	--define=IPC_MSRPC
-endif
 
 if OS_WIN32
 moonshot_webp_CFLAGS = -mwindows
-AM_VALAFLAGS += --define=OS_WIN32
 endif
 
 
 noinst_PROGRAMS = tests/basic
 
-
-tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 tests_basic_SOURCES = tests/basic.c
+tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 
 if OS_WIN32

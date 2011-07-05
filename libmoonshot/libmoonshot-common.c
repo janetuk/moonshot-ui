@@ -38,9 +38,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-MoonshotError *_moonshot_error_new (MoonshotErrorCode  code,
-                                    const char        *format,
-                                    ...)
+MoonshotError *moonshot_error_new (MoonshotErrorCode  code,
+                                   const char        *format,
+                                   ...)
 {
     MoonshotError *error;
     int            buffer_size;
