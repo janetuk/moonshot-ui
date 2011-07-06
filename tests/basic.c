@@ -27,7 +27,8 @@ gpointer test_func (gpointer data)
                                              &subject_alt_name_constraint,
                                              error);
 
-    g_print ("Got id: %s %s\n", nai, password);
+    if (success)
+        g_print ("Got id: %s %s\n", nai, password);
 
     return GINT_TO_POINTER (success);
 }
@@ -91,7 +92,7 @@ int main (int argc, char *argv[])
     g_test_init (&argc, &argv, NULL);
 
     g_test_add_func ("/basic/connect", test_connect);
-    g_test_add_func ("/basic/multithread", test_multithread);
+    //g_test_add_func ("/basic/multithread", test_multithread);
 
     g_test_run ();
 }

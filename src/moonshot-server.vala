@@ -185,7 +185,11 @@ public class MoonshotServer : Object {
     [CCode (cname = "moonshot_get_default_identity_rpc")]
     public static void get_default_identity (Rpc.AsyncCall call,
                                              ref string nai_out,
-                                             ref string password_out)
+                                             ref string password_out,
+                                             ref string server_certificate_hash,
+                                             ref string ca_certificate,
+                                             ref string subject_name_constraint,
+                                             ref string subject_alt_name_constraint)
     {
         bool result;
 
@@ -202,11 +206,16 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         if (request.id_card != null)
         {
             nai_out = request.id_card.nai;
             password_out = request.id_card.password;
+            server_certificate_hash = "certificate";
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);

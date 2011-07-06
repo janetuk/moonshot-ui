@@ -40,9 +40,23 @@
 #include "libmoonshot-common.h"
 #include "moonshot-msrpc.h"
 
+#include <stdio.h>
+
 #define MOONSHOT_ENDPOINT_NAME "/org/janet/Moonshot"
 #define MOONSHOT_INSTALL_PATH_KEY "Software\\Moonshot"
 
+
+static MoonshotError *moonshot_error_new_from_status (MoonshotErrorCode code,
+                                                      DWORD             status)
+{
+    MoonshotError *error = malloc (sizeof (MoonshotError));
+    error->code = code;
+    error->message = malloc (256);
+
+    FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, status, 0, (LPSTR)error->message, 255, NULL);
+
+    return error;
+}
 
 static void launch_server (MoonshotError **error) {
     HKEY key = NULL;
@@ -102,51 +116,79 @@ static void launch_server (MoonshotError **error) {
     }
 }
 
-/*static void dbus_call_complete_cb (DBusGProxy     *proxy,
-                                   DBusGProxyCall *call_id,
-                                   void           *user_data)
+static void bind_rpc (MoonshotError **error)
 {
-    GError *error = NULL;
-    GSimpleAsyncResult   *token;
-    MoonshotIdentityData *identity_data;
-    gboolean              success;
+    DWORD status;
+    int   i;
 
-    token = G_SIMPLE_ASYNC_RESULT (user_data);
-    identity_data = moonshot_identity_data_new ();
+    status = rpc_client_bind (&moonshot_binding_handle,
+                              MOONSHOT_ENDPOINT_NAME,
+                              RPC_PER_USER);
 
-    dbus_g_proxy_end_call (moonshot_dbus_proxy,
-                           call_id,
-                           &error,
-                           G_TYPE_STRING, &identity_data->nai,
-                           G_TYPE_STRING, &identity_data->password,
-                           G_TYPE_STRING, &identity_data->server_certificate_hash,
-                           G_TYPE_STRING, &identity_data->ca_certificate,
-                           G_TYPE_STRING, &identity_data->subject_name_constraint,
-                           G_TYPE_STRING, &identity_data->subject_alt_name_constraint,
-                           G_TYPE_BOOLEAN, &success,
-                           G_TYPE_INVALID);
-
-    if (error != NULL) {
-        g_simple_async_result_set_from_error (token, error);
-    }
-    else
-    if (success == FALSE) {
-        error = g_error_new (MOONSHOT_ERROR,
-                             MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
-                             "No matching identity was available");
-        g_simple_async_result_set_from_error (token, error);
-        g_error_free (error);
-    }
-    else {        
-        g_simple_async_result_set_op_res_gpointer (token,
-                                                   identity_data,
-                                                   moonshot_identity_data_free);
+    if (status != RPC_S_OK) {
+        *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
+                                                 status);
+        return;
     }
 
-    g_simple_async_result_complete (token);
-    g_object_unref (token);
+    status = RpcMgmtIsServerListening (moonshot_binding_handle);
+
+    if (status == RPC_S_NOT_LISTENING) {
+        //launch_server (error);
+
+        /* Allow 5 seconds for the server to launch before we time out */
+        //for (i=0; i<50; i++) {
+           // Sleep (100); /* ms */
+/*
+            status = RpcMgmtIsServerListening (moonshot_binding_handle);
+
+            if (status == RPC_S_OK)
+                return;
+
+            if (status != RPC_S_NOT_LISTENING)
+                break;
+        }*/
+    }
+
+    if (status != RPC_S_OK)
+        *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
+                                                 status);
 }
-*/
+
+static void init_rpc (MoonshotError **error)
+{
+    static volatile LONG binding_init_flag = 2;
+    int status;
+
+    /* Hack to avoid requiring a moonshot_init() function. Windows does not
+     * provide any synchronisation primitives that can be statically init'ed,
+     * but we can use its atomic variable access functions to achieve the same.
+     * See: http://msdn.microsoft.com/en-us/library/ms684122%28v=vs.85%29.aspx
+     */
+
+    if (binding_init_flag == 0)
+        return;
+
+    if (InterlockedCompareExchange (&binding_init_flag, 1, 2) == 2) {
+        bind_rpc (error);
+
+        /* We'll handle all exceptions locally to avoid interfering with any
+         * other RPC/other exception handling that goes on in the process,
+         * and so we can store the problem in a MooshotError instead of
+         * aborting.
+         */
+        rpc_set_global_exception_handler_enable (FALSE);
+
+        if (InterlockedCompareExchange (&binding_init_flag, 0, 1) != 1) {
+            /* This should never happen */
+            fprintf (stderr, "moonshot: Internal synchronisation error");
+        }
+    } else {
+        while (binding_init_flag != 0)
+            Sleep (100); /* ms */
+    }
+}
+
 
 int moonshot_get_identity (const char     *nai,
                            const char     *password,
@@ -159,78 +201,55 @@ int moonshot_get_identity (const char     *nai,
                            char          **subject_alt_name_constraint_out,
                            MoonshotError **error)
 {
-    int status;
+    int success;
+    RpcAsyncCall call;
 
-    status = rpc_client_bind (&moonshot_binding_handle,
-                              MOONSHOT_ENDPOINT_NAME,
-                              RPC_PER_USER);
+    init_rpc (error);
 
-    printf ("RPC status: %i\n", status);
-
-    /*DBusGProxyCall     *call_id;
-    GSimpleAsyncResult *result; 
-    GError *error = NULL;
-
-    if (moonshot_dbus_proxy == NULL)
-        moonshot_dbus_proxy = dbus_connect (&error);
-
-    if (moonshot_dbus_proxy == NULL) {
-        result = g_simple_async_result_new (NULL,
-                                            callback,
-                                            user_data,
-                                            moonshot_get_identity);
-        g_simple_async_result_set_from_error (result, error);
-        g_simple_async_result_complete_in_idle (result);
-        g_error_free (error);
-        return;
-    }
-
-    g_return_if_fail (DBUS_IS_G_PROXY (moonshot_dbus_proxy));
-
-    result = g_simple_async_result_new (NULL,
-                                        callback,
-                                        user_data,
-                                        moonshot_get_identity);
-
-    call_id = dbus_g_proxy_begin_call (moonshot_dbus_proxy,
-                                       "GetIdentity",
-                                       dbus_call_complete_cb,
-                                       result, NULL,
-                                       G_TYPE_STRING, nai,
-                                       G_TYPE_STRING, password,
-                                       G_TYPE_STRING, service);*/
-}
-
-/*gboolean moonshot_get_identity_finish (GAsyncResult  *result,
-                                       char         **nai,
-                                       char         **password,
-                                       char         **server_certificate_hash,
-                                       char         **ca_certificate,
-                                       char         **subject_name_constraint,
-                                       char         **subject_alt_name_constraint,
-                                       GError       **error)
-{
-    MoonshotIdentityData *identity;
-
-    g_return_val_if_fail (g_simple_async_result_is_valid (result,
-                                                          NULL,
-                                                          moonshot_get_identity),
-                          FALSE);
-
-    if (g_simple_async_result_propagate_error (G_SIMPLE_ASYNC_RESULT (result), error))
+    if (*error != NULL)
         return FALSE;
 
-    identity = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (result));
+    rpc_async_call_init (&call);
 
-    *nai = identity->nai;
-    *password = identity->password;
-    *server_certificate_hash = identity->server_certificate_hash;
-    *ca_certificate = identity->ca_certificate;
-    *subject_name_constraint = identity->subject_name_constraint;
-    *subject_alt_name_constraint = identity->subject_alt_name_constraint;
+    nai_out = NULL;
+    password_out = NULL;
+    server_certificate_hash_out = NULL;
+    ca_certificate_out = NULL;
+    subject_name_constraint_out = NULL;
+    subject_alt_name_constraint_out = NULL;
+
+    RPC_TRY_EXCEPT {
+        moonshot_get_identity_rpc (&call,
+                                   nai,
+                                   password,
+                                   service,
+                                   nai_out,
+                                   password_out,
+                                   server_certificate_hash_out,
+                                   ca_certificate_out,
+                                   subject_name_constraint_out,
+                                   subject_alt_name_constraint_out);
+
+        success = rpc_async_call_complete_int (&call);
+    }
+    RPC_EXCEPT {
+        *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
+                                                 RPC_GET_EXCEPTION_CODE ());
+    }
+    RPC_END_EXCEPT
+
+    if (*error != NULL)
+        return FALSE;
+
+    if (success == FALSE) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
+                                     "No identity was returned by the Moonshot "
+                                     "user interface.");
+        return FALSE;
+    }
 
     return TRUE;
-}*/
+}
 
 
 int moonshot_get_default_identity (char          **nai_out,
@@ -241,11 +260,49 @@ int moonshot_get_default_identity (char          **nai_out,
                                    char          **subject_alt_name_constraint_out,
                                    MoonshotError **error)
 {
-    int status;
+    int success;
+    RpcAsyncCall call;
 
-    status = rpc_client_bind (&moonshot_binding_handle,
-                              MOONSHOT_ENDPOINT_NAME,
-                              RPC_PER_USER);
+    init_rpc (error);
 
-    printf ("RPC status: %i\n", status);
+    if (*error != NULL)
+        return FALSE;
+
+    rpc_async_call_init (&call);
+
+    nai_out = NULL;
+    password_out = NULL;
+    server_certificate_hash_out = NULL;
+    ca_certificate_out = NULL;
+    subject_name_constraint_out = NULL;
+    subject_alt_name_constraint_out = NULL;
+
+    RPC_TRY_EXCEPT {
+        moonshot_get_default_identity_rpc (&call,
+                                           nai_out,
+                                           password_out,
+                                           server_certificate_hash_out,
+                                           ca_certificate_out,
+                                           subject_name_constraint_out,
+                                           subject_alt_name_constraint_out);
+
+        success = rpc_async_call_complete_int (&call);
+    }
+    RPC_EXCEPT {
+        *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
+                                                 RPC_GET_EXCEPTION_CODE ());
+    }
+    RPC_END_EXCEPT
+
+    if (*error != NULL)
+        return FALSE;
+
+    if (success == FALSE) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
+                                     "No identity was returned by the Moonshot "
+                                     "user interface.");
+        return FALSE;
+    }
+
+    return TRUE;
 };

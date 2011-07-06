@@ -15,6 +15,10 @@ interface moonshot
                                    [out, string] char **subject_alt_name_constraint);
 
     int moonshot_get_default_identity_rpc ([out, string] char **nai_out,
-                                           [out, string] char **password_out);
+                                           [out, string] char **password_out,
+                                           [out, string] char **server_certificate_hash,
+                                           [out, string] char **ca_certificate,
+                                           [out, string] char **subject_name_constraint,
+                                           [out, string] char **subject_alt_name_constraint);
 }
 
