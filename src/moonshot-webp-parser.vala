@@ -18,9 +18,25 @@ namespace WebProvisioning
   }
 
   bool
+  realm_handler (SList<string> stack)
+  {
+    string[] realm_path = {"realm", "identity", "identities"};
+    
+    return check_stack (stack, realm_path);
+  }
+
+  bool
+  password_handler (SList<string> stack)
+  {
+    string[] password_path = {"password", "identity", "identities"};
+    
+    return check_stack (stack, password_path);
+  }
+
+  bool
   user_handler (SList<string> stack)
   {
-    string[] user_path = {"user", "identity"};
+    string[] user_path = {"user", "identity", "identities"};
     
     return check_stack (stack, user_path);
   }
@@ -28,7 +44,7 @@ namespace WebProvisioning
   bool
   display_name_handler (SList<string> stack)
   {
-    string[] display_name_path = {"display-name", "identity"};
+    string[] display_name_path = {"display-name", "identity", "identities"};
     
     return check_stack (stack, display_name_path);
   }
@@ -50,11 +66,13 @@ namespace WebProvisioning
     {
       card.username = text;
     }
-    else if (stack.nth_data(0) == "password")
+    else if (stack.nth_data(0) == "password" && password_handler (stack))
     {
+      card.password = text;
     }
-    else if (stack.nth_data(0) == "realm")
+    else if (stack.nth_data(0) == "realm" && realm_handler (stack))
     {
+      card.issuer = text;
     }
     else if (stack.nth_data(0) == "service")
     {
@@ -128,7 +146,7 @@ namespace WebProvisioning
     
     var webp = new WebProvisionParser (args[1]);
     
-    debug ("%s %s", card.display_name, card.username);
+    debug ("'%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
     
     return 0;
   }
