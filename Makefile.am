@@ -59,6 +59,11 @@ src_moonshot_CFLAGS = -mwindows
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
 
+noinst_DATA = libmoonshot/libmoonshot.lib
+
+libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
+	"${MSVC_LIB}" -def:$< -out:$@ -machine:x86
+
 endif
 
 
