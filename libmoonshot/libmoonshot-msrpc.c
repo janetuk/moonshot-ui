@@ -84,7 +84,7 @@ static void launch_server (MoonshotError **error) {
     status = RegQueryValueEx (key, NULL, NULL, &value_type, exe_path, &length);
 
     if (value_type != REG_SZ) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
+        *error = moonshot_error_new (MOONSHOT_ERROR_INSTALLATION_ERROR,
                                      "Value of registry key HKLM\\%s is invalid. "
                                      "Please set it to point to the location of "
                                      "moonshot.exe",
