@@ -88,7 +88,21 @@ namespace WebProvisioning
                       string[] attribute_names,
                       string[] attribute_values) throws MarkupError
   {
-    debug ("START %s", element_name); 
+    if (element_name == "identity")
+    {
+      IdCard[] tmp_cards = cards;
+
+      cards = new IdCard[tmp_cards.length + 1];
+      for (int i = 0; i<tmp_cards.length; i++)
+      {
+        cards[i] = tmp_cards[i];
+      }
+      card = new IdCard();
+      cards[tmp_cards.length] = card;
+    }
+    else if (element_name == "rule")
+    {
+    }
   }
 
   public void
@@ -184,8 +198,6 @@ namespace WebProvisioning
     public void
     parse ()
     {
-      card = new IdCard();
-
       var ctx = new MarkupParseContext(parser, 0, null, null);
       
       try
@@ -214,11 +226,15 @@ namespace WebProvisioning
     var webp = new Parser (args[1]);
     webp.parse();
     
-    debug ("'%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
-    
-    foreach (string srv in card.services)
+    foreach (IdCard card in cards)
     {
-      debug ("service: %s", srv);
+    
+      debug ("IDCARD: '%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
+    
+      foreach (string srv in card.services)
+      {
+        debug ("service: %s", srv);
+      }
     }
     
     return 0;

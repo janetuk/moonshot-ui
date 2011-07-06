@@ -26,4 +26,8 @@
       <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
     </trust-anchor>
   </identity>
+  <identity>
+    <display-name>ASD</display-name>
+    <username>ASD</username>
+  </identity>
 </identities> 
