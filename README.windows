@@ -43,7 +43,14 @@ extract into c:\tools\mingw:
 (Alternately you can fetch the source for the w32api package from
  www.sourceforge.net/projects/mingw and apply the patch yourself)
 
-You will need to compile and install the msrpc-mingw package.
+You will need to compile and install the msrpc-mingw package, which wraps
+MIDL.EXE and the RPC API to make it usable from gcc.
+
+  git clone git://github.com/ssssam/msrpc-mingw.git
+  cd msrpc-mingw
+  MIDL=/c/Program\ Files/Microsoft SDKs/Windows/v7.0/bin/MIDL.exe ./waf configure --prefix=c:/build
+  ./waf
+  ./waf install
 
 You can then build moonshot from the MSYS shell:
 
