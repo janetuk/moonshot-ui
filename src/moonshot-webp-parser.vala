@@ -2,23 +2,35 @@ namespace WebProvisioning
 { 
   public IdCard card;
 
-  
+  bool
+  check_stack (SList<string> stack, string[] reference)
+  {
+    if (stack.length () < reference.length)
+      return false;
+    
+    for (int i = 0; i<reference.length; i++)
+    {
+      if (stack.nth_data(i) != reference[i])
+        return false;
+    }
+
+    return true;
+  }
+
+  bool
+  user_handler (SList<string> stack)
+  {
+    string[] user_path = {"user", "identity"};
+    
+    return check_stack (stack, user_path);
+  }
 
   bool
   display_name_handler (SList<string> stack)
   {
-    string[] display_name_path = {"display-name", "identity", "identities"};
+    string[] display_name_path = {"display-name", "identity"};
     
-    if (stack.length () != display_name_path.length)
-      return false;
-    
-    for (int i = 0; i<display_name_path.length; i++)
-    {
-      if (stack.nth_data(i) != display_name_path[i])
-        return false;
-    }
-    
-    return true;
+    return check_stack (stack, display_name_path);
   }
 
   public void text_element_func (MarkupParseContext context,
@@ -34,8 +46,9 @@ namespace WebProvisioning
     {
       card.display_name = text;
     }
-    else if (stack.nth_data(0) == "user")
+    else if (stack.nth_data(0) == "user" && user_handler (stack))
     {
+      card.username = text;
     }
     else if (stack.nth_data(0) == "password")
     {
@@ -115,8 +128,8 @@ namespace WebProvisioning
     
     var webp = new WebProvisionParser (args[1]);
     
-    debug ("%s", card.display_name);
-
+    debug ("%s %s", card.display_name, card.username);
+    
     return 0;
   }
 }
