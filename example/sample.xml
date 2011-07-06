@@ -23,7 +23,7 @@
       <subject>Foo</subject>
       <subject-alt>Bar</subject-alt>
       <!-- Or alternatively -->
-      <srv-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</srv-cert>
+      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
     </trust-anchor>
   </identity>
 </identities> 

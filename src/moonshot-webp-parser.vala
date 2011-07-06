@@ -18,6 +18,14 @@ namespace WebProvisioning
   }
 
   bool
+  server_cert_handler (SList<string> stack)
+  {
+    string[] server_cert_path = {"server-cert", "trust-anchor", "identity", "identities"};
+    
+    return check_stack (stack, server_cert_path);
+  }
+
+  bool
   subject_alt_handler (SList<string> stack)
   {
     string[] subject_alt_path = {"subject-alt", "trust-anchor", "identity", "identities"};
@@ -123,9 +131,15 @@ namespace WebProvisioning
     }
     else if (stack.nth_data(0) == "subject" && subject_handler (stack))
     {
+      card.trust_anchor.subject = text;
     }
     else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler (stack))
     {
+      card.trust_anchor.subject_alt = text;
+    }
+    else if (stack.nth_data(0) == "server-cert" && server_cert_handler (stack))
+    {
+      card.trust_anchor.server_cert = text;
     }
   }
 
