@@ -40,7 +40,9 @@
 #include "libmoonshot-common.h"
 #include "moonshot-msrpc.h"
 
+#include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 
 #define MOONSHOT_ENDPOINT_NAME "/org/janet/Moonshot"
 #define MOONSHOT_INSTALL_PATH_KEY "Software\\Moonshot"
@@ -54,6 +56,40 @@ static MoonshotError *moonshot_error_new_from_status (MoonshotErrorCode code,
     error->message = malloc (256);
 
     FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM, NULL, status, 0, (LPSTR)error->message, 255, NULL);
+    return error;
+}
+
+static MoonshotError *moonshot_error_new_with_status (MoonshotErrorCode code,
+                                                      DWORD             status,
+                                                      const char        *format, ...)
+{
+    MoonshotError *error = malloc (sizeof (MoonshotError));
+    char *buffer;
+    va_list args;
+    int length;
+
+    va_start (args, format);
+
+    error->code = code;
+
+    buffer = malloc (strlen (format) + 256 + 3);
+    strcpy (buffer, format);
+    strcat (buffer, ": ");
+
+    FormatMessage (FORMAT_MESSAGE_FROM_SYSTEM,
+                   NULL,
+                   status,
+                   0,
+                   (LPSTR)buffer + strlen (format) + 3,
+                   255,
+                   NULL);
+
+    length = _vscprintf (buffer, args);
+    error->message = malloc (length + 1);
+    _vsnprintf (error->message, length, buffer, args);
+    free (buffer);
+
+    va_end (args);
 
     return error;
 }
@@ -63,6 +99,7 @@ static void launch_server (MoonshotError **error) {
     STARTUPINFO startup_info = { 0 };
     PROCESS_INFORMATION process_info = { 0 };
     LONG status;
+    BOOL success;
     DWORD value_type;
     DWORD length;
     char exe_path[1024];
@@ -73,10 +110,19 @@ static void launch_server (MoonshotError **error) {
                            KEY_READ,
                            &key);
 
-    if (status != 0) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
-                                     "Unable to read registry key HKLM\\%s",
-                                     MOONSHOT_INSTALL_PATH_KEY);
+    if (status == ERROR_FILE_NOT_FOUND) {
+        *error = moonshot_error_new
+                   (MOONSHOT_ERROR_INSTALLATION_ERROR,
+                    "Moonshot is not installed correctly on this system. "
+                    "(Registry key HKLM\\%s was not found).",
+                    MOONSHOT_INSTALL_PATH_KEY);
+        return;
+    } else if (status != 0) {
+        *error = moonshot_error_new_with_status
+                   (MOONSHOT_ERROR_OS_ERROR,
+                    status,
+                    "Unable to read registry key HKLM\\%s",
+                    MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
@@ -84,34 +130,43 @@ static void launch_server (MoonshotError **error) {
     status = RegQueryValueEx (key, NULL, NULL, &value_type, exe_path, &length);
 
     if (value_type != REG_SZ) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_INSTALLATION_ERROR,
-                                     "Value of registry key HKLM\\%s is invalid. "
-                                     "Please set it to point to the location of "
-                                     "moonshot.exe",
-                                     MOONSHOT_INSTALL_PATH_KEY);
+        *error = moonshot_error_new_with_status
+                   (MOONSHOT_ERROR_INSTALLATION_ERROR,
+                    status,
+                    "Value of registry key HKLM\\%s is invalid. Please set it "
+                    "to point to the location of moonshot.exe",
+                    MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
 
     if (status != 0) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_OS_ERROR,
-                                     "Unable to read value of registry key HKLM\\%s",
-                                     MOONSHOT_INSTALL_PATH_KEY);
+        *error = moonshot_error_new_with_status
+                   (MOONSHOT_ERROR_OS_ERROR,
+                    status,
+                    "Unable to read value of registry key HKLM\\%s",
+                    MOONSHOT_INSTALL_PATH_KEY);
         return;
     }
 
     startup_info.cb = sizeof (startup_info);
 
-    status = CreateProcess (exe_path, NULL,
-                            NULL, NULL,
-                            FALSE, DETACHED_PROCESS,
-                            NULL, NULL,
-                            &startup_info, &process_info);
+    success = CreateProcess (exe_path,
+                             NULL,
+                             NULL,
+                             NULL,
+                             TRUE,
+                             DETACHED_PROCESS,
+                             NULL,
+                             NULL,
+                             &startup_info, &process_info);
 
-    if (status != 0) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_UNABLE_TO_START_SERVICE,
-                                     "Unable to spawn the moonshot server at '%s'",
-                                     exe_path);
+    if (! success) {
+        *error = moonshot_error_new_with_status
+                   (MOONSHOT_ERROR_UNABLE_TO_START_SERVICE,
+                    GetLastError (),
+                    "Unable to spawn the moonshot server at '%s'",
+                    exe_path);
         return;
     }
 }
@@ -134,12 +189,15 @@ static void bind_rpc (MoonshotError **error)
     status = RpcMgmtIsServerListening (moonshot_binding_handle);
 
     if (status == RPC_S_NOT_LISTENING) {
-        //launch_server (error);
+        launch_server (error);
 
-        /* Allow 5 seconds for the server to launch before we time out */
-        //for (i=0; i<50; i++) {
-           // Sleep (100); /* ms */
-/*
+        if (*error != NULL)
+            return;
+
+        /* Allow 10 seconds for the server to launch before we time out */
+        for (i=0; i<100; i++) {
+            Sleep (100); /* ms */
+
             status = RpcMgmtIsServerListening (moonshot_binding_handle);
 
             if (status == RPC_S_OK)
@@ -147,7 +205,7 @@ static void bind_rpc (MoonshotError **error)
 
             if (status != RPC_S_NOT_LISTENING)
                 break;
-        }*/
+        }
     }
 
     if (status != RPC_S_OK)
