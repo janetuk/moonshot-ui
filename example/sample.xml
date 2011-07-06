@@ -11,11 +11,11 @@
     <selection-rules>
       <rule>
         <pattern>PATTERN</pattern>
-        <always_confirm>true</always_confirm>
+        <always-confirm>true</always-confirm>
       </rule>
       <rule>
         <pattern>ANOTHER_PATTERN</pattern>
-        <always_confirm>false</always_confirm>
+        <always-confirm>false</always-confirm>
       </rule>
     </selection-rules>
     <trust-anchor>

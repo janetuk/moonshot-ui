@@ -19,6 +19,22 @@ namespace WebProvisioning
   }
 
   bool
+  always_confirm_handler (SList<string> stack)
+  {
+    string[] always_confirm_path = {"always-confirm", "rule", "selection-rules", "identity", "identities"};
+    
+    return check_stack (stack, always_confirm_path);
+  }
+  
+  bool
+  pattern_handler (SList<string> stack)
+  {
+    string[] pattern_path = {"pattern", "rule", "selection-rules", "identity", "identities"};
+    
+    return check_stack (stack, pattern_path);
+  }
+
+  bool
   server_cert_handler (SList<string> stack)
   {
     string[] server_cert_path = {"server-cert", "trust-anchor", "identity", "identities"};
@@ -93,7 +109,7 @@ namespace WebProvisioning
       IdCard[] tmp_cards = cards;
 
       cards = new IdCard[tmp_cards.length + 1];
-      for (int i = 0; i<tmp_cards.length; i++)
+      for (int i=0; i<tmp_cards.length; i++)
       {
         cards[i] = tmp_cards[i];
       }
@@ -102,6 +118,14 @@ namespace WebProvisioning
     }
     else if (element_name == "rule")
     {
+      Rule[] tmp_rules = card.rules;
+      card.rules = new Rule[tmp_rules.length + 1];
+      for (int i=0; i<tmp_rules.length; i++)
+      {
+        card.rules[i] = tmp_rules[i];
+      }
+      
+      card.rules[tmp_rules.length] = Rule();
     }
   }
 
@@ -142,13 +166,15 @@ namespace WebProvisioning
       card.services[services.length] = text;
     }
     /* Rules */
-    else if (stack.nth_data(0) == "pattern")
+    else if (stack.nth_data(0) == "pattern" && pattern_handler (stack))
     {
+      card.rules[card.rules.length - 1].pattern = text;
     }
-    else if (stack.nth_data(0) == "always_confirm")
+    else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler (stack))
     {
+      if (text == "true" || text == "false")
+        card.rules[card.rules.length - 1].always_confirm = text;
     }
-    
     /*Trust anchor*/
     else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler (stack))
     {
@@ -234,6 +260,11 @@ namespace WebProvisioning
       foreach (string srv in card.services)
       {
         debug ("service: %s", srv);
+      }
+      
+      foreach (Rule r in card.rules)
+      {
+        debug ("rule: '%s' '%s'", r.pattern, r.always_confirm);
       }
     }
     
