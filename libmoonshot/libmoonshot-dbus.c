@@ -52,6 +52,11 @@
  * waiting for calls.
  */
 
+void moonshot_free (void *data)
+{
+    g_free (data);
+}
+
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {
     DBusConnection  *connection;

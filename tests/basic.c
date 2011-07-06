@@ -30,6 +30,13 @@ gpointer test_func (gpointer data)
     /*if (success)
         g_print ("Got id: %s %s\n", nai, password);*/
 
+    moonshot_free (nai);
+    moonshot_free (password);
+    moonshot_free (server_certificate_hash);
+    moonshot_free (ca_certificate);
+    moonshot_free (subject_name_constraint);
+    moonshot_free (subject_alt_name_constraint);
+
     return GINT_TO_POINTER (success);
 }
 

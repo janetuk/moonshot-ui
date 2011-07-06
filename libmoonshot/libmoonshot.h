@@ -35,6 +35,17 @@
 #ifndef __LIBMOONSHOT_H
 #define __LIBMOONSHOT_H
 
+/**
+ * moonshot_free:
+ * @pointer: pointer to be freed
+ *
+ * All the strings returned by the get_identity() functions must be
+ * freed using this function when they are no longer needed.
+ *
+ * @pointer may be %NULL, in which case no action is taken.
+ */
+void moonshot_free (void *data);
+
 typedef enum {
     MOONSHOT_ERROR_UNABLE_TO_START_SERVICE,
     MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
@@ -48,6 +59,13 @@ typedef struct {
     char              *message;
 } MoonshotError;
 
+/**
+ * moonshot_error_free:
+ * @error: A #MoonshotError
+ *
+ * Releases the memory used by @error. This function must be called if
+ * a function has returned an error, once it has been reported.
+ */
 void moonshot_error_free (MoonshotError *error);
 
 /**
