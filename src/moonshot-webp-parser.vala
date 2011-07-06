@@ -18,6 +18,30 @@ namespace WebProvisioning
   }
 
   bool
+  subject_alt_handler (SList<string> stack)
+  {
+    string[] subject_alt_path = {"subject-alt", "trust-anchor", "identity", "identities"};
+    
+    return check_stack (stack, subject_alt_path);
+  }
+
+  bool
+  subject_handler (SList<string> stack)
+  {
+    string[] subject_path = {"subject", "trust-anchor", "identity", "identities"};
+    
+    return check_stack (stack, subject_path);
+  }
+  
+  bool
+  ca_cert_handler (SList<string> stack)
+  {
+    string[] ca_path = {"ca-cert", "trust-anchor", "identity", "identities"};
+    
+    return check_stack (stack, ca_path);
+  }
+
+  bool
   realm_handler (SList<string> stack)
   {
     string[] realm_path = {"realm", "identity", "identities"};
@@ -76,7 +100,15 @@ namespace WebProvisioning
     }
     else if (stack.nth_data(0) == "service")
     {
+      string[] services = card.services;
+      card.services = new string[services.length + 1];
+      for (int i = 0; i<services.length; i++)
+      {
+        card.services[i] = services[i];
+      }
+      card.services[services.length] = text;
     }
+    /* Rules */
     else if (stack.nth_data(0) == "pattern")
     {
     }
@@ -85,13 +117,14 @@ namespace WebProvisioning
     }
     
     /*Trust anchor*/
-    else if (stack.nth_data(0) == "ca-cert")
+    else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler (stack))
+    {
+      card.trust_anchor.ca_cert = text;
+    }
+    else if (stack.nth_data(0) == "subject" && subject_handler (stack))
     {
     }
-    else if (stack.nth_data(0) == "subject")
-    {
-    }
-    else if (stack.nth_data(0) == "ca-cert")
+    else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler (stack))
     {
     }
   }
@@ -147,6 +180,11 @@ namespace WebProvisioning
     var webp = new WebProvisionParser (args[1]);
     
     debug ("'%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
+    
+    foreach (string srv in card.services)
+    {
+      debug ("service: %s", srv);
+    }
     
     return 0;
   }

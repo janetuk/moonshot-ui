@@ -6,11 +6,16 @@
     <realm>issuer name</realm>
     <services>
       <service>xmpp@jabber.project-moonshot.org</service>
+      <service>email@project-moonshot.org</service>
     </services>
     <selection-rules>
       <rule>
         <pattern>PATTERN</pattern>
         <always_confirm>true</always_confirm>
+      </rule>
+      <rule>
+        <pattern>ANOTHER_PATTERN</pattern>
+        <always_confirm>false</always_confirm>
       </rule>
     </selection-rules>
     <trust-anchor>
