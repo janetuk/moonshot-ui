@@ -65,7 +65,7 @@ void moonshot_error_free (MoonshotError *error);
  * @subject_name_constraint_out: Set if @ca_certificate is set, otherwise %NULL.
  * @subject_alt_name_constraint_out: Set if @ca_certificate is set, otherwise
  *                                   %NULL.
- * @error: Return location for a #MoonshotError, or %NULL.
+ * @error: Return location for a #MoonshotError.
  *
  * This function calls the Moonshot server to request an ID card. The server
  * will be activated if it is not already running. The user interface will be
@@ -78,8 +78,9 @@ void moonshot_error_free (MoonshotError *error);
  * constraints will be returned.
  *
  * Error reporting is handled by a simple mechanism similar to #GError. If
- * an error occurs, a #MoonshotError object will be stored at *@error, with
- * a code and message string. This must be freed using moonshot_error_free().
+ * an error occurs, as well as returning %FALSE a #MoonshotError object will
+ * be stored at *@error, with a code and message string. This must be freed
+ * using moonshot_error_free().
  *
  * Return value: %TRUE if an identity was successfully selected, %FALSE on
  *               failure.
@@ -107,7 +108,7 @@ int moonshot_get_identity (const char     *nai,
  * @subject_name_constraint_out: Set if @ca_certificate is set, otherwise %NULL.
  * @subject_alt_name_constraint_out: Set if @ca_certificate is set, otherwise
  *                                   %NULL.
- * @error: Return location for a #MoonshotError, or %NULL.
+ * @error: Return location for a #MoonshotError.
  *
  * This function calls the Moonshot server to request the default identity
  * (the one most recently used). Its semantics are otherwise the same as
