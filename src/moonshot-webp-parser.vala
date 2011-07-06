@@ -154,12 +154,12 @@ namespace WebProvisioning
     }
   }
 
-  class WebProvisionParser
+  class Parser
   {
     private MarkupParser parser;
     private string       text;
     private string       path;
-    public WebProvisionParser (string path)
+    public Parser (string path)
     {
       text = "";
       this.path = path;
@@ -211,7 +211,7 @@ namespace WebProvisioning
       error ("%s does not exist", args[1]);
     }
     
-    var webp = new WebProvisionParser (args[1]);
+    var webp = new Parser (args[1]);
     webp.parse();
     
     debug ("'%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
