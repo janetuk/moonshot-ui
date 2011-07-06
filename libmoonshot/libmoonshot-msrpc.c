@@ -371,3 +371,21 @@ int moonshot_get_default_identity (char          **nai_out,
 
     return TRUE;
 };
+
+BOOL WINAPI DllMain (HINSTANCE  hinst,
+                     DWORD      reason,
+                     void      *reserved)
+{
+    if (reason == DLL_PROCESS_DETACH) {
+        /* Process exiting/DLL being unloaded. This is a good
+         * opportunity to free the RPC binding.
+         *
+         * FIXME: we can't use the msrpc-mingw routine for this in case
+         * it was already unloaded. I'd love to work out how to link
+         * that library statically into libmoonshot-0.dll.
+         */
+        RpcBindingFree (&moonshot_binding_handle);
+    }
+
+    return TRUE;
+}
