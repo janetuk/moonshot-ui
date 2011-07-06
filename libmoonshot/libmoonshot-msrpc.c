@@ -47,6 +47,13 @@
 #define MOONSHOT_ENDPOINT_NAME "/org/janet/Moonshot"
 #define MOONSHOT_INSTALL_PATH_KEY "Software\\Moonshot"
 
+void *__RPC_USER MIDL_user_allocate (size_t size) {
+	return malloc (size);
+}
+
+void __RPC_USER MIDL_user_free (void *data) {
+	free (data);
+}
 
 static MoonshotError *moonshot_error_new_from_status (MoonshotErrorCode code,
                                                       DWORD             status)

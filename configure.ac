@@ -24,24 +24,26 @@ AC_CANONICAL_HOST
 case "$host" in
   *-*-mingw*)
     win32=yes
-    IPC_MODULE="msrpc-glib2-1.0"
+    SERVER_IPC_MODULE="msrpc-glib2-1.0"
+    CLIENT_IPC_MODULE="msrpc-mingw-1.0"
     ;;
   *)
     win32=no
-    IPC_MODULE="dbus-glib-1"
+    SERVER_IPC_MODULE="dbus-glib-1"
+    CLIENT_IPC_MODULE="dbus-glib-1"
     ;;
 esac
 
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
-AM_CONDITIONAL([IPC_MSRPC], [test "$IPC_MODULE" = "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS], [test "$IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
-if test "$IPC_MODULE" = "msrpc-glib2-1.0"; then
+if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   # MS RPC utilities
   AC_PATH_MSRPC_MINGW([0.1.0], :,
     AC_MSG_ERROR([
@@ -114,11 +116,11 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
-        $IPC_MODULE
+        $SERVER_IPC_MODULE
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
-        $IPC_MODULE
+        $CLIENT_IPC_MODULE
 ])
 
 # i18n stuff
