@@ -142,7 +142,7 @@ examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
 examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c
-tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 
