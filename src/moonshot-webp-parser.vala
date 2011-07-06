@@ -1,6 +1,7 @@
 namespace WebProvisioning
 { 
-  public IdCard card;
+  IdCard card;
+  IdCard[] cards;
 
   bool
   check_stack (SList<string> stack, string[] reference)
@@ -80,10 +81,20 @@ namespace WebProvisioning
     
     return check_stack (stack, display_name_path);
   }
+  
+  public void
+  start_element_func (MarkupParseContext context,
+                      string element_name,
+                      string[] attribute_names,
+                      string[] attribute_values) throws MarkupError
+  {
+    debug ("START %s", element_name); 
+  }
 
-  public void text_element_func (MarkupParseContext context,
-                                 string text,
-                                 size_t text_len) throws MarkupError
+  public void
+  text_element_func (MarkupParseContext context,
+                     string             text,
+                     size_t             text_len) throws MarkupError
   {
     unowned SList<string> stack = context.get_element_stack ();
     
@@ -162,6 +173,8 @@ namespace WebProvisioning
         error ("Could not retreive file size");
       }
       
+      card = new IdCard();
+      
       MarkupParser parser = {null, null, text_element_func, null, null};
       
       var ctx = new MarkupParseContext(parser, 0, null, null);
@@ -188,8 +201,6 @@ namespace WebProvisioning
     {
       error ("%s does not exist", args[1]);
     }
-    
-    card = new IdCard();
     
     var webp = new WebProvisionParser (args[1]);
     

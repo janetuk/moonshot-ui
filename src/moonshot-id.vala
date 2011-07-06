@@ -21,7 +21,7 @@ public class IdCard : Object
 
   public string issuer { get; set; default = null; }
   
-  public Rule[] rules;
+  public Rule[] rules {get; set; default = {};}
 
   public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
   
