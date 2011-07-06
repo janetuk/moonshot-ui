@@ -9,7 +9,7 @@
   <?define PackageKeywords    = "Installer" ?>
   <?define PackagePlatform    = "x86" ?>
   <?define MainExeFile        = "moonshot.exe" ?>
-  <?define MainExeSource      = "src/moonshot.exe" ?>
+  <?define MainExeSource      = "src/.libs/moonshot.exe" ?>
   <?define Language           = "1033" ?>
 <!-- GUIDs -->
   <?define ProductGuid = "12259E08-76D6-4D9A-8BFA-D720882E8391" ?>
