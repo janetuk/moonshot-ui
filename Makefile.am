@@ -29,6 +29,8 @@ libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
 libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
 
+include_HEADERS = libmoonshot/libmoonshot.h
+noinst_HEADERS = libmoonshot/libmoonshot-common.h
 
 src_moonshot_SOURCES = \
         src/moonshot-id.vala \
@@ -48,7 +50,6 @@ src_moonshot_LDADD = \
 src_moonshot_CPPFLAGS = \
         $(moonshot_CFLAGS) \
         $(AM_CPPFLAGS)
-
 
 if OS_WIN32
 
@@ -88,14 +89,16 @@ libmoonshot/moonshot-msrpc_s.c: libmoonshot/moonshot-msrpc.h
 libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
 
 libmoonshot_libmoonshot_la_SOURCES += \
-        libmoonshot/libmoonshot-msrpc.c \
-        libmoonshot/moonshot-msrpc_c.c
+        libmoonshot/libmoonshot-msrpc.c
 
 src_moonshot_SOURCES += \
         src/moonshot-msrpc.vapi
 
 nodist_src_moonshot_SOURCES = \
         libmoonshot/moonshot-msrpc_s.c
+
+nodist_libmoonshot_libmoonshot_la_SOURCES = \
+        libmoonshot/moonshot-msrpc_c.c
 
 endif
 
