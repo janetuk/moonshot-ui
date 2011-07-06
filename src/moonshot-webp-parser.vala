@@ -156,9 +156,14 @@ namespace WebProvisioning
 
   class WebProvisionParser
   {
+    private MarkupParser parser;
+    private string       text;
+    private string       path;
     public WebProvisionParser (string path)
     {
-      string text = "";
+      text = "";
+      this.path = path;
+
       var file = File.new_for_path (path);
     
       try
@@ -173,10 +178,14 @@ namespace WebProvisioning
         error ("Could not retreive file size");
       }
       
+      parser = {start_element_func, null, text_element_func, null, null};
+    }
+    
+    public void
+    parse ()
+    {
       card = new IdCard();
-      
-      MarkupParser parser = {null, null, text_element_func, null, null};
-      
+
       var ctx = new MarkupParseContext(parser, 0, null, null);
       
       try
@@ -203,6 +212,7 @@ namespace WebProvisioning
     }
     
     var webp = new WebProvisionParser (args[1]);
+    webp.parse();
     
     debug ("'%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
     
