@@ -168,6 +168,10 @@ public class MoonshotServer : Object {
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);
+            return_if_fail (server_certificate_hash != null);
+            return_if_fail (ca_certificate != null);
+            return_if_fail (subject_name_constraint != null);
+            return_if_fail (subject_alt_name_constraint != null);
 
             result = true;
         }
@@ -219,6 +223,10 @@ public class MoonshotServer : Object {
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);
+            return_if_fail (server_certificate_hash != null);
+            return_if_fail (ca_certificate != null);
+            return_if_fail (subject_name_constraint != null);
+            return_if_fail (subject_alt_name_constraint != null);
 
             result = true;
         }

@@ -194,8 +194,8 @@ static void bind_rpc (MoonshotError **error)
         if (*error != NULL)
             return;
 
-        /* Allow 10 seconds for the server to launch before we time out */
-        for (i=0; i<100; i++) {
+        /* Allow 1 minute for the server to launch before we time out */
+        for (i=0; i<600; i++) {
             Sleep (100); /* ms */
 
             status = RpcMgmtIsServerListening (moonshot_binding_handle);
@@ -269,12 +269,12 @@ int moonshot_get_identity (const char     *nai,
 
     rpc_async_call_init (&call);
 
-    nai_out = NULL;
-    password_out = NULL;
-    server_certificate_hash_out = NULL;
-    ca_certificate_out = NULL;
-    subject_name_constraint_out = NULL;
-    subject_alt_name_constraint_out = NULL;
+    *nai_out = NULL;
+    *password_out = NULL;
+    *server_certificate_hash_out = NULL;
+    *ca_certificate_out = NULL;
+    *subject_name_constraint_out = NULL;
+    *subject_alt_name_constraint_out = NULL;
 
     RPC_TRY_EXCEPT {
         moonshot_get_identity_rpc (&call,
@@ -328,12 +328,12 @@ int moonshot_get_default_identity (char          **nai_out,
 
     rpc_async_call_init (&call);
 
-    nai_out = NULL;
-    password_out = NULL;
-    server_certificate_hash_out = NULL;
-    ca_certificate_out = NULL;
-    subject_name_constraint_out = NULL;
-    subject_alt_name_constraint_out = NULL;
+    *nai_out = NULL;
+    *password_out = NULL;
+    *server_certificate_hash_out = NULL;
+    *ca_certificate_out = NULL;
+    *subject_name_constraint_out = NULL;
+    *subject_alt_name_constraint_out = NULL;
 
     RPC_TRY_EXCEPT {
         moonshot_get_default_identity_rpc (&call,
