@@ -1,0 +1,24 @@
+<identities>
+  <identity>
+    <display-name>Unique Name</display-name>
+    <user>username</user>
+    <password>ENCRYPTEDPW</password>
+    <realm>issuer name</realm>
+    <services>
+      <service>xmpp@jabber.project-moonshot.org</service>
+    </services>
+    <selection-rules>
+      <rule>
+        <pattern>PATTERN</pattern>
+        <always_confirm>true</always_confirm>
+      </rule>
+    </selection-rules>
+    <trust-anchor>
+      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
+      <subject>Foo</subject>
+      <subject-alt>Bar</subject-alt>
+      <!-- Or alternatively -->
+      <srv-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</srv-cert>
+    </trust-anchor>
+  </identity>
+</identities> 
