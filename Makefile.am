@@ -42,7 +42,8 @@ src_moonshot_SOURCES = \
         src/moonshot-server.vala \
         src/moonshot-window.vala \
         src/moonshot-password-dialog.vala \
-        src/moonshot-utils.vala
+        src/moonshot-utils.vala \
+        src/moonshot-webp-dialog.vala
 
 src_moonshot_LDADD = \
         $(moonshot_LIBS)

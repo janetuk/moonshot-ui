@@ -112,15 +112,24 @@ public class MoonshotServer : Object {
       idcard.trust_anchor.subject = subject;
       idcard.trust_anchor.subject_alt = subject_alt;
       idcard.trust_anchor.server_cert = server_cert;
-      /* TODO: Ask for confirmation */
+
       /* TODO: Check if display name already exists */
       
       idcard.pixbuf = find_icon ("avatar-default", 48);
+
+      /* TODO: Act on close */      
+      var dialog = new WebProvisioning.ConfirmDialog (idcard);
+      dialog.show_all ();
+      var ret = dialog.run ();
+      dialog.hide ();
+
+      if (ret == Gtk.ResponseType.ACCEPT)      
+      {
+        main_window.insert_id_card (idcard);
+        return true;
+      }
       
-      main_window.insert_id_card (idcard);
-      
-      debug ("%s", idcard.nai);
-      return true;
+      return false;
     }
                                        
 }
