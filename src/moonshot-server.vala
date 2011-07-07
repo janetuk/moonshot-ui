@@ -88,6 +88,36 @@ public class MoonshotServer : Object {
 
         return false;
     }
+    
+    public async bool install_id_card (string   display_name,
+                                       string   user_name,
+                                       string   password,
+                                       string   realm,
+                                       Rule[]   rules,
+                                       string[] services,
+                                       string   ca_cert,
+                                       string   subject,
+                                       string   subject_alt,
+                                       string   server_cert)
+    {
+      IdCard idcard = new IdCard ();
+      
+      idcard.display_name = display_name;
+      idcard.username = user_name;
+      idcard.password = password;
+      idcard.issuer = realm;
+      idcard.rules = rules;
+      idcard.services = services;
+      idcard.trust_anchor.ca_cert = ca_cert;
+      idcard.trust_anchor.subject = subject;
+      idcard.trust_anchor.subject_alt = subject_alt;
+      idcard.trust_anchor.server_cert = server_cert;
+      /* TODO: Ask for confirmation */
+      /* TODO: Check if display name already exists */
+      
+      return true;
+    }
+                                       
 }
 
 #elif IPC_MSRPC
