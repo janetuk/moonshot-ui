@@ -107,7 +107,7 @@ class IdentitiesManager : Object {
         id_card_data = id_card_data[0].split ("@", 2);
         id_card.username = id_card_data[0];
         id_card.issuer = id_card_data[1];
-        id_card.services = {"email","jabber","irc"};
+        id_card.services = {};
         id_card.nai = id_card.username + "@" + id_card.issuer;
         id_card.pixbuf = find_icon ("avatar-default", 48);
 

@@ -115,6 +115,8 @@ public class MoonshotServer : Object {
       /* TODO: Ask for confirmation */
       /* TODO: Check if display name already exists */
       
+      main_window.insert_id_card (idcard);
+      
       return true;
     }
                                        

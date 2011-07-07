@@ -17,7 +17,7 @@ class MainWindow : Window
     private ListStore listmodel;
     private TreeModelFilter filter;
 
-    private IdentitiesManager identities_manager;
+    public IdentitiesManager identities_manager;
 
     private MoonshotServer ipc_server;
 
@@ -258,8 +258,11 @@ class MainWindow : Window
 
     private void add_identity (AddIdentityDialog dialog)
     {
-        var id_card = get_id_card_data (dialog);
-
+        insert_id_card (get_id_card_data (dialog));
+    }
+    
+    public void insert_id_card (IdCard id_card)
+    {    
         this.identities_manager.id_card_list.prepend (id_card);
         this.identities_manager.store_id_cards ();
         this.identities_manager.store_gss_eap_id_file (id_card);
