@@ -115,8 +115,11 @@ public class MoonshotServer : Object {
       /* TODO: Ask for confirmation */
       /* TODO: Check if display name already exists */
       
+      idcard.pixbuf = find_icon ("avatar-default", 48);
+      
       main_window.insert_id_card (idcard);
       
+      debug ("%s", idcard.nai);
       return true;
     }
                                        

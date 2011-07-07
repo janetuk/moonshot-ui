@@ -31,7 +31,6 @@ class IdentitiesManager : Object {
                 id_card.username = key_file.get_string (identity, "Username");
                 id_card.password = key_file.get_string (identity, "Password");
                 id_card.services = key_file.get_string_list (identity, "Services");
-                id_card.nai = id_card.username + "@" + id_card.issuer;
 
                 id_card_list.prepend (id_card);
             }
@@ -108,7 +107,6 @@ class IdentitiesManager : Object {
         id_card.username = id_card_data[0];
         id_card.issuer = id_card_data[1];
         id_card.services = {};
-        id_card.nai = id_card.username + "@" + id_card.issuer;
         id_card.pixbuf = find_icon ("avatar-default", 48);
 
         return id_card;
