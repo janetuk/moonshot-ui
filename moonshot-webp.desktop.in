@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Terminal=false
+Exec=moonshot-webp %f
+Name=Moonshot Web Provisioning Installer
+NoDisplay=true
+Categories=System;Settings
+MimeType=application/moonshot
