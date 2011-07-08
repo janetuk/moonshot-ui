@@ -24,6 +24,8 @@ class MainWindow : Window
     private IdCard default_id_card;
     private Queue<IdentityRequest> request_queue;
 
+    private HashTable<Gtk.Button, string> service_button_map;
+
     private enum Columns
     {
         IDCARD_COL,
@@ -52,6 +54,8 @@ class MainWindow : Window
     public MainWindow()
     {
         request_queue = new Queue<IdentityRequest>();
+        
+        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
 
         this.title = "Moonshoot";
         this.set_position (WindowPosition.CENTER);
@@ -403,8 +407,6 @@ class MainWindow : Window
          */
         label.modify_font (font_desc);
     }
-    
-
 
     private void fill_services_vbox (IdCard id_card)
     {
@@ -415,6 +417,8 @@ class MainWindow : Window
         services_table.set_col_spacings (10);
         services_table.set_row_spacings (10);
         this.services_internal_vbox.add (services_table);
+        
+        service_button_map.remove_all ();
 
         foreach (string service in id_card.services)
         {
@@ -426,7 +430,10 @@ class MainWindow : Window
             var remove_button = new Button.from_stock (STOCK_REMOVE);
 #endif
 
-            remove_button.clicked.connect (() =>
+
+            service_button_map.insert (remove_button, service);
+            
+            remove_button.clicked.connect ((remove_button) =>
             {
               var dialog = new Gtk.MessageDialog (this,
                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -439,7 +446,29 @@ class MainWindow : Window
               
               if (ret == Gtk.ResponseType.YES)
               {
-                return;
+                IdCard idcard = custom_vbox.current_idcard.id_card;
+                var candidate = service_button_map.lookup (remove_button);
+
+                SList<string> services = new SList<string>();
+                
+                foreach (string srv in id_card.services)
+                {
+                  if (srv == candidate)
+                    continue;
+                  services.append (srv);
+                }
+                
+                id_card.services = new string[services.length()];
+                for (int j=0; j<id_card.services.length; j++)
+                {
+                  id_card.services[j] = services.nth_data(j);
+                }
+                
+                var children = services_internal_vbox.get_children ();
+                foreach (var hbox in children)
+                  hbox.destroy();
+                
+                fill_services_vbox (id_card);
               }
               
             });
