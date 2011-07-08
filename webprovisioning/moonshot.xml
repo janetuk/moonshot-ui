@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="application/moonshot">
+    <comment>Moonshot Web Provisioning document</comment>
+    <acronym>MSHT</acronym>
+    <sub-class-of type="text/plain"/>
+    <generic-icon name="text-x-generic"/>
+    <glob pattern="*.msht"/>
+    <alias type="application/moonshot+xml"/>
+  </mime-type>
+</mime-info>
