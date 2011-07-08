@@ -161,6 +161,7 @@ class MainWindow : Window
        foreach (var hbox in children)
            hbox.destroy();
        fill_services_vbox (id_card_widget.id_card);
+       identities_manager.store_id_cards();
     }
 
     private void show_details (IdCard id_card)
@@ -469,6 +470,7 @@ class MainWindow : Window
                   hbox.destroy();
                 
                 fill_services_vbox (id_card);
+                
               }
               
             });
