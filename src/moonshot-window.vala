@@ -403,6 +403,8 @@ class MainWindow : Window
          */
         label.modify_font (font_desc);
     }
+    
+
 
     private void fill_services_vbox (IdCard id_card)
     {
@@ -423,6 +425,24 @@ class MainWindow : Window
 #else
             var remove_button = new Button.from_stock (STOCK_REMOVE);
 #endif
+
+            remove_button.clicked.connect (() =>
+            {
+              var dialog = new Gtk.MessageDialog (this,
+                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                      Gtk.MessageType.QUESTION,
+                                      Gtk.ButtonsType.YES_NO,
+                                      _("Are you sure you want to stop '%s' ID Card to use %s?"),
+                                      custom_vbox.current_idcard.id_card.display_name);
+              var ret = dialog.run();
+              dialog.hide();
+              
+              if (ret == Gtk.ResponseType.YES)
+              {
+                return;
+              }
+              
+            });
             services_table.attach_defaults (label, 0, 1, i, i+1);
             services_table.attach_defaults (remove_button, 1, 2, i, i+1);
             i++;
