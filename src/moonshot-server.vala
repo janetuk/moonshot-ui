@@ -116,9 +116,14 @@ public class MoonshotServer : Object {
       /* TODO: Check if display name already exists */
       
       idcard.pixbuf = find_icon ("avatar-default", 48);
-
-      /* TODO: Act on close */      
-      var dialog = new WebProvisioning.ConfirmDialog (idcard);
+      
+      var dialog = new Gtk.MessageDialog (main_window,
+                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                      Gtk.MessageType.QUESTION,
+                                      Gtk.ButtonsType.YES_NO,
+                                      _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
+                                      idcard.display_name);
+      
       dialog.show_all ();
       var ret = dialog.run ();
       dialog.hide ();
