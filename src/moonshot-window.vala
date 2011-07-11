@@ -252,8 +252,42 @@ class MainWindow : Window
         insert_id_card (get_id_card_data (dialog));
     }
     
+    /* This method finds a valid display name */
+    public bool display_name_is_valid (string name,
+                                       out string? candidate)
+    {
+        foreach (IdCard id_card in identities_manager.id_card_list)
+        {
+          if (id_card.display_name == name)
+          {
+            if (&candidate != null)
+            {
+              for (int i=0; i<1000; i++)
+              {
+                string tmp = "%s %d".printf (name, i);
+                if (display_name_is_valid (tmp, null))
+                {
+                  candidate = tmp;
+                  break;
+                }
+              }
+            }
+            return false;
+          }
+        }
+        
+        return true;
+    }
+    
     public void insert_id_card (IdCard id_card)
-    {    
+    {
+        string candidate;
+        
+        if (!display_name_is_valid (id_card.display_name, out candidate))
+        {
+          id_card.display_name = candidate;
+        }
+    
         this.identities_manager.id_card_list.prepend (id_card);
         this.identities_manager.store_id_cards ();
 
