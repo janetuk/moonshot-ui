@@ -128,7 +128,7 @@ public class MoonshotServer : Object {
       var ret = dialog.run ();
       dialog.hide ();
 
-      if (ret == Gtk.ResponseType.ACCEPT)      
+      if (ret == Gtk.ResponseType.YES)
       {
         main_window.insert_id_card (idcard);
         return true;
