@@ -6,6 +6,7 @@ class IdentitiesManager : Object {
 
     public IdentitiesManager ()
     {
+        id_card_list = new SList<IdCard>();
         var key_file = new KeyFile ();
 
         var path = get_data_dir ();
@@ -18,6 +19,7 @@ class IdentitiesManager : Object {
         catch (Error e)
         {
             stdout.printf("Error: %s\n", e.message);
+            return;
         }
 
         var identities_uris = key_file.get_groups ();
@@ -49,11 +51,32 @@ class IdentitiesManager : Object {
 
         foreach (IdCard id_card in this.id_card_list)
         {
-            key_file.set_string (id_card.display_name, "Issuer", id_card.issuer);
-            key_file.set_string (id_card.display_name, "DisplayName", id_card.display_name);
-            key_file.set_string (id_card.display_name, "Username", id_card.username);
+            /*string[] rules_patterns = new string[id_card.rules.length];
+            string[] rules_always_conf = new string[id_card.rules.length];
+            
+            for (int i=0; i<id_card.rules.length; i++)
+            {
+              rules_patterns[i] = id_card.rules[i].pattern;
+              rules_always_conf[i] = id_card.rules[i].always_confirm;
+            }
+            */
+            key_file.set_string (id_card.display_name, "Issuer", id_card.issuer ?? "");
+            key_file.set_string (id_card.display_name, "DisplayName", id_card.display_name ?? "");
+            key_file.set_string (id_card.display_name, "Username", id_card.username ?? "");
             key_file.set_string (id_card.display_name, "Password", id_card.password ?? "");
-            key_file.set_string_list (id_card.display_name, "Services", id_card.services);
+            key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
+            /*
+            if (id_card.rules.length > 0)
+            {
+              key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
+              key_file.set_string_list (id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
+            }
+            // Trust anchor 
+            key_file.set_string (id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert ?? "");
+            key_file.set_string (id_card.display_name, "Subject", id_card.trust_anchor.subject ?? "");
+            key_file.set_string (id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt ?? "");
+            key_file.set_string (id_card.display_name, "ServerCert", id_card.trust_anchor.server_cert ?? "");
+            */
         }
 
         var text = key_file.to_data (null);

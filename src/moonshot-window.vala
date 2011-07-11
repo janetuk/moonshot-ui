@@ -140,7 +140,10 @@ class MainWindow : Window
 
     private void load_id_cards ()
     {
-        this.identities_manager = new IdentitiesManager ();
+        identities_manager = new IdentitiesManager ();
+        
+        if (identities_manager.id_card_list == null)
+          return;
 
         foreach (IdCard id_card in identities_manager.id_card_list)
         {
@@ -184,6 +187,7 @@ class MainWindow : Window
     {
         var id_card = new IdCard ();
 
+        id_card.display_name = dialog.display_name;
         id_card.issuer = dialog.issuer;
         if (id_card.issuer == "")
             id_card.issuer = "Issuer";
