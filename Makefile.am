@@ -8,7 +8,6 @@ lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 bin_PROGRAMS = src/moonshot
 
 
-
 AM_CFLAGS =
 
 AM_CPPFLAGS = \
@@ -51,11 +50,14 @@ src_moonshot_CPPFLAGS = \
         $(moonshot_CFLAGS) \
         $(AM_CPPFLAGS)
 
+
+
 if OS_WIN32
 
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined
 
 src_moonshot_CFLAGS = -mwindows
+#src_moonshot_webp_CFLAGS = -mwindows
 
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
@@ -68,6 +70,13 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 endif
 
 if OS_LINUX
+
+bin_PROGRAMS += src/moonshot-webp
+
+src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala src/moonshot-id.vala
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS)
+
 ## Installing mime type data
 mime_DATA = webprovisioning/moonshot.xml
 mimedir = $(datadir)/mime/packages
@@ -134,17 +143,6 @@ EXTRA_DIST = $(dbusservice_in_files)
 endif
 
 
-bin_PROGRAMS += src/moonshot-webp
-
-src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala src/moonshot-id.vala
-src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_moonshot_webp_LDADD = $(moonshot_LIBS)
-
-if OS_WIN32
-moonshot_webp_CFLAGS = -mwindows
-endif
-
-
 noinst_PROGRAMS = \
         examples/client \
         tests/basic
@@ -187,7 +185,7 @@ icons:
 
 installer: moonshot.msi
 
-moonshot.msi: windows/app.wxs
+moonshot.msi: windows/app.wxs windows/config.wxi $(bin_PROGRAMS)
 	"${WIX_CANDLE}" $<
 	"${WIX_LIGHT}" -b c:/build -b c:/tools/mingw -o moonshot.msi app.wixobj
 
