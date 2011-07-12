@@ -17,12 +17,14 @@ class MainWindow : Window
     private ListStore listmodel;
     private TreeModelFilter filter;
 
-    private IdentitiesManager identities_manager;
+    public IdentitiesManager identities_manager;
 
     private MoonshotServer ipc_server;
 
     private IdCard default_id_card;
     private Queue<IdentityRequest> request_queue;
+
+    private HashTable<Gtk.Button, string> service_button_map;
 
     private enum Columns
     {
@@ -52,6 +54,8 @@ class MainWindow : Window
     public MainWindow()
     {
         request_queue = new Queue<IdentityRequest>();
+        
+        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
 
         this.title = "Moonshoot";
         this.set_position (WindowPosition.CENTER);
@@ -59,8 +63,7 @@ class MainWindow : Window
 
         build_ui();
         setup_identities_list();
-        load_gss_eap_id_file();
-        //load_id_cards();
+        load_id_cards();
         connect_signals();
         init_ipc_server();
     }
@@ -135,25 +138,12 @@ class MainWindow : Window
         return false;
     }
 
-    private void load_gss_eap_id_file ()
-    {
-        IdCard id_card;
-
-        this.identities_manager = new IdentitiesManager ();
-
-        id_card = this.identities_manager.load_gss_eap_id_file ();
-        if (id_card != null)
-        {
-            add_id_card_data (id_card);
-            add_id_card_widget (id_card);
-        }
-
-        this.default_id_card = id_card;
-    }
-
     private void load_id_cards ()
     {
-        this.identities_manager = new IdentitiesManager ();
+        identities_manager = new IdentitiesManager ();
+        
+        if (identities_manager.id_card_list == null)
+          return;
 
         foreach (IdCard id_card in identities_manager.id_card_list)
         {
@@ -174,6 +164,7 @@ class MainWindow : Window
        foreach (var hbox in children)
            hbox.destroy();
        fill_services_vbox (id_card_widget.id_card);
+       identities_manager.store_id_cards();
     }
 
     private void show_details (IdCard id_card)
@@ -196,14 +187,14 @@ class MainWindow : Window
     {
         var id_card = new IdCard ();
 
+        id_card.display_name = dialog.display_name;
         id_card.issuer = dialog.issuer;
         if (id_card.issuer == "")
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
-        id_card.nai = id_card.username + "@" + id_card.issuer;
         id_card.pixbuf = find_icon ("avatar-default", 48);
-        id_card.services = {"email","jabber","irc"};
+        id_card.services = {};
 
         return id_card;
     }
@@ -258,11 +249,47 @@ class MainWindow : Window
 
     private void add_identity (AddIdentityDialog dialog)
     {
-        var id_card = get_id_card_data (dialog);
-
+        insert_id_card (get_id_card_data (dialog));
+    }
+    
+    /* This method finds a valid display name */
+    public bool display_name_is_valid (string name,
+                                       out string? candidate)
+    {
+        foreach (IdCard id_card in identities_manager.id_card_list)
+        {
+          if (id_card.display_name == name)
+          {
+            if (&candidate != null)
+            {
+              for (int i=0; i<1000; i++)
+              {
+                string tmp = "%s %d".printf (name, i);
+                if (display_name_is_valid (tmp, null))
+                {
+                  candidate = tmp;
+                  break;
+                }
+              }
+            }
+            return false;
+          }
+        }
+        
+        return true;
+    }
+    
+    public void insert_id_card (IdCard id_card)
+    {
+        string candidate;
+        
+        if (!display_name_is_valid (id_card.display_name, out candidate))
+        {
+          id_card.display_name = candidate;
+        }
+    
         this.identities_manager.id_card_list.prepend (id_card);
         this.identities_manager.store_id_cards ();
-        this.identities_manager.store_gss_eap_id_file (id_card);
 
         add_id_card_data (id_card);
         add_id_card_widget (id_card);
@@ -296,7 +323,6 @@ class MainWindow : Window
 
         this.identities_manager.id_card_list.remove (id_card);
         this.identities_manager.store_id_cards ();
-        this.identities_manager.store_gss_eap_id_file (null);
 
         remove_id_card_widget (id_card_widget);
     }
@@ -430,6 +456,8 @@ class MainWindow : Window
         services_table.set_col_spacings (10);
         services_table.set_row_spacings (10);
         this.services_internal_vbox.add (services_table);
+        
+        service_button_map.remove_all ();
 
         foreach (string service in id_card.services)
         {
@@ -440,6 +468,50 @@ class MainWindow : Window
 #else
             var remove_button = new Button.from_stock (STOCK_REMOVE);
 #endif
+
+
+            service_button_map.insert (remove_button, service);
+            
+            remove_button.clicked.connect ((remove_button) =>
+            {
+              var dialog = new Gtk.MessageDialog (this,
+                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                      Gtk.MessageType.QUESTION,
+                                      Gtk.ButtonsType.YES_NO,
+                                      _("Are you sure you want to stop '%s' ID Card to use %s?"),
+                                      custom_vbox.current_idcard.id_card.display_name);
+              var ret = dialog.run();
+              dialog.hide();
+              
+              if (ret == Gtk.ResponseType.YES)
+              {
+                IdCard idcard = custom_vbox.current_idcard.id_card;
+                var candidate = service_button_map.lookup (remove_button);
+
+                SList<string> services = new SList<string>();
+                
+                foreach (string srv in id_card.services)
+                {
+                  if (srv == candidate)
+                    continue;
+                  services.append (srv);
+                }
+                
+                id_card.services = new string[services.length()];
+                for (int j=0; j<id_card.services.length; j++)
+                {
+                  id_card.services[j] = services.nth_data(j);
+                }
+                
+                var children = services_internal_vbox.get_children ();
+                foreach (var hbox in children)
+                  hbox.destroy();
+                
+                fill_services_vbox (id_card);
+                
+              }
+              
+            });
             services_table.attach_defaults (label, 0, 1, i, i+1);
             services_table.attach_defaults (remove_button, 1, 2, i, i+1);
             i++;
@@ -452,6 +524,7 @@ class MainWindow : Window
         string[] authors = {
             "Javier Jardón <jjardon@codethink.co.uk>",
             "Sam Thursfield <samthursfield@codethink.co.uk>",
+            "Alberto Ruiz <alberto.ruiz@codethink.co.uk>",
             null
         };
 

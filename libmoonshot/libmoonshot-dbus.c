@@ -158,8 +158,13 @@ static DBusGProxy *get_dbus_proxy (MoonshotError **error)
 
     g_static_mutex_lock (&init_lock);
 
-    if (dbus_proxy == NULL)
+    if (dbus_proxy == NULL) {
+        /* Make sure GObject is initialised, in case we are the only user
+         * of GObject in the process
+         */
+        g_type_init ();
         dbus_proxy = dbus_connect (error);
+    }
 
     if (dbus_proxy != NULL)
         g_object_ref (dbus_proxy);

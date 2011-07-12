@@ -34,6 +34,7 @@ case "$host" in
     ;;
 esac
 
+AM_CONDITIONAL([OS_LINUX], [test "$win32" != "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
@@ -104,11 +105,33 @@ if test "$win32" = "yes"; then
   fi
 fi
 
+if test "$win32" != "yes"; then
+  AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
+  if test "$UPDATE_MIME_DATABASE" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Freedesktop.org  mime database update tool.
+*** Web provisioning files could not be automatically installed.])
+  fi
+  AC_PATH_PROG([UPDATE_DESKTOP_DATABASE], [update-desktop-database], [no])
+  if test "$UPDATE_DESKTOP_DATABASE" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Freedesktop.org desktop entry database update
+*** tool. Web provisioning files could not be automatically installed.])
+  fi
+fi
+
+MOONSHOT_APP="$bindir/moonshot"
+MOONSHOT_WEBP="$bindir/moonshot-webp"
+
 AC_SUBST(MIDL)
 AC_SUBST(MSVC_LIB)
 AC_SUBST(IMAGEMAGICK_CONVERT)
 AC_SUBST(WIX_CANDLE)
 AC_SUBST(WIX_LIGHT)
+AC_SUBST(UPDATE_MIME_DATABASE)
+AC_SUBST(UPDATE_DESKTOP_DATABASE)
+AC_SUBST(MOONSHOT_APP)
+AC_SUBST(MOONSHOT_WEBP)
 
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
@@ -133,6 +156,8 @@ AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package nam
 AC_CONFIG_FILES([
         Makefile
         po/Makefile.in
+        moonshot.desktop
+        moonshot-webp.desktop
 ])
 
 AC_OUTPUT

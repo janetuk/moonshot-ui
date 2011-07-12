@@ -67,6 +67,15 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 
 endif
 
+if OS_LINUX
+## Installing mime type data
+mime_DATA = webprovisioning/moonshot.xml
+mimedir = $(datadir)/mime/packages
+
+## Installing
+dotdesktop_DATA = moonshot.desktop moonshot-webp.desktop
+dotdesktopdir = $(datadir)/applications
+endif
 
 if IPC_MSRPC
 
@@ -148,6 +157,11 @@ tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
+if OS_LINUX
+install-data-hook:
+	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
+	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
+endif
 
 if OS_WIN32
 

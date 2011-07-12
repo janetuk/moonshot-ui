@@ -14,6 +14,8 @@ public struct Rule
 
 public class IdCard : Object
 {
+  private string _nai;
+  
   public string display_name { get; set; default = null; }
   
   public string username { get; set; default = null; }
@@ -22,12 +24,13 @@ public class IdCard : Object
   public string issuer { get; set; default = null; }
   
   public Rule[] rules {get; set; default = {};}
+  public string[] services { get; set; default = {}; }
+
 
   public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
   
   public Gdk.Pixbuf pixbuf { get; set; default = null; }    
-  public string[] services { get; set; default = {}; }
 
   //TODO: Set the getter and remove the setter/default
-  public string nai { get; set; default = null; }
+  public unowned string nai { get {  _nai = username + "@" + password; return _nai;}}
 }

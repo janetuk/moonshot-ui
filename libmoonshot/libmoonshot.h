@@ -55,8 +55,8 @@ typedef enum {
 } MoonshotErrorCode;
 
 typedef struct {
-    MoonshotErrorCode  code;
-    char              *message;
+    int   code;    /* A MoonshotErrorCode */
+    char *message;
 } MoonshotError;
 
 /**

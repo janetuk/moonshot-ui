@@ -78,12 +78,18 @@ class IdCardWidget : Box
 
         var image = new Image.from_pixbuf (id_card.pixbuf);
 
-        var issuer = Markup.printf_escaped ("<b>%s</b>", this.id_card.issuer);
-        foreach (string service in id_card.services)
+        var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
+        
+        for (int i=0; i<id_card.services.length; i++)
         {
-            services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
+            var service = id_card.services[i];
+            
+            if (i == (id_card.services.length - 1))
+              services_text = services_text + Markup.printf_escaped ("<i>%s</i>", service);
+            else
+              services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
         }
-        var text = issuer + "\n" + services_text;
+        var text = display_name + "\n" + services_text;
 
         var id_data_label = new Label (null);
         id_data_label.set_markup (text);

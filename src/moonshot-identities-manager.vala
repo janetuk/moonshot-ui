@@ -6,6 +6,7 @@ class IdentitiesManager : Object {
 
     public IdentitiesManager ()
     {
+        id_card_list = new SList<IdCard>();
         var key_file = new KeyFile ();
 
         var path = get_data_dir ();
@@ -18,6 +19,7 @@ class IdentitiesManager : Object {
         catch (Error e)
         {
             stdout.printf("Error: %s\n", e.message);
+            return;
         }
 
         var identities_uris = key_file.get_groups ();
@@ -31,7 +33,8 @@ class IdentitiesManager : Object {
                 id_card.username = key_file.get_string (identity, "Username");
                 id_card.password = key_file.get_string (identity, "Password");
                 id_card.services = key_file.get_string_list (identity, "Services");
-                id_card.nai = id_card.username + "@" + id_card.issuer;
+                id_card.display_name = key_file.get_string (identity, "DisplayName");
+                id_card.pixbuf = find_icon ("avatar-default", 48);
 
                 id_card_list.prepend (id_card);
             }
@@ -48,10 +51,32 @@ class IdentitiesManager : Object {
 
         foreach (IdCard id_card in this.id_card_list)
         {
-            key_file.set_string (id_card.issuer, "Issuer", id_card.issuer);
-            key_file.set_string (id_card.issuer, "Username", id_card.username);
-            key_file.set_string (id_card.issuer, "Password", id_card.password);
-            key_file.set_string_list (id_card.issuer, "Services", id_card.services);
+            /*string[] rules_patterns = new string[id_card.rules.length];
+            string[] rules_always_conf = new string[id_card.rules.length];
+            
+            for (int i=0; i<id_card.rules.length; i++)
+            {
+              rules_patterns[i] = id_card.rules[i].pattern;
+              rules_always_conf[i] = id_card.rules[i].always_confirm;
+            }
+            */
+            key_file.set_string (id_card.display_name, "Issuer", id_card.issuer ?? "");
+            key_file.set_string (id_card.display_name, "DisplayName", id_card.display_name ?? "");
+            key_file.set_string (id_card.display_name, "Username", id_card.username ?? "");
+            key_file.set_string (id_card.display_name, "Password", id_card.password ?? "");
+            key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
+            /*
+            if (id_card.rules.length > 0)
+            {
+              key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
+              key_file.set_string_list (id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
+            }
+            // Trust anchor 
+            key_file.set_string (id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert ?? "");
+            key_file.set_string (id_card.display_name, "Subject", id_card.trust_anchor.subject ?? "");
+            key_file.set_string (id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt ?? "");
+            key_file.set_string (id_card.display_name, "ServerCert", id_card.trust_anchor.server_cert ?? "");
+            */
         }
 
         var text = key_file.to_data (null);
@@ -80,56 +105,5 @@ class IdentitiesManager : Object {
         }
 
         return path;
-    }
-
-    public IdCard? load_gss_eap_id_file ()
-    {
-        IdCard id_card = new IdCard();
-        string text;
-        string id_card_data[2];
-
-        var filename = Path.build_filename (Environment.get_home_dir (),
-                                            ".gss_eap_id");
-        try {
-            FileUtils.get_contents (filename, out text, null);
-        }
-        catch (Error e)
-        {
-            return null;
-        }
-
-        if (text == "")
-            return null;
-
-        id_card_data = text.split ("\n", 2);
-        if (id_card_data[1] != "")
-            id_card.password = id_card_data[1];
-        id_card_data = id_card_data[0].split ("@", 2);
-        id_card.username = id_card_data[0];
-        id_card.issuer = id_card_data[1];
-        id_card.services = {"email","jabber","irc"};
-        id_card.nai = id_card.username + "@" + id_card.issuer;
-        id_card.pixbuf = find_icon ("avatar-default", 48);
-
-        return id_card;
-    }
-
-    public void store_gss_eap_id_file (IdCard ?id_card)
-    {
-        string text = "";
-
-        if (id_card != null)
-            text = id_card.username + "@" + id_card.issuer + "\n" + id_card.password;
-
-        var filename = Path.build_filename (Environment.get_home_dir (),
-                                            ".gss_eap_id");
-        try
-        {
-            FileUtils.set_contents (filename, text, -1);
-        }
-        catch (Error e)
-        {
-            stdout.printf ("Error:  %s\n", e.message);
-        }
     }
 }

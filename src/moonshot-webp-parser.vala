@@ -1,3 +1,42 @@
+namespace Moonshot
+{
+  [DBus (name = "org.janet.Moonshot")]
+  public interface MoonshotServer : Object
+  {
+      public async abstract bool get_identity (string nai,
+                                               string password,
+                                               string service,
+                                               out string nai_out,
+                                               out string password_out,
+                                               out string server_certificate_hash,
+                                               out string ca_certificate,
+                                               out string subject_name_constraint,
+                                               out string subject_alt_name_constraint)
+                                               throws DBus.Error;
+
+      public async abstract bool get_default_identity (out string nai_out,
+                                                       out string password_out,
+                                                       out string server_certificate_hash,
+                                                       out string ca_certificate,
+                                                       out string subject_name_constraint,
+                                                       out string subject_alt_name_constraint)
+                                                       throws DBus.Error;
+      
+      public async abstract bool install_id_card (string   display_name,
+                                                  string   user_name,
+                                                  string   password,
+                                                  string   realm,
+                                                  Rule[]   rules,
+                                                  string[] services,
+                                                  string   ca_cert,
+                                                  string   subject,
+                                                  string   subject_alt,
+                                                  string   server_cert)
+                                                  throws DBus.Error;
+  }
+}
+
+
 namespace WebProvisioning
 { 
   IdCard card;
@@ -254,17 +293,31 @@ namespace WebProvisioning
     
     foreach (IdCard card in cards)
     {
-    
-      debug ("IDCARD: '%s' '%s' '%s' '%s'", card.display_name, card.username, card.password, card.issuer);
-    
-      foreach (string srv in card.services)
+      try
       {
-        debug ("service: %s", srv);
+        var conn = DBus.Bus.get (DBus.BusType.SESSION);
+        dynamic DBus.Object bus = conn.get_object ("org.janet.Moonshot",
+                                                   "/org/janet/moonshot",
+                                                   "org.janet.Moonshot");
+        Rule[] rules = {};
+        string[] services = {};
+        
+        bus.install_id_card (card.display_name,
+                             card.username,
+                             card.password,
+                             card.issuer,
+                             rules,
+                             services,
+                             card.trust_anchor.ca_cert,
+                             card.trust_anchor.subject,
+                             card.trust_anchor.subject_alt,
+                             card.trust_anchor.server_cert);
+        
       }
-      
-      foreach (Rule r in card.rules)
+      catch (Error e)
       {
-        debug ("rule: '%s' '%s'", r.pattern, r.always_confirm);
+        stderr.printf ("Error: %s", e.message);
+        continue;
       }
     }
     

@@ -18,6 +18,7 @@ class CustomVBox : VBox
             if (id_card != id_card_widget)
                 ((IdCardWidget) id_card).collapse ();
         }
+        current_idcard = id_card_widget;
     }
 
     public void add_id_card_widget (IdCardWidget id_card_widget)

@@ -1,2 +1,3 @@
 # List of source files which contain translatable strings.
 src/moonshot-window.vala
+src/moonshot-webp-dialog.vala
