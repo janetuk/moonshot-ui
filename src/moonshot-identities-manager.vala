@@ -51,7 +51,7 @@ class IdentitiesManager : Object {
 
         foreach (IdCard id_card in this.id_card_list)
         {
-            /*string[] rules_patterns = new string[id_card.rules.length];
+            string[] rules_patterns = new string[id_card.rules.length];
             string[] rules_always_conf = new string[id_card.rules.length];
             
             for (int i=0; i<id_card.rules.length; i++)
@@ -59,13 +59,13 @@ class IdentitiesManager : Object {
               rules_patterns[i] = id_card.rules[i].pattern;
               rules_always_conf[i] = id_card.rules[i].always_confirm;
             }
-            */
+
             key_file.set_string (id_card.display_name, "Issuer", id_card.issuer ?? "");
             key_file.set_string (id_card.display_name, "DisplayName", id_card.display_name ?? "");
             key_file.set_string (id_card.display_name, "Username", id_card.username ?? "");
             key_file.set_string (id_card.display_name, "Password", id_card.password ?? "");
             key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
-            /*
+
             if (id_card.rules.length > 0)
             {
               key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
@@ -76,7 +76,6 @@ class IdentitiesManager : Object {
             key_file.set_string (id_card.display_name, "Subject", id_card.trust_anchor.subject ?? "");
             key_file.set_string (id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt ?? "");
             key_file.set_string (id_card.display_name, "ServerCert", id_card.trust_anchor.server_cert ?? "");
-            */
         }
 
         var text = key_file.to_data (null);

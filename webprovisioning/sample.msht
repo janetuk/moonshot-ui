@@ -5,7 +5,7 @@
     <password>ENCRYPTEDPW</password>
     <realm>issuer name</realm>
     <services>
-      <service>xmpp@jabber.project-moonshot.org</service>
+      <service>xmpp@ja;bber.project-moonshot.org</service>
       <service>email@project-moonshot.org</service>
     </services>
     <selection-rules>

@@ -299,15 +299,15 @@ namespace WebProvisioning
         dynamic DBus.Object bus = conn.get_object ("org.janet.Moonshot",
                                                    "/org/janet/moonshot",
                                                    "org.janet.Moonshot");
+
         Rule[] rules = {};
-        string[] services = {};
-        
+
         bus.install_id_card (card.display_name,
                              card.username,
                              card.password,
                              card.issuer,
                              rules,
-                             services,
+                             card.services,
                              card.trust_anchor.ca_cert,
                              card.trust_anchor.subject,
                              card.trust_anchor.subject_alt,
