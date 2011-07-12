@@ -42,6 +42,12 @@
               </File>
             </Component>
 
+            <!-- General deps -->
+            <Component Id='Deps' Guid='4668773A-2486-4BF5-9AFE-A6595F1A3EB9'>
+              <File Id="MSRPC_MINGW.DLL" Name="msrpc-mingw.dll" Source="bin\msrpc-mingw.dll"/>
+              <File Id="MSRPC_GLIB2.DLL" Name="msrpc-glib2.dll" Source="bin\msrpc-glib2.dll" />
+            </Component>
+
             <!-- Gtk+ runtime - /bin -->
             <Component Id='Gtk2BinFiles' Guid='DB587042-E204-4D76-9372-8B6B03642377'>
               <!-- Included in mingw -->
@@ -78,10 +84,6 @@
               <File Id="LIBPNG14_14.DLL" Name="libpng14-14.dll" Source="bin\libpng14-14.dll" />
               <File Id="PANGO_QUERYMODULES.EXE" Name="pango-querymodules.exe" Source="bin\pango-querymodules.exe" />
               <File Id="ZLIB1.DLL" Name="zlib1.dll" Source="bin\zlib1.dll" />
-
-              <!-- FIXME: need to use this and then delete it -->
-              <File Id="GTK_UPDATE_ICON_CACHE.EXE" Name="gtk-update-icon-cache.exe" Source="bin\gtk-update-icon-cache.exe" />
-
             </Component>
           </Directory>
 
@@ -143,6 +145,7 @@
 
     <Feature Id='Complete' Level='1'>
       <ComponentRef Id='MainExe' />
+      <ComponentRef Id='Deps' />
       <ComponentRef Id='ProgramMenuDir' />
       <ComponentRef Id='Gtk2BinFiles' />
       <ComponentRef Id='Gtk2ThemeEngineFiles' />
