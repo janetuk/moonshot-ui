@@ -8,16 +8,16 @@ I recommend you set up a build environment according to the following page:
 However, use the configuration file in the source tree at ./windows/jhbuildrc
 instead of creating a new one. You can tell jhbuild to use that file by running
 
-  jhbuild -f jhbuildrc <...>
+  jhbuild -f ./windows/jhbuildrc <...>
 
-You will also need to install the following extras:
+You will also need to install the following tools:
 
   * MS Windows Platform SDK v7.0 and .NET framework 3.5:
 
       https://www.microsoft.com/downloads/en/details.aspx?FamilyID=c17ba869-9671-4330-a63e-1fd44e0e2505&displaylang=en
 
-    You need the 'Win32 Developer Tools' component for MIDL.EXE, the rest are
-    not important.
+    You need the 'Win32 Developer Tools' component for MIDL.EXE, and 'Visual C compilers'
+    to LIB.EXE. The rest are not important.
 
   * Windows Installer XML 3.5:
 
@@ -27,11 +27,11 @@ You will also need to install the following extras:
 
      http://www.imagemagick.org/download/binaries/ImageMagick-6.6.9-10-Q16-windows-dll.exe
 
-I suggest you put all these things in their default locations, the installers
-seem to mostly ignore attempts to install them in other places.
+I suggest you put all these things in their default locations (the installers
+will sometimes ignore attempts to install them in other places).
 
 You currently also need a patched version of the w32api mingw package, to
-expose some RPC functions. This is on the mingw issue tracker here:
+expose some RPC functions. This issue is on the mingw issue tracker here:
 
   https://sourceforge.net/tracker/?func=detail&aid=3302807&group_id=2435&atid=302435
 
