@@ -15,13 +15,16 @@ int main (int    argc,
          *subject_name_constraint,
          *subject_alt_name_constraint;
 
-    success = moonshot_get_default_identity (&nai,
-                                             &password,
-                                             &server_certificate_hash,
-                                             &ca_certificate,
-                                             &subject_name_constraint,
-                                             &subject_alt_name_constraint,
-                                             &error);
+    success = moonshot_get_identity ("",
+                                     "",
+                                     "",
+                                     &nai,
+                                     &password,
+                                     &server_certificate_hash,
+                                     &ca_certificate,
+                                     &subject_name_constraint,
+                                     &subject_alt_name_constraint,
+                                     &error);
 
     if (success) {
         printf ("Got identity: %s %s %s\n", nai, password, server_certificate_hash);
