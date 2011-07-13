@@ -155,11 +155,14 @@ tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
-if OS_LINUX
-install-data-hook:
-	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
-	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
-endif
+##if OS_LINUX
+##install-data-hook:
+##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
+##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
+##uninstall-hook:
+##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
+##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
+##endif
 
 if OS_WIN32
 
