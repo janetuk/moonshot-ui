@@ -3,31 +3,36 @@ using Gtk;
 class CustomVBox : VBox
 {
     public IdCardWidget current_idcard { get; set; default = null; }
+    private MainWindow main_window; 
 
-    public CustomVBox (bool homogeneous, int spacing)
+    public CustomVBox (MainWindow window, bool homogeneous, int spacing)
     {
-        this.set_homogeneous (homogeneous);
-        this.set_spacing (spacing);
+        main_window = window;
+        set_homogeneous (homogeneous);
+        set_spacing (spacing);
     }
 
     public void receive_expanded_event (IdCardWidget id_card_widget)
     {
-        var list = this.get_children ();
+        var list = get_children ();
         foreach (Widget id_card in list)
         {
             if (id_card != id_card_widget)
                 ((IdCardWidget) id_card).collapse ();
         }
         current_idcard = id_card_widget;
+        
+        if (current_idcard != null && main_window.request_queue.length > 0)
+            current_idcard.send_button.set_sensitive (true);
     }
 
     public void add_id_card_widget (IdCardWidget id_card_widget)
     {
-        this.pack_start (id_card_widget, false, false);
+        pack_start (id_card_widget, false, false);
     }
 
     public void remove_id_card_widget (IdCardWidget id_card_widget)
     {
-        this.remove (id_card_widget);
+        remove (id_card_widget);
     }
 }

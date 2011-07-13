@@ -115,6 +115,7 @@ class IdCardWidget : Box
         hbutton_box.pack_end (delete_button);
         hbutton_box.pack_end (details_button);
         hbutton_box.pack_end (send_button);
+        send_button.set_sensitive (false);
 
         delete_button.clicked.connect (delete_button_cb);
         details_button.clicked.connect (details_button_cb);

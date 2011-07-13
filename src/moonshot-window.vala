@@ -22,7 +22,7 @@ class MainWindow : Window
     private MoonshotServer ipc_server;
 
     private IdCard default_id_card;
-    private Queue<IdentityRequest> request_queue;
+    public Queue<IdentityRequest> request_queue;
 
     private HashTable<Gtk.Button, string> service_button_map;
 
@@ -374,6 +374,10 @@ class MainWindow : Window
         IdCard identity = null;
 
         this.request_queue.push_tail (request);
+        
+        if (custom_vbox.current_idcard != null &&
+            custom_vbox.current_idcard.send_button != null)
+          custom_vbox.current_idcard.send_button.set_sensitive (true);
 
         if (request.select_default)
         {
@@ -667,7 +671,7 @@ SUCH DAMAGE.
         this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
         this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
 
-        this.custom_vbox = new CustomVBox (false, 6);
+        this.custom_vbox = new CustomVBox (this, false, 6);
 
         var viewport = new Viewport (null, null);
         viewport.set_border_width (6);
