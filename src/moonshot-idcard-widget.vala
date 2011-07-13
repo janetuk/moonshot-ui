@@ -5,7 +5,7 @@ class IdCardWidget : Box
     public IdCard id_card { get; set; default = null; }
 
     private VBox main_vbox;
-    private Table table;
+    private HBox table;
     public Button delete_button { get; private set; default = null; }
     public Button details_button { get; private set; default = null; }
     public Button send_button { get; private set; default = null; }
@@ -94,10 +94,11 @@ class IdCardWidget : Box
         var id_data_label = new Label (null);
         id_data_label.set_markup (text);
         id_data_label.set_alignment ((float) 0, (float) 0.5);
+        id_data_label.set_ellipsize (Pango.EllipsizeMode.END);
 
-        this.table = new Table (1, 2, false);
-        table.attach_defaults (image, 0, 1, 0, 1);
-        table.attach_defaults (id_data_label, 1, 2, 0, 1);
+        table = new Gtk.HBox (false, 6);
+        table.pack_start (image, false, false, 0);
+        table.pack_start (id_data_label, true, true, 0);
 
         this.delete_button = new Button.with_label (_("Delete"));
         this.details_button = new Button.with_label (_("View details"));
