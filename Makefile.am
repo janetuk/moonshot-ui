@@ -78,12 +78,13 @@ src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS)
 
 ## Installing mime type data
-mime_DATA = webprovisioning/moonshot.xml
 mimedir = $(datadir)/mime/packages
+mime_DATA = webprovisioning/moonshot.xml
 
 ## Installing
-dotdesktop_DATA = moonshot.desktop moonshot-webp.desktop
 dotdesktopdir = $(datadir)/applications
+dotdesktop_DATA = moonshot.desktop moonshot-webp.desktop
+
 endif
 
 if IPC_MSRPC
@@ -138,10 +139,9 @@ AM_VALAFLAGS += \
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 CLEANFILES = $(dbusservice_DATA)
-EXTRA_DIST = $(dbusservice_in_files)
-
 endif
 
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files)
 
 noinst_PROGRAMS = \
         examples/client \
