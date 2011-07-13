@@ -11,6 +11,8 @@ class IdCardWidget : Box
     public Button send_button { get; private set; default = null; }
     private HButtonBox hbutton_box;
     private EventBox event_box;
+    
+    private Label label;
 
     public signal void expanded ();
     public signal void remove_id ();
@@ -70,16 +72,12 @@ class IdCardWidget : Box
         var state = this.get_state ();
         this.event_box.modify_bg (state, color);
     }
-
-    public IdCardWidget (IdCard id_card)
+    
+    public void
+    update_id_card_label ()
     {
         string services_text = "";
-        this.id_card = id_card;
-
-        var image = new Image.from_pixbuf (id_card.pixbuf);
-
         var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
-        
         for (int i=0; i<id_card.services.length; i++)
         {
             var service = id_card.services[i];
@@ -89,16 +87,23 @@ class IdCardWidget : Box
             else
               services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
         }
-        var text = display_name + "\n" + services_text;
+        label.set_markup (display_name + "\n" + services_text);
+    }
 
-        var id_data_label = new Label (null);
-        id_data_label.set_markup (text);
-        id_data_label.set_alignment ((float) 0, (float) 0.5);
-        id_data_label.set_ellipsize (Pango.EllipsizeMode.END);
+    public IdCardWidget (IdCard id_card)
+    {
+        this.id_card = id_card;
+
+        var image = new Image.from_pixbuf (id_card.pixbuf);
+
+        label = new Label (null);
+        label.set_alignment ((float) 0, (float) 0.5);
+        label.set_ellipsize (Pango.EllipsizeMode.END);
+        update_id_card_label();
 
         table = new Gtk.HBox (false, 6);
         table.pack_start (image, false, false, 0);
-        table.pack_start (id_data_label, true, true, 0);
+        table.pack_start (label, true, true, 0);
 
         this.delete_button = new Button.with_label (_("Delete"));
         this.details_button = new Button.with_label (_("View details"));

@@ -105,7 +105,7 @@ class MainWindow : Window
 
     private void search_entry_icon_press_cb (EntryIconPosition pos, Gdk.Event event)
     {
-	if (pos == EntryIconPosition.PRIMARY)
+        if (pos == EntryIconPosition.PRIMARY)
         {
             print ("Search entry icon pressed\n");
         }
@@ -508,7 +508,7 @@ class MainWindow : Window
                   hbox.destroy();
                 
                 fill_services_vbox (id_card);
-                
+                custom_vbox.current_idcard.update_id_card_label ();
               }
               
             });
@@ -726,7 +726,7 @@ SUCH DAMAGE.
         vbox_right.pack_start (services_vbox, false, true, 0);
 
         var hbox = new HBox (false, 12);
-        hbox.pack_start (vbox_left, false, false, 0);
+        hbox.pack_start (vbox_left, true, true, 0);
         hbox.pack_start (vbox_right, false, false, 0);
 
         var main_vbox = new VBox (false, 0);
