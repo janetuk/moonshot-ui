@@ -93,7 +93,8 @@ public class MoonshotServer : Object {
                                        string   user_name,
                                        string   password,
                                        string   realm,
-                                       Rule[]   rules,
+                                       string[] rules_patterns,
+                                       string[] rules_always_confirm,
                                        string[] services,
                                        string   ca_cert,
                                        string   subject,
@@ -106,12 +107,22 @@ public class MoonshotServer : Object {
       idcard.username = user_name;
       idcard.password = password;
       idcard.issuer = realm;
-      idcard.rules = rules;
       idcard.services = services;
       idcard.trust_anchor.ca_cert = ca_cert;
       idcard.trust_anchor.subject = subject;
       idcard.trust_anchor.subject_alt = subject_alt;
       idcard.trust_anchor.server_cert = server_cert;
+      
+      if (rules_patterns.length == rules_always_confirm.length)
+      {
+        idcard.rules = new Rule[rules_patterns.length];
+         
+        for (int i=0; i<idcard.rules.length; i++)
+        { 
+          idcard.rules[i].pattern = rules_patterns[i];
+          idcard.rules[i].always_confirm = rules_always_confirm[i];
+        }
+      }
 
       /* TODO: Check if display name already exists */
       
