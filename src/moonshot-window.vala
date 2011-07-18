@@ -4,6 +4,8 @@ class MainWindow : Window
 {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
+    
+    private SList<IdCard> candidates;
 
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
@@ -71,50 +73,57 @@ class MainWindow : Window
     private bool visible_func (TreeModel model, TreeIter iter)
     {
         IdCard id_card;
-        
-        string search_text;
-        string search_text_casefold;
 
         model.get (iter,
                    Columns.IDCARD_COL, out id_card);
         if (id_card == null)
-          return false;
+            return false;
 
-        /* TODO: Check if it is within the candidates */
-
-        search_text = this.search_entry.get_text ();
-        if (search_text == null && search_text == "")
-            return true;
-
-        search_text_casefold = search_text.casefold ();
-
-        if (id_card.issuer != null)
+        foreach (IdCard candidate in candidates)
         {
-          string issuer_casefold = id_card.issuer;
-
-          if (issuer_casefold.contains (search_text_casefold))
-              return true;
-        }
-
-        if (id_card.display_name != null)
-        {
-          string display_name_casefold = id_card.display_name.casefold ();
-          
-          if (display_name_casefold.contains (search_text_casefold))
-              return true;
+            if (&candidate == &id_card)
+                return true;
         }
         
-        if (id_card.services.length > 0)
+        string entry_text = search_entry.get_text ();
+        if (entry_text == null && entry_text == "")
+            return true;
+
+        foreach (string search_text in entry_text.split(" "))
         {
-          foreach (string service in id_card.services)
-          {
-            string service_casefold = service.casefold ();
+            if (search_text == "")
+                continue;
+         
 
-            if (service_casefold.contains (search_text_casefold))
-                return true;
-          }
+            string search_text_casefold = search_text.casefold ();
+
+            if (id_card.issuer != null)
+            {
+              string issuer_casefold = id_card.issuer;
+
+              if (issuer_casefold.contains (search_text_casefold))
+                  return true;
+            }
+
+            if (id_card.display_name != null)
+            {
+                string display_name_casefold = id_card.display_name.casefold ();
+              
+                if (display_name_casefold.contains (search_text_casefold))
+                    return true;
+            }
+            
+            if (id_card.services.length > 0)
+            {
+                foreach (string service in id_card.services)
+                {
+                    string service_casefold = service.casefold ();
+
+                    if (service_casefold.contains (search_text_casefold))
+                        return true;
+                }
+            }
         }
-
         return false;
     }
 
