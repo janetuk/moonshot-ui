@@ -284,6 +284,10 @@ int moonshot_get_identity (const char     *nai,
 
     rpc_async_call_init (&call);
 
+    if (nai == NULL) nai = "";
+    if (password == NULL) password = "";
+    if (service == NULL) service = "";
+
     *nai_out = NULL;
     *password_out = NULL;
     *server_certificate_hash_out = NULL;
@@ -379,6 +383,59 @@ int moonshot_get_default_identity (char          **nai_out,
 
     return TRUE;
 };
+
+int moonshot_install_id_card (const char     *display_name,
+                              const char     *user_name,
+                              const char     *password,
+                              const char     *realm,
+                              char           *rules_patterns[],
+                              int             rules_patterns_length,
+                              char           *rules_always_confirm[],
+                              int             rules_always_confirm_length,
+                              char           *services[],
+                              int             services_length,
+                              const char     *ca_cert,
+                              const char     *subject,
+                              const char     *subject_alt,
+                              const char     *server_cert,
+                              MoonshotError **error)
+{
+    int success = FALSE;
+
+    init_rpc (error);
+
+    if (user_name == NULL) user_name = "";
+    if (password == NULL) password = "";
+    if (realm == NULL) realm = "";
+    if (ca_cert == NULL) ca_cert = "";
+    if (subject == NULL) subject = "";
+    if (subject_alt == NULL) subject_alt = "";
+    if (server_cert == NULL) server_cert = "";
+
+    RPC_TRY_EXCEPT {
+        success = moonshot_install_id_card_rpc (display_name,
+                                                user_name,
+                                                password,
+                                                realm,
+                                                rules_patterns,
+                                                rules_patterns_length,
+                                                rules_always_confirm,
+                                                rules_always_confirm_length,
+                                                services,
+                                                services_length,
+                                                ca_cert,
+                                                subject,
+                                                subject_alt,
+                                                server_cert);
+    }
+    RPC_EXCEPT {
+        *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
+                                                 RPC_GET_EXCEPTION_CODE ());
+    }
+    RPC_END_EXCEPT
+
+    return success;
+}
 
 BOOL WINAPI DllMain (HINSTANCE  hinst,
                      DWORD      reason,

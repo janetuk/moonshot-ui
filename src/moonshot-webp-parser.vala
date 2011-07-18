@@ -1,42 +1,4 @@
-namespace Moonshot
-{
-  [DBus (name = "org.janet.Moonshot")]
-  public interface MoonshotServer : Object
-  {
-      public async abstract bool get_identity (string nai,
-                                               string password,
-                                               string service,
-                                               out string nai_out,
-                                               out string password_out,
-                                               out string server_certificate_hash,
-                                               out string ca_certificate,
-                                               out string subject_name_constraint,
-                                               out string subject_alt_name_constraint)
-                                               throws DBus.Error;
-
-      public async abstract bool get_default_identity (out string nai_out,
-                                                       out string password_out,
-                                                       out string server_certificate_hash,
-                                                       out string ca_certificate,
-                                                       out string subject_name_constraint,
-                                                       out string subject_alt_name_constraint)
-                                                       throws DBus.Error;
-      
-      public async abstract bool install_id_card (string   display_name,
-                                                  string   user_name,
-                                                  string   password,
-                                                  string   realm,
-                                                  string[] rules_patterns,
-                                                  string[] rules_always_confirm,
-                                                  string[] services,
-                                                  string   ca_cert,
-                                                  string   subject,
-                                                  string   subject_alt,
-                                                  string   server_cert)
-                                                  throws DBus.Error;
-  }
-}
-
+using Moonshot;
 
 namespace WebProvisioning
 { 
@@ -253,7 +215,7 @@ namespace WebProvisioning
         while ((line = dis.read_line (null)) != null)
           text += line;
       }
-      catch (Error e)
+      catch (GLib.Error e)
       {
         error ("Could not retreive file size");
       }
@@ -270,7 +232,7 @@ namespace WebProvisioning
       {
         ctx.parse (text, text.length);
       }
-      catch (Error e)
+      catch (GLib.Error e)
       {
         error ("Could not parse %s, invalid content", path);
       } 
@@ -294,45 +256,39 @@ namespace WebProvisioning
     
     foreach (IdCard card in cards)
     {
-      try
-      {
-        var conn = DBus.Bus.get (DBus.BusType.SESSION);
-        dynamic DBus.Object bus = conn.get_object ("org.janet.Moonshot",
-                                                   "/org/janet/moonshot",
-                                                   "org.janet.Moonshot");
-
-        string[] rules_patterns = {};
-        string[] rules_always_confirm = {};
+      Moonshot.Error error;
+      string[] rules_patterns = {};
+      string[] rules_always_confirm = {};
         
-        if (card.rules.length > 0)
+      if (card.rules.length > 0)
+      {
+        int i = 0;
+        rules_patterns = new string[card.rules.length];
+        rules_always_confirm = new string[card.rules.length];
+        foreach (Rule r in card.rules)
         {
-          int i = 0;
-          rules_patterns = new string[card.rules.length];
-          rules_always_confirm = new string[card.rules.length];
-          foreach (Rule r in card.rules)
-          {
-            rules_patterns[i] = r.pattern;
-            rules_always_confirm[i] = r.always_confirm;
-            i++;
-          }
+          rules_patterns[i] = r.pattern;
+          rules_always_confirm[i] = r.always_confirm;
+          i++;
         }
-
-        bus.install_id_card (card.display_name,
-                             card.username,
-                             card.password,
-                             card.issuer,
-                             rules_patterns,
-                             rules_always_confirm,
-                             card.services,
-                             card.trust_anchor.ca_cert,
-                             card.trust_anchor.subject,
-                             card.trust_anchor.subject_alt,
-                             card.trust_anchor.server_cert);
-        
       }
-      catch (Error e)
+
+      Moonshot.install_id_card (card.display_name,
+                                card.username,
+                                card.password,
+                                card.issuer,
+                                rules_patterns,
+                                rules_always_confirm,
+                                card.services,
+                                card.trust_anchor.ca_cert,
+                                card.trust_anchor.subject,
+                                card.trust_anchor.subject_alt,
+                                card.trust_anchor.server_cert,
+                                out error);
+
+      if (error != null)
       {
-        stderr.printf ("Error: %s", e.message);
+        stderr.printf ("Error: %s", error.message);
         continue;
       }
     }

@@ -10,6 +10,12 @@ namespace MoonshotRpcInterface {
     [CCode (cname = "moonshot_binding_handle")]
     public BindingHandle binding_handle;
 
+    [CCode (cname = "MoonshotServiceRule_RPC")]
+    public struct Rule_RPC {
+        string pattern;
+        string always_confirm;
+    }
+
     [CCode (cname = "moonshot_get_identity_rpc")]
     public extern void get_identity (Rpc.AsyncCall call,
                                      string nai,

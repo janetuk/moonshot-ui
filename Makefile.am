@@ -5,8 +5,9 @@ SUBDIRS = po
 
 lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 
-bin_PROGRAMS = src/moonshot
-
+bin_PROGRAMS = \
+         src/moonshot \
+         src/moonshot-webp
 
 AM_CFLAGS =
 
@@ -16,8 +17,8 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/libmoonshot
 
 AM_VALAFLAGS = \
-	config.vapi \
-	--pkg gtk+-2.0
+        config.vapi \
+        --pkg gio-2.0
 
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
@@ -43,21 +44,24 @@ src_moonshot_SOURCES = \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
 
-src_moonshot_LDADD = \
-        $(moonshot_LIBS)
+src_moonshot_webp_SOURCES = \
+        src/moonshot-webp-parser.vala \
+        src/moonshot-id.vala
 
-src_moonshot_CPPFLAGS = \
-        $(moonshot_CFLAGS) \
-        $(AM_CPPFLAGS)
+src_moonshot_VALAFLAGS = --pkg gtk+-2.0 $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_LDADD = $(moonshot_LIBS)
 
-
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
 if OS_WIN32
 
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined
 
 src_moonshot_CFLAGS = -mwindows
-#src_moonshot_webp_CFLAGS = -mwindows
+src_moonshot_webp_CFLAGS = -mwindows
 
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
@@ -70,12 +74,6 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 endif
 
 if OS_LINUX
-
-bin_PROGRAMS += src/moonshot-webp
-
-src_moonshot_webp_SOURCES = src/moonshot-webp-parser.vala src/moonshot-id.vala
-src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_moonshot_webp_LDADD = $(moonshot_LIBS)
 
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages

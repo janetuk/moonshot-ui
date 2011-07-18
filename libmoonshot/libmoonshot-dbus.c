@@ -192,9 +192,9 @@ int moonshot_get_identity (const char     *nai,
     dbus_proxy = get_dbus_proxy (error);
 
     if (*error != NULL)
-        return;
+        return FALSE;
 
-    g_return_if_fail (DBUS_IS_G_PROXY (dbus_proxy));
+    g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
 
     dbus_g_proxy_call (dbus_proxy,
                        "GetIdentity",
@@ -247,7 +247,7 @@ int moonshot_get_default_identity (char          **nai_out,
     if (*error != NULL)
         return FALSE;
 
-    g_return_if_fail (DBUS_IS_G_PROXY (dbus_proxy));
+    g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
 
     dbus_g_proxy_call (dbus_proxy,
                        "GetDefaultIdentity",
@@ -278,4 +278,82 @@ int moonshot_get_default_identity (char          **nai_out,
     }
 
     return TRUE;
+}
+
+int moonshot_install_id_card (const char     *display_name,
+                              const char     *user_name,
+                              const char     *password,
+                              const char     *realm,
+                              char           *rules_patterns[],
+                              int             rules_patterns_length,
+                              char           *rules_always_confirm[],
+                              int             rules_always_confirm_length,
+                              char           *services[],
+                              int             services_length,
+                              const char     *ca_cert,
+                              const char     *subject,
+                              const char     *subject_alt,
+                              const char     *server_cert,
+                              MoonshotError **error)
+{
+    GError      *g_error = NULL;
+    DBusGProxy  *dbus_proxy;
+    int          success = FALSE;
+    int          i;
+    const char **rules_patterns_strv,
+               **rules_always_confirm_strv,
+               **services_strv;
+
+    dbus_proxy = get_dbus_proxy (error);
+
+    if (*error != NULL)
+        return FALSE;
+
+    g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
+    g_return_val_if_fail (rules_patterns_length == rules_always_confirm_length), FALSE);
+
+    /* Marshall array and struct parameters for DBus */
+    rules_patterns_strv = g_malloc ((rules_length + 1) * sizeof (const char *));
+    rules_always_confirm_strv = g_malloc ((rules_length + 1) * sizeof (const char *));
+    services_strv = g_malloc ((services_length + 1) * sizeof (const char *));
+
+    for (i = 0; i < rules_patterns_length; i ++) {
+        rules_pattern_strv[i] = rules_patterns[i];
+        rules_always_confirm_strv[i] = rules_always_confirm[i];
+    }
+
+    for (i = 0; i < services_length; i ++)
+        services_strv[i] = services[i];
+
+    rules_pattern_strv[rules_patterns_length] = NULL;
+    rules_always_confirm_strv[rules_patterns_length] = NULL;
+    services_strv[services_length] = NULL;
+
+    dbus_g_proxy_call (dbus_proxy,
+                       "InstallIdCard",
+                       &g_error,
+                       G_TYPE_STRING, display_name,
+                       G_TYPE_STRING, user_name,
+                       G_TYPE_STRING, password,
+                       G_TYPE_STRING, realm,
+                       G_TYPE_STRV, rules_pattern_strv,
+                       G_TYPE_STRV, rules_always_confirm_strv,
+                       G_TYPE_STRV, services_strv,
+                       G_TYPE_STRING, ca_cert,
+                       G_TYPE_STRING, subject,
+                       G_TYPE_STRING, subject_alt,
+                       G_TYPE_STRING, server_cert,
+                       G_TYPE_INVALID,
+                       G_TYPE_BOOLEAN, &success,
+                       G_TYPE_INVALID);
+
+    g_object_unref (dbus_proxy);
+
+    if (g_error != NULL) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                     g_error->message);
+        return FALSE;
+    }
+
+    return success;
 }

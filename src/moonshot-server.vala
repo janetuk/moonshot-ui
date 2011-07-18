@@ -88,7 +88,7 @@ public class MoonshotServer : Object {
 
         return false;
     }
-    
+
     public async bool install_id_card (string   display_name,
                                        string   user_name,
                                        string   password,
@@ -102,7 +102,7 @@ public class MoonshotServer : Object {
                                        string   server_cert)
     {
       IdCard idcard = new IdCard ();
-      
+
       idcard.display_name = display_name;
       idcard.username = user_name;
       idcard.password = password;
@@ -112,7 +112,7 @@ public class MoonshotServer : Object {
       idcard.trust_anchor.subject = subject;
       idcard.trust_anchor.subject_alt = subject_alt;
       idcard.trust_anchor.server_cert = server_cert;
-      
+
       if (rules_patterns.length == rules_always_confirm.length)
       {
         idcard.rules = new Rule[rules_patterns.length];
@@ -124,30 +124,8 @@ public class MoonshotServer : Object {
         }
       }
 
-      /* TODO: Check if display name already exists */
-      
-      idcard.pixbuf = find_icon ("avatar-default", 48);
-      
-      var dialog = new Gtk.MessageDialog (main_window,
-                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                      Gtk.MessageType.QUESTION,
-                                      Gtk.ButtonsType.YES_NO,
-                                      _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
-                                      idcard.display_name);
-      
-      dialog.show_all ();
-      var ret = dialog.run ();
-      dialog.hide ();
-
-      if (ret == Gtk.ResponseType.YES)
-      {
-        main_window.insert_id_card (idcard);
-        return true;
-      }
-      
-      return false;
+      return this.main_window.insert_id_card (idcard);
     }
-                                       
 }
 
 #elif IPC_MSRPC
@@ -312,6 +290,62 @@ public class MoonshotServer : Object {
         // to avoid any races
         request.cond.wait (request.mutex);
         request.mutex.unlock ();
+    }
+
+    [CCode (cname = "moonshot_install_id_card_rpc")]
+    public static bool install_id_card (string     display_name,
+                                        string     user_name,
+                                        string     password,
+                                        string     realm,
+                                        string[]   rules_patterns,
+                                        string[]   rules_always_confirm,
+                                        string[]   services,
+                                        string     ca_cert,
+                                        string     subject,
+                                        string     subject_alt,
+                                        string     server_cert)
+    {
+        IdCard idcard = new IdCard ();
+        bool success = false;
+        Mutex mutex = new Mutex();
+        Cond cond = new Cond();
+
+        idcard.display_name = display_name;
+        idcard.username = user_name;
+        idcard.password = password;
+        idcard.issuer = realm;
+        idcard.services = services;
+        idcard.trust_anchor.ca_cert = ca_cert;
+        idcard.trust_anchor.subject = subject;
+        idcard.trust_anchor.subject_alt = subject_alt;
+        idcard.trust_anchor.server_cert = server_cert;
+
+        if (rules_patterns.length == rules_always_confirm.length)
+        {
+            idcard.rules = new Rule[rules_patterns.length];
+         
+            for (int i=0; i<idcard.rules.length; i++)
+            { 
+                idcard.rules[i].pattern = rules_patterns[i];
+                idcard.rules[i].always_confirm = rules_always_confirm[i];
+            }
+        }
+
+        mutex.lock ();
+
+        // Defer addition to the main loop thread.
+        Idle.add (() => {
+            mutex.lock ();
+            success = main_window.add_identity (idcard);
+            cond.signal ();
+            mutex.unlock ();
+            return false;
+        });
+
+        cond.wait (mutex);
+        mutex.unlock ();
+
+        return success;
     }
 }
 

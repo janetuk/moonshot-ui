@@ -34,7 +34,7 @@ class IdentitiesManager : Object {
                 id_card.password = key_file.get_string (identity, "Password");
                 id_card.services = key_file.get_string_list (identity, "Services");
                 id_card.display_name = key_file.get_string (identity, "DisplayName");
-                id_card.pixbuf = find_icon ("avatar-default", 48);
+                id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
 
                 id_card_list.prepend (id_card);
             }

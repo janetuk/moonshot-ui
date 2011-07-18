@@ -77,6 +77,7 @@ class IdCardWidget : Box
     update_id_card_label ()
     {
         string services_text = "";
+
         var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
         for (int i=0; i<id_card.services.length; i++)
         {
@@ -94,7 +95,7 @@ class IdCardWidget : Box
     {
         this.id_card = id_card;
 
-        var image = new Image.from_pixbuf (id_card.pixbuf);
+        var image = new Image.from_pixbuf (id_card.get_data ("pixbuf"));
 
         label = new Label (null);
         label.set_alignment ((float) 0, (float) 0.5);

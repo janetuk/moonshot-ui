@@ -193,20 +193,22 @@ class MainWindow : Window
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
-        id_card.pixbuf = find_icon ("avatar-default", 48);
         id_card.services = {};
+        id_card.set_data("pixbuf", find_icon ("avatar-default", 48));
 
         return id_card;
     }
 
     private void add_id_card_data (IdCard id_card)
     {
-        TreeIter iter;
+        TreeIter   iter;
+        Gdk.Pixbuf pixbuf;
 
         this.listmodel.append (out iter);
+        pixbuf = id_card.get_data("pixbuf");
         listmodel.set (iter,
                        Columns.IDCARD_COL, id_card,
-                       Columns.LOGO_COL, id_card.pixbuf,
+                       Columns.LOGO_COL, pixbuf,
                        Columns.ISSUER_COL, id_card.issuer,
                        Columns.USERNAME_COL, id_card.username,
                        Columns.PASSWORD_COL, id_card.password);
@@ -247,11 +249,6 @@ class MainWindow : Window
         id_card_widget.expanded.connect (fill_details);
     }
 
-    private void add_identity (AddIdentityDialog dialog)
-    {
-        insert_id_card (get_id_card_data (dialog));
-    }
-    
     /* This method finds a valid display name */
     public bool display_name_is_valid (string name,
                                        out string? candidate)
@@ -295,14 +292,38 @@ class MainWindow : Window
         add_id_card_widget (id_card);
     }
 
-    private void add_identity_cb ()
+    public bool add_identity (IdCard id_card)
+    {
+        /* TODO: Check if display name already exists */
+
+        var dialog = new Gtk.MessageDialog (this,
+                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
+                                            id_card.display_name);
+
+        dialog.show_all ();
+        var ret = dialog.run ();
+        dialog.hide ();
+
+        if (ret == Gtk.ResponseType.YES) {
+            id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
+            this.insert_id_card (id_card);
+            return true;
+        }
+
+        return false;
+    }
+
+    private void add_identity_manual_cb ()
     {
         var dialog = new AddIdentityDialog ();
         var result = dialog.run ();
 
         switch (result) {
         case ResponseType.OK:
-            add_identity (dialog);
+            insert_id_card (get_id_card_data (dialog));
             break;
         default:
             break;
@@ -596,7 +617,7 @@ SUCH DAMAGE.
                                 N_("Add ID Card"),
                                 null,
                                 N_("Add a new ID Card"),
-                                add_identity_cb };
+                                add_identity_manual_cb };
         actions += add;
         Gtk.ActionEntry quit = { "QuitAction",
 #if VALA_0_12

@@ -29,8 +29,6 @@ public class IdCard : Object
 
   public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
   
-  public Gdk.Pixbuf pixbuf { get; set; default = null; }    
-
   //TODO: Set the getter and remove the setter/default
   public unowned string nai { get {  _nai = username + "@" + password; return _nai;}}
 }

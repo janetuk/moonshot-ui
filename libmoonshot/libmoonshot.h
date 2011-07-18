@@ -134,12 +134,56 @@ int moonshot_get_identity (const char     *nai,
  *
  * Return value: %TRUE if an identity was available, otherwise %FALSE.
  */
-int moonshot_default_get_identity (char          **nai_out,
+int moonshot_get_default_identity (char          **nai_out,
                                    char          **password_out,
                                    char          **server_certificate_hash_out,
                                    char          **ca_certificate_out,
                                    char          **subject_name_constraint_out,
                                    char          **subject_alt_name_constraint_out,
                                    MoonshotError **error);
+
+
+/**
+ * moonshot_install_id_card:
+ * @display_name: Display name of card
+ * @user_name: Username for identity, or %NULL
+ * @password: Password for identity, or %NULL
+ * @realm: Realm for identity, or %NULL
+ * @rules_patterns: Array of patterns for the service matching rules
+ * @rules_patterns_length: Length of @rules_patterns and @rules_always_confirm arrays
+ * @rules_always_confirm: Array of 'always confirm' flags corresponding to patterns
+ * @rules_always_confirm_length: Length of @rules_patterns and @rules_always_confirm arrays
+ * @services: Array of strings listing the services this identity provides
+ * @services_length: Length of @services array
+ * @ca_cert: The CA certificate, or %NULL
+ * @subject: Subject name constraint for @ca_cert, or %NULL
+ * @subject_alt: Subject alternative name constraint for @ca_cert, or %NULL
+ * @server_cert: Hash of the server certificate; required if @ca_cert is %NULL
+ * @error: Return location for a #MoonshotError.
+ *
+ * Calls the Moonshot server to add a new identity. The user will be prompted
+ * if they would like to add the ID card.
+ *
+ * The values for @rules_patterns_length and @rules_always_confirm_length should
+ * always be the same. They are present as separate parameters as a concession to
+ * the Vala bindings.
+ *
+ * Return value: %TRUE if the ID card was successfully added, %FALSE otherwise
+ */
+int moonshot_install_id_card (const char     *display_name,
+                              const char     *user_name,
+                              const char     *password,
+                              const char     *realm,
+                              char           *rules_patterns[],
+                              int             rules_patterns_length,
+                              char           *rules_always_confirm[],
+                              int             rules_always_confirm_length,
+                              char           *services[],
+                              int             services_length,
+                              const char     *ca_cert,
+                              const char     *subject,
+                              const char     *subject_alt,
+                              const char     *server_cert,
+                              MoonshotError **error);
 
 #endif

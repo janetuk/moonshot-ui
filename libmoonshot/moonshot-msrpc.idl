@@ -20,5 +20,19 @@ interface moonshot
                                            [out, string] char **ca_certificate,
                                            [out, string] char **subject_name_constraint,
                                            [out, string] char **subject_alt_name_constraint);
-}
 
+    int moonshot_install_id_card_rpc ([in, string] const char *display_name,
+                                      [in, string] const char *user_name,
+                                      [in, string] const char *password,
+                                      [in, string] const char *realm,
+                                      [size_is(rules_patterns_length), in, string] char *rules_patterns[*],
+                                      int rules_patterns_length,
+                                      [size_is(rules_always_confirm_length), in, string] char *rules_always_confirm[*],
+                                      int rules_always_confirm_length,
+                                      [size_is(services_length), in, string] char *services[*],
+                                      int services_length,
+                                      [in, string] const char *ca_cert,
+                                      [in, string] const char *subject,
+                                      [in, string] const char *subject_alt,
+                                      [in, string] const char *server_cert);
+}
