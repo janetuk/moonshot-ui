@@ -70,23 +70,50 @@ class MainWindow : Window
 
     private bool visible_func (TreeModel model, TreeIter iter)
     {
-        string issuer;
+        IdCard id_card;
+        
         string search_text;
-        string issuer_casefold;
         string search_text_casefold;
 
         model.get (iter,
-                   Columns.ISSUER_COL, out issuer);
+                   Columns.IDCARD_COL, out id_card);
+        if (id_card == null)
+          return false;
+
+        /* TODO: Check if it is within the candidates */
+
         search_text = this.search_entry.get_text ();
+        if (search_text == null && search_text == "")
+            return true;
 
-        if (issuer == null || search_text == null)
-            return false;
-
-        issuer_casefold = issuer.casefold ();
         search_text_casefold = search_text.casefold ();
 
-        if (issuer_casefold.contains (search_text_casefold))
-            return true;
+        if (id_card.issuer != null)
+        {
+          string issuer_casefold = id_card.issuer;
+
+          if (issuer_casefold.contains (search_text_casefold))
+              return true;
+        }
+
+        if (id_card.display_name != null)
+        {
+          string display_name_casefold = id_card.display_name.casefold ();
+          
+          if (display_name_casefold.contains (search_text_casefold))
+              return true;
+        }
+        
+        if (id_card.services.length > 0)
+        {
+          foreach (string service in id_card.services)
+          {
+            string service_casefold = service.casefold ();
+
+            if (service_casefold.contains (search_text_casefold))
+                return true;
+          }
+        }
 
         return false;
     }
@@ -125,7 +152,6 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
 
         this.vbox_right.set_visible (false);
-        this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     private bool search_entry_key_press_event_cb (Gdk.EventKey e)
