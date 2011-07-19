@@ -41,11 +41,23 @@ public class MoonshotServer : Object {
             nai_out = id_card.nai;
             password_out = id_card.password;
 
-            server_certificate_hash = "certificate";
+            server_certificate_hash = id_card.trust_anchor.server_cert;
+            ca_certificate = id_card.trust_anchor.ca_cert;
+            subject_name_constraint = id_card.trust_anchor.subject;
+            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
 
-            // User should have been prompted if there was no p/w.
-            return_if_fail (nai_out != null);
-            return_if_fail (password_out != null);
+            if (nai_out == null)
+                nai_out = "";
+            if (password_out == null)
+                password_out = "";
+            if (server_certificate_hash == null)
+                server_certificate_hash = "";
+            if (ca_certificate == null)
+                ca_certificate = "";
+            if (subject_name_constraint == null)
+                subject_name_constraint = "";
+            if (subject_alt_name_constraint == null)
+                subject_alt_name_constraint = "";
 
             return true;
         }
@@ -77,11 +89,23 @@ public class MoonshotServer : Object {
             nai_out = request.id_card.nai;
             password_out = request.id_card.password;
 
-            server_certificate_hash = "certificate";
+            server_certificate_hash = request.id_card.trust_anchor.server_cert;
+            ca_certificate = request.id_card.trust_anchor.ca_cert;
+            subject_name_constraint = request.id_card.trust_anchor.subject;
+            subject_alt_name_constraint = request.id_card.trust_anchor.subject_alt;
 
-            // User should have been prompted if there was no p/w.
-            return_val_if_fail (nai_out != null, false);
-            return_val_if_fail (password_out != null, false);
+            if (nai_out == null)
+                nai_out = "";
+            if (password_out == null)
+                password_out = "";
+            if (server_certificate_hash == null)
+                server_certificate_hash = "";
+            if (ca_certificate == null)
+                ca_certificate = "";
+            if (subject_name_constraint == null)
+                subject_name_constraint = "";
+            if (subject_alt_name_constraint == null)
+                subject_alt_name_constraint = "";
 
             return true;
         }
