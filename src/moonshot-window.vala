@@ -86,8 +86,11 @@ class MainWindow : Window
         }
         
         string entry_text = search_entry.get_text ();
-        if (entry_text == null && entry_text == "")
+        if (entry_text == null || entry_text == "")
+        {
+            debug (entry_text);
             return true;
+        }
 
         foreach (string search_text in entry_text.split(" "))
         {
