@@ -14,6 +14,7 @@ po/[Rr]ules-quot
 po/POTFILES
 Makefile.in
 Makefile
+!examples/msvc/Makefile
 po/Makevars.template
 configure
 config.h*
@@ -33,12 +34,10 @@ src/moonshot-id.c
 src/moonshot-idcard-widget.c
 src/moonshot-identity-request.c
 src/moonshot-identities-manager.c
-src/moonshot-msrpc.h
-src/moonshot-msrpc_c.c
-src/moonshot-msrpc_s.c
 src/moonshot-password-dialog.c
 src/moonshot-server.c
 src/moonshot-utils.c
+src/moonshot-webp-parser.c
 src/moonshot-window.c
 src/msrpc-client.c
 src/dbus-client
@@ -83,3 +82,13 @@ moonshot.wixpdb
 po/Makefile.in.in
 app.wixobj
 org.janet.Moonshot.service
+share/
+moonshot.desktop
+moonshot-webp.desktop
+libmoonshot/moonshot-msrpc.h
+libmoonshot/moonshot-msrpc_c.c
+libmoonshot/moonshot-msrpc_s.c
+libmoonshot/libmoonshot.exp
+libmoonshot/libmoonshot.lib
+*.tar.bz2
+*.stackdump
