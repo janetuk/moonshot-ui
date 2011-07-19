@@ -23,11 +23,11 @@
       <Directory Id='ProgramFilesFolder' Name='PFiles'>
         <Directory Id='INSTALLDIR' Name='Moonshot'>
           <Directory Id='BINDIR' Name='bin'>
-            <Component Id='MainExe' Guid='$(var.MainExeGuid)'>
+            <Component Id='MainExe' Guid='37D8BA2D-40E0-475D-BF50-6328A9E269FE'>
               <File Id='MainExe'
-                    Name='$(var.MainExeFile)'
+                    Name='moonshot.exe'
                     DiskId='1'
-                    Source='$(var.MainExeSource)'
+                    Source='src/.libs/moonshot.exe'
                     KeyPath='yes'>
                 <Shortcut Id='startmenu'
                           Directory='ProgramMenuDir'
@@ -42,10 +42,32 @@
               </File>
             </Component>
 
+            <Component Id='WebProvisionExe' Guid='E150A9E2-3429-4082-9919-557EDAEFB43F'>
+              <!-- FIXME: to add the icon for these associations, see the following:
+                   http://wix.tramontana.co.hu/tutorial/getting-started/beyond-files
+                   http://stackoverflow.com/questions/138550/how-to-register-file-types-extensions-with-a-wix-installer
+                -->
+              <File Id='WebProvisionExe'
+                    Name='moonshot-webp.exe'
+                    DiskId='1'
+                    Source='src/.libs/moonshot-webp.exe'
+                    KeyPath='yes' />
+
+              <ProgId Id="Moonshot.Identity" Description="Moonshot Identity">
+                <Extension Id="msht" ContentType="application/moonshot+xml">
+                  <Verb Id="install"
+                        Command="install"
+                        TargetFile="WebProvisionExe"
+                        Argument="&quot;%1&quot;" />
+                </Extension>
+              </ProgId>
+            </Component>
+
             <!-- General deps -->
             <Component Id='Deps' Guid='4668773A-2486-4BF5-9AFE-A6595F1A3EB9'>
-              <File Id="MSRPC_MINGW.DLL" Name="msrpc-mingw.dll" Source="bin\msrpc-mingw.dll"/>
+              <File Id="MSRPC_MINGW.DLL" Name="msrpc-mingw.dll" Source="bin\msrpc-mingw.dll" />
               <File Id="MSRPC_GLIB2.DLL" Name="msrpc-glib2.dll" Source="bin\msrpc-glib2.dll" />
+              <File Id="LIBMOONSHOT_0.DLL" Name="libmoonshot-0.dll" Source="libmoonshot/.libs/libmoonshot-0.dll" />
             </Component>
 
             <!-- Gtk+ runtime - /bin -->
@@ -137,7 +159,7 @@
         <RegistryKey Root='HKLM'
                      Key='Software\Moonshot'
                      Action='createAndRemoveOnUninstall'>
-          <RegistryValue Type="string" Value="[BINDIR]$(var.MainExeFile)" />
+          <RegistryValue Type="string" Value="[BINDIR]/moonshot.exe" />
         </RegistryKey>
       </Component>
 
@@ -145,6 +167,7 @@
 
     <Feature Id='Complete' Level='1'>
       <ComponentRef Id='MainExe' />
+      <ComponentRef Id='WebProvisionExe' />
       <ComponentRef Id='Deps' />
       <ComponentRef Id='ProgramMenuDir' />
       <ComponentRef Id='Gtk2BinFiles' />
