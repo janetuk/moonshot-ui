@@ -8,19 +8,19 @@ class IdentityRequest : Object {
     private MainWindow main_window;
     private string nai;
     private string password;
-    private string certificate;
+    private string service;
 
     ReturnIdentityCallback callback = null;
 
     public IdentityRequest (MainWindow                   main_window,
                             string                       nai,
                             string                       password,
-                            string                       certificate)
+                            string                       service)
     {
         this.main_window = main_window;
         this.nai = nai;
         this.password = password;
-        this.certificate = certificate;
+        this.service = service;
     }
 
     public IdentityRequest.default (MainWindow main_window)
