@@ -1,0 +1,17 @@
+msvc-example: demonstrates using libmoonshot-0.dll from Visual C
+
+You must edit the Makefile to set up the correct paths before this
+example will build.
+
+To run it, you must set the correct PATH for the required DLL's:
+libmoonshot-0.dll (which is in ../../libmoonshot/.libs/) and msrpc-mingw.dll
+(which is in [msrpc-mingw tree]/build/). You will need to execute something
+like the following:
+
+    (in sh.exe:)
+
+PATH=../../libmoonshot/.libs:/c/build/src/msrpc-mingw/build/:$PATH msvc-example
+
+    (or in cmd.exe:)
+
+PATH=..\..\libmoonshot\.libs;c:\build\src\msrpc-mingw\build\;%PATH% msvc-example
