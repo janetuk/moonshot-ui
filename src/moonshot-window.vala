@@ -4,8 +4,6 @@ class MainWindow : Window
 {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
-    
-    private SList<IdCard> candidates;
 
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
@@ -20,6 +18,7 @@ class MainWindow : Window
     private TreeModelFilter filter;
 
     public IdentitiesManager identities_manager;
+    private SList<IdCard>    candidates;
 
     private MoonshotServer ipc_server;
 
@@ -98,7 +97,6 @@ class MainWindow : Window
         string entry_text = search_entry.get_text ();
         if (entry_text == null || entry_text == "")
         {
-            debug (entry_text);
             return true;
         }
 
@@ -450,15 +448,74 @@ class MainWindow : Window
 
         if (request.select_default)
         {
-            identity = this.default_id_card;
+            identity = default_id_card;
         }
-
-        /* Automatic service matching rules can go here */
 
         if (identity == null)
         {
-            // Resort to manual selection
-            this.show ();
+            bool has_nai = request.nai != null && request.nai != "";
+            bool has_srv = request.service != null && request.service != "";
+            foreach (IdCard tmp in identities_manager.id_card_list)
+            {
+                /* If NAI matches we add id card to the candidate list */
+                if (has_nai && request.nai == tmp.nai)
+                {
+                    add_candidate (tmp);
+                    continue;
+                }
+
+                /* If any service matches we add id card to the candidate list */
+                if (has_srv)
+                {
+                    foreach (string srv in tmp.services)
+                    {
+                        if (request.service == srv)
+                        {
+                            add_candidate (tmp);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            /* If more than one candidate we dissasociate service from all ids */
+            if (has_srv && candidates.length() > 1)
+            {
+                foreach (IdCard id in candidates)
+                {
+                    int i = 0;
+                    SList<string> services_list = null;
+                    foreach (string srv in id.services)
+                    {
+                        if (srv == request.service)
+                            continue;
+                        services_list.append (srv);
+                    }
+
+                    if (services_list.length () == 0)
+                    {
+                        id.services = {};
+                        continue;
+                    }
+
+                    string[] services = new string[services_list.length ()];
+                    foreach (string srv in services_list)
+                    {
+                        services[i] = srv;
+                        i++;
+                    }
+
+                    id.services = services;
+                }
+            }
+
+            if (candidates.length () == 0)
+            {
+                /*TODO: Check regex rules against service */
+            }
+
+            filter.refilter();
+            show ();
         }
         else
         {
@@ -504,6 +561,8 @@ class MainWindow : Window
 
         if (reset_password)
             identity.password = null;
+
+        candidates = null;
     }
 
     private void label_make_bold (Label label)

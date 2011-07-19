@@ -6,9 +6,9 @@ class IdentityRequest : Object {
     public bool select_default = false;
 
     private MainWindow main_window;
-    private string nai;
-    private string password;
-    private string service;
+    public string nai;
+    public string password;
+    public string service;
 
     ReturnIdentityCallback callback = null;
 
