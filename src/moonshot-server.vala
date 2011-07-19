@@ -89,17 +89,17 @@ public class MoonshotServer : Object {
         return false;
     }
 
-    public async bool install_id_card (string   display_name,
-                                       string   user_name,
-                                       string   password,
-                                       string   realm,
-                                       string[] rules_patterns,
-                                       string[] rules_always_confirm,
-                                       string[] services,
-                                       string   ca_cert,
-                                       string   subject,
-                                       string   subject_alt,
-                                       string   server_cert)
+    public bool install_id_card (string   display_name,
+                                 string   user_name,
+                                 string   password,
+                                 string   realm,
+                                 string[] rules_patterns,
+                                 string[] rules_always_confirm,
+                                 string[] services,
+                                 string   ca_cert,
+                                 string   subject,
+                                 string   subject_alt,
+                                 string   server_cert)
     {
       IdCard idcard = new IdCard ();
 
