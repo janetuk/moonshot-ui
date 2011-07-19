@@ -124,7 +124,7 @@ public class MoonshotServer : Object {
         }
       }
 
-      return this.main_window.insert_id_card (idcard);
+      return this.main_window.add_identity (idcard);
     }
 }
 

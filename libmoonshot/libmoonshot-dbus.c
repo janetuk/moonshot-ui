@@ -310,22 +310,22 @@ int moonshot_install_id_card (const char     *display_name,
         return FALSE;
 
     g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
-    g_return_val_if_fail (rules_patterns_length == rules_always_confirm_length), FALSE);
+    g_return_val_if_fail (rules_patterns_length == rules_always_confirm_length, FALSE);
 
     /* Marshall array and struct parameters for DBus */
-    rules_patterns_strv = g_malloc ((rules_length + 1) * sizeof (const char *));
-    rules_always_confirm_strv = g_malloc ((rules_length + 1) * sizeof (const char *));
+    rules_patterns_strv = g_malloc ((rules_patterns_length + 1) * sizeof (const char *));
+    rules_always_confirm_strv = g_malloc ((rules_patterns_length + 1) * sizeof (const char *));
     services_strv = g_malloc ((services_length + 1) * sizeof (const char *));
 
     for (i = 0; i < rules_patterns_length; i ++) {
-        rules_pattern_strv[i] = rules_patterns[i];
+        rules_patterns_strv[i] = rules_patterns[i];
         rules_always_confirm_strv[i] = rules_always_confirm[i];
     }
 
     for (i = 0; i < services_length; i ++)
         services_strv[i] = services[i];
 
-    rules_pattern_strv[rules_patterns_length] = NULL;
+    rules_patterns_strv[rules_patterns_length] = NULL;
     rules_always_confirm_strv[rules_patterns_length] = NULL;
     services_strv[services_length] = NULL;
 
@@ -336,7 +336,7 @@ int moonshot_install_id_card (const char     *display_name,
                        G_TYPE_STRING, user_name,
                        G_TYPE_STRING, password,
                        G_TYPE_STRING, realm,
-                       G_TYPE_STRV, rules_pattern_strv,
+                       G_TYPE_STRV, rules_patterns_strv,
                        G_TYPE_STRV, rules_always_confirm_strv,
                        G_TYPE_STRV, services_strv,
                        G_TYPE_STRING, ca_cert,
