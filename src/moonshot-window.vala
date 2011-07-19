@@ -69,6 +69,16 @@ class MainWindow : Window
         connect_signals();
         init_ipc_server();
     }
+    
+    public void add_candidate (IdCard idcard)
+    {
+        candidates.append (idcard);
+    }
+    
+    public void clear_candidates ()
+    {
+        candidates = new SList<IdCard>();
+    }
 
     private bool visible_func (TreeModel model, TreeIter iter)
     {
