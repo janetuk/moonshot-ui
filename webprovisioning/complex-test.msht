@@ -5,6 +5,7 @@
     <password></password>
     <realm>foo.baz</realm>
     <services>
+      <service>irc@jabber.project-moonshot.org</service>
       <service>xmpp@jabber.project-moonshot.org</service>
     </services>
     <selection-rules>
@@ -33,6 +34,7 @@
     <password></password>
     <realm>foo.bar</realm>
     <services>
+      <service>irc@jabber.project-moonshot.org</service>
       <service>email@project-moonshot.org</service>
     </services>
     <selection-rules>
@@ -55,6 +57,7 @@
     <password></password>
     <realm>foo.com</realm>
     <services>
+      <service>irc@jabber.project-moonshot.org</service>
       <service>email@project-moonshot.org</service>
     </services>
     <trust-anchor>
