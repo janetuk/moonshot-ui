@@ -1,0 +1,68 @@
+<identities>
+  <identity>
+    <display-name>Unique Name</display-name>
+    <user>user1</user>
+    <password></password>
+    <realm>foo.baz</realm>
+    <services>
+      <service>xmpp@jabber.project-moonshot.org</service>
+    </services>
+    <selection-rules>
+      <rule>
+        <pattern>PATTERN</pattern>
+        <always-confirm>true</always-confirm>
+      </rule>
+      <rule>
+      <rule>
+        <pattern>imap@*moonshot.org</pattern>
+        <always-confirm>false</always-confirm>
+      </rule>
+      </rule>
+    </selection-rules>
+    <trust-anchor>
+      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
+      <subject>Foo</subject>
+      <subject-alt>Bar</subject-alt>
+      <!-- Or alternatively -->
+      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+    </trust-anchor>
+  </identity>
+  <identity>
+    <display-name>Another Unique Name</display-name>
+    <user>user2</user>
+    <password></password>
+    <realm>foo.bar</realm>
+    <services>
+      <service>email@project-moonshot.org</service>
+    </services>
+    <selection-rules>
+      <rule>
+        <pattern>*@project-moonshot.org</pattern>
+        <always-confirm>true</always-confirm>
+      </rule>
+    </selection-rules>
+    <trust-anchor>
+      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
+      <subject>Foo</subject>
+      <subject-alt>Bar</subject-alt>
+      <!-- Or alternatively -->
+      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+    </trust-anchor>
+  </identity>
+    <identity>
+    <display-name>Yet Another Unique Name</display-name>
+    <user>user3</user>
+    <password></password>
+    <realm>foo.com</realm>
+    <services>
+      <service>email@project-moonshot.org</service>
+    </services>
+    <trust-anchor>
+      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
+      <subject>Foo</subject>
+      <subject-alt>Bar</subject-alt>
+      <!-- Or alternatively -->
+      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+    </trust-anchor>
+  </identity>
+</identities> 

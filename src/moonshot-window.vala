@@ -527,7 +527,15 @@ class MainWindow : Window
             }
             
             if (candidates.length () > 1)
-                confirm = true;
+            {
+                if (has_nai && nai_provided != null)
+                {
+                    identity = nai_provided;
+                    confirm = false;
+                }
+                else
+                    confirm = true;
+            }
             else
                 identity = candidates.nth_data (0);
             
