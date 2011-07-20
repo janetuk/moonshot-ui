@@ -48,11 +48,11 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gtk+-2.0 $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
@@ -143,7 +143,12 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files)
 
 noinst_PROGRAMS = \
         examples/client \
+        examples/service-selection \
         tests/basic
+
+examples_service_selection_SOURCES = examples/service-selection.c
+examples_service_selection_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 examples_client_SOURCES = examples/client.c
 examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)

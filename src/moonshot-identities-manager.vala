@@ -35,6 +35,29 @@ class IdentitiesManager : Object {
                 id_card.services = key_file.get_string_list (identity, "Services");
                 id_card.display_name = key_file.get_string (identity, "DisplayName");
                 id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
+                
+                
+                if (key_file.has_key (identity, "Rules-Patterns") &&
+                    key_file.has_key (identity, "Rules-AlwaysConfirm"))
+                {
+                    string [] rules_patterns =    key_file.get_string_list (identity, "Rules-Patterns");
+                    string [] rules_always_conf = key_file.get_string_list (identity, "Rules-AlwaysConfirm");
+                    
+                    if (rules_patterns.length == rules_always_conf.length)
+                    {
+                      Rule[] rules = new Rule[rules_patterns.length];
+                      for (int i = 0; i < rules_patterns.length; i++)
+                      {
+                        rules[i] = {rules_patterns[i], rules_always_conf[i]};
+                      }
+                      id_card.rules = rules;
+                    }
+                }
+                // Trust anchor 
+                id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert");
+                id_card.trust_anchor.subject = key_file.get_string (identity, "Subject");
+                id_card.trust_anchor.subject_alt = key_file.get_string (identity, "SubjectAlt");
+                id_card.trust_anchor.server_cert = key_file.get_string (identity, "ServerCert");
 
                 id_card_list.prepend (id_card);
             }

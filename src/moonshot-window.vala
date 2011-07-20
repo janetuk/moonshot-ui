@@ -18,6 +18,7 @@ class MainWindow : Window
     private TreeModelFilter filter;
 
     public IdentitiesManager identities_manager;
+    private SList<IdCard>    candidates;
 
     private MoonshotServer ipc_server;
 
@@ -67,27 +68,75 @@ class MainWindow : Window
         connect_signals();
         init_ipc_server();
     }
+    
+    public void add_candidate (IdCard idcard)
+    {
+        candidates.append (idcard);
+    }
 
     private bool visible_func (TreeModel model, TreeIter iter)
     {
-        string issuer;
-        string search_text;
-        string issuer_casefold;
-        string search_text_casefold;
+        IdCard id_card;
 
         model.get (iter,
-                   Columns.ISSUER_COL, out issuer);
-        search_text = this.search_entry.get_text ();
+                   Columns.IDCARD_COL, out id_card);
 
-        if (issuer == null || search_text == null)
+        if (id_card == null)
             return false;
-
-        issuer_casefold = issuer.casefold ();
-        search_text_casefold = search_text.casefold ();
-
-        if (issuer_casefold.contains (search_text_casefold))
+        
+        if (candidates != null)
+        {
+            bool is_candidate = false;
+            foreach (IdCard candidate in candidates)
+            {
+                if (candidate == id_card)
+                    is_candidate = true;
+            }
+            if (!is_candidate)
+                return false;
+        }
+        
+        string entry_text = search_entry.get_text ();
+        if (entry_text == null || entry_text == "")
+        {
             return true;
+        }
 
+        foreach (string search_text in entry_text.split(" "))
+        {
+            if (search_text == "")
+                continue;
+         
+
+            string search_text_casefold = search_text.casefold ();
+
+            if (id_card.issuer != null)
+            {
+              string issuer_casefold = id_card.issuer;
+
+              if (issuer_casefold.contains (search_text_casefold))
+                  return true;
+            }
+
+            if (id_card.display_name != null)
+            {
+                string display_name_casefold = id_card.display_name.casefold ();
+              
+                if (display_name_casefold.contains (search_text_casefold))
+                    return true;
+            }
+            
+            if (id_card.services.length > 0)
+            {
+                foreach (string service in id_card.services)
+                {
+                    string service_casefold = service.casefold ();
+
+                    if (service_casefold.contains (search_text_casefold))
+                        return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -125,7 +174,6 @@ class MainWindow : Window
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
 
         this.vbox_right.set_visible (false);
-        this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 
     private bool search_entry_key_press_event_cb (Gdk.EventKey e)
@@ -402,23 +450,132 @@ class MainWindow : Window
 
         if (request.select_default)
         {
-            identity = this.default_id_card;
+            identity = default_id_card;
         }
-
-        /* Automatic service matching rules can go here */
 
         if (identity == null)
         {
-            // Resort to manual selection
-            this.show ();
+            bool has_nai = request.nai != null && request.nai != "";
+            bool has_srv = request.service != null && request.service != "";
+            bool confirm = false;
+            IdCard nai_provided = null;
+
+            foreach (IdCard id in identities_manager.id_card_list)
+            {
+                /* If NAI matches we add id card to the candidate list */
+                if (has_nai && request.nai == id.nai)
+                {
+                    nai_provided = id;
+                    add_candidate (id);
+                    continue;
+                }
+
+                /* If any service matches we add id card to the candidate list */
+                if (has_srv)
+                {
+                    foreach (string srv in id.services)
+                    {
+                        if (request.service == srv)
+                        {
+                            add_candidate (id);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            /* If more than one candidate we dissasociate service from all ids */
+            if (has_srv && candidates.length() > 1)
+            {
+                foreach (IdCard id in candidates)
+                {
+                    int i = 0;
+                    SList<string> services_list = null;
+                    bool has_service = false;
+
+                    foreach (string srv in id.services)
+                    {
+                        if (srv == request.service)
+                        {
+                            has_service = true;
+                            continue;
+                        }
+                        services_list.append (srv);
+                    }
+                    
+                    if (!has_service)
+                        continue;
+
+                    if (services_list.length () == 0)
+                    {
+                        id.services = {};
+                        continue;
+                    }
+
+                    string[] services = new string[services_list.length ()];
+                    foreach (string srv in services_list)
+                    {
+                        services[i] = srv;
+                        i++;
+                    }
+
+                    id.services = services;
+                }
+            }
+
+            identities_manager.store_id_cards ();
+
+            /* If there are no candidates we use the service matching rules */
+            if (candidates.length () == 0)
+            {
+                foreach (IdCard id in identities_manager.id_card_list)
+                {
+                    foreach (Rule rule in id.rules)
+                    {
+                        if (!match_service_pattern (request.service, rule.pattern))
+                            continue;
+
+                        candidates.append (id);
+
+                        if (rule.always_confirm == "true")
+                            confirm = true;
+                    }
+                }
+            }
+            
+            if (candidates.length () > 1)
+            {
+                if (has_nai && nai_provided != null)
+                {
+                    identity = nai_provided;
+                    confirm = false;
+                }
+                else
+                    confirm = true;
+            }
+            else
+                identity = candidates.nth_data (0);
+
+            /* TODO: If candidate list empty return fail */
+            
+            if (confirm)
+            {
+                filter.refilter();
+                redraw_id_card_widgets ();
+                show ();
+                return;
+            }
         }
-        else
-        {
-            // Send back the identity (we can't directly run the
-            // callback because we may be being called from a 'yield')
-            Idle.add (() => { send_identity_cb (identity); return false; });
-            return;
-        }
+        // Send back the identity (we can't directly run the
+        // callback because we may be being called from a 'yield')
+        Idle.add (() => { send_identity_cb (identity); return false; });
+        return;
+    }
+    
+    private bool match_service_pattern (string service, string pattern)
+    {
+        var pspec = new PatternSpec (pattern);
+        return pspec.match_string (service);
     }
 
     public void send_identity_cb (IdCard identity)
@@ -427,6 +584,20 @@ class MainWindow : Window
 
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
+
+        if (request.service != null && request.service != "")
+        {
+            string[] services = new string[identity.services.length + 1];
+
+            for (int i = 0; i < identity.services.length; i++)
+                services[i] = identity.services[i];
+
+            services[identity.services.length] = request.service;
+
+            identity.services = services;
+
+            identities_manager.store_id_cards();
+        }
 
         if (identity.password == null)
         {
@@ -456,6 +627,8 @@ class MainWindow : Window
 
         if (reset_password)
             identity.password = null;
+
+        candidates = null;
     }
 
     private void label_make_bold (Label label)
@@ -515,24 +688,24 @@ class MainWindow : Window
 
                 SList<string> services = new SList<string>();
                 
-                foreach (string srv in id_card.services)
+                foreach (string srv in idcard.services)
                 {
                   if (srv == candidate)
                     continue;
                   services.append (srv);
                 }
                 
-                id_card.services = new string[services.length()];
-                for (int j=0; j<id_card.services.length; j++)
+                idcard.services = new string[services.length()];
+                for (int j=0; j<idcard.services.length; j++)
                 {
-                  id_card.services[j] = services.nth_data(j);
+                  idcard.services[j] = services.nth_data(j);
                 }
                 
                 var children = services_internal_vbox.get_children ();
                 foreach (var hbox in children)
                   hbox.destroy();
                 
-                fill_services_vbox (id_card);
+                fill_services_vbox (idcard);
                 custom_vbox.current_idcard.update_id_card_label ();
               }
               
