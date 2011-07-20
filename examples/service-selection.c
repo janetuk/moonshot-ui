@@ -15,7 +15,7 @@ int main (int argc, char *argv[])
 
     success = moonshot_get_identity ("",
                                      "",
-                                     "imap@project-moonshot.org",
+                                     "email@project-moonshot.org",
                                      &nai,
                                      &password,
                                      &server_certificate_hash,

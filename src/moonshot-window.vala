@@ -491,12 +491,20 @@ class MainWindow : Window
                 {
                     int i = 0;
                     SList<string> services_list = null;
+                    bool has_service = false;
+
                     foreach (string srv in id.services)
                     {
                         if (srv == request.service)
+                        {
+                            has_service = true;
                             continue;
+                        }
                         services_list.append (srv);
                     }
+                    
+                    if (!has_service)
+                        continue;
 
                     if (services_list.length () == 0)
                     {
@@ -514,6 +522,8 @@ class MainWindow : Window
                     id.services = services;
                 }
             }
+
+            identities_manager.store_id_cards ();
 
             /* If there are no candidates we use the service matching rules */
             if (candidates.length () == 0)
@@ -544,10 +554,8 @@ class MainWindow : Window
                     confirm = true;
             }
             else
-            {
                 identity = candidates.nth_data (0);
-                confirm = false;
-            }
+                
             
             /* TODO: If candidate list empty return fail */
             
@@ -577,6 +585,20 @@ class MainWindow : Window
 
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
+    
+        if (request.service != null && request.service != "")
+        {
+            string[] services = new string[identity.services.length + 1];
+            
+            for (int i = 0; i < identity.services.length; i++)
+                services[i] = identity.services[i];
+
+            services[identity.services.length] = request.service;
+            
+            identity.services = services;
+            
+            identities_manager.store_id_cards();
+        }
 
         if (identity.password == null)
         {
