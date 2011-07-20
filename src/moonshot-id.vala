@@ -30,5 +30,5 @@ public class IdCard : Object
   
   public Gdk.Pixbuf pixbuf { get; set; default = null; }    
 
-  public unowned string nai { get {  _nai = username + "@" + password; return _nai;}}
+  public unowned string nai { get {  _nai = username + "@" + issuer; return _nai;}}
 }

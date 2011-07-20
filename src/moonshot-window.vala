@@ -85,7 +85,8 @@ class MainWindow : Window
 
         foreach (IdCard candidate in candidates)
         {
-            if (&candidate == &id_card)
+            debug ("candidates -- %s", candidate.display_name);
+            if (candidate != id_card)
                 return true;
         }
         
@@ -452,7 +453,7 @@ class MainWindow : Window
             bool has_srv = request.service != null && request.service != "";
             bool confirm = false;
             IdCard nai_provided = null;
-            
+
             foreach (IdCard id in identities_manager.id_card_list)
             {
                 /* If NAI matches we add id card to the candidate list */
