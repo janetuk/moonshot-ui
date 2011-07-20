@@ -555,8 +555,7 @@ class MainWindow : Window
             }
             else
                 identity = candidates.nth_data (0);
-                
-            
+
             /* TODO: If candidate list empty return fail */
             
             if (confirm)
@@ -585,18 +584,18 @@ class MainWindow : Window
 
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
-    
+
         if (request.service != null && request.service != "")
         {
             string[] services = new string[identity.services.length + 1];
-            
+
             for (int i = 0; i < identity.services.length; i++)
                 services[i] = identity.services[i];
 
             services[identity.services.length] = request.service;
-            
+
             identity.services = services;
-            
+
             identities_manager.store_id_cards();
         }
 
