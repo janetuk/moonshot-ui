@@ -6,9 +6,12 @@ I recommend you set up a build environment according to the following page:
   http://afuera.me.uk/jhbuild-windows/
 
 However, use the configuration file in the source tree at ./windows/jhbuildrc
-instead of creating a new one. You can tell jhbuild to use that file by running
+instead of creating a new one. This means that the last two commands you execute
+become (from inside the moonshot-ui source tree):
 
-  jhbuild -f ./windows/jhbuildrc <...>
+  jhbuild -f ./windows/jhbuildrc bootstrap
+  jhbuild -f ./windows/jhbuildrc
+
 
 You will also need to install the following tools:
 
@@ -42,6 +45,7 @@ extract into c:\tools\mingw:
 
 (Alternately you can fetch the source for the w32api package from
  www.sourceforge.net/projects/mingw and apply the patch yourself)
+
 
 You will need to compile and install the msrpc-mingw package, which wraps
 MIDL.EXE and the RPC API to make it usable from gcc.
