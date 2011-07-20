@@ -50,6 +50,7 @@ class IdentitiesManager : Object {
                       {
                         rules[i] = {rules_patterns[i], rules_always_conf[i]};
                       }
+                      id_card.rules = rules;
                     }
                 }
                 // Trust anchor 

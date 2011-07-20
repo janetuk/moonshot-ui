@@ -14,10 +14,8 @@
         <always-confirm>true</always-confirm>
       </rule>
       <rule>
-      <rule>
         <pattern>imap@*moonshot.org</pattern>
         <always-confirm>false</always-confirm>
-      </rule>
       </rule>
     </selection-rules>
     <trust-anchor>

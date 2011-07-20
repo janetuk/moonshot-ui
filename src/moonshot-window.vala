@@ -80,14 +80,20 @@ class MainWindow : Window
 
         model.get (iter,
                    Columns.IDCARD_COL, out id_card);
+
         if (id_card == null)
             return false;
-
-        foreach (IdCard candidate in candidates)
+        
+        if (candidates != null)
         {
-            debug ("candidates -- %s", candidate.display_name);
-            if (candidate != id_card)
-                return true;
+            bool is_candidate = false;
+            foreach (IdCard candidate in candidates)
+            {
+                if (candidate == id_card)
+                    is_candidate = true;
+            }
+            if (!is_candidate)
+                return false;
         }
         
         string entry_text = search_entry.get_text ();
@@ -518,7 +524,7 @@ class MainWindow : Window
                     {
                         if (!match_service_pattern (request.service, rule.pattern))
                             continue;
-                       
+
                         candidates.append (id);
 
                         if (rule.always_confirm == "true")
@@ -538,8 +544,12 @@ class MainWindow : Window
                     confirm = true;
             }
             else
+            {
                 identity = candidates.nth_data (0);
+                confirm = false;
+            }
             
+            /* TODO: If candidate list empty return fail */
             
             if (confirm)
             {
@@ -597,7 +607,7 @@ class MainWindow : Window
         if (reset_password)
             identity.password = null;
 
-        candidates = new SList<IdCard>();
+        candidates = null;
     }
 
     private void label_make_bold (Label label)

@@ -13,9 +13,9 @@ int main (int argc, char *argv[])
          *subject_name_constraint,
          *subject_alt_name_constraint;
 
-    success = moonshot_get_identity ("user1@foo.baz",
+    success = moonshot_get_identity ("",
                                      "",
-                                     "",
+                                     "imap@project-moonshot.org",
                                      &nai,
                                      &password,
                                      &server_certificate_hash,
@@ -26,6 +26,7 @@ int main (int argc, char *argv[])
 
     if (success)
         g_debug ("Got id: %s %s\n", nai, password);
+
 
     moonshot_free (nai);
     moonshot_free (password);
