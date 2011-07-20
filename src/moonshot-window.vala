@@ -73,11 +73,6 @@ class MainWindow : Window
     {
         candidates.append (idcard);
     }
-    
-    public void clear_candidates ()
-    {
-        candidates = new SList<IdCard>();
-    }
 
     private bool visible_func (TreeModel model, TreeIter iter)
     {
@@ -455,23 +450,27 @@ class MainWindow : Window
         {
             bool has_nai = request.nai != null && request.nai != "";
             bool has_srv = request.service != null && request.service != "";
-            foreach (IdCard tmp in identities_manager.id_card_list)
+            bool confirm = false;
+            IdCard nai_provided = null;
+            
+            foreach (IdCard id in identities_manager.id_card_list)
             {
                 /* If NAI matches we add id card to the candidate list */
-                if (has_nai && request.nai == tmp.nai)
+                if (has_nai && request.nai == id.nai)
                 {
-                    add_candidate (tmp);
+                    nai_provided = id;
+                    add_candidate (id);
                     continue;
                 }
 
                 /* If any service matches we add id card to the candidate list */
                 if (has_srv)
                 {
-                    foreach (string srv in tmp.services)
+                    foreach (string srv in id.services)
                     {
                         if (request.service == srv)
                         {
-                            add_candidate (tmp);
+                            add_candidate (id);
                             continue;
                         }
                     }
@@ -509,21 +508,48 @@ class MainWindow : Window
                 }
             }
 
+            /* If there are no candidates we use the service matching rules */
             if (candidates.length () == 0)
             {
-                /*TODO: Check regex rules against service */
-            }
+                foreach (IdCard id in identities_manager.id_card_list)
+                {
+                    foreach (Rule rule in id.rules)
+                    {
+                        if (!match_service_pattern (request.service, rule.pattern))
+                            continue;
+                       
+                        candidates.append (id);
 
-            filter.refilter();
-            show ();
+                        if (rule.always_confirm == "true")
+                            confirm = true;
+                    }
+                }
+            }
+            
+            if (candidates.length () > 1)
+                confirm = true;
+            else
+                identity = candidates.nth_data (0);
+            
+            
+            if (confirm)
+            {
+                filter.refilter();
+                redraw_id_card_widgets ();
+                show ();
+                return;
+            }
         }
-        else
-        {
-            // Send back the identity (we can't directly run the
-            // callback because we may be being called from a 'yield')
-            Idle.add (() => { send_identity_cb (identity); return false; });
-            return;
-        }
+        // Send back the identity (we can't directly run the
+        // callback because we may be being called from a 'yield')
+        Idle.add (() => { send_identity_cb (identity); return false; });
+        return;
+    }
+    
+    private bool match_service_pattern (string service, string pattern)
+    {
+        var pspec = new PatternSpec (pattern);
+        return pspec.match_string (service);
     }
 
     public void send_identity_cb (IdCard identity)
@@ -562,7 +588,7 @@ class MainWindow : Window
         if (reset_password)
             identity.password = null;
 
-        candidates = null;
+        candidates = new SList<IdCard>();
     }
 
     private void label_make_bold (Label label)
@@ -622,24 +648,24 @@ class MainWindow : Window
 
                 SList<string> services = new SList<string>();
                 
-                foreach (string srv in id_card.services)
+                foreach (string srv in idcard.services)
                 {
                   if (srv == candidate)
                     continue;
                   services.append (srv);
                 }
                 
-                id_card.services = new string[services.length()];
-                for (int j=0; j<id_card.services.length; j++)
+                idcard.services = new string[services.length()];
+                for (int j=0; j<idcard.services.length; j++)
                 {
-                  id_card.services[j] = services.nth_data(j);
+                  idcard.services[j] = services.nth_data(j);
                 }
                 
                 var children = services_internal_vbox.get_children ();
                 foreach (var hbox in children)
                   hbox.destroy();
                 
-                fill_services_vbox (id_card);
+                fill_services_vbox (idcard);
                 custom_vbox.current_idcard.update_id_card_label ();
               }
               
