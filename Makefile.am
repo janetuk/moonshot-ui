@@ -147,8 +147,8 @@ noinst_PROGRAMS = \
         tests/basic
 
 examples_service_selection_SOURCES = examples/service-selection.c
-examples_service_selection_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
-examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
+examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 examples_client_SOURCES = examples/client.c
 examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)

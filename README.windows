@@ -56,10 +56,22 @@ MIDL.EXE and the RPC API to make it usable from gcc.
   ./waf
   ./waf install
 
-You can then build moonshot from the MSYS shell:
+You can then configure moonshot from the MSYS shell:
 
   ACLOCAL="aclocal -I/c/build/share/aclocal" PKG_CONFIG_PATH=/c/build/lib/pkgconfig \
-  ./autogen.sh --disable-maintainer-mode
+    ./autogen.sh --disable-maintainer-mode
+
+The configure script looks for various tools that it may not be able to locate
+automatically. In these cases you will get an error message, and you can set the
+environment variable described there to the location of the program. For example,
+if LIB.EXE is not found you will need to run
+
+  ACLOCAL="aclocal -I/c/build/share/aclocal" PKG_CONFIG_PATH=/c/build/lib/pkgconfig \
+    MSVC_LIB="/c/Program Files/...VC location../bin/lib.exe" \
+    ./autogen.sh --disable-maintainer-mode
+
+If this succeeds, you're ready to build!
+
   make
   make icons
   make installer
@@ -71,9 +83,13 @@ Weird things that might go wrong
 MSYS is a little fragile, here are some things to try if you get weird failures
 of any component:
 
-# Make sure your PATH looks like this:
-#   /c/build/bin:/c/tools/python:/usr/local/bin:/mingw/bin:/bin
-# so that there are no entries before these that might override a shell tool.
+  * Make sure your PATH looks like this:
+      /c/build/bin:/c/tools/python:/usr/local/bin:/mingw/bin:/bin
+    so that there are no entries before these that might override a shell tool.
 
-# Sometimes TMP is set and this breaks some of the tools
-export TMP=
+  * Sometimes TMP is set and this breaks some of the tools. Run:
+      export TMP=
+    to fix this.
+
+  * Don't ever use \ in paths (except to escape spaces) - always use /c/build/bin
+    not c:\build\bin. Otherwise shell scripts break all over the place.
