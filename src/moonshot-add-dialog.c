@@ -35,6 +35,7 @@ struct _AddIdentityDialogClass {
 };
 
 struct _AddIdentityDialogPrivate {
+	GtkEntry* displayname_entry;
 	GtkEntry* issuer_entry;
 	GtkEntry* username_entry;
 	GtkEntry* password_entry;
@@ -47,6 +48,7 @@ GType add_identity_dialog_get_type (void) G_GNUC_CONST;
 #define ADD_IDENTITY_DIALOG_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_ADD_IDENTITY_DIALOG, AddIdentityDialogPrivate))
 enum  {
 	ADD_IDENTITY_DIALOG_DUMMY_PROPERTY,
+	ADD_IDENTITY_DIALOG_DISPLAY_NAME,
 	ADD_IDENTITY_DIALOG_ISSUER,
 	ADD_IDENTITY_DIALOG_USERNAME,
 	ADD_IDENTITY_DIALOG_PASSWORD
@@ -54,6 +56,7 @@ enum  {
 AddIdentityDialog* add_identity_dialog_new (void);
 AddIdentityDialog* add_identity_dialog_construct (GType object_type);
 static void add_identity_dialog_set_atk_relation (AddIdentityDialog* self, GtkWidget* widget, GtkWidget* target_widget, AtkRelationType relationship);
+const char* add_identity_dialog_get_display_name (AddIdentityDialog* self);
 const char* add_identity_dialog_get_issuer (AddIdentityDialog* self);
 const char* add_identity_dialog_get_username (AddIdentityDialog* self);
 const char* add_identity_dialog_get_password (AddIdentityDialog* self);
@@ -70,12 +73,14 @@ static gpointer _g_object_ref0 (gpointer self) {
 AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 	AddIdentityDialog * self;
 	GtkWidget* content_area;
-	GtkLabel* issuer_label;
+	GtkLabel* displayname_label;
 	GtkEntry* _tmp0_;
-	GtkLabel* username_label;
+	GtkLabel* issuer_label;
 	GtkEntry* _tmp1_;
-	GtkLabel* password_label;
+	GtkLabel* username_label;
 	GtkEntry* _tmp2_;
+	GtkLabel* password_label;
+	GtkEntry* _tmp3_;
 	GtkCheckButton* remember_checkbutton;
 	GtkTable* table;
 	GtkVBox* vbox;
@@ -85,31 +90,37 @@ AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 	gtk_dialog_add_buttons ((GtkDialog*) self, _ ("Add ID Card"), GTK_RESPONSE_OK, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
 	content_area = _g_object_ref0 (gtk_dialog_get_content_area ((GtkDialog*) self));
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
+	displayname_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Display Name:")));
+	gtk_misc_set_alignment ((GtkMisc*) displayname_label, (float) 1, (float) 0.5);
+	self->priv->displayname_entry = (_tmp0_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->displayname_entry), _tmp0_);
 	issuer_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Issuer:")));
 	gtk_misc_set_alignment ((GtkMisc*) issuer_label, (float) 1, (float) 0.5);
-	self->priv->issuer_entry = (_tmp0_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->issuer_entry), _tmp0_);
+	self->priv->issuer_entry = (_tmp1_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->issuer_entry), _tmp1_);
 	username_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Username:")));
 	gtk_misc_set_alignment ((GtkMisc*) username_label, (float) 1, (float) 0.5);
-	self->priv->username_entry = (_tmp1_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->username_entry), _tmp1_);
+	self->priv->username_entry = (_tmp2_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->username_entry), _tmp2_);
 	password_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Password:")));
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (float) 1, (float) 0.5);
-	self->priv->password_entry = (_tmp2_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->password_entry), _tmp2_);
+	self->priv->password_entry = (_tmp3_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->password_entry), _tmp3_);
 	gtk_entry_set_invisible_char (self->priv->password_entry, (gunichar) '*');
 	gtk_entry_set_visibility (self->priv->password_entry, FALSE);
 	remember_checkbutton = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Remember password")));
+	add_identity_dialog_set_atk_relation (self, (GtkWidget*) displayname_label, (GtkWidget*) self->priv->displayname_entry, ATK_RELATION_LABEL_FOR);
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) issuer_label, (GtkWidget*) self->priv->issuer_entry, ATK_RELATION_LABEL_FOR);
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) username_label, (GtkWidget*) self->priv->username_entry, ATK_RELATION_LABEL_FOR);
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) self->priv->password_entry, (GtkWidget*) self->priv->password_entry, ATK_RELATION_LABEL_FOR);
-	table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 4, (guint) 4, FALSE));
+	table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 5, (guint) 5, FALSE));
 	gtk_table_set_col_spacings (table, (guint) 10);
 	gtk_table_set_row_spacings (table, (guint) 10);
-	gtk_table_attach_defaults (table, (GtkWidget*) issuer_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
-	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->issuer_entry, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
-	gtk_table_attach_defaults (table, (GtkWidget*) username_label, (guint) 0, (guint) 1, (guint) 1, (guint) 2);
-	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->username_entry, (guint) 1, (guint) 2, (guint) 1, (guint) 2);
-	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
-	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->password_entry, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
-	gtk_table_attach_defaults (table, (GtkWidget*) remember_checkbutton, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
+	gtk_table_attach_defaults (table, (GtkWidget*) displayname_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
+	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->displayname_entry, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
+	gtk_table_attach_defaults (table, (GtkWidget*) issuer_label, (guint) 0, (guint) 1, (guint) 1, (guint) 2);
+	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->issuer_entry, (guint) 1, (guint) 2, (guint) 1, (guint) 2);
+	gtk_table_attach_defaults (table, (GtkWidget*) username_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
+	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->username_entry, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
+	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 3, (guint) 4);
+	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->password_entry, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
+	gtk_table_attach_defaults (table, (GtkWidget*) remember_checkbutton, (guint) 1, (guint) 2, (guint) 4, (guint) 5);
 	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
 	gtk_container_set_border_width ((GtkContainer*) vbox, (guint) 6);
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) table, FALSE, FALSE, (guint) 0);
@@ -123,6 +134,7 @@ AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 	_g_object_unref0 (password_label);
 	_g_object_unref0 (username_label);
 	_g_object_unref0 (issuer_label);
+	_g_object_unref0 (displayname_label);
 	_g_object_unref0 (content_area);
 	return self;
 }
@@ -144,6 +156,14 @@ static void add_identity_dialog_set_atk_relation (AddIdentityDialog* self, GtkWi
 	atk_object_add_relationship (atk_widget, relationship, atk_target_widget);
 	_g_object_unref0 (atk_target_widget);
 	_g_object_unref0 (atk_widget);
+}
+
+
+const char* add_identity_dialog_get_display_name (AddIdentityDialog* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = gtk_entry_get_text (self->priv->displayname_entry);
+	return result;
 }
 
 
@@ -176,6 +196,7 @@ static void add_identity_dialog_class_init (AddIdentityDialogClass * klass) {
 	g_type_class_add_private (klass, sizeof (AddIdentityDialogPrivate));
 	G_OBJECT_CLASS (klass)->get_property = add_identity_dialog_get_property;
 	G_OBJECT_CLASS (klass)->finalize = add_identity_dialog_finalize;
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_DISPLAY_NAME, g_param_spec_string ("display-name", "display-name", "display-name", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_ISSUER, g_param_spec_string ("issuer", "issuer", "issuer", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_USERNAME, g_param_spec_string ("username", "username", "username", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_PASSWORD, g_param_spec_string ("password", "password", "password", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
@@ -190,6 +211,7 @@ static void add_identity_dialog_instance_init (AddIdentityDialog * self) {
 static void add_identity_dialog_finalize (GObject* obj) {
 	AddIdentityDialog * self;
 	self = ADD_IDENTITY_DIALOG (obj);
+	_g_object_unref0 (self->priv->displayname_entry);
 	_g_object_unref0 (self->priv->issuer_entry);
 	_g_object_unref0 (self->priv->username_entry);
 	_g_object_unref0 (self->priv->password_entry);
@@ -213,6 +235,9 @@ static void add_identity_dialog_get_property (GObject * object, guint property_i
 	AddIdentityDialog * self;
 	self = ADD_IDENTITY_DIALOG (object);
 	switch (property_id) {
+		case ADD_IDENTITY_DIALOG_DISPLAY_NAME:
+		g_value_set_string (value, add_identity_dialog_get_display_name (self));
+		break;
 		case ADD_IDENTITY_DIALOG_ISSUER:
 		g_value_set_string (value, add_identity_dialog_get_issuer (self));
 		break;

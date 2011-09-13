@@ -47,14 +47,14 @@ GdkPixbuf* find_icon (const char* name, gint size) {
 		_tmp0_ = gtk_icon_theme_load_icon (icon_theme, name, size, GTK_ICON_LOOKUP_FORCE_SIZE, &_inner_error_);
 		if (_inner_error_ != NULL) {
 			_g_object_unref0 (icon_theme);
-			goto __catch7_g_error;
+			goto __catch5_g_error;
 		}
 		result = _tmp0_;
 		_g_object_unref0 (icon_theme);
 		return result;
 	}
-	goto __finally7;
-	__catch7_g_error:
+	goto __finally5;
+	__catch5_g_error:
 	{
 		GError * e;
 		e = _inner_error_;
@@ -66,7 +66,7 @@ GdkPixbuf* find_icon (const char* name, gint size) {
 			return result;
 		}
 	}
-	__finally7:
+	__finally5:
 	{
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
 		g_clear_error (&_inner_error_);

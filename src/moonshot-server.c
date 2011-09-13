@@ -56,10 +56,23 @@ typedef struct _IdentityRequestPrivate IdentityRequestPrivate;
 
 typedef struct _IdCard IdCard;
 typedef struct _IdCardClass IdCardClass;
+
+#define TYPE_TRUST_ANCHOR (trust_anchor_get_type ())
+#define TRUST_ANCHOR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_TRUST_ANCHOR, TrustAnchor))
+#define TRUST_ANCHOR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_TRUST_ANCHOR, TrustAnchorClass))
+#define IS_TRUST_ANCHOR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_TRUST_ANCHOR))
+#define IS_TRUST_ANCHOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_TRUST_ANCHOR))
+#define TRUST_ANCHOR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_TRUST_ANCHOR, TrustAnchorClass))
+
+typedef struct _TrustAnchor TrustAnchor;
+typedef struct _TrustAnchorClass TrustAnchorClass;
 typedef struct _Block2Data Block2Data;
 typedef struct _MoonshotServerGetIdentityData MoonshotServerGetIdentityData;
 typedef struct _Block3Data Block3Data;
 typedef struct _MoonshotServerGetDefaultIdentityData MoonshotServerGetDefaultIdentityData;
+
+#define TYPE_RULE (rule_get_type ())
+typedef struct _Rule Rule;
 typedef struct _DBusObjectVTable _DBusObjectVTable;
 
 struct _MoonshotServer {
@@ -82,6 +95,9 @@ struct _IdentityRequest {
 	IdCard* id_card;
 	gboolean complete;
 	gboolean select_default;
+	char* nai;
+	char* password;
+	char* service;
 };
 
 struct _IdentityRequestClass {
@@ -120,6 +136,15 @@ struct _MoonshotServerGetIdentityData {
 	char* _tmp6_;
 	char* _tmp7_;
 	char* _tmp8_;
+	char* _tmp9_;
+	char* _tmp10_;
+	char* _tmp11_;
+	char* _tmp12_;
+	char* _tmp13_;
+	char* _tmp14_;
+	char* _tmp15_;
+	char* _tmp16_;
+	char* _tmp17_;
 	Block2Data* _data2_;
 };
 
@@ -136,13 +161,36 @@ struct _MoonshotServerGetDefaultIdentityData {
 	MoonshotServer* self;
 	char* nai_out;
 	char* password_out;
+	char* server_certificate_hash;
+	char* ca_certificate;
+	char* subject_name_constraint;
+	char* subject_alt_name_constraint;
 	gboolean result;
 	IdentityRequest* request;
 	char* _tmp0_;
 	char* _tmp1_;
 	char* _tmp2_;
 	char* _tmp3_;
+	char* _tmp4_;
+	char* _tmp5_;
+	char* _tmp6_;
+	char* _tmp7_;
+	char* _tmp8_;
+	char* _tmp9_;
+	char* _tmp10_;
+	char* _tmp11_;
+	char* _tmp12_;
+	char* _tmp13_;
+	char* _tmp14_;
+	char* _tmp15_;
+	char* _tmp16_;
+	char* _tmp17_;
 	Block3Data* _data3_;
+};
+
+struct _Rule {
+	char* pattern;
+	char* always_confirm;
 };
 
 struct _DBusObjectVTable {
@@ -165,29 +213,56 @@ static void moonshot_server_get_identity_ready (GObject* source_object, GAsyncRe
 void moonshot_server_get_identity (MoonshotServer* self, const char* nai, const char* password, const char* service, GAsyncReadyCallback _callback_, gpointer _user_data_);
 gboolean moonshot_server_get_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint);
 static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* data);
-IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* certificate);
-IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* certificate);
+IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* service);
+IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* service);
 GType identity_request_get_type (void) G_GNUC_CONST;
 void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallback cb, void* cb_target, GDestroyNotify cb_target_destroy_notify);
-static void _lambda1_ (IdentityRequest* IdentityRequest, Block2Data* _data2_);
-static void __lambda1__return_identity_callback (IdentityRequest* request, gpointer self);
+static void _lambda4_ (IdentityRequest* IdentityRequest, Block2Data* _data2_);
+static void __lambda4__return_identity_callback (IdentityRequest* request, gpointer self);
 gboolean identity_request_execute (IdentityRequest* self);
 GType id_card_get_type (void) G_GNUC_CONST;
 const char* id_card_get_nai (IdCard* self);
 const char* id_card_get_password (IdCard* self);
+GType trust_anchor_get_type (void) G_GNUC_CONST;
+TrustAnchor* id_card_get_trust_anchor (IdCard* self);
+const char* trust_anchor_get_server_cert (TrustAnchor* self);
+const char* trust_anchor_get_ca_cert (TrustAnchor* self);
+const char* trust_anchor_get_subject (TrustAnchor* self);
+const char* trust_anchor_get_subject_alt (TrustAnchor* self);
 static Block2Data* block2_data_ref (Block2Data* _data2_);
 static void block2_data_unref (Block2Data* _data2_);
 static void moonshot_server_get_default_identity_data_free (gpointer _data);
 static void moonshot_server_get_default_identity_ready (GObject* source_object, GAsyncResult* _res_, gpointer _user_data_);
 void moonshot_server_get_default_identity (MoonshotServer* self, GAsyncReadyCallback _callback_, gpointer _user_data_);
-gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out);
+gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint);
 static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaultIdentityData* data);
 IdentityRequest* identity_request_new_default (MainWindow* main_window);
 IdentityRequest* identity_request_construct_default (GType object_type, MainWindow* main_window);
-static void _lambda3_ (IdentityRequest* IdentityRequest, Block3Data* _data3_);
-static void __lambda3__return_identity_callback (IdentityRequest* request, gpointer self);
+static void _lambda5_ (IdentityRequest* IdentityRequest, Block3Data* _data3_);
+static void __lambda5__return_identity_callback (IdentityRequest* request, gpointer self);
 static Block3Data* block3_data_ref (Block3Data* _data3_);
 static void block3_data_unref (Block3Data* _data3_);
+gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* display_name, const char* user_name, const char* password, const char* realm, char** rules_patterns, int rules_patterns_length1, char** rules_always_confirm, int rules_always_confirm_length1, char** services, int services_length1, const char* ca_cert, const char* subject, const char* subject_alt, const char* server_cert);
+IdCard* id_card_new (void);
+IdCard* id_card_construct (GType object_type);
+void id_card_set_display_name (IdCard* self, const char* value);
+void id_card_set_username (IdCard* self, const char* value);
+void id_card_set_password (IdCard* self, const char* value);
+void id_card_set_issuer (IdCard* self, const char* value);
+void id_card_set_services (IdCard* self, char** value, int value_length1);
+void trust_anchor_set_ca_cert (TrustAnchor* self, const char* value);
+void trust_anchor_set_subject (TrustAnchor* self, const char* value);
+void trust_anchor_set_subject_alt (TrustAnchor* self, const char* value);
+void trust_anchor_set_server_cert (TrustAnchor* self, const char* value);
+GType rule_get_type (void) G_GNUC_CONST;
+Rule* rule_dup (const Rule* self);
+void rule_free (Rule* self);
+void rule_copy (const Rule* self, Rule* dest);
+void rule_destroy (Rule* self);
+void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
+static void _vala_Rule_array_free (Rule* array, gint array_length);
+Rule* id_card_get_rules (IdCard* self, int* result_length1);
+gboolean main_window_add_identity (MainWindow* self, IdCard* id_card);
 static void _vala_dbus_register_object (DBusConnection* connection, const char* path, void* object);
 static void _vala_dbus_unregister_object (gpointer connection, GObject* object);
 void moonshot_server_dbus_register_object (DBusConnection* connection, const char* path, void* object);
@@ -199,7 +274,10 @@ static DBusHandlerResult _dbus_moonshot_server_get_identity (MoonshotServer* sel
 static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
 static DBusHandlerResult _dbus_moonshot_server_get_default_identity (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
 static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
+static DBusHandlerResult _dbus_moonshot_server_install_id_card (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
 static void moonshot_server_finalize (GObject* obj);
+static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
+static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 
 static const DBusObjectPathVTable _moonshot_server_dbus_path_vtable = {_moonshot_server_dbus_unregister, moonshot_server_dbus_message};
 static const _DBusObjectVTable _moonshot_server_dbus_vtable = {moonshot_server_dbus_register_object};
@@ -278,31 +356,7 @@ static void moonshot_server_get_identity_ready (GObject* source_object, GAsyncRe
 }
 
 
-/**
-     * This is the function used by the GSS mechanism to get the NAI,
-     * password and certificate of the ID card for the specificated service.
-     *
-     * The function will block until the user choose the ID card.
-     *
-     * There are two types of trust anchor that may be returned. If
-     * server_certificate_hash is non-empty, the remaining parameters
-     * will be empty. Otherwise, the ca_certificate paramater and the
-     * subject name constraints will be returned.
-     *
-     * @param nai NAI of the ID Card (optional)
-     * @param password Password of the ID Card (optional)
-     * @param service Service application request an ID Card for (optional)
-     * @param nai_out NAI stored in the ID Card
-     * @param password_out Password stored in the ID Card
-     * @param server_certificate_hash Hash of the identity server's certificate
-     * @param ca_certificate Base64-encoded CA certificate
-     * @param subject_name_constraint Subject name constraint
-     * @param subject_alt_name_constraint Subject alternative name constraint
-     *
-     * @return true if the user choose a correct ID card for that service,
-     *         false otherwise.
-     */
-static void _lambda1_ (IdentityRequest* IdentityRequest, Block2Data* _data2_) {
+static void _lambda4_ (IdentityRequest* IdentityRequest, Block2Data* _data2_) {
 	MoonshotServer * self;
 	self = _data2_->self;
 	g_return_if_fail (IdentityRequest != NULL);
@@ -310,8 +364,8 @@ static void _lambda1_ (IdentityRequest* IdentityRequest, Block2Data* _data2_) {
 }
 
 
-static void __lambda1__return_identity_callback (IdentityRequest* request, gpointer self) {
-	_lambda1_ (request, self);
+static void __lambda4__return_identity_callback (IdentityRequest* request, gpointer self) {
+	_lambda4_ (request, self);
 }
 
 
@@ -344,7 +398,7 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 	data->_data2_->self = g_object_ref (data->self);
 	data->_data2_->_async_data_ = data;
 	data->request = identity_request_new (data->self->priv->main_window, data->nai, data->password, data->service);
-	identity_request_set_callback (data->request, __lambda1__return_identity_callback, block2_data_ref (data->_data2_), block2_data_unref);
+	identity_request_set_callback (data->request, __lambda4__return_identity_callback, block2_data_ref (data->_data2_), block2_data_unref);
 	identity_request_execute (data->request);
 	data->_state_ = 1;
 	return FALSE;
@@ -360,9 +414,28 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 	if (data->id_card != NULL) {
 		data->nai_out = (data->_tmp6_ = g_strdup (id_card_get_nai (data->id_card)), _g_free0 (data->nai_out), data->_tmp6_);
 		data->password_out = (data->_tmp7_ = g_strdup (id_card_get_password (data->id_card)), _g_free0 (data->password_out), data->_tmp7_);
-		data->server_certificate_hash = (data->_tmp8_ = g_strdup ("certificate"), _g_free0 (data->server_certificate_hash), data->_tmp8_);
-		g_return_if_fail (data->nai_out != NULL);
-		g_return_if_fail (data->password_out != NULL);
+		data->server_certificate_hash = (data->_tmp8_ = g_strdup (trust_anchor_get_server_cert (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->server_certificate_hash), data->_tmp8_);
+		data->ca_certificate = (data->_tmp9_ = g_strdup (trust_anchor_get_ca_cert (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->ca_certificate), data->_tmp9_);
+		data->subject_name_constraint = (data->_tmp10_ = g_strdup (trust_anchor_get_subject (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->subject_name_constraint), data->_tmp10_);
+		data->subject_alt_name_constraint = (data->_tmp11_ = g_strdup (trust_anchor_get_subject_alt (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->subject_alt_name_constraint), data->_tmp11_);
+		if (data->nai_out == NULL) {
+			data->nai_out = (data->_tmp12_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp12_);
+		}
+		if (data->password_out == NULL) {
+			data->password_out = (data->_tmp13_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp13_);
+		}
+		if (data->server_certificate_hash == NULL) {
+			data->server_certificate_hash = (data->_tmp14_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp14_);
+		}
+		if (data->ca_certificate == NULL) {
+			data->ca_certificate = (data->_tmp15_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp15_);
+		}
+		if (data->subject_name_constraint == NULL) {
+			data->subject_name_constraint = (data->_tmp16_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp16_);
+		}
+		if (data->subject_alt_name_constraint == NULL) {
+			data->subject_alt_name_constraint = (data->_tmp17_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp17_);
+		}
 		data->result = TRUE;
 		_g_object_unref0 (data->id_card);
 		_g_object_unref0 (data->request);
@@ -423,7 +496,7 @@ void moonshot_server_get_default_identity (MoonshotServer* self, GAsyncReadyCall
 }
 
 
-gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out) {
+gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint) {
 	gboolean result;
 	MoonshotServerGetDefaultIdentityData* _data_;
 	_data_ = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (_res_));
@@ -431,6 +504,14 @@ gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsy
 	_data_->nai_out = NULL;
 	*password_out = _data_->password_out;
 	_data_->password_out = NULL;
+	*server_certificate_hash = _data_->server_certificate_hash;
+	_data_->server_certificate_hash = NULL;
+	*ca_certificate = _data_->ca_certificate;
+	_data_->ca_certificate = NULL;
+	*subject_name_constraint = _data_->subject_name_constraint;
+	_data_->subject_name_constraint = NULL;
+	*subject_alt_name_constraint = _data_->subject_alt_name_constraint;
+	_data_->subject_alt_name_constraint = NULL;
 	result = _data_->result;
 	return result;
 }
@@ -444,15 +525,7 @@ static void moonshot_server_get_default_identity_ready (GObject* source_object, 
 }
 
 
-/**
-     * Returns the default identity - most recently used.
-     *
-     * @param nai_out NAI stored in the ID card
-     * @param password_out Password stored in the ID card
-     *
-     * @return true on success, false if no identities are stored
-     */
-static void _lambda3_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
+static void _lambda5_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
 	MoonshotServer * self;
 	self = _data3_->self;
 	g_return_if_fail (IdentityRequest != NULL);
@@ -460,8 +533,8 @@ static void _lambda3_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
 }
 
 
-static void __lambda3__return_identity_callback (IdentityRequest* request, gpointer self) {
-	_lambda3_ (request, self);
+static void __lambda5__return_identity_callback (IdentityRequest* request, gpointer self) {
+	_lambda5_ (request, self);
 }
 
 
@@ -494,7 +567,7 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 	data->_data3_->self = g_object_ref (data->self);
 	data->_data3_->_async_data_ = data;
 	data->request = identity_request_new_default (data->self->priv->main_window);
-	identity_request_set_callback (data->request, __lambda3__return_identity_callback, block3_data_ref (data->_data3_), block3_data_unref);
+	identity_request_set_callback (data->request, __lambda5__return_identity_callback, block3_data_ref (data->_data3_), block3_data_unref);
 	identity_request_execute (data->request);
 	data->_state_ = 2;
 	return FALSE;
@@ -502,11 +575,35 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 	;
 	data->nai_out = (data->_tmp0_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp0_);
 	data->password_out = (data->_tmp1_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp1_);
+	data->server_certificate_hash = (data->_tmp2_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp2_);
+	data->ca_certificate = (data->_tmp3_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp3_);
+	data->subject_name_constraint = (data->_tmp4_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp4_);
+	data->subject_alt_name_constraint = (data->_tmp5_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp5_);
 	if (data->request->id_card != NULL) {
-		data->nai_out = (data->_tmp2_ = g_strdup (id_card_get_nai (data->request->id_card)), _g_free0 (data->nai_out), data->_tmp2_);
-		data->password_out = (data->_tmp3_ = g_strdup (id_card_get_password (data->request->id_card)), _g_free0 (data->password_out), data->_tmp3_);
-		g_return_val_if_fail (data->nai_out != NULL, FALSE);
-		g_return_val_if_fail (data->password_out != NULL, FALSE);
+		data->nai_out = (data->_tmp6_ = g_strdup (id_card_get_nai (data->request->id_card)), _g_free0 (data->nai_out), data->_tmp6_);
+		data->password_out = (data->_tmp7_ = g_strdup (id_card_get_password (data->request->id_card)), _g_free0 (data->password_out), data->_tmp7_);
+		data->server_certificate_hash = (data->_tmp8_ = g_strdup (trust_anchor_get_server_cert (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->server_certificate_hash), data->_tmp8_);
+		data->ca_certificate = (data->_tmp9_ = g_strdup (trust_anchor_get_ca_cert (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->ca_certificate), data->_tmp9_);
+		data->subject_name_constraint = (data->_tmp10_ = g_strdup (trust_anchor_get_subject (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->subject_name_constraint), data->_tmp10_);
+		data->subject_alt_name_constraint = (data->_tmp11_ = g_strdup (trust_anchor_get_subject_alt (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->subject_alt_name_constraint), data->_tmp11_);
+		if (data->nai_out == NULL) {
+			data->nai_out = (data->_tmp12_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp12_);
+		}
+		if (data->password_out == NULL) {
+			data->password_out = (data->_tmp13_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp13_);
+		}
+		if (data->server_certificate_hash == NULL) {
+			data->server_certificate_hash = (data->_tmp14_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp14_);
+		}
+		if (data->ca_certificate == NULL) {
+			data->ca_certificate = (data->_tmp15_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp15_);
+		}
+		if (data->subject_name_constraint == NULL) {
+			data->subject_name_constraint = (data->_tmp16_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp16_);
+		}
+		if (data->subject_alt_name_constraint == NULL) {
+			data->subject_alt_name_constraint = (data->_tmp17_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp17_);
+		}
 		data->result = TRUE;
 		_g_object_unref0 (data->request);
 		block3_data_unref (data->_data3_);
@@ -546,6 +643,83 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 }
 
 
+static void _vala_Rule_array_free (Rule* array, gint array_length) {
+	if (array != NULL) {
+		int i;
+		for (i = 0; i < array_length; i = i + 1) {
+			rule_destroy (&array[i]);
+		}
+	}
+	g_free (array);
+}
+
+
+gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* display_name, const char* user_name, const char* password, const char* realm, char** rules_patterns, int rules_patterns_length1, char** rules_always_confirm, int rules_always_confirm_length1, char** services, int services_length1, const char* ca_cert, const char* subject, const char* subject_alt, const char* server_cert) {
+	gboolean result = FALSE;
+	IdCard* idcard;
+	char** _tmp0_;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (display_name != NULL, FALSE);
+	g_return_val_if_fail (user_name != NULL, FALSE);
+	g_return_val_if_fail (password != NULL, FALSE);
+	g_return_val_if_fail (realm != NULL, FALSE);
+	g_return_val_if_fail (ca_cert != NULL, FALSE);
+	g_return_val_if_fail (subject != NULL, FALSE);
+	g_return_val_if_fail (subject_alt != NULL, FALSE);
+	g_return_val_if_fail (server_cert != NULL, FALSE);
+	idcard = id_card_new ();
+	id_card_set_display_name (idcard, display_name);
+	id_card_set_username (idcard, user_name);
+	id_card_set_password (idcard, password);
+	id_card_set_issuer (idcard, realm);
+	_tmp0_ = services;
+	id_card_set_services (idcard, _tmp0_, services_length1);
+	trust_anchor_set_ca_cert (id_card_get_trust_anchor (idcard), ca_cert);
+	trust_anchor_set_subject (id_card_get_trust_anchor (idcard), subject);
+	trust_anchor_set_subject_alt (id_card_get_trust_anchor (idcard), subject_alt);
+	trust_anchor_set_server_cert (id_card_get_trust_anchor (idcard), server_cert);
+	if (rules_patterns_length1 == rules_always_confirm_length1) {
+		Rule* _tmp1_;
+		gint _tmp1__length1;
+		Rule* _tmp2_;
+		_tmp2_ = (_tmp1_ = g_new0 (Rule, rules_patterns_length1), _tmp1__length1 = rules_patterns_length1, _tmp1_);
+		id_card_set_rules (idcard, _tmp2_, rules_patterns_length1);
+		_tmp1_ = (_vala_Rule_array_free (_tmp1_, _tmp1__length1), NULL);
+		{
+			gint i;
+			i = 0;
+			{
+				gboolean _tmp3_;
+				_tmp3_ = TRUE;
+				while (TRUE) {
+					gint _tmp4_;
+					gint _tmp5_;
+					char* *_tmp6_;
+					char* _tmp7_;
+					gint _tmp8_;
+					char* *_tmp9_;
+					char* _tmp10_;
+					if (!_tmp3_) {
+						i++;
+					}
+					_tmp3_ = FALSE;
+					if (!(i < _tmp4_)) {
+						break;
+					}
+					_tmp6_ = &id_card_get_rules (idcard, &_tmp5_)[i].pattern;
+					(*_tmp6_) = (_tmp7_ = g_strdup (rules_patterns[i]), _g_free0 ((*_tmp6_)), _tmp7_);
+					_tmp9_ = &id_card_get_rules (idcard, &_tmp8_)[i].always_confirm;
+					(*_tmp9_) = (_tmp10_ = g_strdup (rules_always_confirm[i]), _g_free0 ((*_tmp9_)), _tmp10_);
+				}
+			}
+		}
+	}
+	result = main_window_add_identity (self->priv->main_window, idcard);
+	_g_object_unref0 (idcard);
+	return result;
+}
+
+
 static void _vala_dbus_register_object (DBusConnection* connection, const char* path, void* object) {
 	const _DBusObjectVTable * vtable;
 	vtable = g_type_get_qdata (G_TYPE_FROM_INSTANCE (object), g_quark_from_static_string ("DBusObjectVTable"));
@@ -578,7 +752,7 @@ static DBusHandlerResult _dbus_moonshot_server_introspect (MoonshotServer* self,
 	reply = dbus_message_new_method_return (message);
 	dbus_message_iter_init_append (reply, &iter);
 	xml_data = g_string_new ("<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" \"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n");
-	g_string_append (xml_data, "<node>\n<interface name=\"org.freedesktop.DBus.Introspectable\">\n  <method name=\"Introspect\">\n    <arg name=\"data\" direction=\"out\" type=\"s\"/>\n  </method>\n</interface>\n<interface name=\"org.freedesktop.DBus.Properties\">\n  <method name=\"Get\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"out\" type=\"v\"/>\n  </method>\n  <method name=\"Set\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"in\" type=\"v\"/>\n  </method>\n  <method name=\"GetAll\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"props\" direction=\"out\" type=\"a{sv}\"/>\n  </method>\n</interface>\n<interface name=\"org.janet.Moonshot\">\n  <method name=\"GetIdentity\">\n    <arg name=\"nai\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"service\" type=\"s\" direction=\"in\"/>\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"GetDefaultIdentity\">\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n</interface>\n");
+	g_string_append (xml_data, "<node>\n<interface name=\"org.freedesktop.DBus.Introspectable\">\n  <method name=\"Introspect\">\n    <arg name=\"data\" direction=\"out\" type=\"s\"/>\n  </method>\n</interface>\n<interface name=\"org.freedesktop.DBus.Properties\">\n  <method name=\"Get\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"out\" type=\"v\"/>\n  </method>\n  <method name=\"Set\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"in\" type=\"v\"/>\n  </method>\n  <method name=\"GetAll\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"props\" direction=\"out\" type=\"a{sv}\"/>\n  </method>\n</interface>\n<interface name=\"org.janet.Moonshot\">\n  <method name=\"GetIdentity\">\n    <arg name=\"nai\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"service\" type=\"s\" direction=\"in\"/>\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"GetDefaultIdentity\">\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"InstallIdCard\">\n    <arg name=\"display_name\" type=\"s\" direction=\"in\"/>\n    <arg name=\"user_name\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"realm\" type=\"s\" direction=\"in\"/>\n    <arg name=\"rules_patterns\" type=\"as\" direction=\"in\"/>\n    <arg name=\"rules_always_confirm\" type=\"as\" direction=\"in\"/>\n    <arg name=\"services\" type=\"as\" direction=\"in\"/>\n    <arg name=\"ca_cert\" type=\"s\" direction=\"in\"/>\n    <arg name=\"subject\" type=\"s\" direction=\"in\"/>\n    <arg name=\"subject_alt\" type=\"s\" direction=\"in\"/>\n    <arg name=\"server_cert\" type=\"s\" direction=\"in\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n</interface>\n");
 	dbus_connection_list_registered (connection, g_object_get_data ((GObject *) self, "dbus_object_path"), &children);
 	for (i = 0; children[i]; i++) {
 		g_string_append_printf (xml_data, "<node name=\"%s\"/>\n", children[i]);
@@ -738,15 +912,23 @@ static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_o
 	GError* error;
 	char* nai_out = NULL;
 	char* password_out = NULL;
+	char* server_certificate_hash = NULL;
+	char* ca_certificate = NULL;
+	char* subject_name_constraint = NULL;
+	char* subject_alt_name_constraint = NULL;
 	gboolean result;
 	DBusMessage* reply;
 	const char* _tmp11_;
 	const char* _tmp12_;
-	dbus_bool_t _tmp13_;
+	const char* _tmp13_;
+	const char* _tmp14_;
+	const char* _tmp15_;
+	const char* _tmp16_;
+	dbus_bool_t _tmp17_;
 	connection = _user_data_[0];
 	message = _user_data_[1];
 	error = NULL;
-	result = moonshot_server_get_default_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out);
+	result = moonshot_server_get_default_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint);
 	reply = dbus_message_new_method_return (message);
 	dbus_message_iter_init_append (reply, &iter);
 	_tmp11_ = nai_out;
@@ -755,13 +937,183 @@ static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_o
 	_tmp12_ = password_out;
 	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp12_);
 	_g_free0 (password_out);
-	_tmp13_ = result;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp13_);
+	_tmp13_ = server_certificate_hash;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp13_);
+	_g_free0 (server_certificate_hash);
+	_tmp14_ = ca_certificate;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp14_);
+	_g_free0 (ca_certificate);
+	_tmp15_ = subject_name_constraint;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp15_);
+	_g_free0 (subject_name_constraint);
+	_tmp16_ = subject_alt_name_constraint;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp16_);
+	_g_free0 (subject_alt_name_constraint);
+	_tmp17_ = result;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp17_);
 	dbus_connection_send (connection, reply, NULL);
 	dbus_message_unref (reply);
 	dbus_connection_unref (connection);
 	dbus_message_unref (message);
 	g_free (_user_data_);
+}
+
+
+static DBusHandlerResult _dbus_moonshot_server_install_id_card (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
+	DBusMessageIter iter;
+	GError* error;
+	char* display_name = NULL;
+	const char* _tmp18_;
+	char* user_name = NULL;
+	const char* _tmp19_;
+	char* password = NULL;
+	const char* _tmp20_;
+	char* realm = NULL;
+	const char* _tmp21_;
+	char** rules_patterns = NULL;
+	int rules_patterns_length1;
+	char** _tmp22_;
+	int _tmp22__length;
+	int _tmp22__size;
+	int _tmp22__length1;
+	DBusMessageIter _tmp23_;
+	char** rules_always_confirm = NULL;
+	int rules_always_confirm_length1;
+	char** _tmp25_;
+	int _tmp25__length;
+	int _tmp25__size;
+	int _tmp25__length1;
+	DBusMessageIter _tmp26_;
+	char** services = NULL;
+	int services_length1;
+	char** _tmp28_;
+	int _tmp28__length;
+	int _tmp28__size;
+	int _tmp28__length1;
+	DBusMessageIter _tmp29_;
+	char* ca_cert = NULL;
+	const char* _tmp31_;
+	char* subject = NULL;
+	const char* _tmp32_;
+	char* subject_alt = NULL;
+	const char* _tmp33_;
+	char* server_cert = NULL;
+	const char* _tmp34_;
+	gboolean result;
+	DBusMessage* reply;
+	dbus_bool_t _tmp35_;
+	error = NULL;
+	if (strcmp (dbus_message_get_signature (message), "ssssasasasssss")) {
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	}
+	dbus_message_iter_init (message, &iter);
+	dbus_message_iter_get_basic (&iter, &_tmp18_);
+	dbus_message_iter_next (&iter);
+	display_name = g_strdup (_tmp18_);
+	dbus_message_iter_get_basic (&iter, &_tmp19_);
+	dbus_message_iter_next (&iter);
+	user_name = g_strdup (_tmp19_);
+	dbus_message_iter_get_basic (&iter, &_tmp20_);
+	dbus_message_iter_next (&iter);
+	password = g_strdup (_tmp20_);
+	dbus_message_iter_get_basic (&iter, &_tmp21_);
+	dbus_message_iter_next (&iter);
+	realm = g_strdup (_tmp21_);
+	rules_patterns_length1 = 0;
+	_tmp22_ = g_new (char*, 5);
+	_tmp22__length = 0;
+	_tmp22__size = 4;
+	_tmp22__length1 = 0;
+	dbus_message_iter_recurse (&iter, &_tmp23_);
+	for (; dbus_message_iter_get_arg_type (&_tmp23_); _tmp22__length1++) {
+		const char* _tmp24_;
+		if (_tmp22__size == _tmp22__length) {
+			_tmp22__size = 2 * _tmp22__size;
+			_tmp22_ = g_renew (char*, _tmp22_, _tmp22__size + 1);
+		}
+		dbus_message_iter_get_basic (&_tmp23_, &_tmp24_);
+		dbus_message_iter_next (&_tmp23_);
+		_tmp22_[_tmp22__length++] = g_strdup (_tmp24_);
+	}
+	rules_patterns_length1 = _tmp22__length1;
+	_tmp22_[_tmp22__length] = NULL;
+	dbus_message_iter_next (&iter);
+	rules_patterns = _tmp22_;
+	rules_always_confirm_length1 = 0;
+	_tmp25_ = g_new (char*, 5);
+	_tmp25__length = 0;
+	_tmp25__size = 4;
+	_tmp25__length1 = 0;
+	dbus_message_iter_recurse (&iter, &_tmp26_);
+	for (; dbus_message_iter_get_arg_type (&_tmp26_); _tmp25__length1++) {
+		const char* _tmp27_;
+		if (_tmp25__size == _tmp25__length) {
+			_tmp25__size = 2 * _tmp25__size;
+			_tmp25_ = g_renew (char*, _tmp25_, _tmp25__size + 1);
+		}
+		dbus_message_iter_get_basic (&_tmp26_, &_tmp27_);
+		dbus_message_iter_next (&_tmp26_);
+		_tmp25_[_tmp25__length++] = g_strdup (_tmp27_);
+	}
+	rules_always_confirm_length1 = _tmp25__length1;
+	_tmp25_[_tmp25__length] = NULL;
+	dbus_message_iter_next (&iter);
+	rules_always_confirm = _tmp25_;
+	services_length1 = 0;
+	_tmp28_ = g_new (char*, 5);
+	_tmp28__length = 0;
+	_tmp28__size = 4;
+	_tmp28__length1 = 0;
+	dbus_message_iter_recurse (&iter, &_tmp29_);
+	for (; dbus_message_iter_get_arg_type (&_tmp29_); _tmp28__length1++) {
+		const char* _tmp30_;
+		if (_tmp28__size == _tmp28__length) {
+			_tmp28__size = 2 * _tmp28__size;
+			_tmp28_ = g_renew (char*, _tmp28_, _tmp28__size + 1);
+		}
+		dbus_message_iter_get_basic (&_tmp29_, &_tmp30_);
+		dbus_message_iter_next (&_tmp29_);
+		_tmp28_[_tmp28__length++] = g_strdup (_tmp30_);
+	}
+	services_length1 = _tmp28__length1;
+	_tmp28_[_tmp28__length] = NULL;
+	dbus_message_iter_next (&iter);
+	services = _tmp28_;
+	dbus_message_iter_get_basic (&iter, &_tmp31_);
+	dbus_message_iter_next (&iter);
+	ca_cert = g_strdup (_tmp31_);
+	dbus_message_iter_get_basic (&iter, &_tmp32_);
+	dbus_message_iter_next (&iter);
+	subject = g_strdup (_tmp32_);
+	dbus_message_iter_get_basic (&iter, &_tmp33_);
+	dbus_message_iter_next (&iter);
+	subject_alt = g_strdup (_tmp33_);
+	dbus_message_iter_get_basic (&iter, &_tmp34_);
+	dbus_message_iter_next (&iter);
+	server_cert = g_strdup (_tmp34_);
+	result = moonshot_server_install_id_card (self, display_name, user_name, password, realm, rules_patterns, rules_patterns_length1, rules_always_confirm, rules_always_confirm_length1, services, services_length1, ca_cert, subject, subject_alt, server_cert);
+	reply = dbus_message_new_method_return (message);
+	dbus_message_iter_init_append (reply, &iter);
+	_g_free0 (display_name);
+	_g_free0 (user_name);
+	_g_free0 (password);
+	_g_free0 (realm);
+	rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
+	rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
+	services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
+	_g_free0 (ca_cert);
+	_g_free0 (subject);
+	_g_free0 (subject_alt);
+	_g_free0 (server_cert);
+	_tmp35_ = result;
+	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp35_);
+	if (reply) {
+		dbus_connection_send (connection, reply, NULL);
+		dbus_message_unref (reply);
+		return DBUS_HANDLER_RESULT_HANDLED;
+	} else {
+		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
+	}
 }
 
 
@@ -776,6 +1128,8 @@ DBusHandlerResult moonshot_server_dbus_message (DBusConnection* connection, DBus
 		result = _dbus_moonshot_server_get_identity (object, connection, message);
 	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "GetDefaultIdentity")) {
 		result = _dbus_moonshot_server_get_default_identity (object, connection, message);
+	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "InstallIdCard")) {
+		result = _dbus_moonshot_server_install_id_card (object, connection, message);
 	}
 	if (result == DBUS_HANDLER_RESULT_HANDLED) {
 		return result;
@@ -824,6 +1178,24 @@ GType moonshot_server_get_type (void) {
 		g_once_init_leave (&moonshot_server_type_id__volatile, moonshot_server_type_id);
 	}
 	return moonshot_server_type_id__volatile;
+}
+
+
+static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func) {
+	if ((array != NULL) && (destroy_func != NULL)) {
+		int i;
+		for (i = 0; i < array_length; i = i + 1) {
+			if (((gpointer*) array)[i] != NULL) {
+				destroy_func (((gpointer*) array)[i]);
+			}
+		}
+	}
+}
+
+
+static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func) {
+	_vala_array_destroy (array, array_length, destroy_func);
+	g_free (array);
 }
 
 

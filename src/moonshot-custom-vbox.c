@@ -27,7 +27,38 @@ typedef struct _CustomVBoxPrivate CustomVBoxPrivate;
 
 typedef struct _IdCardWidget IdCardWidget;
 typedef struct _IdCardWidgetClass IdCardWidgetClass;
+
+#define TYPE_MAIN_WINDOW (main_window_get_type ())
+#define MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_MAIN_WINDOW, MainWindow))
+#define MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_MAIN_WINDOW, MainWindowClass))
+#define IS_MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_MAIN_WINDOW))
+#define IS_MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_MAIN_WINDOW))
+#define MAIN_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_MAIN_WINDOW, MainWindowClass))
+
+typedef struct _MainWindow MainWindow;
+typedef struct _MainWindowClass MainWindowClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+typedef struct _MainWindowPrivate MainWindowPrivate;
+
+#define TYPE_IDENTITIES_MANAGER (identities_manager_get_type ())
+#define IDENTITIES_MANAGER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITIES_MANAGER, IdentitiesManager))
+#define IDENTITIES_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITIES_MANAGER, IdentitiesManagerClass))
+#define IS_IDENTITIES_MANAGER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITIES_MANAGER))
+#define IS_IDENTITIES_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITIES_MANAGER))
+#define IDENTITIES_MANAGER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITIES_MANAGER, IdentitiesManagerClass))
+
+typedef struct _IdentitiesManager IdentitiesManager;
+typedef struct _IdentitiesManagerClass IdentitiesManagerClass;
+
+#define TYPE_IDENTITY_REQUEST (identity_request_get_type ())
+#define IDENTITY_REQUEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_REQUEST, IdentityRequest))
+#define IDENTITY_REQUEST_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITY_REQUEST, IdentityRequestClass))
+#define IS_IDENTITY_REQUEST(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITY_REQUEST))
+#define IS_IDENTITY_REQUEST_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITY_REQUEST))
+#define IDENTITY_REQUEST_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITY_REQUEST, IdentityRequestClass))
+
+typedef struct _IdentityRequest IdentityRequest;
+typedef struct _IdentityRequestClass IdentityRequestClass;
 #define _g_list_free0(var) ((var == NULL) ? NULL : (var = (g_list_free (var), NULL)))
 
 struct _CustomVBox {
@@ -41,6 +72,18 @@ struct _CustomVBoxClass {
 
 struct _CustomVBoxPrivate {
 	IdCardWidget* _current_idcard;
+	MainWindow* main_window;
+};
+
+struct _MainWindow {
+	GtkWindow parent_instance;
+	MainWindowPrivate * priv;
+	IdentitiesManager* identities_manager;
+	GQueue* request_queue;
+};
+
+struct _MainWindowClass {
+	GtkWindowClass parent_class;
 };
 
 
@@ -48,37 +91,27 @@ static gpointer custom_vbox_parent_class = NULL;
 
 GType custom_vbox_get_type (void) G_GNUC_CONST;
 GType id_card_widget_get_type (void) G_GNUC_CONST;
+GType main_window_get_type (void) G_GNUC_CONST;
 #define CUSTOM_VBOX_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_CUSTOM_VBOX, CustomVBoxPrivate))
 enum  {
 	CUSTOM_VBOX_DUMMY_PROPERTY,
 	CUSTOM_VBOX_CURRENT_IDCARD
 };
-CustomVBox* custom_vbox_new (gboolean homogeneous, gint spacing);
-CustomVBox* custom_vbox_construct (GType object_type, gboolean homogeneous, gint spacing);
+CustomVBox* custom_vbox_new (MainWindow* window, gboolean homogeneous, gint spacing);
+CustomVBox* custom_vbox_construct (GType object_type, MainWindow* window, gboolean homogeneous, gint spacing);
 void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card_widget);
 void id_card_widget_collapse (IdCardWidget* self);
+void custom_vbox_set_current_idcard (CustomVBox* self, IdCardWidget* value);
+IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self);
+GType identities_manager_get_type (void) G_GNUC_CONST;
+GType identity_request_get_type (void) G_GNUC_CONST;
+GtkButton* id_card_widget_get_send_button (IdCardWidget* self);
 void custom_vbox_add_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget);
 void custom_vbox_remove_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget);
-IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self);
-void custom_vbox_set_current_idcard (CustomVBox* self, IdCardWidget* value);
 static void custom_vbox_finalize (GObject* obj);
 static void custom_vbox_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void custom_vbox_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
 
-
-
-CustomVBox* custom_vbox_construct (GType object_type, gboolean homogeneous, gint spacing) {
-	CustomVBox * self;
-	self = g_object_newv (object_type, 0, NULL);
-	gtk_box_set_homogeneous ((GtkBox*) self, homogeneous);
-	gtk_box_set_spacing ((GtkBox*) self, spacing);
-	return self;
-}
-
-
-CustomVBox* custom_vbox_new (gboolean homogeneous, gint spacing) {
-	return custom_vbox_construct (TYPE_CUSTOM_VBOX, homogeneous, spacing);
-}
 
 
 static gpointer _g_object_ref0 (gpointer self) {
@@ -86,8 +119,26 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+CustomVBox* custom_vbox_construct (GType object_type, MainWindow* window, gboolean homogeneous, gint spacing) {
+	CustomVBox * self;
+	MainWindow* _tmp0_;
+	g_return_val_if_fail (window != NULL, NULL);
+	self = g_object_newv (object_type, 0, NULL);
+	self->priv->main_window = (_tmp0_ = _g_object_ref0 (window), _g_object_unref0 (self->priv->main_window), _tmp0_);
+	gtk_box_set_homogeneous ((GtkBox*) self, homogeneous);
+	gtk_box_set_spacing ((GtkBox*) self, spacing);
+	return self;
+}
+
+
+CustomVBox* custom_vbox_new (MainWindow* window, gboolean homogeneous, gint spacing) {
+	return custom_vbox_construct (TYPE_CUSTOM_VBOX, window, homogeneous, spacing);
+}
+
+
 void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card_widget) {
 	GList* list;
+	gboolean _tmp0_ = FALSE;
 	g_return_if_fail (self != NULL);
 	g_return_if_fail (id_card_widget != NULL);
 	list = gtk_container_get_children ((GtkContainer*) self);
@@ -105,6 +156,15 @@ void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card
 				_g_object_unref0 (id_card);
 			}
 		}
+	}
+	custom_vbox_set_current_idcard (self, id_card_widget);
+	if (self->priv->_current_idcard != NULL) {
+		_tmp0_ = self->priv->main_window->request_queue->length > 0;
+	} else {
+		_tmp0_ = FALSE;
+	}
+	if (_tmp0_) {
+		gtk_widget_set_sensitive ((GtkWidget*) id_card_widget_get_send_button (self->priv->_current_idcard), TRUE);
 	}
 	_g_list_free0 (list);
 }
@@ -160,6 +220,7 @@ static void custom_vbox_finalize (GObject* obj) {
 	CustomVBox * self;
 	self = CUSTOM_VBOX (obj);
 	_g_object_unref0 (self->priv->_current_idcard);
+	_g_object_unref0 (self->priv->main_window);
 	G_OBJECT_CLASS (custom_vbox_parent_class)->finalize (obj);
 }
 

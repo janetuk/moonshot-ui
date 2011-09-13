@@ -4,9 +4,9 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gtk/gtk.h>
 
 
 #define TYPE_IDENTITY_REQUEST (identity_request_get_type ())
@@ -50,6 +50,9 @@ struct _IdentityRequest {
 	IdCard* id_card;
 	gboolean complete;
 	gboolean select_default;
+	char* nai;
+	char* password;
+	char* service;
 };
 
 struct _IdentityRequestClass {
@@ -58,9 +61,6 @@ struct _IdentityRequestClass {
 
 struct _IdentityRequestPrivate {
 	MainWindow* main_window;
-	char* nai;
-	char* password;
-	char* certificate;
 	ReturnIdentityCallback callback;
 	gpointer callback_target;
 	GDestroyNotify callback_target_destroy_notify;
@@ -84,8 +84,8 @@ GType main_window_get_type (void) G_GNUC_CONST;
 enum  {
 	IDENTITY_REQUEST_DUMMY_PROPERTY
 };
-IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* certificate);
-IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* certificate);
+IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* service);
+IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* service);
 IdentityRequest* identity_request_new_default (MainWindow* main_window);
 IdentityRequest* identity_request_construct_default (GType object_type, MainWindow* main_window);
 void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallback cb, void* cb_target, GDestroyNotify cb_target_destroy_notify);
@@ -105,7 +105,7 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
-IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* certificate) {
+IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* service) {
 	IdentityRequest * self = NULL;
 	MainWindow* _tmp0_;
 	char* _tmp1_;
@@ -114,18 +114,18 @@ IdentityRequest* identity_request_construct (GType object_type, MainWindow* main
 	g_return_val_if_fail (main_window != NULL, NULL);
 	g_return_val_if_fail (nai != NULL, NULL);
 	g_return_val_if_fail (password != NULL, NULL);
-	g_return_val_if_fail (certificate != NULL, NULL);
+	g_return_val_if_fail (service != NULL, NULL);
 	self = (IdentityRequest*) g_object_new (object_type, NULL);
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (main_window), _g_object_unref0 (self->priv->main_window), _tmp0_);
-	self->priv->nai = (_tmp1_ = g_strdup (nai), _g_free0 (self->priv->nai), _tmp1_);
-	self->priv->password = (_tmp2_ = g_strdup (password), _g_free0 (self->priv->password), _tmp2_);
-	self->priv->certificate = (_tmp3_ = g_strdup (certificate), _g_free0 (self->priv->certificate), _tmp3_);
+	self->nai = (_tmp1_ = g_strdup (nai), _g_free0 (self->nai), _tmp1_);
+	self->password = (_tmp2_ = g_strdup (password), _g_free0 (self->password), _tmp2_);
+	self->service = (_tmp3_ = g_strdup (service), _g_free0 (self->service), _tmp3_);
 	return self;
 }
 
 
-IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* certificate) {
-	return identity_request_construct (TYPE_IDENTITY_REQUEST, main_window, nai, password, certificate);
+IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* service) {
+	return identity_request_construct (TYPE_IDENTITY_REQUEST, main_window, nai, password, service);
 }
 
 
@@ -231,9 +231,9 @@ static void identity_request_finalize (GObject* obj) {
 	self = IDENTITY_REQUEST (obj);
 	_g_object_unref0 (self->id_card);
 	_g_object_unref0 (self->priv->main_window);
-	_g_free0 (self->priv->nai);
-	_g_free0 (self->priv->password);
-	_g_free0 (self->priv->certificate);
+	_g_free0 (self->nai);
+	_g_free0 (self->password);
+	_g_free0 (self->service);
 	(self->priv->callback_target_destroy_notify == NULL) ? NULL : (self->priv->callback_target_destroy_notify (self->priv->callback_target), NULL);
 	self->priv->callback = NULL;
 	self->priv->callback_target = NULL;

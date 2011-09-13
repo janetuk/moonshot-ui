@@ -4,10 +4,25 @@
 
 #include <glib.h>
 #include <glib-object.h>
-#include <gdk-pixbuf/gdk-pixdata.h>
 #include <stdlib.h>
 #include <string.h>
+#include <gdk-pixbuf/gdk-pixdata.h>
 
+
+#define TYPE_TRUST_ANCHOR (trust_anchor_get_type ())
+#define TRUST_ANCHOR(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_TRUST_ANCHOR, TrustAnchor))
+#define TRUST_ANCHOR_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_TRUST_ANCHOR, TrustAnchorClass))
+#define IS_TRUST_ANCHOR(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_TRUST_ANCHOR))
+#define IS_TRUST_ANCHOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_TRUST_ANCHOR))
+#define TRUST_ANCHOR_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_TRUST_ANCHOR, TrustAnchorClass))
+
+typedef struct _TrustAnchor TrustAnchor;
+typedef struct _TrustAnchorClass TrustAnchorClass;
+typedef struct _TrustAnchorPrivate TrustAnchorPrivate;
+#define _g_free0(var) (var = (g_free (var), NULL))
+
+#define TYPE_RULE (rule_get_type ())
+typedef struct _Rule Rule;
 
 #define TYPE_ID_CARD (id_card_get_type ())
 #define ID_CARD(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_ID_CARD, IdCard))
@@ -20,7 +35,27 @@ typedef struct _IdCard IdCard;
 typedef struct _IdCardClass IdCardClass;
 typedef struct _IdCardPrivate IdCardPrivate;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
-#define _g_free0(var) (var = (g_free (var), NULL))
+
+struct _TrustAnchor {
+	GObject parent_instance;
+	TrustAnchorPrivate * priv;
+};
+
+struct _TrustAnchorClass {
+	GObjectClass parent_class;
+};
+
+struct _TrustAnchorPrivate {
+	char* _ca_cert;
+	char* _subject;
+	char* _subject_alt;
+	char* _server_cert;
+};
+
+struct _Rule {
+	char* pattern;
+	char* always_confirm;
+};
 
 struct _IdCard {
 	GObject parent_instance;
@@ -32,51 +67,308 @@ struct _IdCardClass {
 };
 
 struct _IdCardPrivate {
-	GdkPixbuf* _pixbuf;
-	char* _issuer;
+	char* _nai;
+	char* _display_name;
 	char* _username;
 	char* _password;
+	char* _issuer;
+	Rule* _rules;
+	gint _rules_length1;
+	gint __rules_size_;
 	char** _services;
 	gint _services_length1;
 	gint __services_size_;
-	char* _nai;
+	TrustAnchor* _trust_anchor;
+	GdkPixbuf* _pixbuf;
 };
 
 
+static gpointer trust_anchor_parent_class = NULL;
 static gpointer id_card_parent_class = NULL;
 
+GType trust_anchor_get_type (void) G_GNUC_CONST;
+#define TRUST_ANCHOR_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_TRUST_ANCHOR, TrustAnchorPrivate))
+enum  {
+	TRUST_ANCHOR_DUMMY_PROPERTY,
+	TRUST_ANCHOR_CA_CERT,
+	TRUST_ANCHOR_SUBJECT,
+	TRUST_ANCHOR_SUBJECT_ALT,
+	TRUST_ANCHOR_SERVER_CERT
+};
+TrustAnchor* trust_anchor_new (void);
+TrustAnchor* trust_anchor_construct (GType object_type);
+const char* trust_anchor_get_ca_cert (TrustAnchor* self);
+void trust_anchor_set_ca_cert (TrustAnchor* self, const char* value);
+const char* trust_anchor_get_subject (TrustAnchor* self);
+void trust_anchor_set_subject (TrustAnchor* self, const char* value);
+const char* trust_anchor_get_subject_alt (TrustAnchor* self);
+void trust_anchor_set_subject_alt (TrustAnchor* self, const char* value);
+const char* trust_anchor_get_server_cert (TrustAnchor* self);
+void trust_anchor_set_server_cert (TrustAnchor* self, const char* value);
+static void trust_anchor_finalize (GObject* obj);
+static void trust_anchor_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
+static void trust_anchor_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
+GType rule_get_type (void) G_GNUC_CONST;
+Rule* rule_dup (const Rule* self);
+void rule_free (Rule* self);
+void rule_copy (const Rule* self, Rule* dest);
+void rule_destroy (Rule* self);
 GType id_card_get_type (void) G_GNUC_CONST;
 #define ID_CARD_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_ID_CARD, IdCardPrivate))
 enum  {
 	ID_CARD_DUMMY_PROPERTY,
-	ID_CARD_PIXBUF,
-	ID_CARD_ISSUER,
+	ID_CARD_DISPLAY_NAME,
 	ID_CARD_USERNAME,
 	ID_CARD_PASSWORD,
+	ID_CARD_ISSUER,
 	ID_CARD_SERVICES,
+	ID_CARD_TRUST_ANCHOR,
+	ID_CARD_PIXBUF,
 	ID_CARD_NAI
 };
+static void _vala_Rule_array_free (Rule* array, gint array_length);
 IdCard* id_card_new (void);
 IdCard* id_card_construct (GType object_type);
-GdkPixbuf* id_card_get_pixbuf (IdCard* self);
-void id_card_set_pixbuf (IdCard* self, GdkPixbuf* value);
-const char* id_card_get_issuer (IdCard* self);
-void id_card_set_issuer (IdCard* self, const char* value);
+const char* id_card_get_display_name (IdCard* self);
+void id_card_set_display_name (IdCard* self, const char* value);
 const char* id_card_get_username (IdCard* self);
 void id_card_set_username (IdCard* self, const char* value);
 const char* id_card_get_password (IdCard* self);
 void id_card_set_password (IdCard* self, const char* value);
+const char* id_card_get_issuer (IdCard* self);
+void id_card_set_issuer (IdCard* self, const char* value);
+Rule* id_card_get_rules (IdCard* self, int* result_length1);
+void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
+static Rule* _vala_array_dup4 (Rule* self, int length);
 char** id_card_get_services (IdCard* self, int* result_length1);
 void id_card_set_services (IdCard* self, char** value, int value_length1);
-static char** _vala_array_dup1 (char** self, int length);
+static char** _vala_array_dup5 (char** self, int length);
+TrustAnchor* id_card_get_trust_anchor (IdCard* self);
+void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value);
+GdkPixbuf* id_card_get_pixbuf (IdCard* self);
+void id_card_set_pixbuf (IdCard* self, GdkPixbuf* value);
 const char* id_card_get_nai (IdCard* self);
-void id_card_set_nai (IdCard* self, const char* value);
 static void id_card_finalize (GObject* obj);
 static void id_card_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
 static void id_card_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 
+
+
+TrustAnchor* trust_anchor_construct (GType object_type) {
+	TrustAnchor * self = NULL;
+	self = (TrustAnchor*) g_object_new (object_type, NULL);
+	return self;
+}
+
+
+TrustAnchor* trust_anchor_new (void) {
+	return trust_anchor_construct (TYPE_TRUST_ANCHOR);
+}
+
+
+const char* trust_anchor_get_ca_cert (TrustAnchor* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_ca_cert;
+	return result;
+}
+
+
+void trust_anchor_set_ca_cert (TrustAnchor* self, const char* value) {
+	char* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_ca_cert = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_ca_cert), _tmp0_);
+	g_object_notify ((GObject *) self, "ca-cert");
+}
+
+
+const char* trust_anchor_get_subject (TrustAnchor* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_subject;
+	return result;
+}
+
+
+void trust_anchor_set_subject (TrustAnchor* self, const char* value) {
+	char* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_subject = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_subject), _tmp0_);
+	g_object_notify ((GObject *) self, "subject");
+}
+
+
+const char* trust_anchor_get_subject_alt (TrustAnchor* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_subject_alt;
+	return result;
+}
+
+
+void trust_anchor_set_subject_alt (TrustAnchor* self, const char* value) {
+	char* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_subject_alt = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_subject_alt), _tmp0_);
+	g_object_notify ((GObject *) self, "subject-alt");
+}
+
+
+const char* trust_anchor_get_server_cert (TrustAnchor* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_server_cert;
+	return result;
+}
+
+
+void trust_anchor_set_server_cert (TrustAnchor* self, const char* value) {
+	char* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_server_cert = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_server_cert), _tmp0_);
+	g_object_notify ((GObject *) self, "server-cert");
+}
+
+
+static void trust_anchor_class_init (TrustAnchorClass * klass) {
+	trust_anchor_parent_class = g_type_class_peek_parent (klass);
+	g_type_class_add_private (klass, sizeof (TrustAnchorPrivate));
+	G_OBJECT_CLASS (klass)->get_property = trust_anchor_get_property;
+	G_OBJECT_CLASS (klass)->set_property = trust_anchor_set_property;
+	G_OBJECT_CLASS (klass)->finalize = trust_anchor_finalize;
+	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_CA_CERT, g_param_spec_string ("ca-cert", "ca-cert", "ca-cert", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SUBJECT, g_param_spec_string ("subject", "subject", "subject", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SUBJECT_ALT, g_param_spec_string ("subject-alt", "subject-alt", "subject-alt", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SERVER_CERT, g_param_spec_string ("server-cert", "server-cert", "server-cert", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+}
+
+
+static void trust_anchor_instance_init (TrustAnchor * self) {
+	self->priv = TRUST_ANCHOR_GET_PRIVATE (self);
+	self->priv->_ca_cert = g_strdup ("");
+	self->priv->_subject = g_strdup ("");
+	self->priv->_subject_alt = g_strdup ("");
+	self->priv->_server_cert = g_strdup ("");
+}
+
+
+static void trust_anchor_finalize (GObject* obj) {
+	TrustAnchor * self;
+	self = TRUST_ANCHOR (obj);
+	_g_free0 (self->priv->_ca_cert);
+	_g_free0 (self->priv->_subject);
+	_g_free0 (self->priv->_subject_alt);
+	_g_free0 (self->priv->_server_cert);
+	G_OBJECT_CLASS (trust_anchor_parent_class)->finalize (obj);
+}
+
+
+GType trust_anchor_get_type (void) {
+	static volatile gsize trust_anchor_type_id__volatile = 0;
+	if (g_once_init_enter (&trust_anchor_type_id__volatile)) {
+		static const GTypeInfo g_define_type_info = { sizeof (TrustAnchorClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) trust_anchor_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (TrustAnchor), 0, (GInstanceInitFunc) trust_anchor_instance_init, NULL };
+		GType trust_anchor_type_id;
+		trust_anchor_type_id = g_type_register_static (G_TYPE_OBJECT, "TrustAnchor", &g_define_type_info, 0);
+		g_once_init_leave (&trust_anchor_type_id__volatile, trust_anchor_type_id);
+	}
+	return trust_anchor_type_id__volatile;
+}
+
+
+static void trust_anchor_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
+	TrustAnchor * self;
+	self = TRUST_ANCHOR (object);
+	switch (property_id) {
+		case TRUST_ANCHOR_CA_CERT:
+		g_value_set_string (value, trust_anchor_get_ca_cert (self));
+		break;
+		case TRUST_ANCHOR_SUBJECT:
+		g_value_set_string (value, trust_anchor_get_subject (self));
+		break;
+		case TRUST_ANCHOR_SUBJECT_ALT:
+		g_value_set_string (value, trust_anchor_get_subject_alt (self));
+		break;
+		case TRUST_ANCHOR_SERVER_CERT:
+		g_value_set_string (value, trust_anchor_get_server_cert (self));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+
+static void trust_anchor_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
+	TrustAnchor * self;
+	self = TRUST_ANCHOR (object);
+	switch (property_id) {
+		case TRUST_ANCHOR_CA_CERT:
+		trust_anchor_set_ca_cert (self, g_value_get_string (value));
+		break;
+		case TRUST_ANCHOR_SUBJECT:
+		trust_anchor_set_subject (self, g_value_get_string (value));
+		break;
+		case TRUST_ANCHOR_SUBJECT_ALT:
+		trust_anchor_set_subject_alt (self, g_value_get_string (value));
+		break;
+		case TRUST_ANCHOR_SERVER_CERT:
+		trust_anchor_set_server_cert (self, g_value_get_string (value));
+		break;
+		default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+		break;
+	}
+}
+
+
+void rule_copy (const Rule* self, Rule* dest) {
+	dest->pattern = g_strdup (self->pattern);
+	dest->always_confirm = g_strdup (self->always_confirm);
+}
+
+
+void rule_destroy (Rule* self) {
+	_g_free0 (self->pattern);
+	_g_free0 (self->always_confirm);
+}
+
+
+Rule* rule_dup (const Rule* self) {
+	Rule* dup;
+	dup = g_new0 (Rule, 1);
+	rule_copy (self, dup);
+	return dup;
+}
+
+
+void rule_free (Rule* self) {
+	rule_destroy (self);
+	g_free (self);
+}
+
+
+GType rule_get_type (void) {
+	static volatile gsize rule_type_id__volatile = 0;
+	if (g_once_init_enter (&rule_type_id__volatile)) {
+		GType rule_type_id;
+		rule_type_id = g_boxed_type_register_static ("Rule", (GBoxedCopyFunc) rule_dup, (GBoxedFreeFunc) rule_free);
+		g_once_init_leave (&rule_type_id__volatile, rule_type_id);
+	}
+	return rule_type_id__volatile;
+}
+
+
+static void _vala_Rule_array_free (Rule* array, gint array_length) {
+	if (array != NULL) {
+		int i;
+		for (i = 0; i < array_length; i = i + 1) {
+			rule_destroy (&array[i]);
+		}
+	}
+	g_free (array);
+}
 
 
 IdCard* id_card_construct (GType object_type) {
@@ -91,40 +383,19 @@ IdCard* id_card_new (void) {
 }
 
 
-GdkPixbuf* id_card_get_pixbuf (IdCard* self) {
-	GdkPixbuf* result;
-	g_return_val_if_fail (self != NULL, NULL);
-	result = self->priv->_pixbuf;
-	return result;
-}
-
-
-static gpointer _g_object_ref0 (gpointer self) {
-	return self ? g_object_ref (self) : NULL;
-}
-
-
-void id_card_set_pixbuf (IdCard* self, GdkPixbuf* value) {
-	GdkPixbuf* _tmp0_;
-	g_return_if_fail (self != NULL);
-	self->priv->_pixbuf = (_tmp0_ = _g_object_ref0 (value), _g_object_unref0 (self->priv->_pixbuf), _tmp0_);
-	g_object_notify ((GObject *) self, "pixbuf");
-}
-
-
-const char* id_card_get_issuer (IdCard* self) {
+const char* id_card_get_display_name (IdCard* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
-	result = self->priv->_issuer;
+	result = self->priv->_display_name;
 	return result;
 }
 
 
-void id_card_set_issuer (IdCard* self, const char* value) {
+void id_card_set_display_name (IdCard* self, const char* value) {
 	char* _tmp0_;
 	g_return_if_fail (self != NULL);
-	self->priv->_issuer = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_issuer), _tmp0_);
-	g_object_notify ((GObject *) self, "issuer");
+	self->priv->_display_name = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_display_name), _tmp0_);
+	g_object_notify ((GObject *) self, "display-name");
 }
 
 
@@ -160,6 +431,51 @@ void id_card_set_password (IdCard* self, const char* value) {
 }
 
 
+const char* id_card_get_issuer (IdCard* self) {
+	const char* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_issuer;
+	return result;
+}
+
+
+void id_card_set_issuer (IdCard* self, const char* value) {
+	char* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_issuer = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_issuer), _tmp0_);
+	g_object_notify ((GObject *) self, "issuer");
+}
+
+
+Rule* id_card_get_rules (IdCard* self, int* result_length1) {
+	Rule* result;
+	Rule* _tmp0_;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = (_tmp0_ = self->priv->_rules, *result_length1 = self->priv->_rules_length1, _tmp0_);
+	return result;
+}
+
+
+static Rule* _vala_array_dup4 (Rule* self, int length) {
+	Rule* result;
+	int i;
+	Rule _tmp0_ = {0};
+	result = g_new0 (Rule, length);
+	for (i = 0; i < length; i++) {
+		result[i] = (rule_copy (&self[i], &_tmp0_), _tmp0_);
+	}
+	return result;
+}
+
+
+void id_card_set_rules (IdCard* self, Rule* value, int value_length1) {
+	Rule* _tmp0_;
+	Rule* _tmp1_;
+	g_return_if_fail (self != NULL);
+	self->priv->_rules = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup4 (_tmp0_, value_length1)), self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL), self->priv->_rules_length1 = value_length1, self->priv->__rules_size_ = self->priv->_rules_length1, _tmp1_);
+}
+
+
 char** id_card_get_services (IdCard* self, int* result_length1) {
 	char** result;
 	char** _tmp0_;
@@ -169,7 +485,7 @@ char** id_card_get_services (IdCard* self, int* result_length1) {
 }
 
 
-static char** _vala_array_dup1 (char** self, int length) {
+static char** _vala_array_dup5 (char** self, int length) {
 	char** result;
 	int i;
 	result = g_new0 (char*, length + 1);
@@ -184,24 +500,57 @@ void id_card_set_services (IdCard* self, char** value, int value_length1) {
 	char** _tmp0_;
 	char** _tmp1_;
 	g_return_if_fail (self != NULL);
-	self->priv->_services = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup1 (_tmp0_, value_length1)), self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL), self->priv->_services_length1 = value_length1, self->priv->__services_size_ = self->priv->_services_length1, _tmp1_);
+	self->priv->_services = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup5 (_tmp0_, value_length1)), self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL), self->priv->_services_length1 = value_length1, self->priv->__services_size_ = self->priv->_services_length1, _tmp1_);
 	g_object_notify ((GObject *) self, "services");
+}
+
+
+TrustAnchor* id_card_get_trust_anchor (IdCard* self) {
+	TrustAnchor* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_trust_anchor;
+	return result;
+}
+
+
+static gpointer _g_object_ref0 (gpointer self) {
+	return self ? g_object_ref (self) : NULL;
+}
+
+
+void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value) {
+	TrustAnchor* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_trust_anchor = (_tmp0_ = _g_object_ref0 (value), _g_object_unref0 (self->priv->_trust_anchor), _tmp0_);
+	g_object_notify ((GObject *) self, "trust-anchor");
+}
+
+
+GdkPixbuf* id_card_get_pixbuf (IdCard* self) {
+	GdkPixbuf* result;
+	g_return_val_if_fail (self != NULL, NULL);
+	result = self->priv->_pixbuf;
+	return result;
+}
+
+
+void id_card_set_pixbuf (IdCard* self, GdkPixbuf* value) {
+	GdkPixbuf* _tmp0_;
+	g_return_if_fail (self != NULL);
+	self->priv->_pixbuf = (_tmp0_ = _g_object_ref0 (value), _g_object_unref0 (self->priv->_pixbuf), _tmp0_);
+	g_object_notify ((GObject *) self, "pixbuf");
 }
 
 
 const char* id_card_get_nai (IdCard* self) {
 	const char* result;
+	char* _tmp0_;
+	char* _tmp1_;
 	g_return_val_if_fail (self != NULL, NULL);
+	self->priv->_nai = (_tmp1_ = g_strconcat (_tmp0_ = g_strconcat (self->priv->_username, "@", NULL), self->priv->_issuer, NULL), _g_free0 (self->priv->_nai), _tmp1_);
+	_g_free0 (_tmp0_);
 	result = self->priv->_nai;
 	return result;
-}
-
-
-void id_card_set_nai (IdCard* self, const char* value) {
-	char* _tmp0_;
-	g_return_if_fail (self != NULL);
-	self->priv->_nai = (_tmp0_ = g_strdup (value), _g_free0 (self->priv->_nai), _tmp0_);
-	g_object_notify ((GObject *) self, "nai");
 }
 
 
@@ -211,35 +560,48 @@ static void id_card_class_init (IdCardClass * klass) {
 	G_OBJECT_CLASS (klass)->get_property = id_card_get_property;
 	G_OBJECT_CLASS (klass)->set_property = id_card_set_property;
 	G_OBJECT_CLASS (klass)->finalize = id_card_finalize;
-	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_PIXBUF, g_param_spec_object ("pixbuf", "pixbuf", "pixbuf", GDK_TYPE_PIXBUF, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_ISSUER, g_param_spec_string ("issuer", "issuer", "issuer", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_DISPLAY_NAME, g_param_spec_string ("display-name", "display-name", "display-name", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_USERNAME, g_param_spec_string ("username", "username", "username", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_PASSWORD, g_param_spec_string ("password", "password", "password", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_ISSUER, g_param_spec_string ("issuer", "issuer", "issuer", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_SERVICES, g_param_spec_boxed ("services", "services", "services", G_TYPE_STRV, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_NAI, g_param_spec_string ("nai", "nai", "nai", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_TRUST_ANCHOR, g_param_spec_object ("trust-anchor", "trust-anchor", "trust-anchor", TYPE_TRUST_ANCHOR, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_PIXBUF, g_param_spec_object ("pixbuf", "pixbuf", "pixbuf", GDK_TYPE_PIXBUF, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
+	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_NAI, g_param_spec_string ("nai", "nai", "nai", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 }
 
 
 static void id_card_instance_init (IdCard * self) {
+	Rule* _tmp0_ = NULL;
+	char** _tmp1_ = NULL;
 	self->priv = ID_CARD_GET_PRIVATE (self);
-	self->priv->_pixbuf = NULL;
-	self->priv->_issuer = NULL;
-	self->priv->_username = NULL;
+	self->priv->_display_name = g_strdup ("");
+	self->priv->_username = g_strdup ("");
 	self->priv->_password = NULL;
-	self->priv->_services = NULL;
-	self->priv->_nai = NULL;
+	self->priv->_issuer = g_strdup ("");
+	self->priv->_rules = (_tmp0_ = g_new0 (Rule, 0), _tmp0_);
+	self->priv->_rules_length1 = 0;
+	self->priv->__rules_size_ = self->priv->_rules_length1;
+	self->priv->_services = (_tmp1_ = g_new0 (char*, 0 + 1), _tmp1_);
+	self->priv->_services_length1 = 0;
+	self->priv->__services_size_ = self->priv->_services_length1;
+	self->priv->_trust_anchor = trust_anchor_new ();
+	self->priv->_pixbuf = NULL;
 }
 
 
 static void id_card_finalize (GObject* obj) {
 	IdCard * self;
 	self = ID_CARD (obj);
-	_g_object_unref0 (self->priv->_pixbuf);
-	_g_free0 (self->priv->_issuer);
+	_g_free0 (self->priv->_nai);
+	_g_free0 (self->priv->_display_name);
 	_g_free0 (self->priv->_username);
 	_g_free0 (self->priv->_password);
+	_g_free0 (self->priv->_issuer);
+	self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL);
 	self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL);
-	_g_free0 (self->priv->_nai);
+	_g_object_unref0 (self->priv->_trust_anchor);
+	_g_object_unref0 (self->priv->_pixbuf);
 	G_OBJECT_CLASS (id_card_parent_class)->finalize (obj);
 }
 
@@ -261,11 +623,8 @@ static void id_card_get_property (GObject * object, guint property_id, GValue * 
 	int length;
 	self = ID_CARD (object);
 	switch (property_id) {
-		case ID_CARD_PIXBUF:
-		g_value_set_object (value, id_card_get_pixbuf (self));
-		break;
-		case ID_CARD_ISSUER:
-		g_value_set_string (value, id_card_get_issuer (self));
+		case ID_CARD_DISPLAY_NAME:
+		g_value_set_string (value, id_card_get_display_name (self));
 		break;
 		case ID_CARD_USERNAME:
 		g_value_set_string (value, id_card_get_username (self));
@@ -273,8 +632,17 @@ static void id_card_get_property (GObject * object, guint property_id, GValue * 
 		case ID_CARD_PASSWORD:
 		g_value_set_string (value, id_card_get_password (self));
 		break;
+		case ID_CARD_ISSUER:
+		g_value_set_string (value, id_card_get_issuer (self));
+		break;
 		case ID_CARD_SERVICES:
 		g_value_set_boxed (value, id_card_get_services (self, &length));
+		break;
+		case ID_CARD_TRUST_ANCHOR:
+		g_value_set_object (value, id_card_get_trust_anchor (self));
+		break;
+		case ID_CARD_PIXBUF:
+		g_value_set_object (value, id_card_get_pixbuf (self));
 		break;
 		case ID_CARD_NAI:
 		g_value_set_string (value, id_card_get_nai (self));
@@ -291,11 +659,8 @@ static void id_card_set_property (GObject * object, guint property_id, const GVa
 	gpointer boxed;
 	self = ID_CARD (object);
 	switch (property_id) {
-		case ID_CARD_PIXBUF:
-		id_card_set_pixbuf (self, g_value_get_object (value));
-		break;
-		case ID_CARD_ISSUER:
-		id_card_set_issuer (self, g_value_get_string (value));
+		case ID_CARD_DISPLAY_NAME:
+		id_card_set_display_name (self, g_value_get_string (value));
 		break;
 		case ID_CARD_USERNAME:
 		id_card_set_username (self, g_value_get_string (value));
@@ -303,12 +668,18 @@ static void id_card_set_property (GObject * object, guint property_id, const GVa
 		case ID_CARD_PASSWORD:
 		id_card_set_password (self, g_value_get_string (value));
 		break;
+		case ID_CARD_ISSUER:
+		id_card_set_issuer (self, g_value_get_string (value));
+		break;
 		case ID_CARD_SERVICES:
 		boxed = g_value_get_boxed (value);
 		id_card_set_services (self, boxed, g_strv_length (boxed));
 		break;
-		case ID_CARD_NAI:
-		id_card_set_nai (self, g_value_get_string (value));
+		case ID_CARD_TRUST_ANCHOR:
+		id_card_set_trust_anchor (self, g_value_get_object (value));
+		break;
+		case ID_CARD_PIXBUF:
+		id_card_set_pixbuf (self, g_value_get_object (value));
 		break;
 		default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

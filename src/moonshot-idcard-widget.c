@@ -8,9 +8,9 @@
 #include <string.h>
 #include <gdk/gdk.h>
 #include <stdlib.h>
-#include <gdk-pixbuf/gdk-pixdata.h>
 #include <float.h>
 #include <math.h>
+#include <pango/pango.h>
 #include <glib/gi18n-lib.h>
 #include <atk/atk.h>
 
@@ -50,12 +50,13 @@ struct _IdCardWidgetClass {
 struct _IdCardWidgetPrivate {
 	IdCard* _id_card;
 	GtkVBox* main_vbox;
-	GtkTable* table;
+	GtkHBox* table;
 	GtkButton* _delete_button;
 	GtkButton* _details_button;
 	GtkButton* _send_button;
 	GtkHButtonBox* hbutton_box;
 	GtkEventBox* event_box;
+	GtkLabel* label;
 };
 
 
@@ -77,13 +78,13 @@ static gboolean id_card_widget_button_press_cb (IdCardWidget* self);
 static void id_card_widget_delete_button_cb (IdCardWidget* self);
 static void id_card_widget_details_button_cb (IdCardWidget* self);
 static void id_card_widget_send_button_cb (IdCardWidget* self);
+void id_card_widget_update_id_card_label (IdCardWidget* self);
+IdCard* id_card_widget_get_id_card (IdCardWidget* self);
+const char* id_card_get_display_name (IdCard* self);
+char** id_card_get_services (IdCard* self, int* result_length1);
 IdCardWidget* id_card_widget_new (IdCard* id_card);
 IdCardWidget* id_card_widget_construct (GType object_type, IdCard* id_card);
 void id_card_widget_set_id_card (IdCardWidget* self, IdCard* value);
-GdkPixbuf* id_card_get_pixbuf (IdCard* self);
-IdCard* id_card_widget_get_id_card (IdCardWidget* self);
-const char* id_card_get_issuer (IdCard* self);
-char** id_card_get_services (IdCard* self, int* result_length1);
 static void id_card_widget_set_delete_button (IdCardWidget* self, GtkButton* value);
 static void id_card_widget_set_details_button (IdCardWidget* self, GtkButton* value);
 static void id_card_widget_set_send_button (IdCardWidget* self, GtkButton* value);
@@ -158,6 +159,56 @@ static void id_card_widget_set_idcard_color (IdCardWidget* self) {
 }
 
 
+void id_card_widget_update_id_card_label (IdCardWidget* self) {
+	char* services_text;
+	char* display_name;
+	char* _tmp8_;
+	char* _tmp9_;
+	g_return_if_fail (self != NULL);
+	services_text = g_strdup ("");
+	display_name = g_markup_printf_escaped ("<b>%s</b>", id_card_get_display_name (self->priv->_id_card));
+	{
+		gint i;
+		i = 0;
+		{
+			gboolean _tmp0_;
+			_tmp0_ = TRUE;
+			while (TRUE) {
+				gint _tmp1_;
+				gint _tmp2_;
+				char* service;
+				gint _tmp3_;
+				if (!_tmp0_) {
+					i++;
+				}
+				_tmp0_ = FALSE;
+				if (!(i < _tmp1_)) {
+					break;
+				}
+				service = g_strdup (id_card_get_services (self->priv->_id_card, &_tmp2_)[i]);
+				if (i == (_tmp3_ - 1)) {
+					char* _tmp4_;
+					char* _tmp5_;
+					services_text = (_tmp5_ = g_strconcat (services_text, _tmp4_ = g_markup_printf_escaped ("<i>%s</i>", service), NULL), _g_free0 (services_text), _tmp5_);
+					_g_free0 (_tmp4_);
+				} else {
+					char* _tmp6_;
+					char* _tmp7_;
+					services_text = (_tmp7_ = g_strconcat (services_text, _tmp6_ = g_markup_printf_escaped ("<i>%s, </i>", service), NULL), _g_free0 (services_text), _tmp7_);
+					_g_free0 (_tmp6_);
+				}
+				_g_free0 (service);
+			}
+		}
+	}
+	gtk_label_set_markup (self->priv->label, _tmp9_ = g_strconcat (_tmp8_ = g_strconcat (display_name, "\n", NULL), services_text, NULL));
+	_g_free0 (_tmp9_);
+	_g_free0 (_tmp8_);
+	_g_free0 (display_name);
+	_g_free0 (services_text);
+}
+
+
 static void _id_card_widget_delete_button_cb_gtk_button_clicked (GtkButton* _sender, gpointer self) {
 	id_card_widget_delete_button_cb (self);
 }
@@ -182,84 +233,55 @@ static gboolean _id_card_widget_button_press_cb_gtk_widget_button_press_event (G
 
 IdCardWidget* id_card_widget_construct (GType object_type, IdCard* id_card) {
 	IdCardWidget * self;
-	char* services_text;
 	GtkImage* image;
-	char* issuer;
-	char* _tmp3_;
-	char* _tmp4_;
-	char* text;
-	GtkLabel* id_data_label;
-	GtkTable* _tmp5_;
-	GtkButton* _tmp6_;
-	GtkButton* _tmp7_;
-	GtkButton* _tmp8_;
-	GtkHButtonBox* _tmp9_;
-	GtkVBox* _tmp10_;
-	GtkEventBox* _tmp11_;
+	GtkLabel* _tmp0_;
+	GtkHBox* _tmp1_;
+	GtkButton* _tmp2_;
+	GtkButton* _tmp3_;
+	GtkButton* _tmp4_;
+	GtkHButtonBox* _tmp5_;
+	GtkVBox* _tmp6_;
+	GtkEventBox* _tmp7_;
 	g_return_val_if_fail (id_card != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	services_text = g_strdup ("");
 	id_card_widget_set_id_card (self, id_card);
-	image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_pixbuf (id_card_get_pixbuf (id_card)));
-	issuer = g_markup_printf_escaped ("<b>%s</b>", id_card_get_issuer (self->priv->_id_card));
-	{
-		gint _tmp0_;
-		char** service_collection;
-		int service_collection_length1;
-		int service_it;
-		service_collection = id_card_get_services (id_card, &_tmp0_);
-		service_collection_length1 = _tmp0_;
-		for (service_it = 0; service_it < _tmp0_; service_it = service_it + 1) {
-			char* service;
-			service = g_strdup (service_collection[service_it]);
-			{
-				char* _tmp1_;
-				char* _tmp2_;
-				services_text = (_tmp2_ = g_strconcat (services_text, _tmp1_ = g_markup_printf_escaped ("<i>%s, </i>", service), NULL), _g_free0 (services_text), _tmp2_);
-				_g_free0 (_tmp1_);
-				_g_free0 (service);
-			}
-		}
-	}
-	text = (_tmp4_ = g_strconcat (_tmp3_ = g_strconcat (issuer, "\n", NULL), services_text, NULL), _g_free0 (_tmp3_), _tmp4_);
-	id_data_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (NULL));
-	gtk_label_set_markup (id_data_label, text);
-	gtk_misc_set_alignment ((GtkMisc*) id_data_label, (float) 0, (float) 0.5);
-	self->priv->table = (_tmp5_ = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 1, (guint) 2, FALSE)), _g_object_unref0 (self->priv->table), _tmp5_);
-	gtk_table_attach_defaults (self->priv->table, (GtkWidget*) image, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
-	gtk_table_attach_defaults (self->priv->table, (GtkWidget*) id_data_label, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
-	id_card_widget_set_delete_button (self, _tmp6_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Delete"))));
-	_g_object_unref0 (_tmp6_);
-	id_card_widget_set_details_button (self, _tmp7_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("View details"))));
-	_g_object_unref0 (_tmp7_);
-	id_card_widget_set_send_button (self, _tmp8_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Send"))));
-	_g_object_unref0 (_tmp8_);
+	image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_pixbuf ((GdkPixbuf*) g_object_get_data ((GObject*) id_card, "pixbuf")));
+	self->priv->label = (_tmp0_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (NULL)), _g_object_unref0 (self->priv->label), _tmp0_);
+	gtk_misc_set_alignment ((GtkMisc*) self->priv->label, (float) 0, (float) 0.5);
+	gtk_label_set_ellipsize (self->priv->label, PANGO_ELLIPSIZE_END);
+	id_card_widget_update_id_card_label (self);
+	self->priv->table = (_tmp1_ = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), _g_object_unref0 (self->priv->table), _tmp1_);
+	gtk_box_pack_start ((GtkBox*) self->priv->table, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
+	gtk_box_pack_start ((GtkBox*) self->priv->table, (GtkWidget*) self->priv->label, TRUE, TRUE, (guint) 0);
+	id_card_widget_set_delete_button (self, _tmp2_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Delete"))));
+	_g_object_unref0 (_tmp2_);
+	id_card_widget_set_details_button (self, _tmp3_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("View details"))));
+	_g_object_unref0 (_tmp3_);
+	id_card_widget_set_send_button (self, _tmp4_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Send"))));
+	_g_object_unref0 (_tmp4_);
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_delete_button, _ ("Delete"), _ ("Delete this ID Card"));
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_details_button, _ ("Details"), _ ("View the details of this ID Card"));
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_send_button, _ ("Send"), _ ("Send this ID Card"));
-	self->priv->hbutton_box = (_tmp9_ = g_object_ref_sink ((GtkHButtonBox*) gtk_hbutton_box_new ()), _g_object_unref0 (self->priv->hbutton_box), _tmp9_);
+	self->priv->hbutton_box = (_tmp5_ = g_object_ref_sink ((GtkHButtonBox*) gtk_hbutton_box_new ()), _g_object_unref0 (self->priv->hbutton_box), _tmp5_);
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_delete_button, TRUE, TRUE, 0);
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_details_button, TRUE, TRUE, 0);
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_send_button, TRUE, TRUE, 0);
+	gtk_widget_set_sensitive ((GtkWidget*) self->priv->_send_button, FALSE);
 	g_signal_connect_object (self->priv->_delete_button, "clicked", (GCallback) _id_card_widget_delete_button_cb_gtk_button_clicked, self, 0);
 	g_signal_connect_object (self->priv->_details_button, "clicked", (GCallback) _id_card_widget_details_button_cb_gtk_button_clicked, self, 0);
 	g_signal_connect_object (self->priv->_send_button, "clicked", (GCallback) _id_card_widget_send_button_cb_gtk_button_clicked, self, 0);
-	self->priv->main_vbox = (_tmp10_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 12)), _g_object_unref0 (self->priv->main_vbox), _tmp10_);
+	self->priv->main_vbox = (_tmp6_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 12)), _g_object_unref0 (self->priv->main_vbox), _tmp6_);
 	gtk_box_pack_start ((GtkBox*) self->priv->main_vbox, (GtkWidget*) self->priv->table, TRUE, TRUE, (guint) 0);
 	gtk_box_pack_start ((GtkBox*) self->priv->main_vbox, (GtkWidget*) self->priv->hbutton_box, FALSE, FALSE, (guint) 0);
 	gtk_container_set_border_width ((GtkContainer*) self->priv->main_vbox, (guint) 12);
-	self->priv->event_box = (_tmp11_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), _g_object_unref0 (self->priv->event_box), _tmp11_);
+	self->priv->event_box = (_tmp7_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), _g_object_unref0 (self->priv->event_box), _tmp7_);
 	gtk_container_add ((GtkContainer*) self->priv->event_box, (GtkWidget*) self->priv->main_vbox);
 	g_signal_connect_object ((GtkWidget*) self->priv->event_box, "button-press-event", (GCallback) _id_card_widget_button_press_cb_gtk_widget_button_press_event, self, 0);
 	gtk_box_pack_start ((GtkBox*) self, (GtkWidget*) self->priv->event_box, TRUE, TRUE, 0);
 	gtk_widget_show_all ((GtkWidget*) self);
 	gtk_widget_hide ((GtkWidget*) self->priv->hbutton_box);
 	id_card_widget_set_idcard_color (self);
-	_g_object_unref0 (id_data_label);
-	_g_free0 (text);
-	_g_free0 (issuer);
 	_g_object_unref0 (image);
-	_g_free0 (services_text);
 	return self;
 }
 
@@ -388,6 +410,7 @@ static void id_card_widget_finalize (GObject* obj) {
 	_g_object_unref0 (self->priv->_send_button);
 	_g_object_unref0 (self->priv->hbutton_box);
 	_g_object_unref0 (self->priv->event_box);
+	_g_object_unref0 (self->priv->label);
 	G_OBJECT_CLASS (id_card_widget_parent_class)->finalize (obj);
 }
 
