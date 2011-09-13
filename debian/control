@@ -1,10 +1,10 @@
 Source: moonshot-ui
-Section: non-free/net
+Section: net
 Priority: optional
 Maintainer: Sam Hartman <hartmans@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), 
     libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
-        gettext, autotools-dev, libdbus-glib-1-dev
+        gettext, autotools-dev, libdbus-glib-1-dev, desktop-file-utils
 Standards-Version: 3.9.1
 Homepage: http://www.project-moonshot.org/
 Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
@@ -14,5 +14,21 @@ Package: moonshot-ui
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Moonshot Identity Selector
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform. 
+
+Package: moonshot-ui-dev
+Architecture: any
+Section: libdevel
+Depends: libmoonshot0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Moonshot Identity Development Files
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform. 
+
+Package: libmoonshot0
+Architecture: any
+Section: libdevel
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Moonshot Identity Shared Library
  Project moonshot provides federated authentication using EAP, RADIUS
  and SAML to applications beyond the web platform. 
