@@ -10,30 +10,6 @@ public class MoonshotServer : Object {
         this.main_window = (MainWindow) window;
     }
 
-    /**
-     * This is the function used by the GSS mechanism to get the NAI,
-     * password and certificate of the ID card for the specificated service.
-     *
-     * The function will block until the user choose the ID card.
-     *
-     * There are two types of trust anchor that may be returned. If
-     * server_certificate_hash is non-empty, the remaining parameters
-     * will be empty. Otherwise, the ca_certificate paramater and the
-     * subject name constraints will be returned.
-     *
-     * @param nai NAI of the ID Card (optional)
-     * @param password Password of the ID Card (optional)
-     * @param service Service application request an ID Card for (optional)
-     * @param nai_out NAI stored in the ID Card
-     * @param password_out Password stored in the ID Card
-     * @param server_certificate_hash Hash of the identity server's certificate
-     * @param ca_certificate Base64-encoded CA certificate
-     * @param subject_name_constraint Subject name constraint
-     * @param subject_alt_name_constraint Subject alternative name constraint
-     *
-     * @return true if the user choose a correct ID card for that service,
-     *         false otherwise.
-     */
     public async bool get_identity (string nai,
                                     string password,
                                     string service,
@@ -65,11 +41,23 @@ public class MoonshotServer : Object {
             nai_out = id_card.nai;
             password_out = id_card.password;
 
-            server_certificate_hash = "certificate";
+            server_certificate_hash = id_card.trust_anchor.server_cert;
+            ca_certificate = id_card.trust_anchor.ca_cert;
+            subject_name_constraint = id_card.trust_anchor.subject;
+            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
 
-            // User should have been prompted if there was no p/w.
-            return_if_fail (nai_out != null);
-            return_if_fail (password_out != null);
+            if (nai_out == null)
+                nai_out = "";
+            if (password_out == null)
+                password_out = "";
+            if (server_certificate_hash == null)
+                server_certificate_hash = "";
+            if (ca_certificate == null)
+                ca_certificate = "";
+            if (subject_name_constraint == null)
+                subject_name_constraint = "";
+            if (subject_alt_name_constraint == null)
+                subject_alt_name_constraint = "";
 
             return true;
         }
@@ -77,16 +65,12 @@ public class MoonshotServer : Object {
         return false;
     }
 
-    /**
-     * Returns the default identity - most recently used.
-     *
-     * @param nai_out NAI stored in the ID card
-     * @param password_out Password stored in the ID card
-     *
-     * @return true on success, false if no identities are stored
-     */
     public async bool get_default_identity (out string nai_out,
-                                            out string password_out)
+                                            out string password_out,
+                                            out string server_certificate_hash,
+                                            out string ca_certificate,
+                                            out string subject_name_constraint,
+                                            out string subject_alt_name_constraint)
     {
         var request = new IdentityRequest.default (main_window);
         request.set_callback ((IdentityRequest) => get_default_identity.callback());
@@ -95,20 +79,76 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         if (request.id_card != null)
         {
             nai_out = request.id_card.nai;
             password_out = request.id_card.password;
 
-            // User should have been prompted if there was no p/w.
-            return_val_if_fail (nai_out != null, false);
-            return_val_if_fail (password_out != null, false);
+            server_certificate_hash = request.id_card.trust_anchor.server_cert;
+            ca_certificate = request.id_card.trust_anchor.ca_cert;
+            subject_name_constraint = request.id_card.trust_anchor.subject;
+            subject_alt_name_constraint = request.id_card.trust_anchor.subject_alt;
+
+            if (nai_out == null)
+                nai_out = "";
+            if (password_out == null)
+                password_out = "";
+            if (server_certificate_hash == null)
+                server_certificate_hash = "";
+            if (ca_certificate == null)
+                ca_certificate = "";
+            if (subject_name_constraint == null)
+                subject_name_constraint = "";
+            if (subject_alt_name_constraint == null)
+                subject_alt_name_constraint = "";
 
             return true;
         }
 
         return false;
+    }
+
+    public bool install_id_card (string   display_name,
+                                 string   user_name,
+                                 string   password,
+                                 string   realm,
+                                 string[] rules_patterns,
+                                 string[] rules_always_confirm,
+                                 string[] services,
+                                 string   ca_cert,
+                                 string   subject,
+                                 string   subject_alt,
+                                 string   server_cert)
+    {
+      IdCard idcard = new IdCard ();
+
+      idcard.display_name = display_name;
+      idcard.username = user_name;
+      idcard.password = password;
+      idcard.issuer = realm;
+      idcard.services = services;
+      idcard.trust_anchor.ca_cert = ca_cert;
+      idcard.trust_anchor.subject = subject;
+      idcard.trust_anchor.subject_alt = subject_alt;
+      idcard.trust_anchor.server_cert = server_cert;
+
+      if (rules_patterns.length == rules_always_confirm.length)
+      {
+        idcard.rules = new Rule[rules_patterns.length];
+         
+        for (int i=0; i<idcard.rules.length; i++)
+        { 
+          idcard.rules[i].pattern = rules_patterns[i];
+          idcard.rules[i].always_confirm = rules_always_confirm[i];
+        }
+      }
+
+      return this.main_window.add_identity (idcard);
     }
 }
 
@@ -143,7 +183,7 @@ public class MoonshotServer : Object {
         return instance;
     }
 
-    [CCode (cname = "moonshot_get_identity")]
+    [CCode (cname = "moonshot_get_identity_rpc")]
     public static void get_identity (Rpc.AsyncCall call,
                                      string nai,
                                      string password,
@@ -190,6 +230,10 @@ public class MoonshotServer : Object {
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);
+            return_if_fail (server_certificate_hash != null);
+            return_if_fail (ca_certificate != null);
+            return_if_fail (subject_name_constraint != null);
+            return_if_fail (subject_alt_name_constraint != null);
 
             result = true;
         }
@@ -204,10 +248,14 @@ public class MoonshotServer : Object {
         request.mutex.unlock ();
     }
 
-    [CCode (cname = "moonshot_get_default_identity")]
+    [CCode (cname = "moonshot_get_default_identity_rpc")]
     public static void get_default_identity (Rpc.AsyncCall call,
                                              ref string nai_out,
-                                             ref string password_out)
+                                             ref string password_out,
+                                             ref string server_certificate_hash,
+                                             ref string ca_certificate,
+                                             ref string subject_name_constraint,
+                                             ref string subject_alt_name_constraint)
     {
         bool result;
 
@@ -224,14 +272,23 @@ public class MoonshotServer : Object {
 
         nai_out = "";
         password_out = "";
+        server_certificate_hash = "";
+        ca_certificate = "";
+        subject_name_constraint = "";
+        subject_alt_name_constraint = "";
 
         if (request.id_card != null)
         {
             nai_out = request.id_card.nai;
             password_out = request.id_card.password;
+            server_certificate_hash = "certificate";
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);
+            return_if_fail (server_certificate_hash != null);
+            return_if_fail (ca_certificate != null);
+            return_if_fail (subject_name_constraint != null);
+            return_if_fail (subject_alt_name_constraint != null);
 
             result = true;
         }
@@ -257,6 +314,62 @@ public class MoonshotServer : Object {
         // to avoid any races
         request.cond.wait (request.mutex);
         request.mutex.unlock ();
+    }
+
+    [CCode (cname = "moonshot_install_id_card_rpc")]
+    public static bool install_id_card (string     display_name,
+                                        string     user_name,
+                                        string     password,
+                                        string     realm,
+                                        string[]   rules_patterns,
+                                        string[]   rules_always_confirm,
+                                        string[]   services,
+                                        string     ca_cert,
+                                        string     subject,
+                                        string     subject_alt,
+                                        string     server_cert)
+    {
+        IdCard idcard = new IdCard ();
+        bool success = false;
+        Mutex mutex = new Mutex();
+        Cond cond = new Cond();
+
+        idcard.display_name = display_name;
+        idcard.username = user_name;
+        idcard.password = password;
+        idcard.issuer = realm;
+        idcard.services = services;
+        idcard.trust_anchor.ca_cert = ca_cert;
+        idcard.trust_anchor.subject = subject;
+        idcard.trust_anchor.subject_alt = subject_alt;
+        idcard.trust_anchor.server_cert = server_cert;
+
+        if (rules_patterns.length == rules_always_confirm.length)
+        {
+            idcard.rules = new Rule[rules_patterns.length];
+         
+            for (int i=0; i<idcard.rules.length; i++)
+            { 
+                idcard.rules[i].pattern = rules_patterns[i];
+                idcard.rules[i].always_confirm = rules_always_confirm[i];
+            }
+        }
+
+        mutex.lock ();
+
+        // Defer addition to the main loop thread.
+        Idle.add (() => {
+            mutex.lock ();
+            success = main_window.add_identity (idcard);
+            cond.signal ();
+            mutex.unlock ();
+            return false;
+        });
+
+        cond.wait (mutex);
+        mutex.unlock ();
+
+        return success;
     }
 }
 

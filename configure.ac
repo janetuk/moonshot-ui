@@ -13,6 +13,9 @@ AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
+LT_PREREQ([2.2])
+LT_INIT([win32-dll])
+
 PKG_PROG_PKG_CONFIG([0.24])
 
 # Platform checks
@@ -21,24 +24,27 @@ AC_CANONICAL_HOST
 case "$host" in
   *-*-mingw*)
     win32=yes
-    IPC_MODULE="msrpc-glib2-1.0"
+    SERVER_IPC_MODULE="msrpc-glib2-1.0"
+    CLIENT_IPC_MODULE="msrpc-mingw-1.0"
     ;;
   *)
     win32=no
-    IPC_MODULE="dbus-glib-1"
+    SERVER_IPC_MODULE="dbus-glib-1"
+    CLIENT_IPC_MODULE="dbus-glib-1"
     ;;
 esac
 
+AM_CONDITIONAL([OS_LINUX], [test "$win32" != "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
-AM_CONDITIONAL([IPC_MSRPC], [test "$IPC_MODULE" = "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS], [test "$IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 
 # Checks for programs.
 AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
-if test "$IPC_MODULE" = "msrpc-glib2-1.0"; then
+if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   # MS RPC utilities
   AC_PATH_MSRPC_MINGW([0.1.0], :,
     AC_MSG_ERROR([
@@ -59,22 +65,74 @@ fi
 if test "$win32" = "yes"; then
   # Other Windows-specific tools
 
+  # LIB.EXE from MSVC to build an MSVC-compatible import library.
+  AC_PATH_PROG([MSVC_LIB], [lib], no,
+               [/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR$PATH])
+
+  if test "$MSVC_LIB" = "no"; then
+     AC_MSG_WARN([
+*** Could not find the Microsoft 'LIB.EXE' program. This is required
+*** to build the Visual C import library for libmoonshot. Use the
+*** MSVC_LIB environment variable to pass its location if this is
+*** outside the PATH.])
+  fi
+
+
   # ImageMagick for the 'make icons' target. Watch that it doesn't pick up
   # c:/windows/system32/convert.exe, which is nothing to do with ImageMagick
-  AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], ,
+  AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], no,
                [/c/Program\ Files/ImageMagick$PATH_SEPARATOR$PATH])
 
+  if test "$IMAGEMAGICK_CONVERT" = "no"; then
+     AC_MSG_WARN([
+*** Could not find ImageMagick convert.exe. This is required for the
+*** 'make icons' target. Use the IMAGEMAGICK_CONVERT environment
+*** variable to pass its location if this is outside the PATH.])
+  fi
+
+
   # Windows Installer XML tools
-  AC_PATH_PROG([WIX_CANDLE], [candle], ,
+  AC_PATH_PROG([WIX_CANDLE], [candle], no,
                [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
-  AC_PATH_PROG([WIX_LIGHT], [light], ,
+  AC_PATH_PROG([WIX_LIGHT], [light], no,
                [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
+
+  if test "$WIX_CANDLE" = "no" || test "$WIX_LIGHT" = "no"; then
+     AC_MSG_WARN([
+*** Could not find the Windows Installer XML tools. These are required
+*** for the 'make installer' target. Use the WIX_CANDLE and WIX_LIGHT
+*** environment variables to pass their locations if they are outside
+*** the PATH.])
+  fi
 fi
 
+if test "$win32" != "yes"; then
+  AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
+  if test "$UPDATE_MIME_DATABASE" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Freedesktop.org  mime database update tool.
+*** Web provisioning files could not be automatically installed.])
+  fi
+  AC_PATH_PROG([UPDATE_DESKTOP_DATABASE], [update-desktop-database], [no])
+  if test "$UPDATE_DESKTOP_DATABASE" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Freedesktop.org desktop entry database update
+*** tool. Web provisioning files could not be automatically installed.])
+  fi
+fi
+
+MOONSHOT_APP="$bindir/moonshot"
+MOONSHOT_WEBP="$bindir/moonshot-webp"
+
 AC_SUBST(MIDL)
+AC_SUBST(MSVC_LIB)
 AC_SUBST(IMAGEMAGICK_CONVERT)
 AC_SUBST(WIX_CANDLE)
 AC_SUBST(WIX_LIGHT)
+AC_SUBST(UPDATE_MIME_DATABASE)
+AC_SUBST(UPDATE_DESKTOP_DATABASE)
+AC_SUBST(MOONSHOT_APP)
+AC_SUBST(MOONSHOT_WEBP)
 
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
@@ -82,7 +140,11 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.24
         gobject-2.0 >= 2.24
         gtk+-2.0 >= 2.20
-        $IPC_MODULE
+        $SERVER_IPC_MODULE
+])
+
+PKG_CHECK_MODULES(libmoonshot,[
+        $CLIENT_IPC_MODULE
 ])
 
 # i18n stuff
@@ -95,6 +157,8 @@ AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package nam
 AC_CONFIG_FILES([
         Makefile
         po/Makefile.in
+        moonshot.desktop
+        moonshot-webp.desktop
 ])
 
 AC_OUTPUT

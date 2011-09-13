@@ -8,7 +8,11 @@ use_local_modulesets = True
 moduleset = 'windows-stable'
 modules = [ 'gtk+', 'vala', 'gnome-icon-theme', 'gnome-icon-theme-symbolic' ]
 
-os.environ['CFLAGS'] = "-O3 -mms-bitfields"
+# Maintainer mode (automatically rerunning autoconf, automake etc. when the
+# build scripts are changed) is broken on Windows
+autogenargs = '--disable-maintainer-mode'
+
+os.environ['CFLAGS'] = "-O3 -fno-unit-at-a-time -mms-bitfields"
 
 # Avoid "The application could not be started (0xc00000005)" errors with gcc4
 os.environ['LDFLAGS'] = "-Wl,--enable-auto-import"

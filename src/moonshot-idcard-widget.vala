@@ -5,12 +5,14 @@ class IdCardWidget : Box
     public IdCard id_card { get; set; default = null; }
 
     private VBox main_vbox;
-    private Table table;
+    private HBox table;
     public Button delete_button { get; private set; default = null; }
     public Button details_button { get; private set; default = null; }
     public Button send_button { get; private set; default = null; }
     private HButtonBox hbutton_box;
     private EventBox event_box;
+    
+    private Label label;
 
     public signal void expanded ();
     public signal void remove_id ();
@@ -70,28 +72,39 @@ class IdCardWidget : Box
         var state = this.get_state ();
         this.event_box.modify_bg (state, color);
     }
+    
+    public void
+    update_id_card_label ()
+    {
+        string services_text = "";
+
+        var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
+        for (int i=0; i<id_card.services.length; i++)
+        {
+            var service = id_card.services[i];
+            
+            if (i == (id_card.services.length - 1))
+              services_text = services_text + Markup.printf_escaped ("<i>%s</i>", service);
+            else
+              services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
+        }
+        label.set_markup (display_name + "\n" + services_text);
+    }
 
     public IdCardWidget (IdCard id_card)
     {
-        string services_text = "";
         this.id_card = id_card;
 
-        var image = new Image.from_pixbuf (id_card.pixbuf);
+        var image = new Image.from_pixbuf (id_card.get_data ("pixbuf"));
 
-        var issuer = Markup.printf_escaped ("<b>%s</b>", this.id_card.issuer);
-        foreach (string service in id_card.services)
-        {
-            services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
-        }
-        var text = issuer + "\n" + services_text;
+        label = new Label (null);
+        label.set_alignment ((float) 0, (float) 0.5);
+        label.set_ellipsize (Pango.EllipsizeMode.END);
+        update_id_card_label();
 
-        var id_data_label = new Label (null);
-        id_data_label.set_markup (text);
-        id_data_label.set_alignment ((float) 0, (float) 0.5);
-
-        this.table = new Table (1, 2, false);
-        table.attach_defaults (image, 0, 1, 0, 1);
-        table.attach_defaults (id_data_label, 1, 2, 0, 1);
+        table = new Gtk.HBox (false, 6);
+        table.pack_start (image, false, false, 0);
+        table.pack_start (label, true, true, 0);
 
         this.delete_button = new Button.with_label (_("Delete"));
         this.details_button = new Button.with_label (_("View details"));
@@ -103,6 +116,7 @@ class IdCardWidget : Box
         hbutton_box.pack_end (delete_button);
         hbutton_box.pack_end (details_button);
         hbutton_box.pack_end (send_button);
+        send_button.set_sensitive (false);
 
         delete_button.clicked.connect (delete_button_cb);
         details_button.clicked.connect (details_button_cb);

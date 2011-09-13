@@ -2,18 +2,35 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = po
 
-bin_PROGRAMS = src/moonshot
+
+lib_LTLIBRARIES = libmoonshot/libmoonshot.la
+
+bin_PROGRAMS = \
+         src/moonshot \
+         src/moonshot-webp
 
 AM_CFLAGS =
 
 AM_CPPFLAGS = \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	$(moonshot_CFLAGS)
+	-I$(top_srcdir)/libmoonshot
 
 AM_VALAFLAGS = \
-	config.vapi \
-	--pkg gtk+-2.0
+        config.vapi \
+        --pkg gio-2.0
+
+
+libmoonshot_libmoonshot_la_CPPFLAGS = \
+        $(libmoonshot_CFLAGS) \
+        $(AM_CPPFLAGS)
+
+libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
+
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
+
+include_HEADERS = libmoonshot/libmoonshot.h
+noinst_HEADERS = libmoonshot/libmoonshot-common.h
 
 src_moonshot_SOURCES = \
         src/moonshot-id.vala \
@@ -27,12 +44,45 @@ src_moonshot_SOURCES = \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
 
-src_moonshot_LDADD = \
-        $(moonshot_LIBS)
+src_moonshot_webp_SOURCES = \
+        src/moonshot-webp-parser.vala \
+        src/moonshot-id.vala
+
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_LDADD = $(moonshot_LIBS)
+
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
 if OS_WIN32
+
+libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined
+
 src_moonshot_CFLAGS = -mwindows
+src_moonshot_webp_CFLAGS = -mwindows
+
+AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
+
+noinst_DATA = libmoonshot/libmoonshot.lib
+
+libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
+	"${MSVC_LIB}" -def:$< -out:$@ -machine:x86
+
+endif
+
+if OS_LINUX
+
+## Installing mime type data
+mimedir = $(datadir)/mime/packages
+mime_DATA = webprovisioning/moonshot.xml
+
+## Installing
+dotdesktopdir = $(datadir)/applications
+dotdesktop_DATA = moonshot.desktop moonshot-webp.desktop
+
 endif
 
 if IPC_MSRPC
@@ -43,30 +93,29 @@ AM_VALAFLAGS += \
 	--pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
+BUILT_SOURCES = libmoonshot/moonshot-msrpc.h \
+                libmoonshot/moonshot-msrpc_s.c \
+                libmoonshot/moonshot-msrpc_c.c
+
+DISTCLEANFILES = ${BUILT_SOURCES}
+
+libmoonshot/moonshot-msrpc.h: libmoonshot/moonshot-msrpc.idl libmoonshot/moonshot-msrpc.acf
+	${AM_V_GEN} ${MIDL_WRAPPER} -o libmoonshot -m "${MIDL}" $^
+
+libmoonshot/moonshot-msrpc_s.c: libmoonshot/moonshot-msrpc.h
+libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
+
+libmoonshot_libmoonshot_la_SOURCES += \
+        libmoonshot/libmoonshot-msrpc.c
+
 src_moonshot_SOURCES += \
         src/moonshot-msrpc.vapi
 
 nodist_src_moonshot_SOURCES = \
-        src/moonshot-msrpc_s.c
+        libmoonshot/moonshot-msrpc_s.c
 
-bin_PROGRAMS += src/msrpc-client
-
-nodist_src_msrpc_client_SOURCES = \
-        src/msrpc-client.vala \
-        src/moonshot-msrpc.vapi \
-        src/moonshot-msrpc_c.c
-
-src_msrpc_client_LDADD = \
-        $(moonshot_LIBS)
-
-BUILT_SOURCES = src/moonshot-msrpc.h src/moonshot-msrpc_s.c src/moonshot-msrpc_c.c
-
-DISTCLEANFILES = ${BUILT_SOURCES}
-
-src/moonshot-msrpc.h: src/moonshot-msrpc.idl src/moonshot-msrpc.acf
-	${AM_V_GEN} ${MIDL_WRAPPER} -o src -m "${MIDL}" $^
-
-src/moonshot-msrpc_s.c: src/moonshot-msrpc.h
+nodist_libmoonshot_libmoonshot_la_SOURCES = \
+        libmoonshot/moonshot-msrpc_c.c
 
 endif
 
@@ -85,19 +134,38 @@ AM_VALAFLAGS += \
 	--pkg dbus-glib-1 \
 	--define=IPC_DBUS
 
-bin_PROGRAMS += src/dbus-client
-
-src_dbus_client_SOURCES = \
-        src/dbus-client.vala
-
-src_dbus_client_LDADD = \
-        $(moonshot_LIBS)
+libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 CLEANFILES = $(dbusservice_DATA)
-EXTRA_DIST = $(dbusservice_in_files)
-
 endif
 
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files)
+
+noinst_PROGRAMS = \
+        examples/client \
+        examples/service-selection \
+        tests/basic
+
+examples_service_selection_SOURCES = examples/service-selection.c
+examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+
+examples_client_SOURCES = examples/client.c
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
+
+tests_basic_SOURCES = tests/basic.c
+tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+
+##if OS_LINUX
+##install-data-hook:
+##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
+##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
+##uninstall-hook:
+##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
+##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
+##endif
 
 if OS_WIN32
 
@@ -123,7 +191,7 @@ icons:
 
 installer: moonshot.msi
 
-moonshot.msi: windows/app.wxs
+moonshot.msi: windows/app.wxs windows/config.wxi $(bin_PROGRAMS)
 	"${WIX_CANDLE}" $<
 	"${WIX_LIGHT}" -b c:/build -b c:/tools/mingw -o moonshot.msi app.wixobj
 

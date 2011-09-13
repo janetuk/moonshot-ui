@@ -1,0 +1,6 @@
+Moonshot supports installing new identities via an XML-based .msht file format.
+This file has the MIME type 'application/moonshot+xml'. An association is
+created on install so that these files are automatically opened by Moonshot
+when clicked. It is also possible to provide these via HTTP - in this case,
+make sure that the HTTP mime-type header is correctly set or the file may not
+be handled correctly by the user's browser.

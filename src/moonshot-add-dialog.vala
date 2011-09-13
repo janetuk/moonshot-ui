@@ -2,9 +2,14 @@ using Gtk;
 
 class AddIdentityDialog : Dialog
 {
+    private Entry displayname_entry;
     private Entry issuer_entry;
     private Entry username_entry;
     private Entry password_entry;
+    
+    public string display_name {
+        get { return displayname_entry.get_text(); }
+    }
 
     public string issuer {
         get { return issuer_entry.get_text (); }
@@ -32,7 +37,10 @@ class AddIdentityDialog : Dialog
 
         var content_area = this.get_content_area ();
         ((Box) content_area).set_spacing (12);
-
+        
+        var displayname_label = new Label (_("Display Name:"));
+        displayname_label.set_alignment (1, (float) 0.5);
+        displayname_entry = new Entry ();
         var issuer_label = new Label (_("Issuer:"));
         issuer_label.set_alignment (1, (float) 0.5);
         this.issuer_entry = new Entry ();
@@ -46,20 +54,24 @@ class AddIdentityDialog : Dialog
         password_entry.set_visibility (false);
         var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
 
+        set_atk_relation (displayname_label, displayname_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
-        var table = new Table (4, 4, false);
+        var table = new Table (5, 5, false);
         table.set_col_spacings (10);
         table.set_row_spacings (10);
-        table.attach_defaults (issuer_label, 0, 1, 0, 1);
-        table.attach_defaults (issuer_entry, 1, 2, 0, 1);
-        table.attach_defaults (username_label, 0, 1, 1, 2);
-        table.attach_defaults (username_entry, 1, 2, 1, 2);
-        table.attach_defaults (password_label, 0, 1, 2, 3);
-        table.attach_defaults (password_entry, 1, 2, 2, 3);
-        table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
+        
+        table.attach_defaults (displayname_label, 0, 1, 0, 1);
+        table.attach_defaults (displayname_entry, 1, 2, 0, 1);
+        table.attach_defaults (issuer_label, 0, 1, 1, 2);
+        table.attach_defaults (issuer_entry, 1, 2, 1, 2);
+        table.attach_defaults (username_label, 0, 1, 2, 3);
+        table.attach_defaults (username_entry, 1, 2, 2, 3);
+        table.attach_defaults (password_label, 0, 1, 3, 4);
+        table.attach_defaults (password_entry, 1, 2, 3, 4);
+        table.attach_defaults (remember_checkbutton,  1, 2, 4, 5);
 
         var vbox = new VBox (false, 0);
         vbox.set_border_width (6);

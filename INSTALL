@@ -1,0 +1,10 @@
+After installing the software we need to update the mime database and the desktop
+entry database so that the MIME type registry and the MIME/Application association
+is all indexed.
+
+These are the commands that have to be executed on post install and post uninstall:
+
+update-mime-database $(datadir)/mime
+update-desktop-database $(datadir)/applications
+
+Note that $(datadir) usually is /usr/share.

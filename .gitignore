@@ -18,3 +18,22 @@ moonshot.wixpdb
 app.wixobj
 org.janet.Moonshot.service
 
+aclocal.m4
+.libs/
+*.la
+*.lo
+moonshot.msi
+moonshot.wixpdb
+app.wixobj
+org.janet.Moonshot.service
+share/
+moonshot.desktop
+moonshot-webp.desktop
+libmoonshot/moonshot-msrpc.h
+libmoonshot/moonshot-msrpc_c.c
+libmoonshot/moonshot-msrpc_s.c
+libmoonshot/libmoonshot.exp
+libmoonshot/libmoonshot.lib
+*.tar.bz2
+*.stackdump
+

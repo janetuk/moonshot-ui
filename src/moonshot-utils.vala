@@ -23,7 +23,7 @@ public Gdk.Pixbuf? find_icon (string name, int size)
 
         // Hack to allow running within the source tree
         int last_dir_index = base_path.last_index_of_char ('\\');
-        if (base_path.substring (last_dir_index) == "\\src")
+        if (base_path.substring (last_dir_index) == "\\.libs" || base_path.substring (last_dir_index) == "src")
             base_path = base_path.slice(0, last_dir_index);
 
         string? filename = Path.build_filename (base_path, "share", "icons", "%s.png".printf (name));
