@@ -1,6 +1,6 @@
 AC_PREREQ([2.66])
 AC_INIT([Moonshot],
-        [0.0.1],
+        [0.1],
         [BUG-REPORT-ADDRESS],
         [moonshot])
 
