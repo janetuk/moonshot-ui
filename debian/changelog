@@ -1,3 +1,9 @@
+moonshot-ui (0.0.2+20110913-2) unstable; urgency=low
+
+  * Fix shared libraries
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Tue, 13 Sep 2011 10:52:47 -0400
+
 moonshot-ui (0.0.2+20110913-1) unstable; urgency=low
 
   * New upstream version
