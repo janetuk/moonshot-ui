@@ -139,7 +139,8 @@ libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 CLEANFILES = $(dbusservice_DATA)
 endif
 
-EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files)
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+	moonshot-ui.spec
 
 noinst_PROGRAMS = \
         examples/client \

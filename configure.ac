@@ -1,8 +1,8 @@
 AC_PREREQ([2.66])
-AC_INIT([Moonshot],
+AC_INIT([Moonshot-ui],
         [0.1],
-        [BUG-REPORT-ADDRESS],
-        [moonshot])
+        [moonshot-community@jiscmail.ac.uk],
+        [moonshot-ui])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -16,7 +16,7 @@ AM_MAINTAINER_MODE([enable])
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 
-PKG_PROG_PKG_CONFIG([0.24])
+PKG_PROG_PKG_CONFIG([0.23])
 
 # Platform checks
 AC_CANONICAL_HOST
@@ -137,9 +137,9 @@ AC_SUBST(MOONSHOT_WEBP)
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
-        glib-2.0 >= 2.24
-        gobject-2.0 >= 2.24
-        gtk+-2.0 >= 2.20
+        glib-2.0 >= 2.22
+        gobject-2.0 >= 2.22
+        gtk+-2.0 >= 2.18
         $SERVER_IPC_MODULE
 ])
 
@@ -159,6 +159,7 @@ AC_CONFIG_FILES([
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop
+	moonshot-ui.spec
 ])
 
 AC_OUTPUT

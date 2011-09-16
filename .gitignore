@@ -1,3 +1,4 @@
+*~
 stamp-h1
 *.stamp
 *.exe
@@ -80,6 +81,8 @@ m4/xsize.m4
 moonshot.msi
 moonshot.wixpdb
 po/Makefile.in.in
+moonshot-ui.spec
+
 app.wixobj
 org.janet.Moonshot.service
 share/
@@ -90,5 +93,7 @@ libmoonshot/moonshot-msrpc_c.c
 libmoonshot/moonshot-msrpc_s.c
 libmoonshot/libmoonshot.exp
 libmoonshot/libmoonshot.lib
+*.tar.gz
+
 *.tar.bz2
 *.stackdump
