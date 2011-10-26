@@ -68,7 +68,8 @@ namespace MoonshotIdentityServer {
  * Return value: %TRUE if an identity was successfully selected, %FALSE on
  *               failure.
  */
-  public async bool get_identity (string nai,
+//  public async bool get_identity (string nai,
+  public bool get_identity (string nai,
                                     string password,
                                     string service,
                                     out string nai_out,
@@ -78,47 +79,47 @@ namespace MoonshotIdentityServer {
                                     out string subject_name_constraint,
                                     out string subject_alt_name_constraint)
     {
-        var request = new IdentityRequest (main_window,
-                                           nai,
-                                           password,
-                                           service);
-        request.set_callback ((IdentityRequest) => get_identity.callback());
-        request.execute ();
-        yield;
-
-        nai_out = "";
-        password_out = "";
-        server_certificate_hash = "";
-        ca_certificate = "";
-        subject_name_constraint = "";
-        subject_alt_name_constraint = "";
-
-        var id_card = request.id_card;
-
-        if (id_card != null) {
-            nai_out = id_card.nai;
-            password_out = id_card.password;
-
-            server_certificate_hash = id_card.trust_anchor.server_cert;
-            ca_certificate = id_card.trust_anchor.ca_cert;
-            subject_name_constraint = id_card.trust_anchor.subject;
-            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
-
-            if (nai_out == null)
-                nai_out = "";
-            if (password_out == null)
-                password_out = "";
-            if (server_certificate_hash == null)
-                server_certificate_hash = "";
-            if (ca_certificate == null)
-                ca_certificate = "";
-            if (subject_name_constraint == null)
-                subject_name_constraint = "";
-            if (subject_alt_name_constraint == null)
-                subject_alt_name_constraint = "";
-
-            return true;
-        }
+//        var request = new IdentityRequest (main_window,
+//                                           nai,
+//                                           password,
+//                                           service);
+//        request.set_callback ((IdentityRequest) => get_identity.callback());
+//        request.execute ();
+//        yield;
+//
+//        nai_out = "";
+//        password_out = "";
+//        server_certificate_hash = "";
+//        ca_certificate = "";
+//        subject_name_constraint = "";
+//        subject_alt_name_constraint = "";
+//
+//        var id_card = request.id_card;
+//
+//        if (id_card != null) {
+//            nai_out = id_card.nai;
+//            password_out = id_card.password;
+//
+//            server_certificate_hash = id_card.trust_anchor.server_cert;
+//            ca_certificate = id_card.trust_anchor.ca_cert;
+//            subject_name_constraint = id_card.trust_anchor.subject;
+//            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
+//
+//            if (nai_out == null)
+//                nai_out = "";
+//            if (password_out == null)
+//                password_out = "";
+//            if (server_certificate_hash == null)
+//                server_certificate_hash = "";
+//            if (ca_certificate == null)
+//                ca_certificate = "";
+//            if (subject_name_constraint == null)
+//                subject_name_constraint = "";
+//            if (subject_alt_name_constraint == null)
+//                subject_alt_name_constraint = "";
+//
+//            return true;
+//        }
 
         return false;
     }
@@ -143,50 +144,51 @@ namespace MoonshotIdentityServer {
  *
  * Return value: %TRUE if an identity was available, otherwise %FALSE.
  */
-  public async bool get_default_identity (out string nai_out,
+//  public async bool get_default_identity (out string nai_out,
+  public bool get_default_identity (out string nai_out,
                                             out string password_out,
                                             out string server_certificate_hash,
                                             out string ca_certificate,
                                             out string subject_name_constraint,
                                             out string subject_alt_name_constraint)
     {
-        var request = new IdentityRequest.default (main_window);
-        request.set_callback ((IdentityRequest) => get_default_identity.callback());
-        request.execute ();
-        yield;
-
-        nai_out = "";
-        password_out = "";
-        server_certificate_hash = "";
-        ca_certificate = "";
-        subject_name_constraint = "";
-        subject_alt_name_constraint = "";
-
-        if (request.id_card != null)
-        {
-            nai_out = request.id_card.nai;
-            password_out = request.id_card.password;
-
-            server_certificate_hash = request.id_card.trust_anchor.server_cert;
-            ca_certificate = request.id_card.trust_anchor.ca_cert;
-            subject_name_constraint = request.id_card.trust_anchor.subject;
-            subject_alt_name_constraint = request.id_card.trust_anchor.subject_alt;
-
-            if (nai_out == null)
-                nai_out = "";
-            if (password_out == null)
-                password_out = "";
-            if (server_certificate_hash == null)
-                server_certificate_hash = "";
-            if (ca_certificate == null)
-                ca_certificate = "";
-            if (subject_name_constraint == null)
-                subject_name_constraint = "";
-            if (subject_alt_name_constraint == null)
-                subject_alt_name_constraint = "";
-
-            return true;
-        }
+//        var request = new IdentityRequest.default (main_window);
+//        request.set_callback ((IdentityRequest) => get_default_identity.callback());
+//        request.execute ();
+//        yield;
+//
+//        nai_out = "";
+//        password_out = "";
+//        server_certificate_hash = "";
+//        ca_certificate = "";
+//        subject_name_constraint = "";
+//        subject_alt_name_constraint = "";
+//
+//        if (request.id_card != null)
+//        {
+//            nai_out = request.id_card.nai;
+//            password_out = request.id_card.password;
+//
+//            server_certificate_hash = request.id_card.trust_anchor.server_cert;
+//            ca_certificate = request.id_card.trust_anchor.ca_cert;
+//            subject_name_constraint = request.id_card.trust_anchor.subject;
+//            subject_alt_name_constraint = request.id_card.trust_anchor.subject_alt;
+//
+//            if (nai_out == null)
+//                nai_out = "";
+//            if (password_out == null)
+//                password_out = "";
+//            if (server_certificate_hash == null)
+//                server_certificate_hash = "";
+//            if (ca_certificate == null)
+//                ca_certificate = "";
+//            if (subject_name_constraint == null)
+//                subject_name_constraint = "";
+//            if (subject_alt_name_constraint == null)
+//                subject_alt_name_constraint = "";
+//
+//            return true;
+//        }
 
         return false;
     }
@@ -231,31 +233,32 @@ namespace MoonshotIdentityServer {
                                  string   subject_alt,
                                  string   server_cert)
     {
-      IdCard idcard = new IdCard ();
-
-      idcard.display_name = display_name;
-      idcard.username = user_name;
-      idcard.password = password;
-      idcard.issuer = realm;
-      idcard.services = services;
-      idcard.trust_anchor.ca_cert = ca_cert;
-      idcard.trust_anchor.subject = subject;
-      idcard.trust_anchor.subject_alt = subject_alt;
-      idcard.trust_anchor.server_cert = server_cert;
-
-      if (rules_patterns.length == rules_always_confirm.length)
-      {
-        idcard.rules = new Rule[rules_patterns.length];
-         
-        for (int i=0; i<idcard.rules.length; i++)
-        { 
-          idcard.rules[i].pattern = rules_patterns[i];
-          idcard.rules[i].always_confirm = rules_always_confirm[i];
-        }
-      }
-
-      return this.main_window.add_identity (idcard);
-    }
+//      IdCard idcard = new IdCard ();
+//
+//      idcard.display_name = display_name;
+//      idcard.username = user_name;
+//      idcard.password = password;
+//      idcard.issuer = realm;
+//      idcard.services = services;
+//      idcard.trust_anchor.ca_cert = ca_cert;
+//      idcard.trust_anchor.subject = subject;
+//      idcard.trust_anchor.subject_alt = subject_alt;
+//      idcard.trust_anchor.server_cert = server_cert;
+//
+//      if (rules_patterns.length == rules_always_confirm.length)
+//      {
+//        idcard.rules = new Rule[rules_patterns.length];
+//         
+//        for (int i=0; i<idcard.rules.length; i++)
+//        { 
+//          idcard.rules[i].pattern = rules_patterns[i];
+//          idcard.rules[i].always_confirm = rules_always_confirm[i];
+//        }
+//      }
+//
+//      return this.main_window.add_identity (idcard);
+//    }
+return false;
 }
 
 
