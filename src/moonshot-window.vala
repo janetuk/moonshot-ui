@@ -38,19 +38,17 @@ class MainWindow : Window
     }
 
     private const string layout =
-"
-<menubar name='MenuBar'>
-        <menu name='FileMenu' action='FileMenuAction'>
-            <menuitem name='AddIdCard' action='AddIdCardAction' />
-            <separator />
-            <menuitem name='Quit' action='QuitAction' />
-        </menu>
-
-        <menu name='HelpMenu' action='HelpMenuAction'>
-             <menuitem name='About' action='AboutAction' />
-        </menu>
-</menubar>
-";
+"<menubar name='MenuBar'>" +
+"        <menu name='FileMenu' action='FileMenuAction'>" +
+"            <menuitem name='AddIdCard' action='AddIdCardAction' />" +
+"            <separator />" +
+"            <menuitem name='Quit' action='QuitAction' />" +
+"        </menu>" +
+"" +
+"        <menu name='HelpMenu' action='HelpMenuAction'>" +
+"             <menuitem name='About' action='AboutAction' />" +
+"        </menu>" +
+"</menubar>";
 
     public MainWindow()
     {
