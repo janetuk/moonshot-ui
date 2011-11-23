@@ -68,8 +68,10 @@ AM_VALAFLAGS += --define=OS_WIN32
 
 noinst_DATA = libmoonshot/libmoonshot.lib
 
+# Build the MSVC lib. The sed hack fixes execution in the case that
+# the MSVC toolchain isn't in the PATH.
 libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
-	"${MSVC_LIB}" -def:$< -out:$@ -machine:x86
+	PATH="$(shell echo "${MSVC_LIB}" | sed -e s,/VC/bin/lib,/Common7/IDE,)":$$PATH "${MSVC_LIB}" -def:$< -out:$@ -machine:x86
 
 endif
 
