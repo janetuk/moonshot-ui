@@ -67,7 +67,7 @@ if test "$win32" = "yes"; then
 
   # LIB.EXE from MSVC to build an MSVC-compatible import library.
   AC_PATH_PROG([MSVC_LIB], [lib], no,
-               [/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR$PATH])
 
   if test "$MSVC_LIB" = "no"; then
      AC_MSG_WARN([
@@ -78,12 +78,12 @@ if test "$win32" = "yes"; then
   fi
 
 
-  # ImageMagick for the 'make icons' target. Watch that it doesn't pick up
-  # c:/windows/system32/convert.exe, which is nothing to do with ImageMagick
+  # ImageMagick for the 'make icons' target. Note that
+  # c:/windows/system32/convert.exe is nothing to do with ImageMagick.
   AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], no,
-               [/c/Program\ Files/ImageMagick$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/ImageMagick$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/ImageMagick$PATH_SEPARATOR$PATH])
 
-  if test "$IMAGEMAGICK_CONVERT" = "no"; then
+  if test "$IMAGEMAGICK_CONVERT" = "no" || test "$IMAGEMAGICK_CONVERT" = "/c/windows/system32/convert"; then
      AC_MSG_WARN([
 *** Could not find ImageMagick convert.exe. This is required for the
 *** 'make icons' target. Use the IMAGEMAGICK_CONVERT environment
@@ -93,9 +93,9 @@ if test "$win32" = "yes"; then
 
   # Windows Installer XML tools
   AC_PATH_PROG([WIX_CANDLE], [candle], no,
-               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
   AC_PATH_PROG([WIX_LIGHT], [light], no,
-               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
 
   if test "$WIX_CANDLE" = "no" || test "$WIX_LIGHT" = "no"; then
      AC_MSG_WARN([
