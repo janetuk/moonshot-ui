@@ -14,7 +14,8 @@ AM_CFLAGS =
 AM_CPPFLAGS = \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	-I$(top_srcdir)/libmoonshot
+	-I$(top_srcdir)/libmoonshot \
+	-I$(top_builddir)/libmoonshot
 
 AM_VALAFLAGS = \
         config.vapi \
