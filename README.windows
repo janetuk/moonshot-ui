@@ -59,7 +59,7 @@ MIDL.EXE and the RPC API to make it usable from gcc.
 You can then configure moonshot from the MSYS shell:
 
   ACLOCAL="aclocal -I/c/build/share/aclocal" PKG_CONFIG_PATH=/c/build/lib/pkgconfig \
-    ./autogen.sh --disable-maintainer-mode
+    ./autogen.sh --disable-maintainer-mode --prefix=/c/build
 
 The configure script looks for various tools that it may not be able to locate
 automatically. In these cases you will get an error message, and you can set the
@@ -76,6 +76,9 @@ If this succeeds, you're ready to build!
   make icons
   make installer
 
+The icons and installer targets make a few assumptions based on the install
+prefix. You may have to edit Makefile.am to edit the paths if you haven't
+followed the instructions exactly.
 
 Weird things that might go wrong
 --------------------------------
