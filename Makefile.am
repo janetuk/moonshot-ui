@@ -133,13 +133,21 @@ dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
 $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
-AM_VALAFLAGS += \
-	--pkg dbus-glib-1 \
-	--define=IPC_DBUS
-
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 CLEANFILES = $(dbusservice_DATA)
+
+if IPC_DBUS_GLIB
+AM_VALAFLAGS += \
+	--pkg dbus-glib-1 \
+	--define=IPC_DBUS_GLIB \
+	--define=IPC_DBUS
+else
+AM_VALAFLAGS += \
+	--pkg gio-2.0 \
+	--define=IPC_GDBUS \
+	--define=IPC_DBUS
+endif
 endif
 
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \

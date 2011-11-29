@@ -949,15 +949,18 @@ SUCH DAMAGE.
         this.destroy.connect (Gtk.main_quit);
     }
 
+#if IPC_MSRPC
     private void init_ipc_server ()
     {
-#if IPC_MSRPC
         /* Errors will currently be sent via g_log - ie. to an
          * obtrusive message box, on Windows
          */
         this.ipc_server = MoonshotServer.get_instance ();
         MoonshotServer.start (this);
-#else
+    }
+#elif IPC_DBUS_GLIB
+    private void init_ipc_server ()
+    {
         try {
             var conn = DBus.Bus.get (DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
@@ -970,14 +973,37 @@ SUCH DAMAGE.
 
             this.ipc_server = new MoonshotServer (this);
             conn.register_object ("/org/janet/moonshot", ipc_server);
-
         }
         catch (DBus.Error e)
         {
             stderr.printf ("%s\n", e.message);
         }
-#endif
     }
+#else
+    private void bus_acquired_cb (DBusConnection conn)
+    {
+        try {
+            conn.register_object ("/org/janet/moonshot", ipc_server);
+        }
+        catch (Error e)
+        {
+            stderr.printf ("%s\n", e.message);
+        }
+    }
+
+    private void init_ipc_server ()
+    {
+        this.ipc_server = new MoonshotServer (this);
+        GLib.Bus.own_name (GLib.BusType.SESSION,
+                           "org.janet.Moonshot",
+                           GLib.BusNameOwnerFlags.NONE,
+                           bus_acquired_cb,
+                           (conn, name) => {},
+                           (conn, name) => {
+                               error ("Couldn't own name %s on DBus.", name);
+                           });
+    }
+#endif
 
     public static int main(string[] args)
     {

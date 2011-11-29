@@ -16,7 +16,11 @@ AM_MAINTAINER_MODE([enable])
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 
+# Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])
+AC_PROG_CC
+AM_PROG_CC_C_O
+AM_PROG_VALAC([0.9])
 
 # Platform checks
 AC_CANONICAL_HOST
@@ -29,20 +33,44 @@ case "$host" in
     ;;
   *)
     win32=no
-    SERVER_IPC_MODULE="dbus-glib-1"
+
+    # We require dbus-glib for the client library even if we are using GDBus
+    # in the server. The reason we can't always use dbus-glib in the server is
+    # because Vala drops support for it, but as it ships with DBus there is very
+    # little danger of it being dropped by distros any time soon.
     CLIENT_IPC_MODULE="dbus-glib-1"
+    PKG_CHECK_MODULES([GDBUS],
+            [gio-2.0 >= 2.26],
+            [SERVER_IPC_MODULE="gio-2.0"],
+            [SERVER_IPC_MODULE="dbus-glib-1"]
+    )
+
     ;;
 esac
 
 AM_CONDITIONAL([OS_LINUX], [test "$win32" != "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
-AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 
-# Checks for programs.
-AC_PROG_CC
-AM_PROG_CC_C_O
-AM_PROG_VALAC([0.9])
+AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
+
+if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
+  AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
+  vala_version=`$VALAC --version | sed 's/Vala  *//'`
+  AS_VERSION_COMPARE([0.12.1], ["$vala_version"],
+    [vala_supports_dbus_glib="no"],
+    [vala_supports_dbus_glib="no"],
+    [vala_supports_dbus_glib="yes"])
+
+  AC_MSG_RESULT([$vala_supports_dbus_glib])
+  if test "$vala_supports_dbus_glib" = "no"; then
+    AC_MSG_ERROR([
+*** Vala 0.12.1 or earlier is required for dbus-glib support. Newer versions
+*** require that you have GLib 2.26 or newer (for GDBus support).])
+  fi
+fi
 
 if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   # MS RPC utilities
