@@ -34,6 +34,8 @@ include_HEADERS = libmoonshot/libmoonshot.h
 noinst_HEADERS = libmoonshot/libmoonshot-common.h
 
 src_moonshot_SOURCES = \
+        src/moonshot-local-flat-file-store.vala \
+        src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-add-dialog.vala \
         src/moonshot-idcard-widget.vala \
