@@ -35,6 +35,7 @@ noinst_HEADERS = libmoonshot/libmoonshot-common.h
 
 src_moonshot_SOURCES = \
         src/moonshot-identity-manager-app.vala \
+        src/moonshot-identity-management-view.vala \
         src/moonshot-local-flat-file-store.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
@@ -44,7 +45,6 @@ src_moonshot_SOURCES = \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
         src/moonshot-server.vala \
-        src/moonshot-window.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
 

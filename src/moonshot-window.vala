@@ -17,10 +17,10 @@ class MainWindow : Window
     private ListStore listmodel;
     private TreeModelFilter filter;
 
-    public IdentitiesManager identities_manager;
+    public IdentityManagerModel identities_manager;
     private SList<IdCard>    candidates;
 
-    private MoonshotServer ipc_server;
+//    private MoonshotServer ipc_server;
 
     private IdCard default_id_card;
     public Queue<IdentityRequest> request_queue;
@@ -64,7 +64,7 @@ class MainWindow : Window
         setup_identities_list();
         load_id_cards();
         connect_signals();
-        init_ipc_server();
+  //      init_ipc_server();
     }
     
     public void add_candidate (IdCard idcard)
@@ -186,7 +186,7 @@ class MainWindow : Window
 
     private void load_id_cards ()
     {
-        identities_manager = new IdentitiesManager ();
+ //       identities_manager = new IdentityManagerModel();
         
         if (identities_manager.id_card_list == null)
           return;
@@ -948,13 +948,13 @@ SUCH DAMAGE.
     {
         this.destroy.connect (Gtk.main_quit);
     }
-
+/*
 #if IPC_MSRPC
     private void init_ipc_server ()
     {
-        /* Errors will currently be sent via g_log - ie. to an
-         * obtrusive message box, on Windows
-         */
+        // Errors will currently be sent via g_log - ie. to an
+        // obtrusive message box, on Windows
+        //
         this.ipc_server = MoonshotServer.get_instance ();
         MoonshotServer.start (this);
     }
@@ -1004,5 +1004,5 @@ SUCH DAMAGE.
                            });
     }
 #endif
-
+*/
 }

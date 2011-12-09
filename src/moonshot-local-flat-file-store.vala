@@ -5,6 +5,9 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
      public void add_card(IdCard card) {
      }
 
+     public void update_card(IdCard card) {
+     }
+
      public void remove_card(IdCard card) {
      }
 

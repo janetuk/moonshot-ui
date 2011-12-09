@@ -1,17 +1,23 @@
-class IdentitiesManager : Object {
+class IdentityManagerModel : Object {
 
     public SList<IdCard> id_card_list;
+    public SList<IdCard> get_card_list() {
+         return id_card_list.copy(); 
+    }
+    public signal void card_list_changed();
+
 
     private const string FILE_NAME = "identities.txt";
+    private IdentityManagerApp parent;
 
-    public IdentitiesManager ()
+    public IdentityManagerModel(IdentityManagerApp parent_app)
     {
+     print("IdentityManagerModel()\n");
+        parent = parent_app;
         id_card_list = new SList<IdCard>();
         var key_file = new KeyFile ();
-
         var path = get_data_dir ();
         var filename = Path.build_filename (path, FILE_NAME);
-
         try
         {
             key_file.load_from_file (filename, KeyFileFlags.NONE);

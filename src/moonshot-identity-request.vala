@@ -5,14 +5,14 @@ class IdentityRequest : Object {
     public bool complete = false;
     public bool select_default = false;
 
-    private MainWindow main_window;
+    private IdentityManagerView main_window;
     public string nai;
     public string password;
     public string service;
 
     ReturnIdentityCallback callback = null;
 
-    public IdentityRequest (MainWindow                   main_window,
+    public IdentityRequest (IdentityManagerView                   main_window,
                             string                       nai,
                             string                       password,
                             string                       service)
@@ -23,7 +23,7 @@ class IdentityRequest : Object {
         this.service = service;
     }
 
-    public IdentityRequest.default (MainWindow main_window)
+    public IdentityRequest.default (IdentityManagerView main_window)
     {
         this.main_window = main_window;
         this.select_default = true;
