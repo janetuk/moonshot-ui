@@ -1,45 +1,46 @@
+using Gee; 
 
 public class LocalFlatFileStore : Object, IIdentityCardStore {
-    private SList<IdCard> id_card_list;
+    private LinkedList<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
 
     public void add_card(IdCard card) {
-    print("add_card\n");
-        id_card_list.prepend(card);
+        id_card_list.add(card);
         store_id_cards ();
     }
 
-     public void update_card(IdCard card) {
-    print("update_card\n");
+    public void update_card(IdCard card) {
+        id_card_list.remove(card);
+        id_card_list.add(card);
+        store_id_cards ();
      }
 
      public void remove_card(IdCard card) {
-     print("remove_card\n");
+        id_card_list.remove(card);
+        store_id_cards ();
     }
 
-     public SList<IdCard> get_card_list() {
-          return id_card_list.copy(); 
+     public LinkedList<IdCard> get_card_list() {
+          return id_card_list; 
      }
      
      private void load_id_cards() {
+        id_card_list.clear();
         var key_file = new KeyFile ();
         var path = get_data_dir ();
         var filename = Path.build_filename (path, FILE_NAME);
-        try
-        {
+        
+        try {
             key_file.load_from_file (filename, KeyFileFlags.NONE);
         }
-        catch (Error e)
-        {
+        catch (Error e) {
             stdout.printf("Error: %s\n", e.message);
             return;
         }
 
         var identities_uris = key_file.get_groups ();
-        foreach (string identity in identities_uris)
-        {
-            try
-            {
+        foreach (string identity in identities_uris) {
+            try {
                 IdCard id_card = new IdCard ();
 
                 id_card.issuer = key_file.get_string (identity, "Issuer");
@@ -51,64 +52,51 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 
                 
                 if (key_file.has_key (identity, "Rules-Patterns") &&
-                    key_file.has_key (identity, "Rules-AlwaysConfirm"))
-                {
+                    key_file.has_key (identity, "Rules-AlwaysConfirm")) {
                     string [] rules_patterns =    key_file.get_string_list (identity, "Rules-Patterns");
                     string [] rules_always_conf = key_file.get_string_list (identity, "Rules-AlwaysConfirm");
                     
-                    if (rules_patterns.length == rules_always_conf.length)
-                    {
+                    if (rules_patterns.length == rules_always_conf.length) {
                       Rule[] rules = new Rule[rules_patterns.length];
-                      for (int i = 0; i < rules_patterns.length; i++)
-                      {
+                      for (int i = 0; i < rules_patterns.length; i++) {
                         rules[i] = {rules_patterns[i], rules_always_conf[i]};
                       }
                       id_card.rules = rules;
                     }
                 }
+                
                 // Trust anchor 
                 id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert");
                 id_card.trust_anchor.subject = key_file.get_string (identity, "Subject");
                 id_card.trust_anchor.subject_alt = key_file.get_string (identity, "SubjectAlt");
                 id_card.trust_anchor.server_cert = key_file.get_string (identity, "ServerCert");
 
-                id_card_list.prepend (id_card);
+                id_card_list.add (id_card);
             }
-            catch (Error e)
-            {
+            catch (Error e) {
                 stdout.printf ("Error:  %s\n", e.message);
             }
         }
      }
 
-     public LocalFlatFileStore () {
-        id_card_list = new SList<IdCard>();
-        load_id_cards();
-     }
-    private string get_data_dir()
-    {
+    private string get_data_dir() {
         string path;
-
         path = Path.build_filename (Environment.get_user_data_dir (),
                                     Config.PACKAGE_TARNAME);
-        if (!FileUtils.test (path, FileTest.EXISTS))
-        {
+                                    
+        if (!FileUtils.test (path, FileTest.EXISTS)) {
             DirUtils.create (path, 0700);
         }
-
         return path;
     }
-    public void store_id_cards ()
-    {
+    
+    public void store_id_cards () {
         var key_file = new KeyFile ();
-
-        foreach (IdCard id_card in this.id_card_list)
-        {
+        foreach (IdCard id_card in this.id_card_list) {
             string[] rules_patterns = new string[id_card.rules.length];
             string[] rules_always_conf = new string[id_card.rules.length];
             
-            for (int i=0; i<id_card.rules.length; i++)
-            {
+            for (int i=0; i<id_card.rules.length; i++) {
               rules_patterns[i] = id_card.rules[i].pattern;
               rules_always_conf[i] = id_card.rules[i].always_confirm;
             }
@@ -119,11 +107,11 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             key_file.set_string (id_card.display_name, "Password", id_card.password ?? "");
             key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
 
-            if (id_card.rules.length > 0)
-            {
+            if (id_card.rules.length > 0) {
               key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
               key_file.set_string_list (id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
             }
+            
             // Trust anchor 
             key_file.set_string (id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert ?? "");
             key_file.set_string (id_card.display_name, "Subject", id_card.trust_anchor.subject ?? "");
@@ -133,18 +121,21 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
 
         var text = key_file.to_data (null);
 
-        try
-        {
+        try {
             var path = get_data_dir ();
             var filename = Path.build_filename (path, FILE_NAME);
             FileUtils.set_contents (filename, text, -1);
-        }
-        catch (Error e)
-        {
+        } 
+        catch (Error e) {
             stdout.printf ("Error:  %s\n", e.message);
         }
+
+        load_id_cards();
     }
 
-
+     public LocalFlatFileStore () {
+        id_card_list = new LinkedList<IdCard>();
+        load_id_cards();
+     }
  }
 
