@@ -78,7 +78,9 @@ class IdCardWidget : Box
     {
         string services_text = "";
 
-        var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
+        var display_name = Markup.printf_escaped ("<big><b>%s</b></big>", this.id_card.display_name);
+        var issued_by =  Markup.printf_escaped ("<i>%s</i>", _("Issued by: "));
+        var issuer_name = Markup.printf_escaped ("<i><b>%s</b></i>", this.id_card.issuer);
         for (int i=0; i<id_card.services.length; i++)
         {
             var service = id_card.services[i];
@@ -88,7 +90,7 @@ class IdCardWidget : Box
             else
               services_text = services_text + Markup.printf_escaped ("<i>%s, </i>", service);
         }
-        label.set_markup (display_name + "\n" + services_text);
+        label.set_markup (display_name + "\n" + issued_by + issuer_name + "\n" + services_text);
     }
 
     public IdCardWidget (IdCard id_card)
@@ -98,7 +100,8 @@ class IdCardWidget : Box
         var image = new Image.from_pixbuf (id_card.get_data ("pixbuf"));
 
         label = new Label (null);
-        label.set_alignment ((float) 0, (float) 0.5);
+        label.set_alignment ((float) 0.5, (float) 0.5);
+        label.set_justify(Gtk.Justification.CENTER);
         label.set_ellipsize (Pango.EllipsizeMode.END);
         update_id_card_label();
 
