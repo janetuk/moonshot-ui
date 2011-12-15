@@ -6,7 +6,9 @@ class IdentityManagerApp : Window {
     private MoonshotServer ipc_server;
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
-
+    public void show() {
+        view.show();    
+    }
     public IdentityManagerApp () {
         model = new IdentityManagerModel(this);
         view = new IdentityManagerView(this);
@@ -14,7 +16,6 @@ class IdentityManagerApp : Window {
         view.show();
     }   
     
-
 #if IPC_MSRPC
     private void init_ipc_server ()
     {
@@ -27,6 +28,7 @@ class IdentityManagerApp : Window {
 #elif IPC_DBUS_GLIB
     private void init_ipc_server ()
     {
+ 
         try {
             var conn = DBus.Bus.get (DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
