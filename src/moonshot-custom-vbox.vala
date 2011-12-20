@@ -3,9 +3,9 @@ using Gtk;
 class CustomVBox : VBox
 {
     public IdCardWidget current_idcard { get; set; default = null; }
-    private MainWindow main_window; 
+    private IdentityManagerView main_window; 
 
-    public CustomVBox (MainWindow window, bool homogeneous, int spacing)
+    public CustomVBox (IdentityManagerView window, bool homogeneous, int spacing)
     {
         main_window = window;
         set_homogeneous (homogeneous);

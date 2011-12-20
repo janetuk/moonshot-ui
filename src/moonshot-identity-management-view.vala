@@ -1,10 +1,10 @@
+using Gee;
 using Gtk;
 
-class MainWindow : Window
-{
+class IdentityManagerView : Window {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
-
+    protected IdentityManagerApp parent_app;
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private VBox vbox_right;
@@ -14,16 +14,14 @@ class MainWindow : Window
     private Entry username_entry;
     private Entry password_entry;
 
-    private ListStore listmodel;
+    private ListStore* listmodel;
     private TreeModelFilter filter;
 
-    public IdentitiesManager identities_manager;
+    public IdentityManagerModel identities_manager;
     private SList<IdCard>    candidates;
 
-    private MoonshotServer ipc_server;
-
     private IdCard default_id_card;
-    public Queue<IdentityRequest> request_queue;
+    public GLib.Queue<IdentityRequest> request_queue;
 
     private HashTable<Gtk.Button, string> service_button_map;
 
@@ -50,21 +48,22 @@ class MainWindow : Window
 "        </menu>" +
 "</menubar>";
 
-    public MainWindow()
-    {
-        request_queue = new Queue<IdentityRequest>();
-        
-        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
-
-        this.title = "Moonshoot";
-        this.set_position (WindowPosition.CENTER);
-        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        build_ui();
-        setup_identities_list();
+    public IdentityManagerView(IdentityManagerApp app) {
+       parent_app = app;
+       identities_manager = parent_app.model;
+       request_queue = new GLib.Queue<IdentityRequest>();
+       service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
+       this.title = "Moonshoot";
+       this.set_position (WindowPosition.CENTER);
+       set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
+       build_ui();
+       setup_list_model();
+        load_id_cards(); 
+       connect_signals();
+    }
+    
+    public void on_card_list_changed () {
         load_id_cards();
-        connect_signals();
-        init_ipc_server();
     }
     
     public void add_candidate (IdCard idcard)
@@ -138,9 +137,9 @@ class MainWindow : Window
         return false;
     }
 
-    private void setup_identities_list ()
+    private void setup_list_model ()
     {
-       this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+      this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
                                                           typeof (Gdk.Pixbuf),
                                                           typeof (string),
                                                           typeof (string),
@@ -184,22 +183,28 @@ class MainWindow : Window
         return false;
     }
 
-    private void load_id_cards ()
-    {
-        identities_manager = new IdentitiesManager ();
-        
-        if (identities_manager.id_card_list == null)
-          return;
+    private void load_id_cards () {
+        var children = this.custom_vbox.get_children ();
+        foreach (var id_card_widget in children) {
+        remove_id_card_widget((IdCardWidget)id_card_widget);
+        }   
 
-        foreach (IdCard id_card in identities_manager.id_card_list)
-        {
+        this.default_id_card = null;
+        LinkedList<IdCard> card_list = identities_manager.get_card_list() ;
+        if (card_list == null) {
+            return;
+        }
+
+        foreach (IdCard id_card in card_list) {
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
         }
 
-        this.default_id_card = identities_manager.id_card_list.data;
+        if (card_list.size > 0){
+            this.default_id_card = card_list.first();
+        }
     }
-
+    
     private void fill_details (IdCardWidget id_card_widget)
     {
        var id_card = id_card_widget.id_card;
@@ -210,7 +215,7 @@ class MainWindow : Window
        foreach (var hbox in children)
            hbox.destroy();
        fill_services_vbox (id_card_widget.id_card);
-       identities_manager.store_id_cards();
+//       identities_manager.store_id_cards();
     }
 
     private void show_details (IdCard id_card)
@@ -249,10 +254,9 @@ class MainWindow : Window
     {
         TreeIter   iter;
         Gdk.Pixbuf pixbuf;
-
-        this.listmodel.append (out iter);
+        this.listmodel->append (out iter);
         pixbuf = id_card.get_data("pixbuf");
-        listmodel.set (iter,
+        listmodel->set (iter,
                        Columns.IDCARD_COL, id_card,
                        Columns.LOGO_COL, pixbuf,
                        Columns.ISSUER_COL, id_card.issuer,
@@ -265,29 +269,27 @@ class MainWindow : Window
         TreeIter iter;
         string issuer;
 
-        if (listmodel.get_iter_first (out iter))
+        if (listmodel->get_iter_first (out iter))
         {
             do
             {
-                listmodel.get (iter,
+                listmodel->get (iter,
                                Columns.ISSUER_COL, out issuer);
 
                 if (id_card.issuer == issuer)
                 {
-                    listmodel.remove (iter);
+                    listmodel->remove (iter);
                     break;
                 }
             }
-            while (listmodel.iter_next (ref iter));
+            while (listmodel->iter_next (ref iter));
         }
     }
 
     private void add_id_card_widget (IdCard id_card)
     {
         var id_card_widget = new IdCardWidget (id_card);
-
         this.custom_vbox.add_id_card_widget (id_card_widget);
-
         id_card_widget.details_id.connect (details_identity_cb);
         id_card_widget.remove_id.connect (remove_identity_cb);
         id_card_widget.send_id.connect ((w) => send_identity_cb (w.id_card));
@@ -299,7 +301,7 @@ class MainWindow : Window
     public bool display_name_is_valid (string name,
                                        out string? candidate)
     {
-        foreach (IdCard id_card in identities_manager.id_card_list)
+        foreach (IdCard id_card in identities_manager.get_card_list())
         {
           if (id_card.display_name == name)
           {
@@ -331,11 +333,7 @@ class MainWindow : Window
           id_card.display_name = candidate;
         }
     
-        this.identities_manager.id_card_list.prepend (id_card);
-        this.identities_manager.store_id_cards ();
-
-        add_id_card_data (id_card);
-        add_id_card_widget (id_card);
+    this.identities_manager.add_card(id_card);
     }
 
     public bool add_identity (IdCard id_card)
@@ -377,21 +375,16 @@ class MainWindow : Window
         dialog.destroy ();
     }
 
-    private void remove_id_card_widget (IdCardWidget id_card_widget)
-    {
-        remove_id_card_data (id_card_widget.id_card);
-
-        this.custom_vbox.remove_id_card_widget (id_card_widget);
+    private void remove_id_card_widget (IdCardWidget id_card_widget) {
+       this.custom_vbox.remove_id_card_widget (id_card_widget);
     }
 
     private void remove_identity (IdCardWidget id_card_widget)
     {
         var id_card = id_card_widget.id_card;
-
-        this.identities_manager.id_card_list.remove (id_card);
-        this.identities_manager.store_id_cards ();
-
         remove_id_card_widget (id_card_widget);
+
+        this.identities_manager.remove_card(id_card);
     }
 
     private void redraw_id_card_widgets ()
@@ -458,7 +451,7 @@ class MainWindow : Window
             bool confirm = false;
             IdCard nai_provided = null;
 
-            foreach (IdCard id in identities_manager.id_card_list)
+            foreach (IdCard id in identities_manager.get_card_list())
             {
                 /* If NAI matches we add id card to the candidate list */
                 if (has_nai && request.nai == id.nai)
@@ -521,12 +514,12 @@ class MainWindow : Window
                 }
             }
 
-            identities_manager.store_id_cards ();
+//            identities_manager.store_id_cards ();
 
             /* If there are no candidates we use the service matching rules */
             if (candidates.length () == 0)
             {
-                foreach (IdCard id in identities_manager.id_card_list)
+                foreach (IdCard id in identities_manager.get_card_list())
                 {
                     foreach (Rule rule in id.rules)
                     {
@@ -594,7 +587,7 @@ class MainWindow : Window
 
             identity.services = services;
 
-            identities_manager.store_id_cards();
+//            identities_manager.store_id_cards();
         }
 
         if (identity.password == null)
@@ -947,84 +940,8 @@ SUCH DAMAGE.
     private void connect_signals()
     {
         this.destroy.connect (Gtk.main_quit);
-    }
-
-#if IPC_MSRPC
-    private void init_ipc_server ()
-    {
-        /* Errors will currently be sent via g_log - ie. to an
-         * obtrusive message box, on Windows
-         */
-        this.ipc_server = MoonshotServer.get_instance ();
-        MoonshotServer.start (this);
-    }
-#elif IPC_DBUS_GLIB
-    private void init_ipc_server ()
-    {
-        try {
-            var conn = DBus.Bus.get (DBus.BusType.SESSION);
-            dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
-                                                       "/org/freedesktop/DBus",
-                                                       "org.freedesktop.DBus");
-
-            // try to register service in session bus
-            uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
-            assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
-
-            this.ipc_server = new MoonshotServer (this);
-            conn.register_object ("/org/janet/moonshot", ipc_server);
-        }
-        catch (DBus.Error e)
-        {
-            stderr.printf ("%s\n", e.message);
-        }
-    }
-#else
-    private void bus_acquired_cb (DBusConnection conn)
-    {
-        try {
-            conn.register_object ("/org/janet/moonshot", ipc_server);
-        }
-        catch (Error e)
-        {
-            stderr.printf ("%s\n", e.message);
-        }
-    }
-
-    private void init_ipc_server ()
-    {
-        this.ipc_server = new MoonshotServer (this);
-        GLib.Bus.own_name (GLib.BusType.SESSION,
-                           "org.janet.Moonshot",
-                           GLib.BusNameOwnerFlags.NONE,
-                           bus_acquired_cb,
-                           (conn, name) => {},
-                           (conn, name) => {
-                               error ("Couldn't own name %s on DBus.", name);
-                           });
-    }
-#endif
-
-    public static int main(string[] args)
-    {
-        Gtk.init(ref args);
-
-#if OS_WIN32
-        // Force specific theme settings on Windows without requiring a gtkrc file
-        Gtk.Settings settings = Gtk.Settings.get_default ();
-        settings.set_string_property ("gtk-theme-name", "ms-windows", "moonshot");
-        settings.set_long_property ("gtk-menu-images", 0, "moonshot");
-#endif
-
-        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
-        Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
-        Intl.textdomain (Config.GETTEXT_PACKAGE);
-
-        var window = new MainWindow();
-        window.show ();
-
-        Gtk.main();
-
-        return 0;
+        this.identities_manager.card_list_changed.connect(this.on_card_list_changed);
     }
 }
+
+

@@ -28,11 +28,33 @@ AC_CANONICAL_HOST
 case "$host" in
   *-*-mingw*)
     win32=yes
+    macos=no
+    linux=no
     SERVER_IPC_MODULE="msrpc-glib2-1.0"
     CLIENT_IPC_MODULE="msrpc-mingw-1.0"
     ;;
-  *)
+    
+  *darwin*) 
     win32=no
+    macos=yes
+    linux=no
+
+    # We require dbus-glib for the client library even if we are using GDBus
+    # in the server. The reason we can't always use dbus-glib in the server is
+    # because Vala drops support for it, but as it ships with DBus there is very
+    # little danger of it being dropped by distros any time soon.
+    CLIENT_IPC_MODULE="dbus-glib-1"
+    PKG_CHECK_MODULES([GDBUS],
+            [gio-2.0 >= 2.26],
+            [SERVER_IPC_MODULE="gio-2.0"],
+            [SERVER_IPC_MODULE="dbus-glib-1"]
+    )
+
+    ;;
+  *)
+    macos=no
+    win32=no
+    linux=yes
 
     # We require dbus-glib for the client library even if we are using GDBus
     # in the server. The reason we can't always use dbus-glib in the server is
@@ -48,8 +70,9 @@ case "$host" in
     ;;
 esac
 
-AM_CONDITIONAL([OS_LINUX], [test "$win32" != "yes"])
+AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
+AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
@@ -134,7 +157,7 @@ if test "$win32" = "yes"; then
   fi
 fi
 
-if test "$win32" != "yes"; then
+if test "$linux" = "yes"; then
   AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
   if test "$UPDATE_MIME_DATABASE" = "no"; then
     AC_MSG_ERROR([
@@ -168,6 +191,7 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         gtk+-2.0 >= 2.18
+        gee-1.0 > 0.6
         $SERVER_IPC_MODULE
 ])
 
