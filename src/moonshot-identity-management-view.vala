@@ -415,7 +415,7 @@ class IdentityManagerView : Window {
 
         var dialog = new MessageDialog (null,
                                         DialogFlags.DESTROY_WITH_PARENT,
-                                        MessageType.INFO,
+                                        MessageType.QUESTION,
                                         Gtk.ButtonsType.YES_NO,
                                         _("Are you sure you want to delete %s ID Card?"), id_card.issuer);
         var result = dialog.run ();
