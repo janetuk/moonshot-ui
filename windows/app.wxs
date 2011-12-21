@@ -68,6 +68,7 @@
               <File Id="MSRPC_MINGW.DLL" Name="msrpc-mingw.dll" Source="bin\msrpc-mingw.dll" />
               <File Id="MSRPC_GLIB2.DLL" Name="msrpc-glib2.dll" Source="bin\msrpc-glib2.dll" />
               <File Id="LIBMOONSHOT_0.DLL" Name="libmoonshot-0.dll" Source="libmoonshot/.libs/libmoonshot-0.dll" />
+			  <File Id="LIBGEE_2.DLL" Name="libgee-2.dll" Source="bin\libgee-2.dll" />
             </Component>
 
             <!-- Gtk+ runtime - /bin -->
