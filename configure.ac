@@ -191,7 +191,7 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         gtk+-2.0 >= 2.18
-        gee-1.0 > 0.6
+        gee-1.0 >= 0.5
         $SERVER_IPC_MODULE
 ])
 
