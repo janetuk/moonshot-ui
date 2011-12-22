@@ -840,13 +840,15 @@ SUCH DAMAGE.
 
         set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
         this.search_entry.set_icon_from_pixbuf (EntryIconPosition.PRIMARY,
-                                                find_icon_sized ("edit-find-symbolic", Gtk.IconSize.MENU));
+                                                find_icon_sized ("edit-find", Gtk.IconSize.MENU));
+//                                                find_icon_sized ("edit-find-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.PRIMARY,
                                                  _("Search identity or service"));
         this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
 
         this.search_entry.set_icon_from_pixbuf (EntryIconPosition.SECONDARY,
-                                                find_icon_sized ("edit-clear-symbolic", Gtk.IconSize.MENU));
+                                                find_icon_sized ("process-stop", Gtk.IconSize.MENU));
+//                                                find_icon_sized ("edit-clear-symbolic", Gtk.IconSize.MENU));
         this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
                                                  _("Clear the current search"));
         this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);

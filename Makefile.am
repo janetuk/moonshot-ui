@@ -79,6 +79,13 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 
 endif
 
+if  OS_MACOS
+
+AM_CPPFLAGS += -DOS_MACOS
+AM_VALAFLAGS += --define=OS_MACOS
+
+endif
+
 if OS_LINUX
 
 ## Installing mime type data
@@ -209,5 +216,21 @@ installer: moonshot.msi
 moonshot.msi: windows/app.wxs windows/config.wxi $(bin_PROGRAMS)
 	"${WIX_CANDLE}" $<
 	"${WIX_LIGHT}" -b ${prefix} -b ${prefix}/mingw -o moonshot.msi app.wixobj
+
+endif
+
+if  OS_MACOS
+## Mac-specific targets
+
+## 1. Icons. 
+
+icons:
+	mkdir -p share/icons
+	cp src/mac/icons/process-stop.png share/icons
+	cp src/mac/icons/edit-find.png share/icons
+	cp src/mac/icons/avatar-default.png share/icons
+	
+
+## Installer
 
 endif

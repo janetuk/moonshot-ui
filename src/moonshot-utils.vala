@@ -19,6 +19,7 @@ public Gdk.Pixbuf? find_icon (string name, int size)
     try
     {
 #if OS_WIN32
+print("Windows\n");
         string? base_path = g_win32_get_package_installation_directory_of_module (null);
 
         // Hack to allow running within the source tree
@@ -28,7 +29,18 @@ public Gdk.Pixbuf? find_icon (string name, int size)
 
         string? filename = Path.build_filename (base_path, "share", "icons", "%s.png".printf (name));
         return new Gdk.Pixbuf.from_file_at_size (filename, size, size);
+//#elif OS_MACOS
+/*
+print("MacOS\n");
+        string? base_path = " /Users/pete/moonshot-ui";
+         string? filename = Filename.display_name(Path.build_filename (base_path, "share", "icons", "%s.png".printf (name)));
+print("%s\n".printf(filename));
+size_t x, y;
+        return new Gdk.Pixbuf.from_file (filename);
+//        return new Gdk.Pixbuf.from_file_at_size (filename, -1, -1);
+*/
 #else
+print("Linux\n");
         var icon_theme = Gtk.IconTheme.get_default ();
         return icon_theme.load_icon (name, size, Gtk.IconLookupFlags.FORCE_SIZE);
 #endif
