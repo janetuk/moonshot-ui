@@ -35,7 +35,6 @@ print("MacOS\n");
         string? base_path = " /Users/pete/moonshot-ui";
          string? filename = Filename.display_name(Path.build_filename (base_path, "share", "icons", "%s.png".printf (name)));
 print("%s\n".printf(filename));
-size_t x, y;
         return new Gdk.Pixbuf.from_file (filename);
 //        return new Gdk.Pixbuf.from_file_at_size (filename, -1, -1);
 */

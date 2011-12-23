@@ -32,6 +32,10 @@ case "$host" in
     linux=no
     SERVER_IPC_MODULE="msrpc-glib2-1.0"
     CLIENT_IPC_MODULE="msrpc-mingw-1.0"
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
+    )
     ;;
     
   *darwin*) 
@@ -50,6 +54,14 @@ case "$host" in
             [SERVER_IPC_MODULE="dbus-glib-1"]
     )
 
+# TODO: Move to GTK+-3
+#            [gtk+-3.0 >= 2.0],
+#            [GTK_VERSION="gtk+-3.0"]
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
+    )
+
     ;;
   *)
     macos=no
@@ -65,6 +77,13 @@ case "$host" in
             [gio-2.0 >= 2.26],
             [SERVER_IPC_MODULE="gio-2.0"],
             [SERVER_IPC_MODULE="dbus-glib-1"]
+    )
+# TODO: Move to GTK+-3
+#            [gtk+-3.0 >= 2.0],
+#            [GTK_VERSION="gtk+-3.0"]
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
     )
 
     ;;
@@ -190,7 +209,7 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
-        gtk+-2.0 >= 2.18
+        $GTK_VERSION
         gee-1.0 >= 0.5
         $SERVER_IPC_MODULE
 ])
