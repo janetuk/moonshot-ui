@@ -230,10 +230,11 @@ icons:
 	cp mac/icons/edit-find.png share/icons
 	cp mac/icons/avatar-default.png share/icons
 	
-
-## Installer
-install-exec-local:
+## 2. App bundle
+## gtk-app-bundler must be installed
+app-bundle:
 	gtk-mac-bundler ./mac/moonshot-ui.bundle
 
+## Installer
 
 endif
