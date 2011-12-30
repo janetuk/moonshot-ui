@@ -226,11 +226,14 @@ if  OS_MACOS
 
 icons:
 	mkdir -p share/icons
-	cp src/mac/icons/process-stop.png share/icons
-	cp src/mac/icons/edit-find.png share/icons
-	cp src/mac/icons/avatar-default.png share/icons
+	cp mac/icons/process-stop.png share/icons
+	cp mac/icons/edit-find.png share/icons
+	cp mac/icons/avatar-default.png share/icons
 	
 
 ## Installer
+install-exec-local:
+	gtk-mac-bundler ./mac/moonshot-ui.bundle
+
 
 endif
