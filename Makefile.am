@@ -234,7 +234,13 @@ icons:
 ## gtk-app-bundler must be installed
 app-bundle:
 	gtk-mac-bundler ./mac/moonshot-ui.bundle
+	mkdir -p ${HOME}/moonshot/mac-client-installer/moonshot-ui/
+	cp -R ./mac/moonshot-ui.app ${HOME}/moonshot/mac-client-installer/moonshot-ui/
 
-## Installer
+## 3: Installer Package
+installer:
+
+## 4: Disk Image
+disk-image:
 
 endif
