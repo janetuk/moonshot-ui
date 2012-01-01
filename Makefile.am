@@ -235,8 +235,6 @@ icons:
 app-bundle:
 	gtk-mac-bundler ./mac/moonshot-ui.bundle
 
-moonshot-ui/
-
 ## 3: Installer Package
 installer:
 
