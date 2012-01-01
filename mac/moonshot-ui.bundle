@@ -12,13 +12,14 @@
          defined by jhbuild, so it you are not using jhbuild you can
          either define your own or just hardcode the path here.
     -->
-    <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
+      <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
+      <prefix name="installer-dir">${env:HOME}/moonshot/mac-client-installer/moonshot-ui/</prefix>
 
     <!-- The project directory is the default location of the created
          app. If you leave out the path, the current directory is
          used. Note the usage of an environment variable here again.
     -->
-    <destination overwrite="yes"></destination>
+    <destination overwrite="yes">${prefix:installer-dir}</destination>
 
     <image>
       <!-- Not implemented yet (DMG image). -->
@@ -50,7 +51,7 @@
   -->
   <plist>${project}/moonshot-ui.plist</plist>
 
-  <main-binary>${prefix}/bin/moonshot</main-binary>
+    <main-binary>${prefix:installer-dir}bin/moonshot</main-binary>
 
   <!-- Copy in GTK+ modules.  Note the ${gtkdir} macro, which expands
        to the correct library subdirectory for the specified gtk
