@@ -232,13 +232,31 @@ icons:
 	
 ## 2. App bundle
 ## gtk-app-bundler must be installed
+## moonshot-ui.app will be built in moonshot/mac-client-installer/moonshot-ui/
 app-bundle:
 	gtk-mac-bundler ./mac/moonshot-ui.bundle
 
 ## 3: Installer Package
+
+installerdir = $(HOME)/moonshot/mac-client-installer
+
 installer:
+	cd $(installerdir) && pwd
 
-## 4: Disk Image
-disk-image:
+# fix up the cyrus-sasl links
+	cd $(installerdir) && mkdir -p sasl/usr/lib
+	cd $(installerdir)/sasl/usr/lib && ln -fs   ../local/lib/sasl2 
+	cd $(installerdir) && mkdir -p resources
 
+# Ensure the permissions are correct for the files to be installed
+
+	cd $(installerdir) && sudo chown -R root:admin sasl
+	cd $(installerdir) && sudo chmod -R g+w sasl
+
+# create the installer package
+	cd $(installerdir) && /Developer/usr/bin/packagemaker --doc Moonshot\ Client\ Software.pmdoc \
+      --version 0.1 --filter "/.DS_Store" --resources ./resources/ --root-volume-only\
+      --domain system --verbose --no-relocate -l "/" --target 10.5 \
+      --id ja.net.moonshotClientSoftware  --out Moonshot\ Client\ Software.pkg
+	
 endif
