@@ -240,23 +240,5 @@ app-bundle:
 
 installerdir = $(HOME)/moonshot/mac-client-installer
 
-installer:
-	cd $(installerdir) && pwd
-
-# fix up the cyrus-sasl links
-	cd $(installerdir) && mkdir -p sasl/usr/lib
-	cd $(installerdir)/sasl/usr/lib && ln -fs   ../local/lib/sasl2 
-	cd $(installerdir) && mkdir -p resources
-
-# Ensure the permissions are correct for the files to be installed
-
-	cd $(installerdir) && sudo chown -R root:admin sasl
-	cd $(installerdir) && sudo chmod -R g+w sasl
-
-# create the installer package
-	cd $(installerdir) && /Developer/usr/bin/packagemaker --doc Moonshot\ Client\ Software.pmdoc \
-      --version 0.1 --filter "/.DS_Store" --resources ./resources/ --root-volume-only\
-      --domain system --verbose --no-relocate -l "/" --target 10.5 \
-      --id ja.net.moonshotClientSoftware  --out Moonshot\ Client\ Software.pkg
 	
 endif
