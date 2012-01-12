@@ -85,7 +85,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                                     Config.PACKAGE_TARNAME);
                                     
         if (!FileUtils.test (path, FileTest.EXISTS)) {
-            DirUtils.create (path, 0700);
+            DirUtils.create_with_parents (path, 0700);
         }
         return path;
     }
