@@ -5,6 +5,9 @@ class IdentityManagerView : Window {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
+#if OS_MACOS
+	public OSXApplication osxApp;
+#endif
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private VBox vbox_right;
@@ -50,15 +53,21 @@ class IdentityManagerView : Window {
 
     public IdentityManagerView(IdentityManagerApp app) {
        parent_app = app;
-       identities_manager = parent_app.model;
+#if OS_MACOS
+ 		osxApp = OSXApplication.get_instance();
+#endif
+	   identities_manager = parent_app.model;
        request_queue = new GLib.Queue<IdentityRequest>();
        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
        this.title = "Moonshoot";
        this.set_position (WindowPosition.CENTER);
        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
        build_ui();
-       setup_list_model();
+       setup_list_model(); 
         load_id_cards(); 
+#if OS_MACOS
+		osxApp = app.osxApp;
+#endif
        connect_signals();
     }
     
@@ -925,6 +934,10 @@ SUCH DAMAGE.
         var menubar = this.ui_manager.get_widget ("/MenuBar");
         main_vbox.pack_start (menubar, false, false, 0);
         main_vbox.pack_start (hbox, true, true, 0);
+#if OS_MACOS
+		var menushell = this.ui_manager.get_widget("/Menu") as Gtk.MenuShell;
+		osxApp.set_menu_bar(menushell);
+#endif
         add (main_vbox);
 
         main_vbox.show_all();

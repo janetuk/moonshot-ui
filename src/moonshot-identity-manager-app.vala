@@ -1,9 +1,13 @@
 using Gtk;
 
+
 class IdentityManagerApp : Window {
     public IdentityManagerModel model;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;
+#if OS_MACOS
+	public OSXApplication osxApp;
+#endif
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
@@ -13,6 +17,9 @@ class IdentityManagerApp : Window {
         model = new IdentityManagerModel(this);
         view = new IdentityManagerView(this);
         init_ipc_server ();
+#if OS_MACOS
+ 		osxApp = OSXApplication.get_instance();
+#endif
         view.show();
     }   
     
@@ -77,6 +84,9 @@ class IdentityManagerApp : Window {
 
 public static int main(string[] args){
         Gtk.init(ref args);
+		stdout.printf("Hello\n");
+        foreach (string arg in args)
+			stdout.printf("arg %s\n", arg);
 
 #if OS_WIN32
         // Force specific theme settings on Windows without requiring a gtkrc file
@@ -89,6 +99,7 @@ public static int main(string[] args){
         Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
         Intl.textdomain (Config.GETTEXT_PACKAGE);
        
+	   
         var app = new IdentityManagerApp();
         
         app.show();

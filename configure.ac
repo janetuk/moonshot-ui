@@ -53,6 +53,10 @@ case "$host" in
             [SERVER_IPC_MODULE="gio-2.0"],
             [SERVER_IPC_MODULE="dbus-glib-1"]
     )
+	
+	PKG_CHECK_MODULES([MAC], 
+			[gtk-mac-integration >= 1.0.1]
+	)
 
 # TODO: Move to GTK+-3
 #            [gtk+-3.0 >= 2.0],
@@ -212,6 +216,7 @@ PKG_CHECK_MODULES(moonshot,[
         $GTK_VERSION
         gee-1.0 >= 0.5
         $SERVER_IPC_MODULE
+		$MAC
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
