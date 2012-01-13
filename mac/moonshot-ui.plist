@@ -26,5 +26,28 @@
 	<string>Copyright 2006-2007 Imendio AB, GNU General Public License.</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>10.4</string>
+<key>CFBundleDisplayName</key>
+<string>Moonshot Identity Selector</string>
+<key>CFBundleDocumentTypes</key>
+<array>
+    <dict>
+        <key>CFBundleTypeName</key>
+        <string>Moonshot Identity Selector ID Card</string>
+        <key>LSHandlerRank</key>
+        <string>Owner</string>
+        <key>CFBundleTypeExtensions</key>
+        <array>
+            <string>msht</string>
+            <string>msht</string>
+        </array>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleTypeMIMETypes</key>
+        <array>
+            <string>application/msht</string>
+            <string>application/msht</string>
+        </array>
+    </dict>
+</array>
 </dict>
 </plist>
