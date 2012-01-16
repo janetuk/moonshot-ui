@@ -931,18 +931,26 @@ SUCH DAMAGE.
 
         var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
+ 
+#if OS_MACOS
+        // hide the  File | Quit menu item which is now on the Mac Menu
+        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
+        quit_item.hide();
+        
+		Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
+		osxApp.set_menu_bar(menushell);
+		osxApp.set_use_quartz_accelerators(true);
+		osxApp.sync_menu_bar();
+		osxApp.ready(); 
+#else
         var menubar = this.ui_manager.get_widget ("/MenuBar");
         main_vbox.pack_start (menubar, false, false, 0);
-        main_vbox.pack_start (hbox, true, true, 0);
-#if OS_MACOS
-		var menushell = this.ui_manager.get_widget("/Menu") as Gtk.MenuShell;
-		osxApp.set_menu_bar(menushell);
 #endif
+        main_vbox.pack_start (hbox, true, true, 0);
         add (main_vbox);
-
         main_vbox.show_all();
         this.vbox_right.hide ();
-    }
+  } 
 
     private void set_atk_name_description (Widget widget, string name, string description)
     {
