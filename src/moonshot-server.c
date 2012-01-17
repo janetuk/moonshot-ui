@@ -8,9 +8,6 @@
 #include <gio/gio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dbus/dbus.h>
-#include <dbus/dbus-glib.h>
-#include <dbus/dbus-glib-lowlevel.h>
 
 
 #define TYPE_MOONSHOT_SERVER (moonshot_server_get_type ())
@@ -24,15 +21,15 @@ typedef struct _MoonshotServer MoonshotServer;
 typedef struct _MoonshotServerClass MoonshotServerClass;
 typedef struct _MoonshotServerPrivate MoonshotServerPrivate;
 
-#define TYPE_MAIN_WINDOW (main_window_get_type ())
-#define MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_MAIN_WINDOW, MainWindow))
-#define MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_MAIN_WINDOW, MainWindowClass))
-#define IS_MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_MAIN_WINDOW))
-#define IS_MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_MAIN_WINDOW))
-#define MAIN_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_MAIN_WINDOW, MainWindowClass))
+#define TYPE_IDENTITY_MANAGER_VIEW (identity_manager_view_get_type ())
+#define IDENTITY_MANAGER_VIEW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerView))
+#define IDENTITY_MANAGER_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerViewClass))
+#define IS_IDENTITY_MANAGER_VIEW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITY_MANAGER_VIEW))
+#define IS_IDENTITY_MANAGER_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITY_MANAGER_VIEW))
+#define IDENTITY_MANAGER_VIEW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerViewClass))
 
-typedef struct _MainWindow MainWindow;
-typedef struct _MainWindowClass MainWindowClass;
+typedef struct _IdentityManagerView IdentityManagerView;
+typedef struct _IdentityManagerViewClass IdentityManagerViewClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_free0(var) (var = (g_free (var), NULL))
 
@@ -66,14 +63,13 @@ typedef struct _IdCardClass IdCardClass;
 
 typedef struct _TrustAnchor TrustAnchor;
 typedef struct _TrustAnchorClass TrustAnchorClass;
-typedef struct _Block2Data Block2Data;
-typedef struct _MoonshotServerGetIdentityData MoonshotServerGetIdentityData;
 typedef struct _Block3Data Block3Data;
+typedef struct _MoonshotServerGetIdentityData MoonshotServerGetIdentityData;
+typedef struct _Block4Data Block4Data;
 typedef struct _MoonshotServerGetDefaultIdentityData MoonshotServerGetDefaultIdentityData;
 
 #define TYPE_RULE (rule_get_type ())
 typedef struct _Rule Rule;
-typedef struct _DBusObjectVTable _DBusObjectVTable;
 
 struct _MoonshotServer {
 	GObject parent_instance;
@@ -85,7 +81,7 @@ struct _MoonshotServerClass {
 };
 
 struct _MoonshotServerPrivate {
-	MainWindow* main_window;
+	IdentityManagerView* main_window;
 };
 
 typedef void (*ReturnIdentityCallback) (IdentityRequest* request, void* user_data);
@@ -104,7 +100,7 @@ struct _IdentityRequestClass {
 	GObjectClass parent_class;
 };
 
-struct _Block2Data {
+struct _Block3Data {
 	int _ref_count_;
 	MoonshotServer * self;
 	gpointer _async_data_;
@@ -145,10 +141,10 @@ struct _MoonshotServerGetIdentityData {
 	char* _tmp15_;
 	char* _tmp16_;
 	char* _tmp17_;
-	Block2Data* _data2_;
+	Block3Data* _data3_;
 };
 
-struct _Block3Data {
+struct _Block4Data {
 	int _ref_count_;
 	MoonshotServer * self;
 	gpointer _async_data_;
@@ -185,7 +181,7 @@ struct _MoonshotServerGetDefaultIdentityData {
 	char* _tmp15_;
 	char* _tmp16_;
 	char* _tmp17_;
-	Block3Data* _data3_;
+	Block4Data* _data4_;
 };
 
 struct _Rule {
@@ -193,15 +189,12 @@ struct _Rule {
 	char* always_confirm;
 };
 
-struct _DBusObjectVTable {
-	void (*register_object) (DBusConnection*, const char*, void*);
-};
-
 
 static gpointer moonshot_server_parent_class = NULL;
 
 GType moonshot_server_get_type (void) G_GNUC_CONST;
-GType main_window_get_type (void) G_GNUC_CONST;
+guint moonshot_server_register_object (void* object, GDBusConnection* connection, const gchar* path, GError** error);
+GType identity_manager_view_get_type (void) G_GNUC_CONST;
 #define MOONSHOT_SERVER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_MOONSHOT_SERVER, MoonshotServerPrivate))
 enum  {
 	MOONSHOT_SERVER_DUMMY_PROPERTY
@@ -213,11 +206,11 @@ static void moonshot_server_get_identity_ready (GObject* source_object, GAsyncRe
 void moonshot_server_get_identity (MoonshotServer* self, const char* nai, const char* password, const char* service, GAsyncReadyCallback _callback_, gpointer _user_data_);
 gboolean moonshot_server_get_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint);
 static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* data);
-IdentityRequest* identity_request_new (MainWindow* main_window, const char* nai, const char* password, const char* service);
-IdentityRequest* identity_request_construct (GType object_type, MainWindow* main_window, const char* nai, const char* password, const char* service);
+IdentityRequest* identity_request_new (IdentityManagerView* main_window, const char* nai, const char* password, const char* service);
+IdentityRequest* identity_request_construct (GType object_type, IdentityManagerView* main_window, const char* nai, const char* password, const char* service);
 GType identity_request_get_type (void) G_GNUC_CONST;
 void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallback cb, void* cb_target, GDestroyNotify cb_target_destroy_notify);
-static void _lambda4_ (IdentityRequest* IdentityRequest, Block2Data* _data2_);
+static void _lambda4_ (IdentityRequest* IdentityRequest, Block3Data* _data3_);
 static void __lambda4__return_identity_callback (IdentityRequest* request, gpointer self);
 gboolean identity_request_execute (IdentityRequest* self);
 GType id_card_get_type (void) G_GNUC_CONST;
@@ -229,19 +222,19 @@ const char* trust_anchor_get_server_cert (TrustAnchor* self);
 const char* trust_anchor_get_ca_cert (TrustAnchor* self);
 const char* trust_anchor_get_subject (TrustAnchor* self);
 const char* trust_anchor_get_subject_alt (TrustAnchor* self);
-static Block2Data* block2_data_ref (Block2Data* _data2_);
-static void block2_data_unref (Block2Data* _data2_);
+static Block3Data* block3_data_ref (Block3Data* _data3_);
+static void block3_data_unref (Block3Data* _data3_);
 static void moonshot_server_get_default_identity_data_free (gpointer _data);
 static void moonshot_server_get_default_identity_ready (GObject* source_object, GAsyncResult* _res_, gpointer _user_data_);
 void moonshot_server_get_default_identity (MoonshotServer* self, GAsyncReadyCallback _callback_, gpointer _user_data_);
 gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, char** nai_out, char** password_out, char** server_certificate_hash, char** ca_certificate, char** subject_name_constraint, char** subject_alt_name_constraint);
 static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaultIdentityData* data);
-IdentityRequest* identity_request_new_default (MainWindow* main_window);
-IdentityRequest* identity_request_construct_default (GType object_type, MainWindow* main_window);
-static void _lambda5_ (IdentityRequest* IdentityRequest, Block3Data* _data3_);
+IdentityRequest* identity_request_new_default (IdentityManagerView* main_window);
+IdentityRequest* identity_request_construct_default (GType object_type, IdentityManagerView* main_window);
+static void _lambda5_ (IdentityRequest* IdentityRequest, Block4Data* _data4_);
 static void __lambda5__return_identity_callback (IdentityRequest* request, gpointer self);
-static Block3Data* block3_data_ref (Block3Data* _data3_);
-static void block3_data_unref (Block3Data* _data3_);
+static Block4Data* block4_data_ref (Block4Data* _data4_);
+static void block4_data_unref (Block4Data* _data4_);
 gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* display_name, const char* user_name, const char* password, const char* realm, char** rules_patterns, int rules_patterns_length1, char** rules_always_confirm, int rules_always_confirm_length1, char** services, int services_length1, const char* ca_cert, const char* subject, const char* subject_alt, const char* server_cert);
 IdCard* id_card_new (void);
 IdCard* id_card_construct (GType object_type);
@@ -262,25 +255,63 @@ void rule_destroy (Rule* self);
 void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
 static void _vala_Rule_array_free (Rule* array, gint array_length);
 Rule* id_card_get_rules (IdCard* self, int* result_length1);
-gboolean main_window_add_identity (MainWindow* self, IdCard* id_card);
-static void _vala_dbus_register_object (DBusConnection* connection, const char* path, void* object);
-static void _vala_dbus_unregister_object (gpointer connection, GObject* object);
-void moonshot_server_dbus_register_object (DBusConnection* connection, const char* path, void* object);
-void _moonshot_server_dbus_unregister (DBusConnection* connection, void* _user_data_);
-DBusHandlerResult moonshot_server_dbus_message (DBusConnection* connection, DBusMessage* message, void* object);
-static DBusHandlerResult _dbus_moonshot_server_introspect (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
-static DBusHandlerResult _dbus_moonshot_server_property_get_all (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
-static DBusHandlerResult _dbus_moonshot_server_get_identity (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
-static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
-static DBusHandlerResult _dbus_moonshot_server_get_default_identity (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
-static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
-static DBusHandlerResult _dbus_moonshot_server_install_id_card (MoonshotServer* self, DBusConnection* connection, DBusMessage* message);
+gboolean identity_manager_view_add_identity (IdentityManagerView* self, IdCard* id_card);
 static void moonshot_server_finalize (GObject* obj);
+static void moonshot_server_dbus_interface_method_call (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* method_name, GVariant* parameters, GDBusMethodInvocation* invocation, gpointer user_data);
+static void _dbus_moonshot_server_get_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
+static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
+static void _dbus_moonshot_server_get_default_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
+static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
+static void _dbus_moonshot_server_install_id_card (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
+static GVariant* moonshot_server_dbus_interface_get_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GError** error, gpointer user_data);
+static gboolean moonshot_server_dbus_interface_set_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GVariant* value, GError** error, gpointer user_data);
+static void _moonshot_server_unregister_object (gpointer user_data);
 static void _vala_array_destroy (gpointer array, gint array_length, GDestroyNotify destroy_func);
 static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify destroy_func);
 
-static const DBusObjectPathVTable _moonshot_server_dbus_path_vtable = {_moonshot_server_dbus_unregister, moonshot_server_dbus_message};
-static const _DBusObjectVTable _moonshot_server_dbus_vtable = {moonshot_server_dbus_register_object};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_nai = {-1, "nai", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_password = {-1, "password", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_service = {-1, "service", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_nai_out = {-1, "nai_out", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_password_out = {-1, "password_out", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_server_certificate_hash = {-1, "server_certificate_hash", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_ca_certificate = {-1, "ca_certificate", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_subject_name_constraint = {-1, "subject_name_constraint", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_subject_alt_name_constraint = {-1, "subject_alt_name_constraint", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_identity_result = {-1, "result", "b"};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_get_identity_in[] = {&_moonshot_server_dbus_arg_info_get_identity_nai, &_moonshot_server_dbus_arg_info_get_identity_password, &_moonshot_server_dbus_arg_info_get_identity_service, NULL};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_get_identity_out[] = {&_moonshot_server_dbus_arg_info_get_identity_nai_out, &_moonshot_server_dbus_arg_info_get_identity_password_out, &_moonshot_server_dbus_arg_info_get_identity_server_certificate_hash, &_moonshot_server_dbus_arg_info_get_identity_ca_certificate, &_moonshot_server_dbus_arg_info_get_identity_subject_name_constraint, &_moonshot_server_dbus_arg_info_get_identity_subject_alt_name_constraint, &_moonshot_server_dbus_arg_info_get_identity_result, NULL};
+static const GDBusMethodInfo _moonshot_server_dbus_method_info_get_identity = {-1, "GetIdentity", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_get_identity_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_get_identity_out)};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_nai_out = {-1, "nai_out", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_password_out = {-1, "password_out", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_server_certificate_hash = {-1, "server_certificate_hash", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_ca_certificate = {-1, "ca_certificate", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_subject_name_constraint = {-1, "subject_name_constraint", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_subject_alt_name_constraint = {-1, "subject_alt_name_constraint", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_get_default_identity_result = {-1, "result", "b"};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_get_default_identity_in[] = {NULL};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_get_default_identity_out[] = {&_moonshot_server_dbus_arg_info_get_default_identity_nai_out, &_moonshot_server_dbus_arg_info_get_default_identity_password_out, &_moonshot_server_dbus_arg_info_get_default_identity_server_certificate_hash, &_moonshot_server_dbus_arg_info_get_default_identity_ca_certificate, &_moonshot_server_dbus_arg_info_get_default_identity_subject_name_constraint, &_moonshot_server_dbus_arg_info_get_default_identity_subject_alt_name_constraint, &_moonshot_server_dbus_arg_info_get_default_identity_result, NULL};
+static const GDBusMethodInfo _moonshot_server_dbus_method_info_get_default_identity = {-1, "GetDefaultIdentity", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_get_default_identity_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_get_default_identity_out)};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_display_name = {-1, "display_name", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_user_name = {-1, "user_name", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_password = {-1, "password", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_realm = {-1, "realm", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_rules_patterns = {-1, "rules_patterns", "as"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_rules_always_confirm = {-1, "rules_always_confirm", "as"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_services = {-1, "services", "as"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_ca_cert = {-1, "ca_cert", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_subject = {-1, "subject", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_subject_alt = {-1, "subject_alt", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_server_cert = {-1, "server_cert", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_result = {-1, "result", "b"};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card_in[] = {&_moonshot_server_dbus_arg_info_install_id_card_display_name, &_moonshot_server_dbus_arg_info_install_id_card_user_name, &_moonshot_server_dbus_arg_info_install_id_card_password, &_moonshot_server_dbus_arg_info_install_id_card_realm, &_moonshot_server_dbus_arg_info_install_id_card_rules_patterns, &_moonshot_server_dbus_arg_info_install_id_card_rules_always_confirm, &_moonshot_server_dbus_arg_info_install_id_card_services, &_moonshot_server_dbus_arg_info_install_id_card_ca_cert, &_moonshot_server_dbus_arg_info_install_id_card_subject, &_moonshot_server_dbus_arg_info_install_id_card_subject_alt, &_moonshot_server_dbus_arg_info_install_id_card_server_cert, NULL};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card_out[] = {&_moonshot_server_dbus_arg_info_install_id_card_result, NULL};
+static const GDBusMethodInfo _moonshot_server_dbus_method_info_install_id_card = {-1, "InstallIdCard", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_out)};
+static const GDBusMethodInfo * const _moonshot_server_dbus_method_info[] = {&_moonshot_server_dbus_method_info_get_identity, &_moonshot_server_dbus_method_info_get_default_identity, &_moonshot_server_dbus_method_info_install_id_card, NULL};
+static const GDBusSignalInfo * const _moonshot_server_dbus_signal_info[] = {NULL};
+static const GDBusPropertyInfo * const _moonshot_server_dbus_property_info[] = {NULL};
+static const GDBusInterfaceInfo _moonshot_server_dbus_interface_info = {-1, "org.janet.Moonshot", (GDBusMethodInfo **) (&_moonshot_server_dbus_method_info), (GDBusSignalInfo **) (&_moonshot_server_dbus_signal_info), (GDBusPropertyInfo **) (&_moonshot_server_dbus_property_info)};
+static const GDBusInterfaceVTable _moonshot_server_dbus_interface_vtable = {moonshot_server_dbus_interface_method_call, moonshot_server_dbus_interface_get_property, moonshot_server_dbus_interface_set_property};
 
 
 static gpointer _g_object_ref0 (gpointer self) {
@@ -290,10 +321,10 @@ static gpointer _g_object_ref0 (gpointer self) {
 
 MoonshotServer* moonshot_server_construct (GType object_type, GtkWindow* window) {
 	MoonshotServer * self = NULL;
-	MainWindow* _tmp0_;
+	IdentityManagerView* _tmp0_;
 	g_return_val_if_fail (window != NULL, NULL);
 	self = (MoonshotServer*) g_object_new (object_type, NULL);
-	self->priv->main_window = (_tmp0_ = _g_object_ref0 (MAIN_WINDOW (window)), _g_object_unref0 (self->priv->main_window), _tmp0_);
+	self->priv->main_window = (_tmp0_ = _g_object_ref0 (IDENTITY_MANAGER_VIEW (window)), _g_object_unref0 (self->priv->main_window), _tmp0_);
 	return self;
 }
 
@@ -356,11 +387,11 @@ static void moonshot_server_get_identity_ready (GObject* source_object, GAsyncRe
 }
 
 
-static void _lambda4_ (IdentityRequest* IdentityRequest, Block2Data* _data2_) {
+static void _lambda4_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
 	MoonshotServer * self;
-	self = _data2_->self;
+	self = _data3_->self;
 	g_return_if_fail (IdentityRequest != NULL);
-	moonshot_server_get_identity_co (_data2_->_async_data_);
+	moonshot_server_get_identity_co (_data3_->_async_data_);
 }
 
 
@@ -369,16 +400,16 @@ static void __lambda4__return_identity_callback (IdentityRequest* request, gpoin
 }
 
 
-static Block2Data* block2_data_ref (Block2Data* _data2_) {
-	g_atomic_int_inc (&_data2_->_ref_count_);
-	return _data2_;
+static Block3Data* block3_data_ref (Block3Data* _data3_) {
+	g_atomic_int_inc (&_data3_->_ref_count_);
+	return _data3_;
 }
 
 
-static void block2_data_unref (Block2Data* _data2_) {
-	if (g_atomic_int_dec_and_test (&_data2_->_ref_count_)) {
-		_g_object_unref0 (_data2_->self);
-		g_slice_free (Block2Data, _data2_);
+static void block3_data_unref (Block3Data* _data3_) {
+	if (g_atomic_int_dec_and_test (&_data3_->_ref_count_)) {
+		_g_object_unref0 (_data3_->self);
+		g_slice_free (Block3Data, _data3_);
 	}
 }
 
@@ -393,12 +424,12 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 		goto _state_1;
 	}
 	_state_0:
-	data->_data2_ = g_slice_new0 (Block2Data);
-	data->_data2_->_ref_count_ = 1;
-	data->_data2_->self = g_object_ref (data->self);
-	data->_data2_->_async_data_ = data;
+	data->_data3_ = g_slice_new0 (Block3Data);
+	data->_data3_->_ref_count_ = 1;
+	data->_data3_->self = g_object_ref (data->self);
+	data->_data3_->_async_data_ = data;
 	data->request = identity_request_new (data->self->priv->main_window, data->nai, data->password, data->service);
-	identity_request_set_callback (data->request, __lambda4__return_identity_callback, block2_data_ref (data->_data2_), block2_data_unref);
+	identity_request_set_callback (data->request, __lambda4__return_identity_callback, block3_data_ref (data->_data3_), block3_data_unref);
 	identity_request_execute (data->request);
 	data->_state_ = 1;
 	return FALSE;
@@ -439,7 +470,7 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 		data->result = TRUE;
 		_g_object_unref0 (data->id_card);
 		_g_object_unref0 (data->request);
-		block2_data_unref (data->_data2_);
+		block3_data_unref (data->_data3_);
 		{
 			if (data->_state_ == 0) {
 				g_simple_async_result_complete_in_idle (data->_async_result);
@@ -453,7 +484,7 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 	data->result = FALSE;
 	_g_object_unref0 (data->id_card);
 	_g_object_unref0 (data->request);
-	block2_data_unref (data->_data2_);
+	block3_data_unref (data->_data3_);
 	{
 		if (data->_state_ == 0) {
 			g_simple_async_result_complete_in_idle (data->_async_result);
@@ -465,7 +496,7 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 	}
 	_g_object_unref0 (data->id_card);
 	_g_object_unref0 (data->request);
-	block2_data_unref (data->_data2_);
+	block3_data_unref (data->_data3_);
 	{
 		if (data->_state_ == 0) {
 			g_simple_async_result_complete_in_idle (data->_async_result);
@@ -525,11 +556,11 @@ static void moonshot_server_get_default_identity_ready (GObject* source_object, 
 }
 
 
-static void _lambda5_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
+static void _lambda5_ (IdentityRequest* IdentityRequest, Block4Data* _data4_) {
 	MoonshotServer * self;
-	self = _data3_->self;
+	self = _data4_->self;
 	g_return_if_fail (IdentityRequest != NULL);
-	moonshot_server_get_default_identity_co (_data3_->_async_data_);
+	moonshot_server_get_default_identity_co (_data4_->_async_data_);
 }
 
 
@@ -538,16 +569,16 @@ static void __lambda5__return_identity_callback (IdentityRequest* request, gpoin
 }
 
 
-static Block3Data* block3_data_ref (Block3Data* _data3_) {
-	g_atomic_int_inc (&_data3_->_ref_count_);
-	return _data3_;
+static Block4Data* block4_data_ref (Block4Data* _data4_) {
+	g_atomic_int_inc (&_data4_->_ref_count_);
+	return _data4_;
 }
 
 
-static void block3_data_unref (Block3Data* _data3_) {
-	if (g_atomic_int_dec_and_test (&_data3_->_ref_count_)) {
-		_g_object_unref0 (_data3_->self);
-		g_slice_free (Block3Data, _data3_);
+static void block4_data_unref (Block4Data* _data4_) {
+	if (g_atomic_int_dec_and_test (&_data4_->_ref_count_)) {
+		_g_object_unref0 (_data4_->self);
+		g_slice_free (Block4Data, _data4_);
 	}
 }
 
@@ -562,12 +593,12 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 		goto _state_2;
 	}
 	_state_0:
-	data->_data3_ = g_slice_new0 (Block3Data);
-	data->_data3_->_ref_count_ = 1;
-	data->_data3_->self = g_object_ref (data->self);
-	data->_data3_->_async_data_ = data;
+	data->_data4_ = g_slice_new0 (Block4Data);
+	data->_data4_->_ref_count_ = 1;
+	data->_data4_->self = g_object_ref (data->self);
+	data->_data4_->_async_data_ = data;
 	data->request = identity_request_new_default (data->self->priv->main_window);
-	identity_request_set_callback (data->request, __lambda5__return_identity_callback, block3_data_ref (data->_data3_), block3_data_unref);
+	identity_request_set_callback (data->request, __lambda5__return_identity_callback, block4_data_ref (data->_data4_), block4_data_unref);
 	identity_request_execute (data->request);
 	data->_state_ = 2;
 	return FALSE;
@@ -606,7 +637,7 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 		}
 		data->result = TRUE;
 		_g_object_unref0 (data->request);
-		block3_data_unref (data->_data3_);
+		block4_data_unref (data->_data4_);
 		{
 			if (data->_state_ == 0) {
 				g_simple_async_result_complete_in_idle (data->_async_result);
@@ -619,7 +650,7 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 	}
 	data->result = FALSE;
 	_g_object_unref0 (data->request);
-	block3_data_unref (data->_data3_);
+	block4_data_unref (data->_data4_);
 	{
 		if (data->_state_ == 0) {
 			g_simple_async_result_complete_in_idle (data->_async_result);
@@ -630,7 +661,7 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 		return FALSE;
 	}
 	_g_object_unref0 (data->request);
-	block3_data_unref (data->_data3_);
+	block4_data_unref (data->_data4_);
 	{
 		if (data->_state_ == 0) {
 			g_simple_async_result_complete_in_idle (data->_async_result);
@@ -714,437 +745,9 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* disp
 			}
 		}
 	}
-	result = main_window_add_identity (self->priv->main_window, idcard);
+	result = identity_manager_view_add_identity (self->priv->main_window, idcard);
 	_g_object_unref0 (idcard);
 	return result;
-}
-
-
-static void _vala_dbus_register_object (DBusConnection* connection, const char* path, void* object) {
-	const _DBusObjectVTable * vtable;
-	vtable = g_type_get_qdata (G_TYPE_FROM_INSTANCE (object), g_quark_from_static_string ("DBusObjectVTable"));
-	if (vtable) {
-		vtable->register_object (connection, path, object);
-	} else {
-		g_warning ("Object does not implement any D-Bus interface");
-	}
-}
-
-
-static void _vala_dbus_unregister_object (gpointer connection, GObject* object) {
-	char* path;
-	path = g_object_steal_data ((GObject*) object, "dbus_object_path");
-	dbus_connection_unregister_object_path (connection, path);
-	g_free (path);
-}
-
-
-void _moonshot_server_dbus_unregister (DBusConnection* connection, void* _user_data_) {
-}
-
-
-static DBusHandlerResult _dbus_moonshot_server_introspect (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
-	DBusMessage* reply;
-	DBusMessageIter iter;
-	GString* xml_data;
-	char** children;
-	int i;
-	reply = dbus_message_new_method_return (message);
-	dbus_message_iter_init_append (reply, &iter);
-	xml_data = g_string_new ("<!DOCTYPE node PUBLIC \"-//freedesktop//DTD D-BUS Object Introspection 1.0//EN\" \"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd\">\n");
-	g_string_append (xml_data, "<node>\n<interface name=\"org.freedesktop.DBus.Introspectable\">\n  <method name=\"Introspect\">\n    <arg name=\"data\" direction=\"out\" type=\"s\"/>\n  </method>\n</interface>\n<interface name=\"org.freedesktop.DBus.Properties\">\n  <method name=\"Get\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"out\" type=\"v\"/>\n  </method>\n  <method name=\"Set\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"propname\" direction=\"in\" type=\"s\"/>\n    <arg name=\"value\" direction=\"in\" type=\"v\"/>\n  </method>\n  <method name=\"GetAll\">\n    <arg name=\"interface\" direction=\"in\" type=\"s\"/>\n    <arg name=\"props\" direction=\"out\" type=\"a{sv}\"/>\n  </method>\n</interface>\n<interface name=\"org.janet.Moonshot\">\n  <method name=\"GetIdentity\">\n    <arg name=\"nai\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"service\" type=\"s\" direction=\"in\"/>\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"GetDefaultIdentity\">\n    <arg name=\"nai_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"password_out\" type=\"s\" direction=\"out\"/>\n    <arg name=\"server_certificate_hash\" type=\"s\" direction=\"out\"/>\n    <arg name=\"ca_certificate\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"subject_alt_name_constraint\" type=\"s\" direction=\"out\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n  <method name=\"InstallIdCard\">\n    <arg name=\"display_name\" type=\"s\" direction=\"in\"/>\n    <arg name=\"user_name\" type=\"s\" direction=\"in\"/>\n    <arg name=\"password\" type=\"s\" direction=\"in\"/>\n    <arg name=\"realm\" type=\"s\" direction=\"in\"/>\n    <arg name=\"rules_patterns\" type=\"as\" direction=\"in\"/>\n    <arg name=\"rules_always_confirm\" type=\"as\" direction=\"in\"/>\n    <arg name=\"services\" type=\"as\" direction=\"in\"/>\n    <arg name=\"ca_cert\" type=\"s\" direction=\"in\"/>\n    <arg name=\"subject\" type=\"s\" direction=\"in\"/>\n    <arg name=\"subject_alt\" type=\"s\" direction=\"in\"/>\n    <arg name=\"server_cert\" type=\"s\" direction=\"in\"/>\n    <arg name=\"result\" type=\"b\" direction=\"out\"/>\n  </method>\n</interface>\n");
-	dbus_connection_list_registered (connection, g_object_get_data ((GObject *) self, "dbus_object_path"), &children);
-	for (i = 0; children[i]; i++) {
-		g_string_append_printf (xml_data, "<node name=\"%s\"/>\n", children[i]);
-	}
-	dbus_free_string_array (children);
-	g_string_append (xml_data, "</node>\n");
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &xml_data->str);
-	g_string_free (xml_data, TRUE);
-	if (reply) {
-		dbus_connection_send (connection, reply, NULL);
-		dbus_message_unref (reply);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	} else {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-}
-
-
-static DBusHandlerResult _dbus_moonshot_server_property_get_all (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
-	DBusMessage* reply;
-	DBusMessageIter iter, reply_iter, subiter;
-	char* interface_name;
-	const char* _tmp0_;
-	if (strcmp (dbus_message_get_signature (message), "s")) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	dbus_message_iter_init (message, &iter);
-	reply = dbus_message_new_method_return (message);
-	dbus_message_iter_init_append (reply, &reply_iter);
-	dbus_message_iter_get_basic (&iter, &_tmp0_);
-	dbus_message_iter_next (&iter);
-	interface_name = g_strdup (_tmp0_);
-	if (strcmp (interface_name, "org.janet.Moonshot") == 0) {
-		dbus_message_iter_open_container (&reply_iter, DBUS_TYPE_ARRAY, "{sv}", &subiter);
-		dbus_message_iter_close_container (&reply_iter, &subiter);
-	} else {
-		dbus_message_unref (reply);
-		reply = NULL;
-	}
-	g_free (interface_name);
-	if (reply) {
-		dbus_connection_send (connection, reply, NULL);
-		dbus_message_unref (reply);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	} else {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-}
-
-
-static DBusHandlerResult _dbus_moonshot_server_get_identity (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
-	DBusMessageIter iter;
-	char* nai = NULL;
-	const char* _tmp1_;
-	char* password = NULL;
-	const char* _tmp2_;
-	char* service = NULL;
-	const char* _tmp3_;
-	gpointer * _user_data_;
-	if (strcmp (dbus_message_get_signature (message), "sss")) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	dbus_message_iter_init (message, &iter);
-	dbus_message_iter_get_basic (&iter, &_tmp1_);
-	dbus_message_iter_next (&iter);
-	nai = g_strdup (_tmp1_);
-	dbus_message_iter_get_basic (&iter, &_tmp2_);
-	dbus_message_iter_next (&iter);
-	password = g_strdup (_tmp2_);
-	dbus_message_iter_get_basic (&iter, &_tmp3_);
-	dbus_message_iter_next (&iter);
-	service = g_strdup (_tmp3_);
-	_user_data_ = g_new0 (gpointer, 2);
-	_user_data_[0] = dbus_connection_ref (connection);
-	_user_data_[1] = dbus_message_ref (message);
-	moonshot_server_get_identity (self, nai, password, service, (GAsyncReadyCallback) _dbus_moonshot_server_get_identity_ready, _user_data_);
-	_g_free0 (nai);
-	_g_free0 (password);
-	_g_free0 (service);
-	return DBUS_HANDLER_RESULT_HANDLED;
-}
-
-
-static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_) {
-	DBusConnection * connection;
-	DBusMessage * message;
-	DBusMessageIter iter;
-	GError* error;
-	char* nai_out = NULL;
-	char* password_out = NULL;
-	char* server_certificate_hash = NULL;
-	char* ca_certificate = NULL;
-	char* subject_name_constraint = NULL;
-	char* subject_alt_name_constraint = NULL;
-	gboolean result;
-	DBusMessage* reply;
-	const char* _tmp4_;
-	const char* _tmp5_;
-	const char* _tmp6_;
-	const char* _tmp7_;
-	const char* _tmp8_;
-	const char* _tmp9_;
-	dbus_bool_t _tmp10_;
-	connection = _user_data_[0];
-	message = _user_data_[1];
-	error = NULL;
-	result = moonshot_server_get_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint);
-	reply = dbus_message_new_method_return (message);
-	dbus_message_iter_init_append (reply, &iter);
-	_tmp4_ = nai_out;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp4_);
-	_g_free0 (nai_out);
-	_tmp5_ = password_out;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp5_);
-	_g_free0 (password_out);
-	_tmp6_ = server_certificate_hash;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp6_);
-	_g_free0 (server_certificate_hash);
-	_tmp7_ = ca_certificate;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp7_);
-	_g_free0 (ca_certificate);
-	_tmp8_ = subject_name_constraint;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp8_);
-	_g_free0 (subject_name_constraint);
-	_tmp9_ = subject_alt_name_constraint;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp9_);
-	_g_free0 (subject_alt_name_constraint);
-	_tmp10_ = result;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp10_);
-	dbus_connection_send (connection, reply, NULL);
-	dbus_message_unref (reply);
-	dbus_connection_unref (connection);
-	dbus_message_unref (message);
-	g_free (_user_data_);
-}
-
-
-static DBusHandlerResult _dbus_moonshot_server_get_default_identity (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
-	DBusMessageIter iter;
-	gpointer * _user_data_;
-	if (strcmp (dbus_message_get_signature (message), "")) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	dbus_message_iter_init (message, &iter);
-	_user_data_ = g_new0 (gpointer, 2);
-	_user_data_[0] = dbus_connection_ref (connection);
-	_user_data_[1] = dbus_message_ref (message);
-	moonshot_server_get_default_identity (self, (GAsyncReadyCallback) _dbus_moonshot_server_get_default_identity_ready, _user_data_);
-	return DBUS_HANDLER_RESULT_HANDLED;
-}
-
-
-static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_) {
-	DBusConnection * connection;
-	DBusMessage * message;
-	DBusMessageIter iter;
-	GError* error;
-	char* nai_out = NULL;
-	char* password_out = NULL;
-	char* server_certificate_hash = NULL;
-	char* ca_certificate = NULL;
-	char* subject_name_constraint = NULL;
-	char* subject_alt_name_constraint = NULL;
-	gboolean result;
-	DBusMessage* reply;
-	const char* _tmp11_;
-	const char* _tmp12_;
-	const char* _tmp13_;
-	const char* _tmp14_;
-	const char* _tmp15_;
-	const char* _tmp16_;
-	dbus_bool_t _tmp17_;
-	connection = _user_data_[0];
-	message = _user_data_[1];
-	error = NULL;
-	result = moonshot_server_get_default_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint);
-	reply = dbus_message_new_method_return (message);
-	dbus_message_iter_init_append (reply, &iter);
-	_tmp11_ = nai_out;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp11_);
-	_g_free0 (nai_out);
-	_tmp12_ = password_out;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp12_);
-	_g_free0 (password_out);
-	_tmp13_ = server_certificate_hash;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp13_);
-	_g_free0 (server_certificate_hash);
-	_tmp14_ = ca_certificate;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp14_);
-	_g_free0 (ca_certificate);
-	_tmp15_ = subject_name_constraint;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp15_);
-	_g_free0 (subject_name_constraint);
-	_tmp16_ = subject_alt_name_constraint;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_STRING, &_tmp16_);
-	_g_free0 (subject_alt_name_constraint);
-	_tmp17_ = result;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp17_);
-	dbus_connection_send (connection, reply, NULL);
-	dbus_message_unref (reply);
-	dbus_connection_unref (connection);
-	dbus_message_unref (message);
-	g_free (_user_data_);
-}
-
-
-static DBusHandlerResult _dbus_moonshot_server_install_id_card (MoonshotServer* self, DBusConnection* connection, DBusMessage* message) {
-	DBusMessageIter iter;
-	GError* error;
-	char* display_name = NULL;
-	const char* _tmp18_;
-	char* user_name = NULL;
-	const char* _tmp19_;
-	char* password = NULL;
-	const char* _tmp20_;
-	char* realm = NULL;
-	const char* _tmp21_;
-	char** rules_patterns = NULL;
-	int rules_patterns_length1;
-	char** _tmp22_;
-	int _tmp22__length;
-	int _tmp22__size;
-	int _tmp22__length1;
-	DBusMessageIter _tmp23_;
-	char** rules_always_confirm = NULL;
-	int rules_always_confirm_length1;
-	char** _tmp25_;
-	int _tmp25__length;
-	int _tmp25__size;
-	int _tmp25__length1;
-	DBusMessageIter _tmp26_;
-	char** services = NULL;
-	int services_length1;
-	char** _tmp28_;
-	int _tmp28__length;
-	int _tmp28__size;
-	int _tmp28__length1;
-	DBusMessageIter _tmp29_;
-	char* ca_cert = NULL;
-	const char* _tmp31_;
-	char* subject = NULL;
-	const char* _tmp32_;
-	char* subject_alt = NULL;
-	const char* _tmp33_;
-	char* server_cert = NULL;
-	const char* _tmp34_;
-	gboolean result;
-	DBusMessage* reply;
-	dbus_bool_t _tmp35_;
-	error = NULL;
-	if (strcmp (dbus_message_get_signature (message), "ssssasasasssss")) {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-	dbus_message_iter_init (message, &iter);
-	dbus_message_iter_get_basic (&iter, &_tmp18_);
-	dbus_message_iter_next (&iter);
-	display_name = g_strdup (_tmp18_);
-	dbus_message_iter_get_basic (&iter, &_tmp19_);
-	dbus_message_iter_next (&iter);
-	user_name = g_strdup (_tmp19_);
-	dbus_message_iter_get_basic (&iter, &_tmp20_);
-	dbus_message_iter_next (&iter);
-	password = g_strdup (_tmp20_);
-	dbus_message_iter_get_basic (&iter, &_tmp21_);
-	dbus_message_iter_next (&iter);
-	realm = g_strdup (_tmp21_);
-	rules_patterns_length1 = 0;
-	_tmp22_ = g_new (char*, 5);
-	_tmp22__length = 0;
-	_tmp22__size = 4;
-	_tmp22__length1 = 0;
-	dbus_message_iter_recurse (&iter, &_tmp23_);
-	for (; dbus_message_iter_get_arg_type (&_tmp23_); _tmp22__length1++) {
-		const char* _tmp24_;
-		if (_tmp22__size == _tmp22__length) {
-			_tmp22__size = 2 * _tmp22__size;
-			_tmp22_ = g_renew (char*, _tmp22_, _tmp22__size + 1);
-		}
-		dbus_message_iter_get_basic (&_tmp23_, &_tmp24_);
-		dbus_message_iter_next (&_tmp23_);
-		_tmp22_[_tmp22__length++] = g_strdup (_tmp24_);
-	}
-	rules_patterns_length1 = _tmp22__length1;
-	_tmp22_[_tmp22__length] = NULL;
-	dbus_message_iter_next (&iter);
-	rules_patterns = _tmp22_;
-	rules_always_confirm_length1 = 0;
-	_tmp25_ = g_new (char*, 5);
-	_tmp25__length = 0;
-	_tmp25__size = 4;
-	_tmp25__length1 = 0;
-	dbus_message_iter_recurse (&iter, &_tmp26_);
-	for (; dbus_message_iter_get_arg_type (&_tmp26_); _tmp25__length1++) {
-		const char* _tmp27_;
-		if (_tmp25__size == _tmp25__length) {
-			_tmp25__size = 2 * _tmp25__size;
-			_tmp25_ = g_renew (char*, _tmp25_, _tmp25__size + 1);
-		}
-		dbus_message_iter_get_basic (&_tmp26_, &_tmp27_);
-		dbus_message_iter_next (&_tmp26_);
-		_tmp25_[_tmp25__length++] = g_strdup (_tmp27_);
-	}
-	rules_always_confirm_length1 = _tmp25__length1;
-	_tmp25_[_tmp25__length] = NULL;
-	dbus_message_iter_next (&iter);
-	rules_always_confirm = _tmp25_;
-	services_length1 = 0;
-	_tmp28_ = g_new (char*, 5);
-	_tmp28__length = 0;
-	_tmp28__size = 4;
-	_tmp28__length1 = 0;
-	dbus_message_iter_recurse (&iter, &_tmp29_);
-	for (; dbus_message_iter_get_arg_type (&_tmp29_); _tmp28__length1++) {
-		const char* _tmp30_;
-		if (_tmp28__size == _tmp28__length) {
-			_tmp28__size = 2 * _tmp28__size;
-			_tmp28_ = g_renew (char*, _tmp28_, _tmp28__size + 1);
-		}
-		dbus_message_iter_get_basic (&_tmp29_, &_tmp30_);
-		dbus_message_iter_next (&_tmp29_);
-		_tmp28_[_tmp28__length++] = g_strdup (_tmp30_);
-	}
-	services_length1 = _tmp28__length1;
-	_tmp28_[_tmp28__length] = NULL;
-	dbus_message_iter_next (&iter);
-	services = _tmp28_;
-	dbus_message_iter_get_basic (&iter, &_tmp31_);
-	dbus_message_iter_next (&iter);
-	ca_cert = g_strdup (_tmp31_);
-	dbus_message_iter_get_basic (&iter, &_tmp32_);
-	dbus_message_iter_next (&iter);
-	subject = g_strdup (_tmp32_);
-	dbus_message_iter_get_basic (&iter, &_tmp33_);
-	dbus_message_iter_next (&iter);
-	subject_alt = g_strdup (_tmp33_);
-	dbus_message_iter_get_basic (&iter, &_tmp34_);
-	dbus_message_iter_next (&iter);
-	server_cert = g_strdup (_tmp34_);
-	result = moonshot_server_install_id_card (self, display_name, user_name, password, realm, rules_patterns, rules_patterns_length1, rules_always_confirm, rules_always_confirm_length1, services, services_length1, ca_cert, subject, subject_alt, server_cert);
-	reply = dbus_message_new_method_return (message);
-	dbus_message_iter_init_append (reply, &iter);
-	_g_free0 (display_name);
-	_g_free0 (user_name);
-	_g_free0 (password);
-	_g_free0 (realm);
-	rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
-	rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
-	services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
-	_g_free0 (ca_cert);
-	_g_free0 (subject);
-	_g_free0 (subject_alt);
-	_g_free0 (server_cert);
-	_tmp35_ = result;
-	dbus_message_iter_append_basic (&iter, DBUS_TYPE_BOOLEAN, &_tmp35_);
-	if (reply) {
-		dbus_connection_send (connection, reply, NULL);
-		dbus_message_unref (reply);
-		return DBUS_HANDLER_RESULT_HANDLED;
-	} else {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-}
-
-
-DBusHandlerResult moonshot_server_dbus_message (DBusConnection* connection, DBusMessage* message, void* object) {
-	DBusHandlerResult result;
-	result = DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Introspectable", "Introspect")) {
-		result = _dbus_moonshot_server_introspect (object, connection, message);
-	} else if (dbus_message_is_method_call (message, "org.freedesktop.DBus.Properties", "GetAll")) {
-		result = _dbus_moonshot_server_property_get_all (object, connection, message);
-	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "GetIdentity")) {
-		result = _dbus_moonshot_server_get_identity (object, connection, message);
-	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "GetDefaultIdentity")) {
-		result = _dbus_moonshot_server_get_default_identity (object, connection, message);
-	} else if (dbus_message_is_method_call (message, "org.janet.Moonshot", "InstallIdCard")) {
-		result = _dbus_moonshot_server_install_id_card (object, connection, message);
-	}
-	if (result == DBUS_HANDLER_RESULT_HANDLED) {
-		return result;
-	} else {
-		return DBUS_HANDLER_RESULT_NOT_YET_HANDLED;
-	}
-}
-
-
-void moonshot_server_dbus_register_object (DBusConnection* connection, const char* path, void* object) {
-	if (!g_object_get_data (object, "dbus_object_path")) {
-		g_object_set_data (object, "dbus_object_path", g_strdup (path));
-		dbus_connection_register_object_path (connection, path, &_moonshot_server_dbus_path_vtable, object);
-		g_object_weak_ref (object, _vala_dbus_unregister_object, connection);
-	}
 }
 
 
@@ -1152,7 +755,6 @@ static void moonshot_server_class_init (MoonshotServerClass * klass) {
 	moonshot_server_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (MoonshotServerPrivate));
 	G_OBJECT_CLASS (klass)->finalize = moonshot_server_finalize;
-	g_type_set_qdata (TYPE_MOONSHOT_SERVER, g_quark_from_static_string ("DBusObjectVTable"), (void*) (&_moonshot_server_dbus_vtable));
 }
 
 
@@ -1178,6 +780,319 @@ GType moonshot_server_get_type (void) {
 		g_once_init_leave (&moonshot_server_type_id__volatile, moonshot_server_type_id);
 	}
 	return moonshot_server_type_id__volatile;
+}
+
+
+static void _dbus_moonshot_server_get_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation) {
+	char* nai = NULL;
+	GVariant* _tmp0_;
+	char* password = NULL;
+	GVariant* _tmp1_;
+	char* service = NULL;
+	GVariant* _tmp2_;
+	GVariantIter _arguments_iter;
+	g_variant_iter_init (&_arguments_iter, parameters);
+	_tmp0_ = g_variant_iter_next_value (&_arguments_iter);
+	nai = g_variant_dup_string (_tmp0_, NULL);
+	g_variant_unref (_tmp0_);
+	_tmp1_ = g_variant_iter_next_value (&_arguments_iter);
+	password = g_variant_dup_string (_tmp1_, NULL);
+	g_variant_unref (_tmp1_);
+	_tmp2_ = g_variant_iter_next_value (&_arguments_iter);
+	service = g_variant_dup_string (_tmp2_, NULL);
+	g_variant_unref (_tmp2_);
+	moonshot_server_get_identity (self, nai, password, service, (GAsyncReadyCallback) _dbus_moonshot_server_get_identity_ready, g_object_ref (invocation));
+	_g_free0 (nai);
+	_g_free0 (password);
+	_g_free0 (service);
+}
+
+
+static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_) {
+	GDBusMethodInvocation * invocation;
+	GError* error;
+	char* nai_out = NULL;
+	char* password_out = NULL;
+	char* server_certificate_hash = NULL;
+	char* ca_certificate = NULL;
+	char* subject_name_constraint = NULL;
+	char* subject_alt_name_constraint = NULL;
+	gboolean result;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	invocation = _user_data_;
+	error = NULL;
+	result = moonshot_server_get_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint);
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (nai_out));
+	_g_free0 (nai_out);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (password_out));
+	_g_free0 (password_out);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (server_certificate_hash));
+	_g_free0 (server_certificate_hash);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (ca_certificate));
+	_g_free0 (ca_certificate);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (subject_name_constraint));
+	_g_free0 (subject_name_constraint);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (subject_alt_name_constraint));
+	_g_free0 (subject_alt_name_constraint);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_boolean (result));
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_method_invocation_return_value (invocation, _reply);
+	g_object_unref (invocation);
+	g_variant_unref (_reply);
+}
+
+
+static void _dbus_moonshot_server_get_default_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation) {
+	GVariantIter _arguments_iter;
+	g_variant_iter_init (&_arguments_iter, parameters);
+	moonshot_server_get_default_identity (self, (GAsyncReadyCallback) _dbus_moonshot_server_get_default_identity_ready, g_object_ref (invocation));
+}
+
+
+static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_) {
+	GDBusMethodInvocation * invocation;
+	GError* error;
+	char* nai_out = NULL;
+	char* password_out = NULL;
+	char* server_certificate_hash = NULL;
+	char* ca_certificate = NULL;
+	char* subject_name_constraint = NULL;
+	char* subject_alt_name_constraint = NULL;
+	gboolean result;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	invocation = _user_data_;
+	error = NULL;
+	result = moonshot_server_get_default_identity_finish ((MoonshotServer*) source_object, _res_, &nai_out, &password_out, &server_certificate_hash, &ca_certificate, &subject_name_constraint, &subject_alt_name_constraint);
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (nai_out));
+	_g_free0 (nai_out);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (password_out));
+	_g_free0 (password_out);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (server_certificate_hash));
+	_g_free0 (server_certificate_hash);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (ca_certificate));
+	_g_free0 (ca_certificate);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (subject_name_constraint));
+	_g_free0 (subject_name_constraint);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_string (subject_alt_name_constraint));
+	_g_free0 (subject_alt_name_constraint);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_boolean (result));
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_method_invocation_return_value (invocation, _reply);
+	g_object_unref (invocation);
+	g_variant_unref (_reply);
+}
+
+
+static void _dbus_moonshot_server_install_id_card (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation) {
+	GError* error;
+	char* display_name = NULL;
+	GVariant* _tmp3_;
+	char* user_name = NULL;
+	GVariant* _tmp4_;
+	char* password = NULL;
+	GVariant* _tmp5_;
+	char* realm = NULL;
+	GVariant* _tmp6_;
+	char** rules_patterns = NULL;
+	int rules_patterns_length1;
+	GVariant* _tmp7_;
+	char** _tmp8_;
+	int _tmp8__length;
+	int _tmp8__size;
+	int _tmp8__length1;
+	GVariantIter _tmp9_;
+	GVariant* _tmp10_;
+	char** rules_always_confirm = NULL;
+	int rules_always_confirm_length1;
+	GVariant* _tmp11_;
+	char** _tmp12_;
+	int _tmp12__length;
+	int _tmp12__size;
+	int _tmp12__length1;
+	GVariantIter _tmp13_;
+	GVariant* _tmp14_;
+	char** services = NULL;
+	int services_length1;
+	GVariant* _tmp15_;
+	char** _tmp16_;
+	int _tmp16__length;
+	int _tmp16__size;
+	int _tmp16__length1;
+	GVariantIter _tmp17_;
+	GVariant* _tmp18_;
+	char* ca_cert = NULL;
+	GVariant* _tmp19_;
+	char* subject = NULL;
+	GVariant* _tmp20_;
+	char* subject_alt = NULL;
+	GVariant* _tmp21_;
+	char* server_cert = NULL;
+	GVariant* _tmp22_;
+	gboolean result;
+	GVariantIter _arguments_iter;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	error = NULL;
+	g_variant_iter_init (&_arguments_iter, parameters);
+	_tmp3_ = g_variant_iter_next_value (&_arguments_iter);
+	display_name = g_variant_dup_string (_tmp3_, NULL);
+	g_variant_unref (_tmp3_);
+	_tmp4_ = g_variant_iter_next_value (&_arguments_iter);
+	user_name = g_variant_dup_string (_tmp4_, NULL);
+	g_variant_unref (_tmp4_);
+	_tmp5_ = g_variant_iter_next_value (&_arguments_iter);
+	password = g_variant_dup_string (_tmp5_, NULL);
+	g_variant_unref (_tmp5_);
+	_tmp6_ = g_variant_iter_next_value (&_arguments_iter);
+	realm = g_variant_dup_string (_tmp6_, NULL);
+	g_variant_unref (_tmp6_);
+	rules_patterns_length1 = 0;
+	_tmp7_ = g_variant_iter_next_value (&_arguments_iter);
+	_tmp8_ = g_new (char*, 5);
+	_tmp8__length = 0;
+	_tmp8__size = 4;
+	_tmp8__length1 = 0;
+	g_variant_iter_init (&_tmp9_, _tmp7_);
+	for (; _tmp10_ = g_variant_iter_next_value (&_tmp9_); _tmp8__length1++) {
+		if (_tmp8__size == _tmp8__length) {
+			_tmp8__size = 2 * _tmp8__size;
+			_tmp8_ = g_renew (char*, _tmp8_, _tmp8__size + 1);
+		}
+		_tmp8_[_tmp8__length++] = g_variant_dup_string (_tmp10_, NULL);
+		g_variant_unref (_tmp10_);
+	}
+	rules_patterns_length1 = _tmp8__length1;
+	_tmp8_[_tmp8__length] = NULL;
+	rules_patterns = _tmp8_;
+	g_variant_unref (_tmp7_);
+	rules_always_confirm_length1 = 0;
+	_tmp11_ = g_variant_iter_next_value (&_arguments_iter);
+	_tmp12_ = g_new (char*, 5);
+	_tmp12__length = 0;
+	_tmp12__size = 4;
+	_tmp12__length1 = 0;
+	g_variant_iter_init (&_tmp13_, _tmp11_);
+	for (; _tmp14_ = g_variant_iter_next_value (&_tmp13_); _tmp12__length1++) {
+		if (_tmp12__size == _tmp12__length) {
+			_tmp12__size = 2 * _tmp12__size;
+			_tmp12_ = g_renew (char*, _tmp12_, _tmp12__size + 1);
+		}
+		_tmp12_[_tmp12__length++] = g_variant_dup_string (_tmp14_, NULL);
+		g_variant_unref (_tmp14_);
+	}
+	rules_always_confirm_length1 = _tmp12__length1;
+	_tmp12_[_tmp12__length] = NULL;
+	rules_always_confirm = _tmp12_;
+	g_variant_unref (_tmp11_);
+	services_length1 = 0;
+	_tmp15_ = g_variant_iter_next_value (&_arguments_iter);
+	_tmp16_ = g_new (char*, 5);
+	_tmp16__length = 0;
+	_tmp16__size = 4;
+	_tmp16__length1 = 0;
+	g_variant_iter_init (&_tmp17_, _tmp15_);
+	for (; _tmp18_ = g_variant_iter_next_value (&_tmp17_); _tmp16__length1++) {
+		if (_tmp16__size == _tmp16__length) {
+			_tmp16__size = 2 * _tmp16__size;
+			_tmp16_ = g_renew (char*, _tmp16_, _tmp16__size + 1);
+		}
+		_tmp16_[_tmp16__length++] = g_variant_dup_string (_tmp18_, NULL);
+		g_variant_unref (_tmp18_);
+	}
+	services_length1 = _tmp16__length1;
+	_tmp16_[_tmp16__length] = NULL;
+	services = _tmp16_;
+	g_variant_unref (_tmp15_);
+	_tmp19_ = g_variant_iter_next_value (&_arguments_iter);
+	ca_cert = g_variant_dup_string (_tmp19_, NULL);
+	g_variant_unref (_tmp19_);
+	_tmp20_ = g_variant_iter_next_value (&_arguments_iter);
+	subject = g_variant_dup_string (_tmp20_, NULL);
+	g_variant_unref (_tmp20_);
+	_tmp21_ = g_variant_iter_next_value (&_arguments_iter);
+	subject_alt = g_variant_dup_string (_tmp21_, NULL);
+	g_variant_unref (_tmp21_);
+	_tmp22_ = g_variant_iter_next_value (&_arguments_iter);
+	server_cert = g_variant_dup_string (_tmp22_, NULL);
+	g_variant_unref (_tmp22_);
+	result = moonshot_server_install_id_card (self, display_name, user_name, password, realm, rules_patterns, rules_patterns_length1, rules_always_confirm, rules_always_confirm_length1, services, services_length1, ca_cert, subject, subject_alt, server_cert);
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	_g_free0 (display_name);
+	_g_free0 (user_name);
+	_g_free0 (password);
+	_g_free0 (realm);
+	rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
+	rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
+	services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
+	_g_free0 (ca_cert);
+	_g_free0 (subject);
+	_g_free0 (subject_alt);
+	_g_free0 (server_cert);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_boolean (result));
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_method_invocation_return_value (invocation, _reply);
+}
+
+
+static void moonshot_server_dbus_interface_method_call (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* method_name, GVariant* parameters, GDBusMethodInvocation* invocation, gpointer user_data) {
+	gpointer* data;
+	gpointer object;
+	data = user_data;
+	object = data[0];
+	if (strcmp (method_name, "GetIdentity") == 0) {
+		_dbus_moonshot_server_get_identity (object, parameters, invocation);
+	} else if (strcmp (method_name, "GetDefaultIdentity") == 0) {
+		_dbus_moonshot_server_get_default_identity (object, parameters, invocation);
+	} else if (strcmp (method_name, "InstallIdCard") == 0) {
+		_dbus_moonshot_server_install_id_card (object, parameters, invocation);
+	}
+}
+
+
+static GVariant* moonshot_server_dbus_interface_get_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GError** error, gpointer user_data) {
+	gpointer* data;
+	gpointer object;
+	data = user_data;
+	object = data[0];
+	return NULL;
+}
+
+
+static gboolean moonshot_server_dbus_interface_set_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GVariant* value, GError** error, gpointer user_data) {
+	gpointer* data;
+	gpointer object;
+	data = user_data;
+	object = data[0];
+	return FALSE;
+}
+
+
+guint moonshot_server_register_object (gpointer object, GDBusConnection* connection, const gchar* path, GError** error) {
+	guint result;
+	gpointer *data;
+	data = g_new (gpointer, 3);
+	data[0] = g_object_ref (object);
+	data[1] = g_object_ref (connection);
+	data[2] = g_strdup (path);
+	result = g_dbus_connection_register_object (connection, path, &_moonshot_server_dbus_interface_info, &_moonshot_server_dbus_interface_vtable, data, _moonshot_server_unregister_object, error);
+	if (!result) {
+		return 0;
+	}
+	return result;
+}
+
+
+static void _moonshot_server_unregister_object (gpointer user_data) {
+	gpointer* data;
+	data = user_data;
+	g_object_unref (data[0]);
+	g_object_unref (data[1]);
+	g_free (data[2]);
+	g_free (data);
 }
 
 

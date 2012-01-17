@@ -43,6 +43,7 @@ GdkPixbuf* find_icon (const char* name, gint size) {
 	{
 		GtkIconTheme* icon_theme;
 		GdkPixbuf* _tmp0_;
+		g_print ("Linux\n");
 		icon_theme = _g_object_ref0 (gtk_icon_theme_get_default ());
 		_tmp0_ = gtk_icon_theme_load_icon (icon_theme, name, size, GTK_ICON_LOOKUP_FORCE_SIZE, &_inner_error_);
 		if (_inner_error_ != NULL) {

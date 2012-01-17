@@ -166,7 +166,7 @@ void id_card_widget_update_id_card_label (IdCardWidget* self) {
 	char* _tmp9_;
 	g_return_if_fail (self != NULL);
 	services_text = g_strdup ("");
-	display_name = g_markup_printf_escaped ("<b>%s</b>", id_card_get_display_name (self->priv->_id_card));
+	display_name = g_markup_printf_escaped ("<big>%s</big>", id_card_get_display_name (self->priv->_id_card));
 	{
 		gint i;
 		i = 0;

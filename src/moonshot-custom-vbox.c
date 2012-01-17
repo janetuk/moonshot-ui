@@ -28,27 +28,37 @@ typedef struct _CustomVBoxPrivate CustomVBoxPrivate;
 typedef struct _IdCardWidget IdCardWidget;
 typedef struct _IdCardWidgetClass IdCardWidgetClass;
 
-#define TYPE_MAIN_WINDOW (main_window_get_type ())
-#define MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_MAIN_WINDOW, MainWindow))
-#define MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_MAIN_WINDOW, MainWindowClass))
-#define IS_MAIN_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_MAIN_WINDOW))
-#define IS_MAIN_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_MAIN_WINDOW))
-#define MAIN_WINDOW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_MAIN_WINDOW, MainWindowClass))
+#define TYPE_IDENTITY_MANAGER_VIEW (identity_manager_view_get_type ())
+#define IDENTITY_MANAGER_VIEW(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerView))
+#define IDENTITY_MANAGER_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerViewClass))
+#define IS_IDENTITY_MANAGER_VIEW(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITY_MANAGER_VIEW))
+#define IS_IDENTITY_MANAGER_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITY_MANAGER_VIEW))
+#define IDENTITY_MANAGER_VIEW_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITY_MANAGER_VIEW, IdentityManagerViewClass))
 
-typedef struct _MainWindow MainWindow;
-typedef struct _MainWindowClass MainWindowClass;
+typedef struct _IdentityManagerView IdentityManagerView;
+typedef struct _IdentityManagerViewClass IdentityManagerViewClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
-typedef struct _MainWindowPrivate MainWindowPrivate;
+typedef struct _IdentityManagerViewPrivate IdentityManagerViewPrivate;
 
-#define TYPE_IDENTITIES_MANAGER (identities_manager_get_type ())
-#define IDENTITIES_MANAGER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITIES_MANAGER, IdentitiesManager))
-#define IDENTITIES_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITIES_MANAGER, IdentitiesManagerClass))
-#define IS_IDENTITIES_MANAGER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITIES_MANAGER))
-#define IS_IDENTITIES_MANAGER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITIES_MANAGER))
-#define IDENTITIES_MANAGER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITIES_MANAGER, IdentitiesManagerClass))
+#define TYPE_IDENTITY_MANAGER_APP (identity_manager_app_get_type ())
+#define IDENTITY_MANAGER_APP(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_MANAGER_APP, IdentityManagerApp))
+#define IDENTITY_MANAGER_APP_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITY_MANAGER_APP, IdentityManagerAppClass))
+#define IS_IDENTITY_MANAGER_APP(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITY_MANAGER_APP))
+#define IS_IDENTITY_MANAGER_APP_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITY_MANAGER_APP))
+#define IDENTITY_MANAGER_APP_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITY_MANAGER_APP, IdentityManagerAppClass))
 
-typedef struct _IdentitiesManager IdentitiesManager;
-typedef struct _IdentitiesManagerClass IdentitiesManagerClass;
+typedef struct _IdentityManagerApp IdentityManagerApp;
+typedef struct _IdentityManagerAppClass IdentityManagerAppClass;
+
+#define TYPE_IDENTITY_MANAGER_MODEL (identity_manager_model_get_type ())
+#define IDENTITY_MANAGER_MODEL(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_MANAGER_MODEL, IdentityManagerModel))
+#define IDENTITY_MANAGER_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), TYPE_IDENTITY_MANAGER_MODEL, IdentityManagerModelClass))
+#define IS_IDENTITY_MANAGER_MODEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TYPE_IDENTITY_MANAGER_MODEL))
+#define IS_IDENTITY_MANAGER_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), TYPE_IDENTITY_MANAGER_MODEL))
+#define IDENTITY_MANAGER_MODEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), TYPE_IDENTITY_MANAGER_MODEL, IdentityManagerModelClass))
+
+typedef struct _IdentityManagerModel IdentityManagerModel;
+typedef struct _IdentityManagerModelClass IdentityManagerModelClass;
 
 #define TYPE_IDENTITY_REQUEST (identity_request_get_type ())
 #define IDENTITY_REQUEST(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_IDENTITY_REQUEST, IdentityRequest))
@@ -72,17 +82,18 @@ struct _CustomVBoxClass {
 
 struct _CustomVBoxPrivate {
 	IdCardWidget* _current_idcard;
-	MainWindow* main_window;
+	IdentityManagerView* main_window;
 };
 
-struct _MainWindow {
+struct _IdentityManagerView {
 	GtkWindow parent_instance;
-	MainWindowPrivate * priv;
-	IdentitiesManager* identities_manager;
+	IdentityManagerViewPrivate * priv;
+	IdentityManagerApp* parent_app;
+	IdentityManagerModel* identities_manager;
 	GQueue* request_queue;
 };
 
-struct _MainWindowClass {
+struct _IdentityManagerViewClass {
 	GtkWindowClass parent_class;
 };
 
@@ -91,19 +102,20 @@ static gpointer custom_vbox_parent_class = NULL;
 
 GType custom_vbox_get_type (void) G_GNUC_CONST;
 GType id_card_widget_get_type (void) G_GNUC_CONST;
-GType main_window_get_type (void) G_GNUC_CONST;
+GType identity_manager_view_get_type (void) G_GNUC_CONST;
 #define CUSTOM_VBOX_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_CUSTOM_VBOX, CustomVBoxPrivate))
 enum  {
 	CUSTOM_VBOX_DUMMY_PROPERTY,
 	CUSTOM_VBOX_CURRENT_IDCARD
 };
-CustomVBox* custom_vbox_new (MainWindow* window, gboolean homogeneous, gint spacing);
-CustomVBox* custom_vbox_construct (GType object_type, MainWindow* window, gboolean homogeneous, gint spacing);
+CustomVBox* custom_vbox_new (IdentityManagerView* window, gboolean homogeneous, gint spacing);
+CustomVBox* custom_vbox_construct (GType object_type, IdentityManagerView* window, gboolean homogeneous, gint spacing);
 void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card_widget);
 void id_card_widget_collapse (IdCardWidget* self);
 void custom_vbox_set_current_idcard (CustomVBox* self, IdCardWidget* value);
 IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self);
-GType identities_manager_get_type (void) G_GNUC_CONST;
+GType identity_manager_app_get_type (void) G_GNUC_CONST;
+GType identity_manager_model_get_type (void) G_GNUC_CONST;
 GType identity_request_get_type (void) G_GNUC_CONST;
 GtkButton* id_card_widget_get_send_button (IdCardWidget* self);
 void custom_vbox_add_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget);
@@ -119,9 +131,9 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
-CustomVBox* custom_vbox_construct (GType object_type, MainWindow* window, gboolean homogeneous, gint spacing) {
+CustomVBox* custom_vbox_construct (GType object_type, IdentityManagerView* window, gboolean homogeneous, gint spacing) {
 	CustomVBox * self;
-	MainWindow* _tmp0_;
+	IdentityManagerView* _tmp0_;
 	g_return_val_if_fail (window != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (window), _g_object_unref0 (self->priv->main_window), _tmp0_);
@@ -131,7 +143,7 @@ CustomVBox* custom_vbox_construct (GType object_type, MainWindow* window, gboole
 }
 
 
-CustomVBox* custom_vbox_new (MainWindow* window, gboolean homogeneous, gint spacing) {
+CustomVBox* custom_vbox_new (IdentityManagerView* window, gboolean homogeneous, gint spacing) {
 	return custom_vbox_construct (TYPE_CUSTOM_VBOX, window, homogeneous, spacing);
 }
 
