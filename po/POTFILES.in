@@ -1,2 +1,2 @@
 # List of source files which contain translatable strings.
-src/moonshot-window.vala
+src/moonshot-identity-management-view.vala

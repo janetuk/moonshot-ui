@@ -3,11 +3,11 @@
 [DBus (name = "org.janet.Moonshot")]
 public class MoonshotServer : Object {
 
-    private MainWindow main_window;
+    private IdentityManagerView main_window;
 
     public MoonshotServer (Gtk.Window window)
     {
-        this.main_window = (MainWindow) window;
+        this.main_window = (IdentityManagerView) window;
     }
 
     public async bool get_identity (string nai,
@@ -166,13 +166,13 @@ using MoonshotRpcInterface;
  * process ends
  */
 public class MoonshotServer : Object {
-    private static MainWindow main_window;
+    private static IdentityManagerView main_window;
 
     private static MoonshotServer instance = null;
 
     public static void start (Gtk.Window window)
     {
-        main_window = (MainWindow) window;
+        main_window = (IdentityManagerView) window;
         Rpc.server_start (MoonshotRpcInterface.spec, "/org/janet/Moonshot", Rpc.Flags.PER_USER);
     }
 

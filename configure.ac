@@ -1,8 +1,8 @@
 AC_PREREQ([2.66])
-AC_INIT([Moonshot],
-        [0.0.1],
-        [BUG-REPORT-ADDRESS],
-        [moonshot])
+AC_INIT([Moonshot-ui],
+        [0.1],
+        [moonshot-community@jiscmail.ac.uk],
+        [moonshot-ui])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -16,7 +16,11 @@ AM_MAINTAINER_MODE([enable])
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 
-PKG_PROG_PKG_CONFIG([0.24])
+# Checks for programs.
+PKG_PROG_PKG_CONFIG([0.23])
+AC_PROG_CC
+AM_PROG_CC_C_O
+AM_PROG_VALAC([0.9])
 
 # Platform checks
 AC_CANONICAL_HOST
@@ -24,25 +28,95 @@ AC_CANONICAL_HOST
 case "$host" in
   *-*-mingw*)
     win32=yes
+    macos=no
+    linux=no
     SERVER_IPC_MODULE="msrpc-glib2-1.0"
     CLIENT_IPC_MODULE="msrpc-mingw-1.0"
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
+    )
+    ;;
+    
+  *darwin*) 
+    win32=no
+    macos=yes
+    linux=no
+
+    # We require dbus-glib for the client library even if we are using GDBus
+    # in the server. The reason we can't always use dbus-glib in the server is
+    # because Vala drops support for it, but as it ships with DBus there is very
+    # little danger of it being dropped by distros any time soon.
+    CLIENT_IPC_MODULE="dbus-glib-1"
+    PKG_CHECK_MODULES([GDBUS],
+            [gio-2.0 >= 2.26],
+            [SERVER_IPC_MODULE="gio-2.0"],
+            [SERVER_IPC_MODULE="dbus-glib-1"]
+    )
+	
+	PKG_CHECK_MODULES([MAC], 
+			[gtk-mac-integration >= 1.0.1]
+	)
+
+# TODO: Move to GTK+-3
+#            [gtk+-3.0 >= 2.0],
+#            [GTK_VERSION="gtk+-3.0"]
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
+    )
+
     ;;
   *)
+    macos=no
     win32=no
-    SERVER_IPC_MODULE="dbus-glib-1"
+    linux=yes
+
+    # We require dbus-glib for the client library even if we are using GDBus
+    # in the server. The reason we can't always use dbus-glib in the server is
+    # because Vala drops support for it, but as it ships with DBus there is very
+    # little danger of it being dropped by distros any time soon.
     CLIENT_IPC_MODULE="dbus-glib-1"
+    PKG_CHECK_MODULES([GDBUS],
+            [gio-2.0 >= 2.26],
+            [SERVER_IPC_MODULE="gio-2.0"],
+            [SERVER_IPC_MODULE="dbus-glib-1"]
+    )
+# TODO: Move to GTK+-3
+#            [gtk+-3.0 >= 2.0],
+#            [GTK_VERSION="gtk+-3.0"]
+    PKG_CHECK_MODULES([GTK],
+            [gtk+-2.0 >= 2.18],
+            [GTK_VERSION="gtk+-2.0"]
+    )
+
     ;;
 esac
 
-AM_CONDITIONAL([OS_LINUX], [test "$win32" != "yes"])
+AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
-AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 
-# Checks for programs.
-AC_PROG_CC
-AM_PROG_CC_C_O
-AM_PROG_VALAC([0.9])
+AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
+AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
+
+if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
+  AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
+  vala_version=`$VALAC --version | sed 's/Vala  *//'`
+  AS_VERSION_COMPARE([0.12.1], ["$vala_version"],
+    [vala_supports_dbus_glib="no"],
+    [vala_supports_dbus_glib="no"],
+    [vala_supports_dbus_glib="yes"])
+
+  AC_MSG_RESULT([$vala_supports_dbus_glib])
+  if test "$vala_supports_dbus_glib" = "no"; then
+    AC_MSG_ERROR([
+*** Vala 0.12.1 or earlier is required for dbus-glib support. Newer versions
+*** require that you have GLib 2.26 or newer (for GDBus support).])
+  fi
+fi
 
 if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   # MS RPC utilities
@@ -67,7 +141,7 @@ if test "$win32" = "yes"; then
 
   # LIB.EXE from MSVC to build an MSVC-compatible import library.
   AC_PATH_PROG([MSVC_LIB], [lib], no,
-               [/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Microsoft\ Visual\ Studio\ 9.0/VC/bin$PATH_SEPARATOR$PATH])
 
   if test "$MSVC_LIB" = "no"; then
      AC_MSG_WARN([
@@ -78,12 +152,12 @@ if test "$win32" = "yes"; then
   fi
 
 
-  # ImageMagick for the 'make icons' target. Watch that it doesn't pick up
-  # c:/windows/system32/convert.exe, which is nothing to do with ImageMagick
+  # ImageMagick for the 'make icons' target. Note that
+  # c:/windows/system32/convert.exe is nothing to do with ImageMagick.
   AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], no,
-               [/c/Program\ Files/ImageMagick$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/ImageMagick$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/ImageMagick$PATH_SEPARATOR$PATH])
 
-  if test "$IMAGEMAGICK_CONVERT" = "no"; then
+  if test "$IMAGEMAGICK_CONVERT" = "no" || test "$IMAGEMAGICK_CONVERT" = "/c/windows/system32/convert"; then
      AC_MSG_WARN([
 *** Could not find ImageMagick convert.exe. This is required for the
 *** 'make icons' target. Use the IMAGEMAGICK_CONVERT environment
@@ -93,9 +167,9 @@ if test "$win32" = "yes"; then
 
   # Windows Installer XML tools
   AC_PATH_PROG([WIX_CANDLE], [candle], no,
-               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
   AC_PATH_PROG([WIX_LIGHT], [light], no,
-               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
+               [/c/Program\ Files/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR/c/Program\ Files\ \(x86\)/Windows\ Installer\ XML\ v3.5/bin$PATH_SEPARATOR$PATH])
 
   if test "$WIX_CANDLE" = "no" || test "$WIX_LIGHT" = "no"; then
      AC_MSG_WARN([
@@ -106,7 +180,7 @@ if test "$win32" = "yes"; then
   fi
 fi
 
-if test "$win32" != "yes"; then
+if test "$linux" = "yes"; then
   AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
   if test "$UPDATE_MIME_DATABASE" = "no"; then
     AC_MSG_ERROR([
@@ -137,10 +211,12 @@ AC_SUBST(MOONSHOT_WEBP)
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
-        glib-2.0 >= 2.24
-        gobject-2.0 >= 2.24
-        gtk+-2.0 >= 2.20
+        glib-2.0 >= 2.22
+        gobject-2.0 >= 2.22
+        $GTK_VERSION
+        gee-1.0 >= 0.5
         $SERVER_IPC_MODULE
+		$MAC
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
@@ -159,6 +235,7 @@ AC_CONFIG_FILES([
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop
+	moonshot-ui.spec
 ])
 
 AC_OUTPUT

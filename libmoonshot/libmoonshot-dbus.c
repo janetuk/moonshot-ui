@@ -38,6 +38,9 @@
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
 
+/*30 days in ms*/
+#define INFINITE_TIMEOUT 10*24*60*60*1000
+
 #define MOONSHOT_DBUS_NAME "org.janet.Moonshot"
 #define MOONSHOT_DBUS_PATH "/org/janet/moonshot"
 
@@ -196,9 +199,10 @@ int moonshot_get_identity (const char     *nai,
 
     g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
 
-    dbus_g_proxy_call (dbus_proxy,
+    dbus_g_proxy_call_with_timeout (dbus_proxy,
                        "GetIdentity",
-                       &g_error,
+				    INFINITE_TIMEOUT,
+				    &g_error,
                        G_TYPE_STRING, nai,
                        G_TYPE_STRING, password,
                        G_TYPE_STRING, service,
@@ -249,8 +253,9 @@ int moonshot_get_default_identity (char          **nai_out,
 
     g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
 
-    dbus_g_proxy_call (dbus_proxy,
+    dbus_g_proxy_call_with_timeout (dbus_proxy,
                        "GetDefaultIdentity",
+				    INFINITE_TIMEOUT,
                        &g_error,
                        G_TYPE_INVALID,
                        G_TYPE_STRING, nai_out,

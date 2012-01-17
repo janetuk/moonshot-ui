@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
-
+ 
 SUBDIRS = po
 
 
@@ -14,16 +14,18 @@ AM_CFLAGS =
 AM_CPPFLAGS = \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	-I$(top_srcdir)/libmoonshot
+	-I$(top_srcdir)/libmoonshot \
+	-I$(top_builddir)/libmoonshot
 
 AM_VALAFLAGS = \
         config.vapi \
+	--vapidir=$(top_srcdir)/vapi \
         --pkg gio-2.0
 
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS)
+        $(AM_CPPFLAGS) 
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
@@ -33,6 +35,10 @@ include_HEADERS = libmoonshot/libmoonshot.h
 noinst_HEADERS = libmoonshot/libmoonshot-common.h
 
 src_moonshot_SOURCES = \
+        src/moonshot-identity-manager-app.vala \
+        src/moonshot-identity-management-view.vala \
+        src/moonshot-local-flat-file-store.vala \
+        src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-add-dialog.vala \
         src/moonshot-idcard-widget.vala \
@@ -40,7 +46,6 @@ src_moonshot_SOURCES = \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
         src/moonshot-server.vala \
-        src/moonshot-window.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-utils.vala
 
@@ -48,11 +53,11 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
-src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_moonshot_LDADD = $(moonshot_LIBS)
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
+src_moonshot_LDADD = $(moonshot_LIBS) 
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
@@ -62,15 +67,25 @@ libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined
 
 src_moonshot_CFLAGS = -mwindows
 src_moonshot_webp_CFLAGS = -mwindows
-
+    
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
 
 noinst_DATA = libmoonshot/libmoonshot.lib
 
+# Build the MSVC lib. The sed hack fixes execution in the case that
+# the MSVC toolchain isn't in the PATH.
 libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
-	"${MSVC_LIB}" -def:$< -out:$@ -machine:x86
+	PATH="$(shell echo "${MSVC_LIB}" | sed -e s,/VC/bin/lib,/Common7/IDE,)":$$PATH "${MSVC_LIB}" -def:$< -out:$@ -machine:x86
 
+endif
+
+if  OS_MACOS
+
+AM_CPPFLAGS += -DOS_MACOS $(MAC_CFLAGS)
+AM_VALAFLAGS += --define=OS_MACOS --pkg gtk-mac-integration
+moonshot_LIBS += $(MAC_LIBS)
+src_moonshot_LDADD += $(MAC_LIBS)
 endif
 
 if OS_LINUX
@@ -130,16 +145,25 @@ dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
 $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
 
-AM_VALAFLAGS += \
-	--pkg dbus-glib-1 \
-	--define=IPC_DBUS
-
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 CLEANFILES = $(dbusservice_DATA)
+
+if IPC_DBUS_GLIB
+AM_VALAFLAGS += \
+	--pkg dbus-glib-1 \
+	--define=IPC_DBUS_GLIB \
+	--define=IPC_DBUS
+else
+AM_VALAFLAGS += \
+	--pkg gio-2.0 \
+	--define=IPC_GDBUS \
+	--define=IPC_DBUS
+endif
 endif
 
-EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files)
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+	moonshot-ui.spec
 
 noinst_PROGRAMS = \
         examples/client \
@@ -172,15 +196,15 @@ if OS_WIN32
 ## A couple of Windows-specific targets:
 
 ## 1. Icons. You must have gnome-icon-theme and gnome-icon-theme-symbolic installed
-##    in c:/build prefix; and ImageMagick installed in c:/tools/ImageMagick. This
+##    in the install prefix; and ImageMagick installed in c:/tools/ImageMagick. This
 ##    pulls in the icons required by moonshot and converts svg's to png's (we have
 ##    no svg support built in to Windows Gtk+ right now).
 
 icons:
 	mkdir -p share/icons
-	cp c:/build/share/icons/gnome/48x48/status/avatar-default.png share/icons
-	"${IMAGEMAGICK_CONVERT}" -background none c:/build/share/icons/gnome/scalable/actions/edit-clear-symbolic.svg -size 13x13 share/icons/edit-clear-symbolic.png
-	"${IMAGEMAGICK_CONVERT}" -background none c:/build/share/icons/gnome/scalable/actions/edit-find-symbolic.svg -size 13x13 share/icons/edit-find-symbolic.png
+	cp ${prefix}/share/icons/gnome/48x48/status/avatar-default.png share/icons
+	"${IMAGEMAGICK_CONVERT}" -background none ${prefix}/share/icons/gnome/scalable/actions/edit-clear-symbolic.svg -size 13x13 share/icons/edit-clear-symbolic.png
+	"${IMAGEMAGICK_CONVERT}" -background none ${prefix}/share/icons/gnome/scalable/actions/edit-find-symbolic.svg -size 13x13 share/icons/edit-find-symbolic.png
 
 
 ## 2. Installer. You must have the Windows Installer XML toolkit version 3.5
@@ -193,6 +217,30 @@ installer: moonshot.msi
 
 moonshot.msi: windows/app.wxs windows/config.wxi $(bin_PROGRAMS)
 	"${WIX_CANDLE}" $<
-	"${WIX_LIGHT}" -b c:/build -b c:/tools/mingw -o moonshot.msi app.wixobj
+	"${WIX_LIGHT}" -b ${prefix} -b ${prefix}/mingw -o moonshot.msi app.wixobj
 
+endif
+
+if  OS_MACOS
+## Mac-specific targets
+
+## 1. Icons. 
+
+icons:
+	mkdir -p share/icons
+	cp mac/icons/process-stop.png share/icons
+	cp mac/icons/edit-find.png share/icons
+	cp mac/icons/avatar-default.png share/icons
+	
+## 2. App bundle
+## gtk-app-bundler must be installed
+## moonshot-ui.app will be built in moonshot/mac-client-installer/moonshot-ui/
+app-bundle:
+	gtk-mac-bundler ./mac/moonshot-ui.bundle
+
+## 3: Installer Package
+
+installerdir = $(HOME)/moonshot/mac-client-installer
+
+	
 endif

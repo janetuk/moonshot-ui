@@ -78,7 +78,7 @@ class IdCardWidget : Box
     {
         string services_text = "";
 
-        var display_name = Markup.printf_escaped ("<b>%s</b>", this.id_card.display_name);
+        var display_name = Markup.printf_escaped ("<big>%s</big>", this.id_card.display_name);
         for (int i=0; i<id_card.services.length; i++)
         {
             var service = id_card.services[i];
