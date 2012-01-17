@@ -26,7 +26,7 @@
     </image>
 
     <!-- Comment this out to keep the install names in binaries -->
-    <run-install-name-tool/>
+    <!--<run-install-name-tool/>-->
  
     <!-- Optionally specify a launcher script to use. If the
          application sets up everything needed itself, like
@@ -36,10 +36,6 @@
     -->
     <launcher-script>${project}/launcher.sh</launcher-script >
 
-    <!-- Not implemented: Optional runtime, could be python or mono
-         for example.
-    -->
-    <!-- runtime copy="yes">/usr/bin/python</runtime -->
     <!-- Indicate the active gtk version to use. This is needed only
          for gtk+-3.0 projects. -->
     <gtk>gtk+-2.0</gtk>

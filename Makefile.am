@@ -47,10 +47,12 @@ src_moonshot_SOURCES = \
         src/moonshot-identity-request.vala \
         src/moonshot-server.vala \
         src/moonshot-password-dialog.vala \
+        src/moonshot-provisioning-common.vala \
         src/moonshot-utils.vala
 
 src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \
+        src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
 src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)

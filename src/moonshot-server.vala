@@ -150,7 +150,49 @@ public class MoonshotServer : Object {
 
       return this.main_window.add_identity (idcard);
     }
+
+
+    public bool install_from_file (string file_name)
+    {
+    var webp = new WebProvisioning.Parser (file_name);
+    webp.parse();
+    bool result = false;
+    
+    foreach (IdCard card in WebProvisioning.cards)
+    {
+      string[] rules_patterns = {};
+      string[] rules_always_confirm = {};
+        
+      if (card.rules.length > 0)
+      {
+        int i = 0;
+        rules_patterns = new string[card.rules.length];
+        rules_always_confirm = new string[card.rules.length];
+        foreach (Rule r in card.rules)
+        {
+          rules_patterns[i] = r.pattern;
+          rules_always_confirm[i] = r.always_confirm;
+          i++;
+        }
+      } 
+      result = install_id_card (card.display_name,
+                                card.username,
+                                card.password,
+                                card.issuer,
+                                rules_patterns,
+                                rules_always_confirm,
+                                card.services,
+                                card.trust_anchor.ca_cert,
+                                card.trust_anchor.subject,
+                                card.trust_anchor.subject_alt,
+                                card.trust_anchor.server_cert);
+       }
+
+    return true;
+    }
+
 }
+
 
 #elif IPC_MSRPC
 
@@ -371,6 +413,8 @@ public class MoonshotServer : Object {
 
         return success;
     }
+
 }
+
 
 #endif
