@@ -38,6 +38,10 @@
 	
 	    [CCode(cname="gtk_osxapplication_use_quartz_accelerators")]
 	    public bool use_quartz_accelerators();
-	
+
+    /* Signals */
+
+       [CCode(cname="NSApplicationOpenFile")]
+        public signal bool ns_application_open_file(string file_name);
     }
 

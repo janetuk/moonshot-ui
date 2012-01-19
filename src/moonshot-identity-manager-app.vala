@@ -19,6 +19,7 @@ class IdentityManagerApp : Window {
         init_ipc_server ();
 #if OS_MACOS
  		osxApp = OSXApplication.get_instance();
+ 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
 #endif
         view.show();
     }   
