@@ -139,10 +139,10 @@ const char* id_card_get_issuer (IdCard* self);
 void id_card_set_issuer (IdCard* self, const char* value);
 Rule* id_card_get_rules (IdCard* self, int* result_length1);
 void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
-static Rule* _vala_array_dup2 (Rule* self, int length);
+static Rule* _vala_array_dup4 (Rule* self, int length);
 char** id_card_get_services (IdCard* self, int* result_length1);
 void id_card_set_services (IdCard* self, char** value, int value_length1);
-static char** _vala_array_dup3 (char** self, int length);
+static char** _vala_array_dup5 (char** self, int length);
 TrustAnchor* id_card_get_trust_anchor (IdCard* self);
 void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value);
 GdkPixbuf* id_card_get_pixbuf (IdCard* self);
@@ -456,7 +456,7 @@ Rule* id_card_get_rules (IdCard* self, int* result_length1) {
 }
 
 
-static Rule* _vala_array_dup2 (Rule* self, int length) {
+static Rule* _vala_array_dup4 (Rule* self, int length) {
 	Rule* result;
 	int i;
 	Rule _tmp0_ = {0};
@@ -472,7 +472,7 @@ void id_card_set_rules (IdCard* self, Rule* value, int value_length1) {
 	Rule* _tmp0_;
 	Rule* _tmp1_;
 	g_return_if_fail (self != NULL);
-	self->priv->_rules = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup2 (_tmp0_, value_length1)), self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL), self->priv->_rules_length1 = value_length1, self->priv->__rules_size_ = self->priv->_rules_length1, _tmp1_);
+	self->priv->_rules = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup4 (_tmp0_, value_length1)), self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL), self->priv->_rules_length1 = value_length1, self->priv->__rules_size_ = self->priv->_rules_length1, _tmp1_);
 }
 
 
@@ -485,7 +485,7 @@ char** id_card_get_services (IdCard* self, int* result_length1) {
 }
 
 
-static char** _vala_array_dup3 (char** self, int length) {
+static char** _vala_array_dup5 (char** self, int length) {
 	char** result;
 	int i;
 	result = g_new0 (char*, length + 1);
@@ -500,7 +500,7 @@ void id_card_set_services (IdCard* self, char** value, int value_length1) {
 	char** _tmp0_;
 	char** _tmp1_;
 	g_return_if_fail (self != NULL);
-	self->priv->_services = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup3 (_tmp0_, value_length1)), self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL), self->priv->_services_length1 = value_length1, self->priv->__services_size_ = self->priv->_services_length1, _tmp1_);
+	self->priv->_services = (_tmp1_ = (_tmp0_ = value, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup5 (_tmp0_, value_length1)), self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL), self->priv->_services_length1 = value_length1, self->priv->__services_size_ = self->priv->_services_length1, _tmp1_);
 	g_object_notify ((GObject *) self, "services");
 }
 

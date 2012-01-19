@@ -87,7 +87,8 @@ DIST_COMMON = $(am__configure_deps) $(include_HEADERS) \
 	src/moonshot-identity-manager-app.c \
 	src/moonshot-identity-request.c \
 	src/moonshot-local-flat-file-store.c \
-	src/moonshot-password-dialog.c src/moonshot-server.c \
+	src/moonshot-password-dialog.c \
+	src/moonshot-provisioning-common.c src/moonshot-server.c \
 	src/moonshot-utils.c src/moonshot-webp-parser.c \
 	src_moonshot_vala.stamp src_moonshot_webp_vala.stamp \
 	tests_basic_vala.stamp
@@ -180,7 +181,8 @@ am__src_moonshot_SOURCES_DIST =  \
 	src/moonshot-custom-vbox.vala \
 	src/moonshot-identities-manager.vala \
 	src/moonshot-identity-request.vala src/moonshot-server.vala \
-	src/moonshot-password-dialog.vala src/moonshot-utils.vala \
+	src/moonshot-password-dialog.vala \
+	src/moonshot-provisioning-common.vala src/moonshot-utils.vala \
 	src/moonshot-msrpc.vapi
 am__objects_3 =
 am_src_moonshot_OBJECTS =  \
@@ -196,6 +198,7 @@ am_src_moonshot_OBJECTS =  \
 	src/src_moonshot-moonshot-identity-request.$(OBJEXT) \
 	src/src_moonshot-moonshot-server.$(OBJEXT) \
 	src/src_moonshot-moonshot-password-dialog.$(OBJEXT) \
+	src/src_moonshot-moonshot-provisioning-common.$(OBJEXT) \
 	src/src_moonshot-moonshot-utils.$(OBJEXT) $(am__objects_3)
 @IPC_MSRPC_TRUE@nodist_src_moonshot_OBJECTS = libmoonshot/src_moonshot-moonshot-msrpc_s.$(OBJEXT)
 src_moonshot_OBJECTS = $(am_src_moonshot_OBJECTS) \
@@ -207,6 +210,7 @@ src_moonshot_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_src_moonshot_webp_OBJECTS =  \
 	src/src_moonshot_webp-moonshot-webp-parser.$(OBJEXT) \
+	src/src_moonshot_webp-moonshot-provisioning-common.$(OBJEXT) \
 	src/src_moonshot_webp-moonshot-id.$(OBJEXT)
 src_moonshot_webp_OBJECTS = $(am_src_moonshot_webp_OBJECTS)
 src_moonshot_webp_DEPENDENCIES = $(am__DEPENDENCIES_3) \
@@ -503,10 +507,12 @@ src_moonshot_SOURCES = src/moonshot-identity-manager-app.vala \
 	src/moonshot-custom-vbox.vala \
 	src/moonshot-identities-manager.vala \
 	src/moonshot-identity-request.vala src/moonshot-server.vala \
-	src/moonshot-password-dialog.vala src/moonshot-utils.vala \
+	src/moonshot-password-dialog.vala \
+	src/moonshot-provisioning-common.vala src/moonshot-utils.vala \
 	$(am__append_10)
 src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \
+        src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
 src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
@@ -764,6 +770,8 @@ src/src_moonshot-moonshot-server.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-password-dialog.$(OBJEXT):  \
 	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/src_moonshot-moonshot-provisioning-common.$(OBJEXT):  \
+	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot-moonshot-utils.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 libmoonshot/src_moonshot-moonshot-msrpc_s.$(OBJEXT):  \
@@ -773,6 +781,8 @@ src/moonshot$(EXEEXT): $(src_moonshot_OBJECTS) $(src_moonshot_DEPENDENCIES) src/
 	@rm -f src/moonshot$(EXEEXT)
 	$(AM_V_CCLD)$(src_moonshot_LINK) $(src_moonshot_OBJECTS) $(src_moonshot_LDADD) $(LIBS)
 src/src_moonshot_webp-moonshot-webp-parser.$(OBJEXT):  \
+	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
+src/src_moonshot_webp-moonshot-provisioning-common.$(OBJEXT):  \
 	src/$(am__dirstamp) src/$(DEPDIR)/$(am__dirstamp)
 src/src_moonshot_webp-moonshot-id.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
@@ -815,9 +825,11 @@ mostlyclean-compile:
 	-rm -f src/src_moonshot-moonshot-identity-request.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-local-flat-file-store.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-password-dialog.$(OBJEXT)
+	-rm -f src/src_moonshot-moonshot-provisioning-common.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-server.$(OBJEXT)
 	-rm -f src/src_moonshot-moonshot-utils.$(OBJEXT)
 	-rm -f src/src_moonshot_webp-moonshot-id.$(OBJEXT)
+	-rm -f src/src_moonshot_webp-moonshot-provisioning-common.$(OBJEXT)
 	-rm -f src/src_moonshot_webp-moonshot-webp-parser.$(OBJEXT)
 	-rm -f tests/tests_basic-basic.$(OBJEXT)
 
@@ -842,9 +854,11 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-identity-request.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-local-flat-file-store.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-password-dialog.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot-moonshot-utils.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot_webp-moonshot-id.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/src_moonshot_webp-moonshot-webp-parser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@tests/$(DEPDIR)/tests_basic-basic.Po@am__quote@
 
@@ -1131,6 +1145,22 @@ src/src_moonshot-moonshot-password-dialog.obj: src/moonshot-password-dialog.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-password-dialog.obj `if test -f 'src/moonshot-password-dialog.c'; then $(CYGPATH_W) 'src/moonshot-password-dialog.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-password-dialog.c'; fi`
 
+src/src_moonshot-moonshot-provisioning-common.o: src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-provisioning-common.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Tpo -c -o src/src_moonshot-moonshot-provisioning-common.o `test -f 'src/moonshot-provisioning-common.c' || echo '$(srcdir)/'`src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Tpo src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-provisioning-common.c' object='src/src_moonshot-moonshot-provisioning-common.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-provisioning-common.o `test -f 'src/moonshot-provisioning-common.c' || echo '$(srcdir)/'`src/moonshot-provisioning-common.c
+
+src/src_moonshot-moonshot-provisioning-common.obj: src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-provisioning-common.obj -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Tpo -c -o src/src_moonshot-moonshot-provisioning-common.obj `if test -f 'src/moonshot-provisioning-common.c'; then $(CYGPATH_W) 'src/moonshot-provisioning-common.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-provisioning-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Tpo src/$(DEPDIR)/src_moonshot-moonshot-provisioning-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-provisioning-common.c' object='src/src_moonshot-moonshot-provisioning-common.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -c -o src/src_moonshot-moonshot-provisioning-common.obj `if test -f 'src/moonshot-provisioning-common.c'; then $(CYGPATH_W) 'src/moonshot-provisioning-common.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-provisioning-common.c'; fi`
+
 src/src_moonshot-moonshot-utils.o: src/moonshot-utils.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_CFLAGS) $(CFLAGS) -MT src/src_moonshot-moonshot-utils.o -MD -MP -MF src/$(DEPDIR)/src_moonshot-moonshot-utils.Tpo -c -o src/src_moonshot-moonshot-utils.o `test -f 'src/moonshot-utils.c' || echo '$(srcdir)/'`src/moonshot-utils.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot-moonshot-utils.Tpo src/$(DEPDIR)/src_moonshot-moonshot-utils.Po
@@ -1179,6 +1209,22 @@ src/src_moonshot_webp-moonshot-webp-parser.obj: src/moonshot-webp-parser.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -c -o src/src_moonshot_webp-moonshot-webp-parser.obj `if test -f 'src/moonshot-webp-parser.c'; then $(CYGPATH_W) 'src/moonshot-webp-parser.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-webp-parser.c'; fi`
 
+src/src_moonshot_webp-moonshot-provisioning-common.o: src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -MT src/src_moonshot_webp-moonshot-provisioning-common.o -MD -MP -MF src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Tpo -c -o src/src_moonshot_webp-moonshot-provisioning-common.o `test -f 'src/moonshot-provisioning-common.c' || echo '$(srcdir)/'`src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Tpo src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-provisioning-common.c' object='src/src_moonshot_webp-moonshot-provisioning-common.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -c -o src/src_moonshot_webp-moonshot-provisioning-common.o `test -f 'src/moonshot-provisioning-common.c' || echo '$(srcdir)/'`src/moonshot-provisioning-common.c
+
+src/src_moonshot_webp-moonshot-provisioning-common.obj: src/moonshot-provisioning-common.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -MT src/src_moonshot_webp-moonshot-provisioning-common.obj -MD -MP -MF src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Tpo -c -o src/src_moonshot_webp-moonshot-provisioning-common.obj `if test -f 'src/moonshot-provisioning-common.c'; then $(CYGPATH_W) 'src/moonshot-provisioning-common.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-provisioning-common.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Tpo src/$(DEPDIR)/src_moonshot_webp-moonshot-provisioning-common.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='src/moonshot-provisioning-common.c' object='src/src_moonshot_webp-moonshot-provisioning-common.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -c -o src/src_moonshot_webp-moonshot-provisioning-common.obj `if test -f 'src/moonshot-provisioning-common.c'; then $(CYGPATH_W) 'src/moonshot-provisioning-common.c'; else $(CYGPATH_W) '$(srcdir)/src/moonshot-provisioning-common.c'; fi`
+
 src/src_moonshot_webp-moonshot-id.o: src/moonshot-id.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(src_moonshot_webp_CPPFLAGS) $(CPPFLAGS) $(src_moonshot_webp_CFLAGS) $(CFLAGS) -MT src/src_moonshot_webp-moonshot-id.o -MD -MP -MF src/$(DEPDIR)/src_moonshot_webp-moonshot-id.Tpo -c -o src/src_moonshot_webp-moonshot-id.o `test -f 'src/moonshot-id.c' || echo '$(srcdir)/'`src/moonshot-id.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/src_moonshot_webp-moonshot-id.Tpo src/$(DEPDIR)/src_moonshot_webp-moonshot-id.Po
@@ -1211,6 +1257,11 @@ tests/tests_basic-basic.obj: tests/basic.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(tests_basic_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o tests/tests_basic-basic.obj `if test -f 'tests/basic.c'; then $(CYGPATH_W) 'tests/basic.c'; else $(CYGPATH_W) '$(srcdir)/tests/basic.c'; fi`
 $(srcdir)/src/moonshot-webp-parser.c: $(srcdir)/src_moonshot_webp_vala.stamp
+	@if test -f $@; then :; else \
+	  rm -f $(srcdir)/src_moonshot_webp_vala.stamp; \
+	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_webp_vala.stamp; \
+	fi
+$(srcdir)/src/moonshot-provisioning-common.c: $(srcdir)/src_moonshot_webp_vala.stamp
 	@if test -f $@; then :; else \
 	  rm -f $(srcdir)/src_moonshot_webp_vala.stamp; \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_webp_vala.stamp; \
@@ -1285,6 +1336,11 @@ $(srcdir)/src/moonshot-server.c: $(srcdir)/src_moonshot_vala.stamp
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
 	fi
 $(srcdir)/src/moonshot-password-dialog.c: $(srcdir)/src_moonshot_vala.stamp
+	@if test -f $@; then :; else \
+	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
+	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
+	fi
+$(srcdir)/src/moonshot-provisioning-common.c: $(srcdir)/src_moonshot_vala.stamp
 	@if test -f $@; then :; else \
 	  rm -f $(srcdir)/src_moonshot_vala.stamp; \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
@@ -1768,6 +1824,7 @@ maintainer-clean-generic:
 	-rm -f src/moonshot-identity-request.c
 	-rm -f src/moonshot-local-flat-file-store.c
 	-rm -f src/moonshot-password-dialog.c
+	-rm -f src/moonshot-provisioning-common.c
 	-rm -f src/moonshot-server.c
 	-rm -f src/moonshot-utils.c
 	-rm -f src/moonshot-webp-parser.c

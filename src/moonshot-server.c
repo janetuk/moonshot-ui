@@ -71,6 +71,17 @@ typedef struct _MoonshotServerGetDefaultIdentityData MoonshotServerGetDefaultIde
 #define TYPE_RULE (rule_get_type ())
 typedef struct _Rule Rule;
 
+#define WEB_PROVISIONING_TYPE_PARSER (web_provisioning_parser_get_type ())
+#define WEB_PROVISIONING_PARSER(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), WEB_PROVISIONING_TYPE_PARSER, WebProvisioningParser))
+#define WEB_PROVISIONING_PARSER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST ((klass), WEB_PROVISIONING_TYPE_PARSER, WebProvisioningParserClass))
+#define WEB_PROVISIONING_IS_PARSER(obj) (G_TYPE_CHECK_INSTANCE_TYPE ((obj), WEB_PROVISIONING_TYPE_PARSER))
+#define WEB_PROVISIONING_IS_PARSER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), WEB_PROVISIONING_TYPE_PARSER))
+#define WEB_PROVISIONING_PARSER_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS ((obj), WEB_PROVISIONING_TYPE_PARSER, WebProvisioningParserClass))
+
+typedef struct _WebProvisioningParser WebProvisioningParser;
+typedef struct _WebProvisioningParserClass WebProvisioningParserClass;
+#define _web_provisioning_parser_unref0(var) ((var == NULL) ? NULL : (var = (web_provisioning_parser_unref (var), NULL)))
+
 struct _MoonshotServer {
 	GObject parent_instance;
 	MoonshotServerPrivate * priv;
@@ -190,6 +201,8 @@ struct _Rule {
 };
 
 
+extern IdCard** web_provisioning_cards;
+extern gint web_provisioning_cards_length1;
 static gpointer moonshot_server_parent_class = NULL;
 
 GType moonshot_server_get_type (void) G_GNUC_CONST;
@@ -256,6 +269,21 @@ void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
 static void _vala_Rule_array_free (Rule* array, gint array_length);
 Rule* id_card_get_rules (IdCard* self, int* result_length1);
 gboolean identity_manager_view_add_identity (IdentityManagerView* self, IdCard* id_card);
+gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* file_name);
+WebProvisioningParser* web_provisioning_parser_new (const char* path);
+WebProvisioningParser* web_provisioning_parser_construct (GType object_type, const char* path);
+gpointer web_provisioning_parser_ref (gpointer instance);
+void web_provisioning_parser_unref (gpointer instance);
+GParamSpec* web_provisioning_param_spec_parser (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags);
+void web_provisioning_value_set_parser (GValue* value, gpointer v_object);
+void web_provisioning_value_take_parser (GValue* value, gpointer v_object);
+gpointer web_provisioning_value_get_parser (const GValue* value);
+GType web_provisioning_parser_get_type (void) G_GNUC_CONST;
+void web_provisioning_parser_parse (WebProvisioningParser* self);
+const char* id_card_get_display_name (IdCard* self);
+const char* id_card_get_username (IdCard* self);
+const char* id_card_get_issuer (IdCard* self);
+char** id_card_get_services (IdCard* self, int* result_length1);
 static void moonshot_server_finalize (GObject* obj);
 static void moonshot_server_dbus_interface_method_call (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* method_name, GVariant* parameters, GDBusMethodInvocation* invocation, gpointer user_data);
 static void _dbus_moonshot_server_get_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
@@ -263,6 +291,7 @@ static void _dbus_moonshot_server_get_identity_ready (GObject * source_object, G
 static void _dbus_moonshot_server_get_default_identity (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
 static void _dbus_moonshot_server_get_default_identity_ready (GObject * source_object, GAsyncResult * _res_, gpointer * _user_data_);
 static void _dbus_moonshot_server_install_id_card (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
+static void _dbus_moonshot_server_install_from_file (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation);
 static GVariant* moonshot_server_dbus_interface_get_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GError** error, gpointer user_data);
 static gboolean moonshot_server_dbus_interface_set_property (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* property_name, GVariant* value, GError** error, gpointer user_data);
 static void _moonshot_server_unregister_object (gpointer user_data);
@@ -307,7 +336,12 @@ static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_id_card_result 
 static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card_in[] = {&_moonshot_server_dbus_arg_info_install_id_card_display_name, &_moonshot_server_dbus_arg_info_install_id_card_user_name, &_moonshot_server_dbus_arg_info_install_id_card_password, &_moonshot_server_dbus_arg_info_install_id_card_realm, &_moonshot_server_dbus_arg_info_install_id_card_rules_patterns, &_moonshot_server_dbus_arg_info_install_id_card_rules_always_confirm, &_moonshot_server_dbus_arg_info_install_id_card_services, &_moonshot_server_dbus_arg_info_install_id_card_ca_cert, &_moonshot_server_dbus_arg_info_install_id_card_subject, &_moonshot_server_dbus_arg_info_install_id_card_subject_alt, &_moonshot_server_dbus_arg_info_install_id_card_server_cert, NULL};
 static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card_out[] = {&_moonshot_server_dbus_arg_info_install_id_card_result, NULL};
 static const GDBusMethodInfo _moonshot_server_dbus_method_info_install_id_card = {-1, "InstallIdCard", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_out)};
-static const GDBusMethodInfo * const _moonshot_server_dbus_method_info[] = {&_moonshot_server_dbus_method_info_get_identity, &_moonshot_server_dbus_method_info_get_default_identity, &_moonshot_server_dbus_method_info_install_id_card, NULL};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_from_file_file_name = {-1, "file_name", "s"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_from_file_result = {-1, "result", "b"};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_from_file_in[] = {&_moonshot_server_dbus_arg_info_install_from_file_file_name, NULL};
+static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_from_file_out[] = {&_moonshot_server_dbus_arg_info_install_from_file_result, NULL};
+static const GDBusMethodInfo _moonshot_server_dbus_method_info_install_from_file = {-1, "InstallFromFile", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_from_file_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_from_file_out)};
+static const GDBusMethodInfo * const _moonshot_server_dbus_method_info[] = {&_moonshot_server_dbus_method_info_get_identity, &_moonshot_server_dbus_method_info_get_default_identity, &_moonshot_server_dbus_method_info_install_id_card, &_moonshot_server_dbus_method_info_install_from_file, NULL};
 static const GDBusSignalInfo * const _moonshot_server_dbus_signal_info[] = {NULL};
 static const GDBusPropertyInfo * const _moonshot_server_dbus_property_info[] = {NULL};
 static const GDBusInterfaceInfo _moonshot_server_dbus_interface_info = {-1, "org.janet.Moonshot", (GDBusMethodInfo **) (&_moonshot_server_dbus_method_info), (GDBusSignalInfo **) (&_moonshot_server_dbus_signal_info), (GDBusPropertyInfo **) (&_moonshot_server_dbus_property_info)};
@@ -751,6 +785,83 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* disp
 }
 
 
+gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* file_name) {
+	gboolean result = FALSE;
+	WebProvisioningParser* webp;
+	gboolean _result_;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (file_name != NULL, FALSE);
+	webp = web_provisioning_parser_new (file_name);
+	web_provisioning_parser_parse (webp);
+	_result_ = FALSE;
+	{
+		IdCard** card_collection;
+		int card_collection_length1;
+		int card_it;
+		card_collection = web_provisioning_cards;
+		card_collection_length1 = web_provisioning_cards_length1;
+		for (card_it = 0; card_it < web_provisioning_cards_length1; card_it = card_it + 1) {
+			IdCard* card;
+			card = _g_object_ref0 (card_collection[card_it]);
+			{
+				gint rules_patterns_length1;
+				gint _rules_patterns_size_;
+				char** _tmp1_;
+				char** _tmp0_ = NULL;
+				char** rules_patterns;
+				gint rules_always_confirm_length1;
+				gint _rules_always_confirm_size_;
+				char** _tmp3_;
+				char** _tmp2_ = NULL;
+				char** rules_always_confirm;
+				gint _tmp4_;
+				gint _tmp13_;
+				rules_patterns = (_tmp1_ = (_tmp0_ = g_new0 (char*, 0 + 1), _tmp0_), rules_patterns_length1 = 0, _rules_patterns_size_ = rules_patterns_length1, _tmp1_);
+				rules_always_confirm = (_tmp3_ = (_tmp2_ = g_new0 (char*, 0 + 1), _tmp2_), rules_always_confirm_length1 = 0, _rules_always_confirm_size_ = rules_always_confirm_length1, _tmp3_);
+				if (_tmp4_ > 0) {
+					gint i;
+					gint _tmp5_;
+					char** _tmp6_;
+					gint _tmp7_;
+					char** _tmp8_;
+					i = 0;
+					rules_patterns = (_tmp6_ = g_new0 (char*, _tmp5_ + 1), rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL), rules_patterns_length1 = _tmp5_, _rules_patterns_size_ = rules_patterns_length1, _tmp6_);
+					rules_always_confirm = (_tmp8_ = g_new0 (char*, _tmp7_ + 1), rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL), rules_always_confirm_length1 = _tmp7_, _rules_always_confirm_size_ = rules_always_confirm_length1, _tmp8_);
+					{
+						gint _tmp9_;
+						Rule* r_collection;
+						int r_collection_length1;
+						int r_it;
+						r_collection = id_card_get_rules (card, &_tmp9_);
+						r_collection_length1 = _tmp9_;
+						for (r_it = 0; r_it < _tmp9_; r_it = r_it + 1) {
+							Rule _tmp12_ = {0};
+							Rule r;
+							r = (rule_copy (&r_collection[r_it], &_tmp12_), _tmp12_);
+							{
+								char* _tmp10_;
+								char* _tmp11_;
+								rules_patterns[i] = (_tmp10_ = g_strdup (r.pattern), _g_free0 (rules_patterns[i]), _tmp10_);
+								rules_always_confirm[i] = (_tmp11_ = g_strdup (r.always_confirm), _g_free0 (rules_always_confirm[i]), _tmp11_);
+								i++;
+								rule_destroy (&r);
+							}
+						}
+					}
+				}
+				_result_ = moonshot_server_install_id_card (self, id_card_get_display_name (card), id_card_get_username (card), id_card_get_password (card), id_card_get_issuer (card), rules_patterns, rules_patterns_length1, rules_always_confirm, rules_always_confirm_length1, id_card_get_services (card, &_tmp13_), _tmp13_, trust_anchor_get_ca_cert (id_card_get_trust_anchor (card)), trust_anchor_get_subject (id_card_get_trust_anchor (card)), trust_anchor_get_subject_alt (id_card_get_trust_anchor (card)), trust_anchor_get_server_cert (id_card_get_trust_anchor (card)));
+				rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
+				rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
+				_g_object_unref0 (card);
+			}
+		}
+	}
+	result = TRUE;
+	_web_provisioning_parser_unref0 (webp);
+	return result;
+}
+
+
 static void moonshot_server_class_init (MoonshotServerClass * klass) {
 	moonshot_server_parent_class = g_type_class_peek_parent (klass);
 	g_type_class_add_private (klass, sizeof (MoonshotServerPrivate));
@@ -1038,6 +1149,28 @@ static void _dbus_moonshot_server_install_id_card (MoonshotServer* self, GVarian
 }
 
 
+static void _dbus_moonshot_server_install_from_file (MoonshotServer* self, GVariant* parameters, GDBusMethodInvocation* invocation) {
+	GError* error;
+	char* file_name = NULL;
+	GVariant* _tmp23_;
+	gboolean result;
+	GVariantIter _arguments_iter;
+	GVariant* _reply;
+	GVariantBuilder _reply_builder;
+	error = NULL;
+	g_variant_iter_init (&_arguments_iter, parameters);
+	_tmp23_ = g_variant_iter_next_value (&_arguments_iter);
+	file_name = g_variant_dup_string (_tmp23_, NULL);
+	g_variant_unref (_tmp23_);
+	result = moonshot_server_install_from_file (self, file_name);
+	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
+	_g_free0 (file_name);
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_boolean (result));
+	_reply = g_variant_builder_end (&_reply_builder);
+	g_dbus_method_invocation_return_value (invocation, _reply);
+}
+
+
 static void moonshot_server_dbus_interface_method_call (GDBusConnection* connection, const gchar* sender, const gchar* object_path, const gchar* interface_name, const gchar* method_name, GVariant* parameters, GDBusMethodInvocation* invocation, gpointer user_data) {
 	gpointer* data;
 	gpointer object;
@@ -1049,6 +1182,8 @@ static void moonshot_server_dbus_interface_method_call (GDBusConnection* connect
 		_dbus_moonshot_server_get_default_identity (object, parameters, invocation);
 	} else if (strcmp (method_name, "InstallIdCard") == 0) {
 		_dbus_moonshot_server_install_id_card (object, parameters, invocation);
+	} else if (strcmp (method_name, "InstallFromFile") == 0) {
+		_dbus_moonshot_server_install_from_file (object, parameters, invocation);
 	}
 }
 

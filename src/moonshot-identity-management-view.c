@@ -1439,7 +1439,7 @@ static void _lambda1_ (GtkButton* remove_button, IdentityManagerView* self) {
 	GtkMessageDialog* dialog;
 	gint ret;
 	g_return_if_fail (remove_button != NULL);
-	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) self, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Are you sure you want to stop '%s' ID Card to use %s?"), id_card_get_display_name (id_card_widget_get_id_card (custom_vbox_get_current_idcard (self->priv->custom_vbox)))));
+	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) self, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Are you sure you want to stop '%s' ID Card from being used with %s?"), id_card_get_display_name (id_card_widget_get_id_card (custom_vbox_get_current_idcard (self->priv->custom_vbox))), _ ("this service")));
 	ret = gtk_dialog_run ((GtkDialog*) dialog);
 	gtk_widget_hide ((GtkWidget*) dialog);
 	if (ret == GTK_RESPONSE_YES) {

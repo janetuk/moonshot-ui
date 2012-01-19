@@ -180,7 +180,7 @@ static void __lambda6__gbus_name_acquired_callback (GDBusConnection* connection,
 static void _lambda7_ (GDBusConnection* conn, const char* name, IdentityManagerApp* self) {
 	g_return_if_fail (conn != NULL);
 	g_return_if_fail (name != NULL);
-	g_error ("moonshot-identity-manager-app.vala:78: Couldn't own name %s on DBus.", name);
+	g_error ("moonshot-identity-manager-app.vala:79: Couldn't own name %s on DBus.", name);
 }
 
 
