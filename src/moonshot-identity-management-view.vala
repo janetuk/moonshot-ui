@@ -676,7 +676,7 @@ class IdentityManagerView : Window {
                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                       Gtk.MessageType.QUESTION,
                                       Gtk.ButtonsType.YES_NO,
-                                      _("Are you sure you want to stop '%s' ID Card from using %s?"),
+                                      _("Are you sure you want to stop '%s' ID Card from being used with %s?"),
                                       custom_vbox.current_idcard.id_card.display_name,
                                       _("this service"));
               var ret = dialog.run();
