@@ -483,7 +483,6 @@ class IdentityManagerView : Window {
                     }
                 }
             }
-
             /* If more than one candidate we dissasociate service from all ids */
             if (has_srv && candidates.length() > 1)
             {
@@ -492,7 +491,7 @@ class IdentityManagerView : Window {
                     int i = 0;
                     SList<string> services_list = null;
                     bool has_service = false;
-
+// this is problematic - 
                     foreach (string srv in id.services)
                     {
                         if (srv == request.service)
@@ -578,54 +577,55 @@ class IdentityManagerView : Window {
         return pspec.match_string (service);
     }
 
-    public void send_identity_cb (IdCard identity)
+    public void send_identity_cb (IdCard? identity)  //identity will be null if no matching card was found
     {
         return_if_fail (request_queue.length > 0);
 
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
 
-        if (request.service != null && request.service != "")
+        if (identity != null)
         {
-            string[] services = new string[identity.services.length + 1];
+            if (request.service != null && request.service != "")
+            {
+                string[] services = new string[identity.services.length + 1];
 
-            for (int i = 0; i < identity.services.length; i++)
-                services[i] = identity.services[i];
+                for (int i = 0; i < identity.services.length; i++)
+                    services[i] = identity.services[i];
+    
+                services[identity.services.length] = request.service;
 
-            services[identity.services.length] = request.service;
-
-            identity.services = services;
+                identity.services = services;
 
 //            identities_manager.store_id_cards();
-        }
-
-        if (identity.password == null)
-        {
-            var dialog = new AddPasswordDialog ();
-            var result = dialog.run ();
-
-            switch (result) {
-            case ResponseType.OK:
-                identity.password = dialog.password;
-                reset_password = ! dialog.remember;
-                break;
-            default:
-                identity = null;
-                break;
             }
 
-            dialog.destroy ();
+            if (identity.password == null)
+            {
+                var dialog = new AddPasswordDialog ();
+                var result = dialog.run ();
+    
+                switch (result) {
+                case ResponseType.OK:
+                    identity.password = dialog.password;
+                    reset_password = ! dialog.remember;
+                    break;
+                default:
+                    identity = null;
+                    break;
+                }
+
+                dialog.destroy ();
+            }
+            this.default_id_card = identity;
         }
 
         if (this.request_queue.is_empty())
             this.hide ();
 
-        if (identity != null)
-            this.default_id_card = identity;
-
         request.return_identity (identity);
-
-        if (reset_password)
+ 
+        if (reset_password && identity != null)
             identity.password = null;
 
         candidates = null;
