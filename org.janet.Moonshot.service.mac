@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.janet.Moonshot
+Exec=/Applications/moonshot-ui.app/Contents/MacOS/moonshot-ui
