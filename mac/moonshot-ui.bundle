@@ -14,6 +14,7 @@
     -->
       <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
       <prefix name="installer-dir">${env:HOME}/moonshot/mac-client-installer/moonshot-ui/</prefix>
+	  <prefix name="dbus-source-dir">${env:HOME}/gtk/source/dbus-1.4.1/</prefix>
 
     <!-- The project directory is the default location of the created
          app. If you leave out the path, the current directory is
@@ -78,12 +79,13 @@
 
 <!-- DBUS -->
 	<binary>${prefix}/bin/dbus-*</binary>
-	<!-- system.conf and session.conf -->
-	<data>${prefix}/etc/dbus-1</data>
 	<!-- org.janet.Moonshot.service -->
 	<data>${prefix}/share/dbus-1</data>
 	<binary>${prefix}/libexec/dbus-daemon-launch-helper</binary>
-
+	<data dest="${bundle}/Contents/Resources/etc/dbus-1/session.d/">${prefix:dbus-source-dir}/test/data/valid-config-files/session.d/</data> 
+	<!-- session.conf: we're not shipping system.conf -->
+	<data dest="${bundle}/Contents/Resources/etc/dbus-1/session.conf">${prefix:dbus-source-dir}/bus/session.conf</data>
+	
 	
   <!-- Translation filenames, one for each program or library that you
        want to copy in to the bundle. The "dest" attribute is
