@@ -165,4 +165,8 @@ if /bin/expr "x$1" : '^x-psn_' > /dev/null; then
     shift 1
 fi
 
+# The app needs to know the DBUS Session bus address
+DBUS_SESSION_BUS_ADDRESS=unix:path=$(launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET) 
+export DBUS_SESSION_BUS_ADDRESS
+
 $EXEC "$bundle_contents/MacOS/$name-bin" "$@" $EXTRA_ARGS
