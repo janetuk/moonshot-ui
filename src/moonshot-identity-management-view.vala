@@ -618,7 +618,7 @@ class IdentityManagerView : Window {
         }
 
         if (this.request_queue.is_empty())
-            this.hide ();
+            Gtk.main_quit ();
 
         if (identity != null)
             this.default_id_card = identity;
