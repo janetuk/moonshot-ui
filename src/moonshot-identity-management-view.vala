@@ -596,7 +596,7 @@ class IdentityManagerView : Window {
 
             identity.services = services;
 
-//            identities_manager.store_id_cards();
+            identities_manager.update_card (identity);
         }
 
         if (identity.password == null)
