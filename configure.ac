@@ -48,11 +48,7 @@ case "$host" in
     # because Vala drops support for it, but as it ships with DBus there is very
     # little danger of it being dropped by distros any time soon.
     CLIENT_IPC_MODULE="dbus-glib-1"
-    PKG_CHECK_MODULES([GDBUS],
-            [gio-2.0 >= 2.26],
-            [SERVER_IPC_MODULE="gio-2.0"],
-            [SERVER_IPC_MODULE="dbus-glib-1"]
-    )
+	SERVER_IPC_MODULE="dbus-glib-1"   
 	
 	PKG_CHECK_MODULES([MAC], 
 			[gtk-mac-integration >= 1.0.1]
