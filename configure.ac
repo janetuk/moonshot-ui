@@ -105,7 +105,7 @@ AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
   AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
   vala_version=`$VALAC --version | sed 's/Vala  *//'`
-  AS_VERSION_COMPARE([0.12.1], ["$vala_version"],
+  AS_VERSION_COMPARE([0.12.2], ["$vala_version"],
     [vala_supports_dbus_glib="no"],
     [vala_supports_dbus_glib="no"],
     [vala_supports_dbus_glib="yes"])
