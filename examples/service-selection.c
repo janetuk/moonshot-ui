@@ -3,7 +3,7 @@
 
 int main (int argc, char *argv[])
 {
-    MoonshotError *error;
+    MoonshotError *error = NULL;
     gboolean        success;
 
     char *nai,
