@@ -5,7 +5,6 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <gee.h>
-#include <gtk/gtk.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,6 +48,7 @@ typedef struct _IdCardClass IdCardClass;
 typedef struct _IdentityManagerApp IdentityManagerApp;
 typedef struct _IdentityManagerAppClass IdentityManagerAppClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
+#define _identity_manager_app_unref0(var) ((var == NULL) ? NULL : (var = (identity_manager_app_unref (var), NULL)))
 
 #define TYPE_LOCAL_FLAT_FILE_STORE (local_flat_file_store_get_type ())
 #define LOCAL_FLAT_FILE_STORE(obj) (G_TYPE_CHECK_INSTANCE_CAST ((obj), TYPE_LOCAL_FLAT_FILE_STORE, LocalFlatFileStore))
@@ -88,6 +88,12 @@ static gpointer identity_manager_model_parent_class = NULL;
 GType identity_manager_model_get_type (void) G_GNUC_CONST;
 GType id_card_get_type (void) G_GNUC_CONST;
 GType iidentity_card_store_get_type (void) G_GNUC_CONST;
+gpointer identity_manager_app_ref (gpointer instance);
+void identity_manager_app_unref (gpointer instance);
+GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags);
+void value_set_identity_manager_app (GValue* value, gpointer v_object);
+void value_take_identity_manager_app (GValue* value, gpointer v_object);
+gpointer value_get_identity_manager_app (const GValue* value);
 GType identity_manager_app_get_type (void) G_GNUC_CONST;
 #define IDENTITY_MANAGER_MODEL_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), TYPE_IDENTITY_MANAGER_MODEL, IdentityManagerModelPrivate))
 enum  {
@@ -143,8 +149,8 @@ void identity_manager_model_remove_card (IdentityManagerModel* self, IdCard* car
 }
 
 
-static gpointer _g_object_ref0 (gpointer self) {
-	return self ? g_object_ref (self) : NULL;
+static gpointer _identity_manager_app_ref0 (gpointer self) {
+	return self ? identity_manager_app_ref (self) : NULL;
 }
 
 
@@ -154,7 +160,7 @@ IdentityManagerModel* identity_manager_model_construct (GType object_type, Ident
 	IIdentityCardStore* _tmp1_;
 	g_return_val_if_fail (parent_app != NULL, NULL);
 	self = (IdentityManagerModel*) g_object_new (object_type, NULL);
-	self->priv->parent = (_tmp0_ = _g_object_ref0 (parent_app), _g_object_unref0 (self->priv->parent), _tmp0_);
+	self->priv->parent = (_tmp0_ = _identity_manager_app_ref0 (parent_app), _identity_manager_app_unref0 (self->priv->parent), _tmp0_);
 	self->priv->store = (_tmp1_ = (IIdentityCardStore*) local_flat_file_store_new (), _g_object_unref0 (self->priv->store), _tmp1_);
 	return self;
 }
@@ -182,7 +188,7 @@ static void identity_manager_model_finalize (GObject* obj) {
 	IdentityManagerModel * self;
 	self = IDENTITY_MANAGER_MODEL (obj);
 	_g_object_unref0 (self->priv->store);
-	_g_object_unref0 (self->priv->parent);
+	_identity_manager_app_unref0 (self->priv->parent);
 	G_OBJECT_CLASS (identity_manager_model_parent_class)->finalize (obj);
 }
 

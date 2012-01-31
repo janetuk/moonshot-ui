@@ -114,6 +114,12 @@ void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card
 void id_card_widget_collapse (IdCardWidget* self);
 void custom_vbox_set_current_idcard (CustomVBox* self, IdCardWidget* value);
 IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self);
+gpointer identity_manager_app_ref (gpointer instance);
+void identity_manager_app_unref (gpointer instance);
+GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags);
+void value_set_identity_manager_app (GValue* value, gpointer v_object);
+void value_take_identity_manager_app (GValue* value, gpointer v_object);
+gpointer value_get_identity_manager_app (const GValue* value);
 GType identity_manager_app_get_type (void) G_GNUC_CONST;
 GType identity_manager_model_get_type (void) G_GNUC_CONST;
 GType identity_request_get_type (void) G_GNUC_CONST;

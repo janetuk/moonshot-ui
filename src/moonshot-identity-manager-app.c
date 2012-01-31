@@ -11,6 +11,7 @@
 #include <string.h>
 #include <glib/gi18n-lib.h>
 #include <config.h>
+#include <gobject/gvaluecollector.h>
 
 
 #define TYPE_IDENTITY_MANAGER_APP (identity_manager_app_get_type ())
@@ -55,16 +56,20 @@ typedef struct _MoonshotServer MoonshotServer;
 typedef struct _MoonshotServerClass MoonshotServerClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
+typedef struct _ParamSpecIdentityManagerApp ParamSpecIdentityManagerApp;
 #define _g_free0(var) (var = (g_free (var), NULL))
+#define _identity_manager_app_unref0(var) ((var == NULL) ? NULL : (var = (identity_manager_app_unref (var), NULL)))
 
 struct _IdentityManagerApp {
-	GtkWindow parent_instance;
+	GTypeInstance parent_instance;
+	volatile int ref_count;
 	IdentityManagerAppPrivate * priv;
 	IdentityManagerModel* model;
 };
 
 struct _IdentityManagerAppClass {
-	GtkWindowClass parent_class;
+	GTypeClass parent_class;
+	void (*finalize) (IdentityManagerApp *self);
 };
 
 struct _IdentityManagerAppPrivate {
@@ -72,9 +77,19 @@ struct _IdentityManagerAppPrivate {
 	MoonshotServer* ipc_server;
 };
 
+struct _ParamSpecIdentityManagerApp {
+	GParamSpec parent_instance;
+};
+
 
 static gpointer identity_manager_app_parent_class = NULL;
 
+gpointer identity_manager_app_ref (gpointer instance);
+void identity_manager_app_unref (gpointer instance);
+GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags);
+void value_set_identity_manager_app (GValue* value, gpointer v_object);
+void value_take_identity_manager_app (GValue* value, gpointer v_object);
+gpointer value_get_identity_manager_app (const GValue* value);
 GType identity_manager_app_get_type (void) G_GNUC_CONST;
 GType identity_manager_model_get_type (void) G_GNUC_CONST;
 GType identity_manager_view_get_type (void) G_GNUC_CONST;
@@ -102,7 +117,7 @@ static void _lambda6_ (GDBusConnection* conn, const char* name, IdentityManagerA
 static void __lambda6__gbus_name_acquired_callback (GDBusConnection* connection, const char* name, gpointer self);
 static void _lambda7_ (GDBusConnection* conn, const char* name, IdentityManagerApp* self);
 static void __lambda7__gbus_name_lost_callback (GDBusConnection* connection, const char* name, gpointer self);
-static void identity_manager_app_finalize (GObject* obj);
+static void identity_manager_app_finalize (IdentityManagerApp* obj);
 gint _vala_main (char** args, int args_length1);
 
 
@@ -114,10 +129,9 @@ void identity_manager_app_show (IdentityManagerApp* self) {
 
 
 IdentityManagerApp* identity_manager_app_construct (GType object_type) {
-	IdentityManagerApp * self;
+	IdentityManagerApp* self = (IdentityManagerApp*) g_type_create_instance (object_type);
 	IdentityManagerModel* _tmp0_;
 	IdentityManagerView* _tmp1_;
-	self = g_object_newv (object_type, 0, NULL);
 	self->model = (_tmp0_ = identity_manager_model_new (self), _g_object_unref0 (self->model), _tmp0_);
 	self->priv->view = (_tmp1_ = g_object_ref_sink (identity_manager_view_new (self)), _g_object_unref0 (self->priv->view), _tmp1_);
 	identity_manager_app_init_ipc_server (self);
@@ -193,41 +207,171 @@ static void identity_manager_app_init_ipc_server (IdentityManagerApp* self) {
 	MoonshotServer* _tmp0_;
 	g_return_if_fail (self != NULL);
 	self->priv->ipc_server = (_tmp0_ = moonshot_server_new ((GtkWindow*) self->priv->view), _g_object_unref0 (self->priv->ipc_server), _tmp0_);
-	g_bus_own_name_with_closures (G_BUS_TYPE_SESSION, "org.janet.Moonshot", G_BUS_NAME_OWNER_FLAGS_NONE, (GClosure*) g_cclosure_new ((GCallback) _identity_manager_app_bus_acquired_cb_gbus_acquired_callback, g_object_ref (self), g_object_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda6__gbus_name_acquired_callback, g_object_ref (self), g_object_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda7__gbus_name_lost_callback, g_object_ref (self), g_object_unref));
+	g_bus_own_name_with_closures (G_BUS_TYPE_SESSION, "org.janet.Moonshot", G_BUS_NAME_OWNER_FLAGS_NONE, (GClosure*) g_cclosure_new ((GCallback) _identity_manager_app_bus_acquired_cb_gbus_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda6__gbus_name_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda7__gbus_name_lost_callback, identity_manager_app_ref (self), identity_manager_app_unref));
+}
+
+
+static void value_identity_manager_app_init (GValue* value) {
+	value->data[0].v_pointer = NULL;
+}
+
+
+static void value_identity_manager_app_free_value (GValue* value) {
+	if (value->data[0].v_pointer) {
+		identity_manager_app_unref (value->data[0].v_pointer);
+	}
+}
+
+
+static void value_identity_manager_app_copy_value (const GValue* src_value, GValue* dest_value) {
+	if (src_value->data[0].v_pointer) {
+		dest_value->data[0].v_pointer = identity_manager_app_ref (src_value->data[0].v_pointer);
+	} else {
+		dest_value->data[0].v_pointer = NULL;
+	}
+}
+
+
+static gpointer value_identity_manager_app_peek_pointer (const GValue* value) {
+	return value->data[0].v_pointer;
+}
+
+
+static gchar* value_identity_manager_app_collect_value (GValue* value, guint n_collect_values, GTypeCValue* collect_values, guint collect_flags) {
+	if (collect_values[0].v_pointer) {
+		IdentityManagerApp* object;
+		object = collect_values[0].v_pointer;
+		if (object->parent_instance.g_class == NULL) {
+			return g_strconcat ("invalid unclassed object pointer for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
+		} else if (!g_value_type_compatible (G_TYPE_FROM_INSTANCE (object), G_VALUE_TYPE (value))) {
+			return g_strconcat ("invalid object type `", g_type_name (G_TYPE_FROM_INSTANCE (object)), "' for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
+		}
+		value->data[0].v_pointer = identity_manager_app_ref (object);
+	} else {
+		value->data[0].v_pointer = NULL;
+	}
+	return NULL;
+}
+
+
+static gchar* value_identity_manager_app_lcopy_value (const GValue* value, guint n_collect_values, GTypeCValue* collect_values, guint collect_flags) {
+	IdentityManagerApp** object_p;
+	object_p = collect_values[0].v_pointer;
+	if (!object_p) {
+		return g_strdup_printf ("value location for `%s' passed as NULL", G_VALUE_TYPE_NAME (value));
+	}
+	if (!value->data[0].v_pointer) {
+		*object_p = NULL;
+	} else if (collect_flags & G_VALUE_NOCOPY_CONTENTS) {
+		*object_p = value->data[0].v_pointer;
+	} else {
+		*object_p = identity_manager_app_ref (value->data[0].v_pointer);
+	}
+	return NULL;
+}
+
+
+GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags) {
+	ParamSpecIdentityManagerApp* spec;
+	g_return_val_if_fail (g_type_is_a (object_type, TYPE_IDENTITY_MANAGER_APP), NULL);
+	spec = g_param_spec_internal (G_TYPE_PARAM_OBJECT, name, nick, blurb, flags);
+	G_PARAM_SPEC (spec)->value_type = object_type;
+	return G_PARAM_SPEC (spec);
+}
+
+
+gpointer value_get_identity_manager_app (const GValue* value) {
+	g_return_val_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP), NULL);
+	return value->data[0].v_pointer;
+}
+
+
+void value_set_identity_manager_app (GValue* value, gpointer v_object) {
+	IdentityManagerApp* old;
+	g_return_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP));
+	old = value->data[0].v_pointer;
+	if (v_object) {
+		g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (v_object, TYPE_IDENTITY_MANAGER_APP));
+		g_return_if_fail (g_value_type_compatible (G_TYPE_FROM_INSTANCE (v_object), G_VALUE_TYPE (value)));
+		value->data[0].v_pointer = v_object;
+		identity_manager_app_ref (value->data[0].v_pointer);
+	} else {
+		value->data[0].v_pointer = NULL;
+	}
+	if (old) {
+		identity_manager_app_unref (old);
+	}
+}
+
+
+void value_take_identity_manager_app (GValue* value, gpointer v_object) {
+	IdentityManagerApp* old;
+	g_return_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP));
+	old = value->data[0].v_pointer;
+	if (v_object) {
+		g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (v_object, TYPE_IDENTITY_MANAGER_APP));
+		g_return_if_fail (g_value_type_compatible (G_TYPE_FROM_INSTANCE (v_object), G_VALUE_TYPE (value)));
+		value->data[0].v_pointer = v_object;
+	} else {
+		value->data[0].v_pointer = NULL;
+	}
+	if (old) {
+		identity_manager_app_unref (old);
+	}
 }
 
 
 static void identity_manager_app_class_init (IdentityManagerAppClass * klass) {
 	identity_manager_app_parent_class = g_type_class_peek_parent (klass);
+	IDENTITY_MANAGER_APP_CLASS (klass)->finalize = identity_manager_app_finalize;
 	g_type_class_add_private (klass, sizeof (IdentityManagerAppPrivate));
-	G_OBJECT_CLASS (klass)->finalize = identity_manager_app_finalize;
 }
 
 
 static void identity_manager_app_instance_init (IdentityManagerApp * self) {
 	self->priv = IDENTITY_MANAGER_APP_GET_PRIVATE (self);
+	self->ref_count = 1;
 }
 
 
-static void identity_manager_app_finalize (GObject* obj) {
+static void identity_manager_app_finalize (IdentityManagerApp* obj) {
 	IdentityManagerApp * self;
 	self = IDENTITY_MANAGER_APP (obj);
 	_g_object_unref0 (self->model);
 	_g_object_unref0 (self->priv->view);
 	_g_object_unref0 (self->priv->ipc_server);
-	G_OBJECT_CLASS (identity_manager_app_parent_class)->finalize (obj);
 }
 
 
 GType identity_manager_app_get_type (void) {
 	static volatile gsize identity_manager_app_type_id__volatile = 0;
 	if (g_once_init_enter (&identity_manager_app_type_id__volatile)) {
-		static const GTypeInfo g_define_type_info = { sizeof (IdentityManagerAppClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) identity_manager_app_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (IdentityManagerApp), 0, (GInstanceInitFunc) identity_manager_app_instance_init, NULL };
+		static const GTypeValueTable g_define_type_value_table = { value_identity_manager_app_init, value_identity_manager_app_free_value, value_identity_manager_app_copy_value, value_identity_manager_app_peek_pointer, "p", value_identity_manager_app_collect_value, "p", value_identity_manager_app_lcopy_value };
+		static const GTypeInfo g_define_type_info = { sizeof (IdentityManagerAppClass), (GBaseInitFunc) NULL, (GBaseFinalizeFunc) NULL, (GClassInitFunc) identity_manager_app_class_init, (GClassFinalizeFunc) NULL, NULL, sizeof (IdentityManagerApp), 0, (GInstanceInitFunc) identity_manager_app_instance_init, &g_define_type_value_table };
+		static const GTypeFundamentalInfo g_define_type_fundamental_info = { (G_TYPE_FLAG_CLASSED | G_TYPE_FLAG_INSTANTIATABLE | G_TYPE_FLAG_DERIVABLE | G_TYPE_FLAG_DEEP_DERIVABLE) };
 		GType identity_manager_app_type_id;
-		identity_manager_app_type_id = g_type_register_static (GTK_TYPE_WINDOW, "IdentityManagerApp", &g_define_type_info, 0);
+		identity_manager_app_type_id = g_type_register_fundamental (g_type_fundamental_next (), "IdentityManagerApp", &g_define_type_info, &g_define_type_fundamental_info, 0);
 		g_once_init_leave (&identity_manager_app_type_id__volatile, identity_manager_app_type_id);
 	}
 	return identity_manager_app_type_id__volatile;
+}
+
+
+gpointer identity_manager_app_ref (gpointer instance) {
+	IdentityManagerApp* self;
+	self = instance;
+	g_atomic_int_inc (&self->ref_count);
+	return instance;
+}
+
+
+void identity_manager_app_unref (gpointer instance) {
+	IdentityManagerApp* self;
+	self = instance;
+	if (g_atomic_int_dec_and_test (&self->ref_count)) {
+		IDENTITY_MANAGER_APP_GET_CLASS (self)->finalize (self);
+		g_type_free_instance ((GTypeInstance *) self);
+	}
 }
 
 
@@ -254,11 +398,11 @@ gint _vala_main (char** args, int args_length1) {
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-	app = g_object_ref_sink (identity_manager_app_new ());
+	app = identity_manager_app_new ();
 	identity_manager_app_show (app);
 	gtk_main ();
 	result = 0;
-	_g_object_unref0 (app);
+	_identity_manager_app_unref0 (app);
 	return result;
 }
 

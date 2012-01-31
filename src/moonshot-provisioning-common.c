@@ -98,7 +98,7 @@ gboolean web_provisioning_password_handler (GSList* stack);
 gboolean web_provisioning_user_handler (GSList* stack);
 gboolean web_provisioning_display_name_handler (GSList* stack);
 void web_provisioning_start_element_func (GMarkupParseContext* context, const char* element_name, char** attribute_names, int attribute_names_length1, char** attribute_values, int attribute_values_length1, GError** error);
-static IdCard** _vala_array_dup1 (IdCard** self, int length);
+static IdCard** _vala_array_dup4 (IdCard** self, int length);
 IdCard* id_card_new (void);
 IdCard* id_card_construct (GType object_type);
 GType rule_get_type (void) G_GNUC_CONST;
@@ -107,7 +107,7 @@ void rule_free (Rule* self);
 void rule_copy (const Rule* self, Rule* dest);
 void rule_destroy (Rule* self);
 Rule* id_card_get_rules (IdCard* self, int* result_length1);
-static Rule* _vala_array_dup2 (Rule* self, int length);
+static Rule* _vala_array_dup5 (Rule* self, int length);
 void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
 static void _vala_Rule_array_free (Rule* array, gint array_length);
 void web_provisioning_text_element_func (GMarkupParseContext* context, const char* text, gsize text_len, GError** error);
@@ -116,7 +116,7 @@ void id_card_set_username (IdCard* self, const char* value);
 void id_card_set_password (IdCard* self, const char* value);
 void id_card_set_issuer (IdCard* self, const char* value);
 char** id_card_get_services (IdCard* self, int* result_length1);
-static char** _vala_array_dup3 (char** self, int length);
+static char** _vala_array_dup6 (char** self, int length);
 void id_card_set_services (IdCard* self, char** value, int value_length1);
 GType trust_anchor_get_type (void) G_GNUC_CONST;
 TrustAnchor* id_card_get_trust_anchor (IdCard* self);
@@ -325,7 +325,7 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
-static IdCard** _vala_array_dup1 (IdCard** self, int length) {
+static IdCard** _vala_array_dup4 (IdCard** self, int length) {
 	IdCard** result;
 	int i;
 	result = g_new0 (IdCard*, length + 1);
@@ -336,7 +336,7 @@ static IdCard** _vala_array_dup1 (IdCard** self, int length) {
 }
 
 
-static Rule* _vala_array_dup2 (Rule* self, int length) {
+static Rule* _vala_array_dup5 (Rule* self, int length) {
 	Rule* result;
 	int i;
 	Rule _tmp0_ = {0};
@@ -371,7 +371,7 @@ void web_provisioning_start_element_func (GMarkupParseContext* context, const ch
 		IdCard** _tmp2_;
 		IdCard* _tmp5_;
 		IdCard* _tmp6_;
-		tmp_cards = (_tmp1_ = (_tmp0_ = web_provisioning_cards, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup1 (_tmp0_, web_provisioning_cards_length1)), tmp_cards_length1 = web_provisioning_cards_length1, _tmp_cards_size_ = tmp_cards_length1, _tmp1_);
+		tmp_cards = (_tmp1_ = (_tmp0_ = web_provisioning_cards, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup4 (_tmp0_, web_provisioning_cards_length1)), tmp_cards_length1 = web_provisioning_cards_length1, _tmp_cards_size_ = tmp_cards_length1, _tmp1_);
 		web_provisioning_cards = (_tmp2_ = g_new0 (IdCard*, (tmp_cards_length1 + 1) + 1), web_provisioning_cards = (_vala_array_free (web_provisioning_cards, web_provisioning_cards_length1, (GDestroyNotify) g_object_unref), NULL), web_provisioning_cards_length1 = tmp_cards_length1 + 1, _web_provisioning_cards_size_ = web_provisioning_cards_length1, _tmp2_);
 		{
 			gint i;
@@ -411,7 +411,7 @@ void web_provisioning_start_element_func (GMarkupParseContext* context, const ch
 			gint _tmp20_;
 			Rule *_tmp21_;
 			Rule _tmp22_;
-			tmp_rules = (_tmp9_ = (_tmp8_ = id_card_get_rules (web_provisioning_card, &_tmp7_), (_tmp8_ == NULL) ? ((gpointer) _tmp8_) : _vala_array_dup2 (_tmp8_, _tmp7_)), tmp_rules_length1 = _tmp7_, _tmp_rules_size_ = tmp_rules_length1, _tmp9_);
+			tmp_rules = (_tmp9_ = (_tmp8_ = id_card_get_rules (web_provisioning_card, &_tmp7_), (_tmp8_ == NULL) ? ((gpointer) _tmp8_) : _vala_array_dup5 (_tmp8_, _tmp7_)), tmp_rules_length1 = _tmp7_, _tmp_rules_size_ = tmp_rules_length1, _tmp9_);
 			_tmp11_ = (_tmp10_ = g_new0 (Rule, tmp_rules_length1 + 1), _tmp10__length1 = tmp_rules_length1 + 1, _tmp10_);
 			id_card_set_rules (web_provisioning_card, _tmp11_, tmp_rules_length1 + 1);
 			_tmp10_ = (_vala_Rule_array_free (_tmp10_, _tmp10__length1), NULL);
@@ -447,7 +447,7 @@ void web_provisioning_start_element_func (GMarkupParseContext* context, const ch
 }
 
 
-static char** _vala_array_dup3 (char** self, int length) {
+static char** _vala_array_dup6 (char** self, int length) {
 	char** result;
 	int i;
 	result = g_new0 (char*, length + 1);
@@ -516,7 +516,7 @@ void web_provisioning_text_element_func (GMarkupParseContext* context, const cha
 						gint _tmp15_;
 						char* *_tmp16_;
 						char* _tmp17_;
-						services = (_tmp6_ = (_tmp5_ = id_card_get_services (web_provisioning_card, &_tmp4_), (_tmp5_ == NULL) ? ((gpointer) _tmp5_) : _vala_array_dup3 (_tmp5_, _tmp4_)), services_length1 = _tmp4_, _services_size_ = services_length1, _tmp6_);
+						services = (_tmp6_ = (_tmp5_ = id_card_get_services (web_provisioning_card, &_tmp4_), (_tmp5_ == NULL) ? ((gpointer) _tmp5_) : _vala_array_dup6 (_tmp5_, _tmp4_)), services_length1 = _tmp4_, _services_size_ = services_length1, _tmp6_);
 						_tmp8_ = (_tmp7_ = g_new0 (char*, (services_length1 + 1) + 1), _tmp7__length1 = services_length1 + 1, _tmp7_);
 						id_card_set_services (web_provisioning_card, _tmp8_, services_length1 + 1);
 						_tmp7_ = (_vala_array_free (_tmp7_, _tmp7__length1, (GDestroyNotify) g_free), NULL);
@@ -661,7 +661,7 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 		char* line;
 		_tmp2_ = g_file_read (file, NULL, &_inner_error_);
 		if (_inner_error_ != NULL) {
-			goto __catch0_g_error;
+			goto __catch5_g_error;
 		}
 		dis = (_tmp4_ = g_data_input_stream_new ((GInputStream*) (_tmp3_ = _tmp2_)), _g_object_unref0 (_tmp3_), _tmp4_);
 		line = NULL;
@@ -673,7 +673,7 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 			if (_inner_error_ != NULL) {
 				_g_free0 (line);
 				_g_object_unref0 (dis);
-				goto __catch0_g_error;
+				goto __catch5_g_error;
 			}
 			if (!((line = (_tmp6_ = _tmp5_, _g_free0 (line), _tmp6_)) != NULL)) {
 				break;
@@ -683,8 +683,8 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 		_g_free0 (line);
 		_g_object_unref0 (dis);
 	}
-	goto __finally0;
-	__catch0_g_error:
+	goto __finally5;
+	__catch5_g_error:
 	{
 		GError * e;
 		e = _inner_error_;
@@ -694,7 +694,7 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 			_g_error_free0 (e);
 		}
 	}
-	__finally0:
+	__finally5:
 	if (_inner_error_ != NULL) {
 		_g_object_unref0 (file);
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
@@ -728,11 +728,11 @@ void web_provisioning_parser_parse (WebProvisioningParser* self) {
 	{
 		g_markup_parse_context_parse (ctx, self->priv->text, (gssize) string_get_length (self->priv->text), &_inner_error_);
 		if (_inner_error_ != NULL) {
-			goto __catch1_g_error;
+			goto __catch6_g_error;
 		}
 	}
-	goto __finally1;
-	__catch1_g_error:
+	goto __finally6;
+	__catch6_g_error:
 	{
 		GError * e;
 		e = _inner_error_;
@@ -743,7 +743,7 @@ void web_provisioning_parser_parse (WebProvisioningParser* self) {
 			_g_error_free0 (e);
 		}
 	}
-	__finally1:
+	__finally6:
 	if (_inner_error_ != NULL) {
 		_g_markup_parse_context_free0 (ctx);
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);

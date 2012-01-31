@@ -80,6 +80,7 @@ typedef struct _IdCard IdCard;
 typedef struct _IdCardClass IdCardClass;
 
 #define IDENTITY_MANAGER_VIEW_TYPE_COLUMNS (identity_manager_view_columns_get_type ())
+#define _identity_manager_app_unref0(var) ((var == NULL) ? NULL : (var = (identity_manager_app_unref (var), NULL)))
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define __g_slist_free_g_object_unref0(var) ((var == NULL) ? NULL : (var = (_g_slist_free_g_object_unref (var), NULL)))
 #define _g_queue_free0(var) ((var == NULL) ? NULL : (var = (g_queue_free (var), NULL)))
@@ -164,13 +165,15 @@ typedef enum  {
 } IdentityManagerViewColumns;
 
 struct _IdentityManagerApp {
-	GtkWindow parent_instance;
+	GTypeInstance parent_instance;
+	volatile int ref_count;
 	IdentityManagerAppPrivate * priv;
 	IdentityManagerModel* model;
 };
 
 struct _IdentityManagerAppClass {
-	GtkWindowClass parent_class;
+	GTypeClass parent_class;
+	void (*finalize) (IdentityManagerApp *self);
 };
 
 struct _IdentityRequest {
@@ -203,6 +206,12 @@ struct _Block1Data {
 static gpointer identity_manager_view_parent_class = NULL;
 
 GType identity_manager_view_get_type (void) G_GNUC_CONST;
+gpointer identity_manager_app_ref (gpointer instance);
+void identity_manager_app_unref (gpointer instance);
+GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags);
+void value_set_identity_manager_app (GValue* value, gpointer v_object);
+void value_take_identity_manager_app (GValue* value, gpointer v_object);
+gpointer value_get_identity_manager_app (const GValue* value);
 GType identity_manager_app_get_type (void) G_GNUC_CONST;
 GType identity_manager_model_get_type (void) G_GNUC_CONST;
 GType identity_request_get_type (void) G_GNUC_CONST;
@@ -299,6 +308,7 @@ static gboolean _lambda3_ (Block1Data* _data1_);
 static gboolean __lambda3__gsource_func (gpointer self);
 static Block1Data* block1_data_ref (Block1Data* _data1_);
 static void block1_data_unref (Block1Data* _data1_);
+void identity_manager_model_update_card (IdentityManagerModel* self, IdCard* card);
 AddPasswordDialog* add_password_dialog_new (void);
 AddPasswordDialog* add_password_dialog_construct (GType object_type);
 GType add_password_dialog_get_type (void) G_GNUC_CONST;
@@ -355,6 +365,11 @@ static void _g_slist_free_g_object_unref (GSList* self) {
 }
 
 
+static gpointer _identity_manager_app_ref0 (gpointer self) {
+	return self ? identity_manager_app_ref (self) : NULL;
+}
+
+
 static gpointer _g_object_ref0 (gpointer self) {
 	return self ? g_object_ref (self) : NULL;
 }
@@ -368,7 +383,7 @@ IdentityManagerView* identity_manager_view_construct (GType object_type, Identit
 	GHashTable* _tmp3_;
 	g_return_val_if_fail (app != NULL, NULL);
 	self = g_object_newv (object_type, 0, NULL);
-	self->parent_app = (_tmp0_ = _g_object_ref0 (app), _g_object_unref0 (self->parent_app), _tmp0_);
+	self->parent_app = (_tmp0_ = _identity_manager_app_ref0 (app), _identity_manager_app_unref0 (self->parent_app), _tmp0_);
 	self->identities_manager = (_tmp1_ = _g_object_ref0 (self->parent_app->model), _g_object_unref0 (self->identities_manager), _tmp1_);
 	self->request_queue = (_tmp2_ = g_queue_new (), _g_queue_free0 (self->request_queue), _tmp2_);
 	self->priv->service_button_map = (_tmp3_ = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, g_free), _g_hash_table_unref0 (self->priv->service_button_map), _tmp3_);
@@ -1385,6 +1400,7 @@ void identity_manager_view_send_identity_cb (IdentityManagerView* self, IdCard* 
 		services[_tmp7_] = (_tmp9_ = g_strdup (request->service), _g_free0 (services[_tmp7_]), _tmp9_);
 		_tmp10_ = services;
 		id_card_set_services (identity, _tmp10_, services_length1);
+		identity_manager_model_update_card (self->identities_manager, identity);
 		services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
 	}
 	if (id_card_get_password (identity) == NULL) {
@@ -1409,7 +1425,7 @@ void identity_manager_view_send_identity_cb (IdentityManagerView* self, IdCard* 
 		_g_object_unref0 (dialog);
 	}
 	if (g_queue_is_empty (self->request_queue)) {
-		gtk_widget_hide ((GtkWidget*) self);
+		gtk_main_quit ();
 	}
 	if (identity != NULL) {
 		IdCard* _tmp11_;
@@ -1958,7 +1974,7 @@ static void identity_manager_view_instance_init (IdentityManagerView * self) {
 static void identity_manager_view_finalize (GObject* obj) {
 	IdentityManagerView * self;
 	self = IDENTITY_MANAGER_VIEW (obj);
-	_g_object_unref0 (self->parent_app);
+	_identity_manager_app_unref0 (self->parent_app);
 	_g_object_unref0 (self->priv->ui_manager);
 	_g_object_unref0 (self->priv->search_entry);
 	_g_object_unref0 (self->priv->vbox_right);
