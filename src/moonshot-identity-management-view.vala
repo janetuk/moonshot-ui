@@ -596,7 +596,7 @@ class IdentityManagerView : Window {
 
             identity.services = services;
 
-//            identities_manager.store_id_cards();
+            identities_manager.update_card (identity);
         }
 
         if (identity.password == null)
@@ -618,7 +618,7 @@ class IdentityManagerView : Window {
         }
 
         if (this.request_queue.is_empty())
-            this.hide ();
+            Gtk.main_quit ();
 
         if (identity != null)
             this.default_id_card = identity;

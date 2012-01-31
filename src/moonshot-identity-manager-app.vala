@@ -1,7 +1,7 @@
 using Gtk;
 
 
-class IdentityManagerApp : Window {
+class IdentityManagerApp {
     public IdentityManagerModel model;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;

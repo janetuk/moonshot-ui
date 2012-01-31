@@ -140,8 +140,13 @@ if IPC_DBUS
 
 # DBus service file
 dbusservicedir = $(datadir)/dbus-1/services
+if  OS_MACOS
+dbusservice_in_files = org.janet.Moonshot.service.mac
+dbusservice_DATA = $(dbusservice_in_files:.service.mac=.service)
+else
 dbusservice_in_files = org.janet.Moonshot.service.in
 dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
+endif 
 
 # Rule to make the service file with bindir expanded
 $(dbusservice_DATA): $(dbusservice_in_files) Makefile

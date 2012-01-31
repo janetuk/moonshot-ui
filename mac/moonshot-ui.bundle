@@ -14,6 +14,7 @@
     -->
       <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
       <prefix name="installer-dir">${env:HOME}/moonshot/mac-client-installer/moonshot-ui/</prefix>
+	  <prefix name="dbus-source-dir">${env:HOME}/gtk/source/dbus-1.4.1/</prefix>
 
     <!-- The project directory is the default location of the created
          app. If you leave out the path, the current directory is
@@ -47,7 +48,8 @@
   -->
   <plist>${project}/moonshot-ui.plist</plist>
 
-    <main-binary>${prefix:installer-dir}bin/moonshot</main-binary>
+ <!--   <main-binary>${prefix:installer-dir}bin/moonshot</main-binary>-->
+    <main-binary>${prefix}/bin/moonshot</main-binary>
 
   <!-- Copy in GTK+ modules.  Note the ${gtkdir} macro, which expands
        to the correct library subdirectory for the specified gtk
@@ -75,6 +77,16 @@
     ${prefix}/lib/gdk-pixbuf-2.0/${pkg:${gtk}:gtk_binary_version}/*.so
   </binary>
 
+<!-- DBUS -->
+	<binary>${prefix}/bin/dbus-*</binary>
+	<!-- org.janet.Moonshot.service -->
+	<data>${prefix}/share/dbus-1</data>
+	<binary>${prefix}/libexec/dbus-daemon-launch-helper</binary>
+	<data dest="${bundle}/Contents/Resources/etc/dbus-1/session.d/">${prefix:dbus-source-dir}/test/data/valid-config-files/session.d/</data> 
+	<!-- session.conf: we're not shipping system.conf -->
+	<data dest="${bundle}/Contents/Resources/etc/dbus-1/session.conf">${prefix:dbus-source-dir}/bus/session.conf</data>
+	
+	
   <!-- Translation filenames, one for each program or library that you
        want to copy in to the bundle. The "dest" attribute is
        optional, as usual. Bundler will find all translations of that
@@ -82,7 +94,6 @@
   <translations name="gtk20">
     ${prefix}/share/locale
   </translations>
-
 
   <!-- Data to copy in, usually Glade/UI files, images, sounds files
        etc. The destination inside the bundle can be specified if the
@@ -96,17 +107,10 @@
 
   <!-- Copy in the themes data. You may want to trim this to save space
        in your bundle. -->
-  <data>
-    ${prefix}/share/themes
-  </data>
+	<data>${prefix}/share/themes/Default</data>
 
-  <!-- Copy icons. Note that the .icns file is an Apple format which
-       contains up to 4 sizes of icon. You can use
-       /Developer/Applications/Utilities/Icon Composer.app to import
-       artwork and create the file. >
-  <data dest="${bundle}/Contents/Resources">
-    ${project}/Giggle.icns
-  </data -->
+	<!-- App icon -->
+	<data dest="${bundle}/Contents/Resources">${project}/moonshot-ui.icns</data>
 
   <!-- This is where theme commands go. You can copy them in from your
        theme of choice if they provide and example, or you can just

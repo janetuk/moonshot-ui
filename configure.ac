@@ -1,4 +1,4 @@
-AC_PREREQ([2.66])
+AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
         [0.1],
         [moonshot-community@jiscmail.ac.uk],
@@ -48,11 +48,7 @@ case "$host" in
     # because Vala drops support for it, but as it ships with DBus there is very
     # little danger of it being dropped by distros any time soon.
     CLIENT_IPC_MODULE="dbus-glib-1"
-    PKG_CHECK_MODULES([GDBUS],
-            [gio-2.0 >= 2.26],
-            [SERVER_IPC_MODULE="gio-2.0"],
-            [SERVER_IPC_MODULE="dbus-glib-1"]
-    )
+	SERVER_IPC_MODULE="dbus-glib-1"   
 	
 	PKG_CHECK_MODULES([MAC], 
 			[gtk-mac-integration >= 1.0.1]
@@ -105,7 +101,7 @@ AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
   AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
   vala_version=`$VALAC --version | sed 's/Vala  *//'`
-  AS_VERSION_COMPARE([0.12.1], ["$vala_version"],
+  AS_VERSION_COMPARE([0.12.2], ["$vala_version"],
     [vala_supports_dbus_glib="no"],
     [vala_supports_dbus_glib="no"],
     [vala_supports_dbus_glib="yes"])
