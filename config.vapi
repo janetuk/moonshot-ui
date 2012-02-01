@@ -6,6 +6,7 @@ namespace Config
         public const string PACKAGE_STRING;
         public const string PACKAGE_VERSION;
         public const string PACKAGE_TARNAME;
+        public const string PACKAGE_URL;
 
         /* Gettext package */
         public const string GETTEXT_PACKAGE;
