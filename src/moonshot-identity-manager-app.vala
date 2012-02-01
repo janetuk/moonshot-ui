@@ -95,9 +95,6 @@ class IdentityManagerApp {
 
 public static int main(string[] args){
         Gtk.init(ref args);
-		stdout.printf("Hello\n");
-        foreach (string arg in args)
-			stdout.printf("arg %s\n", arg);
 
 #if OS_WIN32
         // Force specific theme settings on Windows without requiring a gtkrc file
