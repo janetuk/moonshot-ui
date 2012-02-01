@@ -9,15 +9,15 @@ bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp
 
-AM_CFLAGS =
+AM_CFLAGS = -g -O0
 
-AM_CPPFLAGS = \
+AM_CPPFLAGS = -g -O0 \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
-AM_VALAFLAGS = \
+AM_VALAFLAGS = -g \
         config.vapi \
 	--vapidir=$(top_srcdir)/vapi \
         --pkg gio-2.0
@@ -58,6 +58,7 @@ src_moonshot_webp_SOURCES = \
 src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
 src_moonshot_LDADD = $(moonshot_LIBS) 
+src_moonshot_LDFLAGS = -g -O0
 
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)

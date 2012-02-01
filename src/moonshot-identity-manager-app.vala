@@ -7,6 +7,10 @@ class IdentityManagerApp {
     private MoonshotServer ipc_server;
 #if OS_MACOS
 	public OSXApplication osxApp;
+	public bool on_osx_open_files (string file_name ) {
+	print ("on_osx_open_files()  file_name = %s\n", file_name);
+		return ipc_server.install_from_file(file_name);
+	}
 #endif
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
@@ -23,7 +27,8 @@ class IdentityManagerApp {
 // This wont work with Vala 0.12		
 // 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
 // so we have to use this old way
-		Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(ipc_server.install_from_file), null);
+		Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), ipc_server);
+//		Signal.connect_data(osxApp, "NSApplicationOpenFile", (GLib.Callback)(ipc_server.install_from_file), ipc_server, null, 0);
 
 #endif
         view.show();

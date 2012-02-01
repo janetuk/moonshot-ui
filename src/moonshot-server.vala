@@ -3,7 +3,7 @@
 [DBus (name = "org.janet.Moonshot")]
 public class MoonshotServer : Object {
 
-    private IdentityManagerView main_window;
+    private static IdentityManagerView main_window;
 
     public MoonshotServer (Gtk.Window window)
     {
@@ -115,15 +115,15 @@ public class MoonshotServer : Object {
 
     public bool install_id_card (string   display_name,
                                  string   user_name,
-                                 string   password,
-                                 string   realm,
-                                 string[] rules_patterns,
-                                 string[] rules_always_confirm,
-                                 string[] services,
-                                 string   ca_cert,
-                                 string   subject,
-                                 string   subject_alt,
-                                 string   server_cert)
+                                 string   ?password,
+                                 string   ?realm,
+                                 string[] ?rules_patterns,
+                                 string[] ?rules_always_confirm,
+                                 string[] ?services,
+                                 string   ?ca_cert,
+                                 string   ?subject,
+                                 string   ?subject_alt,
+                                 string   ?server_cert)
     {
       IdCard idcard = new IdCard ();
 
@@ -148,13 +148,14 @@ public class MoonshotServer : Object {
         }
       }
 
-      return this.main_window.add_identity (idcard);
+      return main_window.add_identity (idcard);
     }
 
 
     public bool install_from_file (string file_name)
     {
     var webp = new WebProvisioning.Parser (file_name);
+	print ("install_from_file()  file_name = %s", file_name);
     webp.parse();
     bool result = false;
     
@@ -188,7 +189,8 @@ public class MoonshotServer : Object {
                                 card.trust_anchor.server_cert);
        }
 
-    return true;
+print ("install_from_file() result %s\n", result.to_string());
+    return result;
     }
 
 }
