@@ -13,13 +13,18 @@ class IdentityManagerApp {
     public void show() {
         view.show();    
     }
+	
     public IdentityManagerApp () {
         model = new IdentityManagerModel(this);
         view = new IdentityManagerView(this);
         init_ipc_server ();
 #if OS_MACOS
  		osxApp = OSXApplication.get_instance();
- 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
+// This wont work with Vala 0.12		
+// 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
+// so we have to use this old way
+		Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(ipc_server.install_from_file), null);
+
 #endif
         view.show();
     }   
