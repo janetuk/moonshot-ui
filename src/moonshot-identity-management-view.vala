@@ -587,16 +587,25 @@ class IdentityManagerView : Window {
 
         if (request.service != null && request.service != "")
         {
-            string[] services = new string[identity.services.length + 1];
+            bool duplicate_service = false;
 
-            for (int i = 0; i < identity.services.length; i++)
-                services[i] = identity.services[i];
+            foreach (string service in identity.services)
+            {
+                if (service == request.service)
+                    duplicate_service = true;
+            }
+            if (duplicate_service == false)
+            {
+                string[] services = new string[identity.services.length + 1];
 
-            services[identity.services.length] = request.service;
+                for (int i = 0; i < identity.services.length; i++)
+                    services[i] = identity.services[i];
 
-            identity.services = services;
+                services[identity.services.length] = request.service;
+                identity.services = services;
 
-            identities_manager.update_card (identity);
+                identities_manager.update_card (identity);
+            }
         }
 
         if (identity.password == null)
