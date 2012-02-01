@@ -729,7 +729,7 @@ class IdentityManagerView : Window {
 
         string copyright = "Copyright 2011 JANET";
 
-        string license =
+        const string license =
 """
 Copyright (c) 2011, JANET(UK)
 All rights reserved.
