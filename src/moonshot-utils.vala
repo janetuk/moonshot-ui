@@ -29,15 +29,7 @@ print("Windows\n");
 
         string? filename = Path.build_filename (base_path, "share", "icons", "%s.png".printf (name));
         return new Gdk.Pixbuf.from_file_at_size (filename, size, size);
-//#elif OS_MACOS
-/*
-print("MacOS\n");
-        string? base_path = " /Users/pete/moonshot-ui";
-         string? filename = Filename.display_name(Path.build_filename (base_path, "share", "icons", "%s.png".printf (name)));
-print("%s\n".printf(filename));
-        return new Gdk.Pixbuf.from_file (filename);
-//        return new Gdk.Pixbuf.from_file_at_size (filename, -1, -1);
-*/
+
 #else
 print("Linux\n");
         var icon_theme = Gtk.IconTheme.get_default ();
