@@ -1,10 +1,11 @@
-#include <glib.h>
-#include "libmoonshot.h"
+#include <libmoonshot.h>
+
+#include <stdio.h>
 
 int main (int argc, char *argv[])
 {
     MoonshotError *error = NULL;
-    gboolean        success;
+    int success;
 
     char *nai,
          *password,
