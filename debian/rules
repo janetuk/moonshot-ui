@@ -11,3 +11,7 @@
 
 %:
 	dh $@ 
+
+override_dh_auto_build:
+	touch *stamp
+	dh_auto_build
