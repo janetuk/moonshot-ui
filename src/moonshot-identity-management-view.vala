@@ -347,7 +347,14 @@ class IdentityManagerView : Window {
 
     public bool add_identity (IdCard id_card)
     {
-        /* TODO: Check if display name already exists */
+#if OS_MACOS
+        /* 
+         * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
+         * so for now we will install silently
+         */
+        var ret = Gtk.ResponseType.YES;
+#else
+	public OSXApplication osxApp;
 
         var dialog = new Gtk.MessageDialog (this,
                                             Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -356,9 +363,9 @@ class IdentityManagerView : Window {
                                             _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
                                             id_card.display_name);
 
-        dialog.show_all ();
         var ret = dialog.run ();
-        dialog.hide ();
+        dialog.destroy ();
+#endif
 
         if (ret == Gtk.ResponseType.YES) {
             id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
@@ -422,7 +429,7 @@ class IdentityManagerView : Window {
     {
         var id_card = id_card_widget.id_card;
 
-        var dialog = new MessageDialog (null,
+        var dialog = new MessageDialog (this,
                                         DialogFlags.DESTROY_WITH_PARENT,
                                         MessageType.QUESTION,
                                         Gtk.ButtonsType.YES_NO,

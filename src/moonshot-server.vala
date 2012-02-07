@@ -3,7 +3,7 @@
 [DBus (name = "org.janet.Moonshot")]
 public class MoonshotServer : Object {
 
-    private static IdentityManagerView main_window;
+    private IdentityManagerView main_window;
 
     public MoonshotServer (Gtk.Window window)
     {
@@ -152,13 +152,13 @@ public class MoonshotServer : Object {
     }
 
 
-    public bool install_from_file (string file_name)
+    public int install_from_file (string file_name)
     {
     var webp = new WebProvisioning.Parser (file_name);
-	print ("install_from_file()  file_name = %s", file_name);
+
     webp.parse();
     bool result = false;
-    
+    int installed_cards = 0;
     foreach (IdCard card in WebProvisioning.cards)
     {
       string[] rules_patterns = {};
@@ -176,6 +176,7 @@ public class MoonshotServer : Object {
           i++;
         }
       } 
+
       result = install_id_card (card.display_name,
                                 card.username,
                                 card.password,
@@ -187,12 +188,12 @@ public class MoonshotServer : Object {
                                 card.trust_anchor.subject,
                                 card.trust_anchor.subject_alt,
                                 card.trust_anchor.server_cert);
-       }
-
-print ("install_from_file() result %s\n", result.to_string());
-    return result;
+      if (result) {
+        installed_cards++;
+      }
     }
-
+    return installed_cards;
+  }
 }
 
 

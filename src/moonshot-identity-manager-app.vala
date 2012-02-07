@@ -5,13 +5,21 @@ class IdentityManagerApp {
     public IdentityManagerModel model;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;
+
 #if OS_MACOS
 	public OSXApplication osxApp;
-	public bool on_osx_open_files (string file_name ) {
-	print ("on_osx_open_files()  file_name = %s\n", file_name);
-		return ipc_server.install_from_file(file_name);
+  
+    // the signal handler function.
+    // the current instance of our app class is passed in the 
+    // id_manager_app_instanceparameter 
+	public static bool on_osx_open_files (OSXApplication osx_app_instance, 
+                                        string file_name, 
+                                        IdentityManagerApp id_manager_app_instance ) {
+    int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
+    return true;
 	}
 #endif
+
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
@@ -22,13 +30,14 @@ class IdentityManagerApp {
         model = new IdentityManagerModel(this);
         view = new IdentityManagerView(this);
         init_ipc_server ();
+
 #if OS_MACOS
- 		osxApp = OSXApplication.get_instance();
-// This wont work with Vala 0.12		
-// 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
-// so we have to use this old way
-		Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), ipc_server);
-//		Signal.connect_data(osxApp, "NSApplicationOpenFile", (GLib.Callback)(ipc_server.install_from_file), ipc_server, null, 0);
+
+        osxApp = OSXApplication.get_instance();
+        // The 'correct' way of connrcting wont work in Mac OS with Vala 0.12	e.g.	
+        // 		osxApp.ns_application_open_file.connect(install_from_file);
+        // so we have to use this old way
+        Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
 
 #endif
         view.show();
