@@ -64,10 +64,7 @@ class IdentityManagerView : Window {
        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
        build_ui();
        setup_list_model(); 
-        load_id_cards(); 
-#if OS_MACOS
-		osxApp = app.osxApp;
-#endif
+       load_id_cards(); 
        connect_signals();
     }
     
@@ -353,7 +350,6 @@ class IdentityManagerView : Window {
          * so for now we will install silently
          */
         var ret = Gtk.ResponseType.YES;
-    	public OSXApplication osxApp;
 #else
 
         var dialog = new Gtk.MessageDialog (this,
