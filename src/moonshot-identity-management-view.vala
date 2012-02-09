@@ -353,8 +353,8 @@ class IdentityManagerView : Window {
          * so for now we will install silently
          */
         var ret = Gtk.ResponseType.YES;
+    	public OSXApplication osxApp;
 #else
-	public OSXApplication osxApp;
 
         var dialog = new Gtk.MessageDialog (this,
                                             Gtk.DialogFlags.DESTROY_WITH_PARENT,
