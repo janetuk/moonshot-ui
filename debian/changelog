@@ -1,3 +1,9 @@
+moonshot-ui (0.0.2+20120131-2) unstable; urgency=low
+
+  * Update from master branch
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Fri, 18 May 2012 20:49:17 -0400
+
 moonshot-ui (0.0.2+20120131-1) unstable; urgency=low
 
   * New upstream version
