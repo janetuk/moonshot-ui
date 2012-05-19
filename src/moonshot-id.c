@@ -156,15 +156,22 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 
 
+#line 1 "moonshot-id.vala"
 TrustAnchor* trust_anchor_construct (GType object_type) {
+#line 162 "moonshot-id.c"
 	TrustAnchor * self = NULL;
+#line 1 "moonshot-id.vala"
 	self = (TrustAnchor*) g_object_new (object_type, NULL);
+#line 166 "moonshot-id.c"
 	return self;
 }
 
 
+#line 1 "moonshot-id.vala"
 TrustAnchor* trust_anchor_new (void) {
+#line 1 "moonshot-id.vala"
 	return trust_anchor_construct (TYPE_TRUST_ANCHOR);
+#line 175 "moonshot-id.c"
 }
 
 
@@ -172,7 +179,9 @@ const char* trust_anchor_get_ca_cert (TrustAnchor* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_ca_cert;
+#line 3 "moonshot-id.vala"
 	return result;
+#line 185 "moonshot-id.c"
 }
 
 
@@ -188,7 +197,9 @@ const char* trust_anchor_get_subject (TrustAnchor* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_subject;
+#line 4 "moonshot-id.vala"
 	return result;
+#line 203 "moonshot-id.c"
 }
 
 
@@ -204,7 +215,9 @@ const char* trust_anchor_get_subject_alt (TrustAnchor* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_subject_alt;
+#line 5 "moonshot-id.vala"
 	return result;
+#line 221 "moonshot-id.c"
 }
 
 
@@ -220,7 +233,9 @@ const char* trust_anchor_get_server_cert (TrustAnchor* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_server_cert;
+#line 6 "moonshot-id.vala"
 	return result;
+#line 239 "moonshot-id.c"
 }
 
 
@@ -371,15 +386,22 @@ static void _vala_Rule_array_free (Rule* array, gint array_length) {
 }
 
 
+#line 15 "moonshot-id.vala"
 IdCard* id_card_construct (GType object_type) {
+#line 392 "moonshot-id.c"
 	IdCard * self = NULL;
+#line 15 "moonshot-id.vala"
 	self = (IdCard*) g_object_new (object_type, NULL);
+#line 396 "moonshot-id.c"
 	return self;
 }
 
 
+#line 15 "moonshot-id.vala"
 IdCard* id_card_new (void) {
+#line 15 "moonshot-id.vala"
 	return id_card_construct (TYPE_ID_CARD);
+#line 405 "moonshot-id.c"
 }
 
 
@@ -387,7 +409,9 @@ const char* id_card_get_display_name (IdCard* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_display_name;
+#line 19 "moonshot-id.vala"
 	return result;
+#line 415 "moonshot-id.c"
 }
 
 
@@ -403,7 +427,9 @@ const char* id_card_get_username (IdCard* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_username;
+#line 21 "moonshot-id.vala"
 	return result;
+#line 433 "moonshot-id.c"
 }
 
 
@@ -419,7 +445,9 @@ const char* id_card_get_password (IdCard* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_password;
+#line 22 "moonshot-id.vala"
 	return result;
+#line 451 "moonshot-id.c"
 }
 
 
@@ -435,7 +463,9 @@ const char* id_card_get_issuer (IdCard* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_issuer;
+#line 24 "moonshot-id.vala"
 	return result;
+#line 469 "moonshot-id.c"
 }
 
 
@@ -452,7 +482,9 @@ Rule* id_card_get_rules (IdCard* self, int* result_length1) {
 	Rule* _tmp0_;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = (_tmp0_ = self->priv->_rules, *result_length1 = self->priv->_rules_length1, _tmp0_);
+#line 26 "moonshot-id.vala"
 	return result;
+#line 488 "moonshot-id.c"
 }
 
 
@@ -481,7 +513,9 @@ char** id_card_get_services (IdCard* self, int* result_length1) {
 	char** _tmp0_;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = (_tmp0_ = self->priv->_services, *result_length1 = self->priv->_services_length1, _tmp0_);
+#line 27 "moonshot-id.vala"
 	return result;
+#line 519 "moonshot-id.c"
 }
 
 
@@ -509,7 +543,9 @@ TrustAnchor* id_card_get_trust_anchor (IdCard* self) {
 	TrustAnchor* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_trust_anchor;
+#line 29 "moonshot-id.vala"
 	return result;
+#line 549 "moonshot-id.c"
 }
 
 
@@ -530,7 +566,9 @@ GdkPixbuf* id_card_get_pixbuf (IdCard* self) {
 	GdkPixbuf* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_pixbuf;
+#line 31 "moonshot-id.vala"
 	return result;
+#line 572 "moonshot-id.c"
 }
 
 
@@ -547,10 +585,14 @@ const char* id_card_get_nai (IdCard* self) {
 	char* _tmp0_;
 	char* _tmp1_;
 	g_return_val_if_fail (self != NULL, NULL);
+#line 33 "moonshot-id.vala"
 	self->priv->_nai = (_tmp1_ = g_strconcat (_tmp0_ = g_strconcat (self->priv->_username, "@", NULL), self->priv->_issuer, NULL), _g_free0 (self->priv->_nai), _tmp1_);
+#line 591 "moonshot-id.c"
 	_g_free0 (_tmp0_);
 	result = self->priv->_nai;
+#line 33 "moonshot-id.vala"
 	return result;
+#line 596 "moonshot-id.c"
 }
 
 

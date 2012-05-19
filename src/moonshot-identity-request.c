@@ -105,55 +105,87 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 15 "moonshot-identity-request.vala"
 IdentityRequest* identity_request_construct (GType object_type, IdentityManagerView* main_window, const char* nai, const char* password, const char* service) {
+#line 111 "moonshot-identity-request.c"
 	IdentityRequest * self = NULL;
 	IdentityManagerView* _tmp0_;
 	char* _tmp1_;
 	char* _tmp2_;
 	char* _tmp3_;
+#line 15 "moonshot-identity-request.vala"
 	g_return_val_if_fail (main_window != NULL, NULL);
+#line 15 "moonshot-identity-request.vala"
 	g_return_val_if_fail (nai != NULL, NULL);
+#line 15 "moonshot-identity-request.vala"
 	g_return_val_if_fail (password != NULL, NULL);
+#line 15 "moonshot-identity-request.vala"
 	g_return_val_if_fail (service != NULL, NULL);
+#line 15 "moonshot-identity-request.vala"
 	self = (IdentityRequest*) g_object_new (object_type, NULL);
+#line 20 "moonshot-identity-request.vala"
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (main_window), _g_object_unref0 (self->priv->main_window), _tmp0_);
+#line 21 "moonshot-identity-request.vala"
 	self->nai = (_tmp1_ = g_strdup (nai), _g_free0 (self->nai), _tmp1_);
+#line 22 "moonshot-identity-request.vala"
 	self->password = (_tmp2_ = g_strdup (password), _g_free0 (self->password), _tmp2_);
+#line 23 "moonshot-identity-request.vala"
 	self->service = (_tmp3_ = g_strdup (service), _g_free0 (self->service), _tmp3_);
+#line 135 "moonshot-identity-request.c"
 	return self;
 }
 
 
+#line 15 "moonshot-identity-request.vala"
 IdentityRequest* identity_request_new (IdentityManagerView* main_window, const char* nai, const char* password, const char* service) {
+#line 15 "moonshot-identity-request.vala"
 	return identity_request_construct (TYPE_IDENTITY_REQUEST, main_window, nai, password, service);
+#line 144 "moonshot-identity-request.c"
 }
 
 
+#line 26 "moonshot-identity-request.vala"
 IdentityRequest* identity_request_construct_default (GType object_type, IdentityManagerView* main_window) {
+#line 150 "moonshot-identity-request.c"
 	IdentityRequest * self = NULL;
 	IdentityManagerView* _tmp0_;
+#line 26 "moonshot-identity-request.vala"
 	g_return_val_if_fail (main_window != NULL, NULL);
+#line 26 "moonshot-identity-request.vala"
 	self = (IdentityRequest*) g_object_new (object_type, NULL);
+#line 28 "moonshot-identity-request.vala"
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (main_window), _g_object_unref0 (self->priv->main_window), _tmp0_);
+#line 29 "moonshot-identity-request.vala"
 	self->select_default = TRUE;
+#line 161 "moonshot-identity-request.c"
 	return self;
 }
 
 
+#line 26 "moonshot-identity-request.vala"
 IdentityRequest* identity_request_new_default (IdentityManagerView* main_window) {
+#line 26 "moonshot-identity-request.vala"
 	return identity_request_construct_default (TYPE_IDENTITY_REQUEST, main_window);
+#line 170 "moonshot-identity-request.c"
 }
 
 
+#line 37 "moonshot-identity-request.vala"
 static void _lambda0_ (IdentityRequest* IdCard, Block2Data* _data2_) {
+#line 176 "moonshot-identity-request.c"
 	IdentityRequest * self;
 	self = _data2_->self;
+#line 37 "moonshot-identity-request.vala"
 	g_return_if_fail (IdCard != NULL);
+#line 37 "moonshot-identity-request.vala"
 	_data2_->cb (IdCard, _data2_->cb_target);
+#line 183 "moonshot-identity-request.c"
 }
 
 
+#line 37 "moonshot-identity-request.vala"
 static void __lambda0__return_identity_callback (IdentityRequest* request, gpointer self) {
+#line 189 "moonshot-identity-request.c"
 	_lambda0_ (request, self);
 }
 
@@ -176,37 +208,58 @@ static void block2_data_unref (Block2Data* _data2_) {
 }
 
 
+#line 32 "moonshot-identity-request.vala"
 void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallback cb, void* cb_target, GDestroyNotify cb_target_destroy_notify) {
+#line 214 "moonshot-identity-request.c"
 	Block2Data* _data2_;
 	ReturnIdentityCallback _tmp0_;
+#line 32 "moonshot-identity-request.vala"
 	g_return_if_fail (self != NULL);
+#line 219 "moonshot-identity-request.c"
 	_data2_ = g_slice_new0 (Block2Data);
 	_data2_->_ref_count_ = 1;
 	_data2_->self = g_object_ref (self);
 	_data2_->cb = cb;
 	_data2_->cb_target = cb_target;
 	_data2_->cb_target_destroy_notify = cb_target_destroy_notify;
+#line 37 "moonshot-identity-request.vala"
 	self->priv->callback = (_tmp0_ = __lambda0__return_identity_callback, ((self->priv->callback_target_destroy_notify == NULL) ? NULL : (self->priv->callback_target_destroy_notify (self->priv->callback_target), NULL), self->priv->callback = NULL, self->priv->callback_target = NULL, self->priv->callback_target_destroy_notify = NULL), self->priv->callback_target = block2_data_ref (_data2_), self->priv->callback_target_destroy_notify = block2_data_unref, _tmp0_);
+#line 228 "moonshot-identity-request.c"
 	block2_data_unref (_data2_);
 }
 
 
+#line 41 "moonshot-identity-request.vala"
 gboolean identity_request_execute (IdentityRequest* self) {
+#line 235 "moonshot-identity-request.c"
 	gboolean result = FALSE;
+#line 41 "moonshot-identity-request.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 42 "moonshot-identity-request.vala"
 	identity_manager_view_select_identity (self->priv->main_window, self);
+#line 241 "moonshot-identity-request.c"
 	result = FALSE;
+#line 47 "moonshot-identity-request.vala"
 	return result;
+#line 245 "moonshot-identity-request.c"
 }
 
 
+#line 50 "moonshot-identity-request.vala"
 void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
+#line 251 "moonshot-identity-request.c"
 	IdCard* _tmp0_;
+#line 50 "moonshot-identity-request.vala"
 	g_return_if_fail (self != NULL);
+#line 51 "moonshot-identity-request.vala"
 	g_return_if_fail (self->priv->callback != NULL);
+#line 53 "moonshot-identity-request.vala"
 	self->id_card = (_tmp0_ = _g_object_ref0 (id_card), _g_object_unref0 (self->id_card), _tmp0_);
+#line 54 "moonshot-identity-request.vala"
 	self->complete = TRUE;
+#line 56 "moonshot-identity-request.vala"
 	self->priv->callback (self, self->priv->callback_target);
+#line 263 "moonshot-identity-request.c"
 }
 
 

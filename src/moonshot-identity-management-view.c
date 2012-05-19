@@ -14,6 +14,7 @@
 #include <pango/pango.h>
 #include <float.h>
 #include <math.h>
+#include <config.h>
 #include <stdio.h>
 #include <atk/atk.h>
 
@@ -375,112 +376,184 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 54 "moonshot-identity-management-view.vala"
 IdentityManagerView* identity_manager_view_construct (GType object_type, IdentityManagerApp* app) {
+#line 382 "moonshot-identity-management-view.c"
 	IdentityManagerView * self;
 	IdentityManagerApp* _tmp0_;
 	IdentityManagerModel* _tmp1_;
 	GQueue* _tmp2_;
 	GHashTable* _tmp3_;
+#line 54 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (app != NULL, NULL);
+#line 390 "moonshot-identity-management-view.c"
 	self = g_object_newv (object_type, 0, NULL);
+#line 55 "moonshot-identity-management-view.vala"
 	self->parent_app = (_tmp0_ = _identity_manager_app_ref0 (app), _identity_manager_app_unref0 (self->parent_app), _tmp0_);
+#line 59 "moonshot-identity-management-view.vala"
 	self->identities_manager = (_tmp1_ = _g_object_ref0 (self->parent_app->model), _g_object_unref0 (self->identities_manager), _tmp1_);
+#line 60 "moonshot-identity-management-view.vala"
 	self->request_queue = (_tmp2_ = g_queue_new (), _g_queue_free0 (self->request_queue), _tmp2_);
+#line 61 "moonshot-identity-management-view.vala"
 	self->priv->service_button_map = (_tmp3_ = g_hash_table_new_full (g_direct_hash, g_direct_equal, g_object_unref, g_free), _g_hash_table_unref0 (self->priv->service_button_map), _tmp3_);
+#line 62 "moonshot-identity-management-view.vala"
 	gtk_window_set_title ((GtkWindow*) self, "Moonshoot");
+#line 63 "moonshot-identity-management-view.vala"
 	gtk_window_set_position ((GtkWindow*) self, GTK_WIN_POS_CENTER);
+#line 64 "moonshot-identity-management-view.vala"
 	gtk_window_set_default_size ((GtkWindow*) self, IDENTITY_MANAGER_VIEW_WINDOW_WIDTH, IDENTITY_MANAGER_VIEW_WINDOW_HEIGHT);
+#line 65 "moonshot-identity-management-view.vala"
 	identity_manager_view_build_ui (self);
+#line 66 "moonshot-identity-management-view.vala"
 	identity_manager_view_setup_list_model (self);
+#line 67 "moonshot-identity-management-view.vala"
 	identity_manager_view_load_id_cards (self);
+#line 68 "moonshot-identity-management-view.vala"
 	identity_manager_view_connect_signals (self);
+#line 414 "moonshot-identity-management-view.c"
 	return self;
 }
 
 
+#line 54 "moonshot-identity-management-view.vala"
 IdentityManagerView* identity_manager_view_new (IdentityManagerApp* app) {
+#line 54 "moonshot-identity-management-view.vala"
 	return identity_manager_view_construct (TYPE_IDENTITY_MANAGER_VIEW, app);
+#line 423 "moonshot-identity-management-view.c"
 }
 
 
+#line 71 "moonshot-identity-management-view.vala"
 void identity_manager_view_on_card_list_changed (IdentityManagerView* self) {
+#line 71 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 72 "moonshot-identity-management-view.vala"
 	identity_manager_view_load_id_cards (self);
+#line 433 "moonshot-identity-management-view.c"
 }
 
 
+#line 75 "moonshot-identity-management-view.vala"
 void identity_manager_view_add_candidate (IdentityManagerView* self, IdCard* idcard) {
+#line 75 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 75 "moonshot-identity-management-view.vala"
 	g_return_if_fail (idcard != NULL);
+#line 77 "moonshot-identity-management-view.vala"
 	self->priv->candidates = g_slist_append (self->priv->candidates, _g_object_ref0 (idcard));
+#line 445 "moonshot-identity-management-view.c"
 }
 
 
+#line 1177 "glib-2.0.vapi"
 static gboolean string_contains (const char* self, const char* needle) {
+#line 451 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
+#line 1177 "glib-2.0.vapi"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 1177 "glib-2.0.vapi"
 	g_return_val_if_fail (needle != NULL, FALSE);
+#line 457 "moonshot-identity-management-view.c"
 	result = strstr (self, needle) != NULL;
+#line 1178 "glib-2.0.vapi"
 	return result;
+#line 461 "moonshot-identity-management-view.c"
 }
 
 
+#line 80 "moonshot-identity-management-view.vala"
 static gboolean identity_manager_view_visible_func (IdentityManagerView* self, GtkTreeModel* model, GtkTreeIter* iter) {
+#line 467 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
 	IdCard* id_card;
 	char* entry_text;
 	gboolean _tmp0_ = FALSE;
+#line 80 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 80 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (model != NULL, FALSE);
+#line 476 "moonshot-identity-management-view.c"
 	id_card = NULL;
+#line 84 "moonshot-identity-management-view.vala"
 	gtk_tree_model_get (model, iter, IDENTITY_MANAGER_VIEW_COLUMNS_IDCARD_COL, &id_card, -1);
+#line 87 "moonshot-identity-management-view.vala"
 	if (id_card == NULL) {
+#line 482 "moonshot-identity-management-view.c"
 		result = FALSE;
 		_g_object_unref0 (id_card);
+#line 88 "moonshot-identity-management-view.vala"
 		return result;
+#line 487 "moonshot-identity-management-view.c"
 	}
+#line 90 "moonshot-identity-management-view.vala"
 	if (self->priv->candidates != NULL) {
+#line 491 "moonshot-identity-management-view.c"
 		gboolean is_candidate;
+#line 92 "moonshot-identity-management-view.vala"
 		is_candidate = FALSE;
+#line 495 "moonshot-identity-management-view.c"
 		{
 			GSList* candidate_collection;
 			GSList* candidate_it;
+#line 93 "moonshot-identity-management-view.vala"
 			candidate_collection = self->priv->candidates;
+#line 501 "moonshot-identity-management-view.c"
 			for (candidate_it = candidate_collection; candidate_it != NULL; candidate_it = candidate_it->next) {
 				IdCard* candidate;
+#line 93 "moonshot-identity-management-view.vala"
 				candidate = _g_object_ref0 ((IdCard*) candidate_it->data);
+#line 506 "moonshot-identity-management-view.c"
 				{
+#line 95 "moonshot-identity-management-view.vala"
 					if (candidate == id_card) {
+#line 96 "moonshot-identity-management-view.vala"
 						is_candidate = TRUE;
+#line 512 "moonshot-identity-management-view.c"
 					}
 					_g_object_unref0 (candidate);
 				}
 			}
 		}
+#line 98 "moonshot-identity-management-view.vala"
 		if (!is_candidate) {
+#line 520 "moonshot-identity-management-view.c"
 			result = FALSE;
 			_g_object_unref0 (id_card);
+#line 99 "moonshot-identity-management-view.vala"
 			return result;
+#line 525 "moonshot-identity-management-view.c"
 		}
 	}
+#line 102 "moonshot-identity-management-view.vala"
 	entry_text = g_strdup (gtk_entry_get_text (self->priv->search_entry));
+#line 103 "moonshot-identity-management-view.vala"
 	if (entry_text == NULL) {
+#line 103 "moonshot-identity-management-view.vala"
 		_tmp0_ = TRUE;
+#line 534 "moonshot-identity-management-view.c"
 	} else {
+#line 103 "moonshot-identity-management-view.vala"
 		_tmp0_ = _vala_strcmp0 (entry_text, "") == 0;
+#line 538 "moonshot-identity-management-view.c"
 	}
+#line 103 "moonshot-identity-management-view.vala"
 	if (_tmp0_) {
+#line 542 "moonshot-identity-management-view.c"
 		result = TRUE;
 		_g_free0 (entry_text);
 		_g_object_unref0 (id_card);
+#line 105 "moonshot-identity-management-view.vala"
 		return result;
+#line 548 "moonshot-identity-management-view.c"
 	}
 	{
 		char** _tmp1_;
 		char** search_text_collection;
 		int search_text_collection_length1;
 		int search_text_it;
+#line 108 "moonshot-identity-management-view.vala"
 		search_text_collection = _tmp1_ = g_strsplit (entry_text, " ", 0);
+#line 557 "moonshot-identity-management-view.c"
 		search_text_collection_length1 = _vala_array_length (_tmp1_);
 		for (search_text_it = 0; search_text_it < _vala_array_length (_tmp1_); search_text_it = search_text_it + 1) {
 			char* search_text;
@@ -488,15 +561,25 @@ static gboolean identity_manager_view_visible_func (IdentityManagerView* self, G
 			{
 				char* search_text_casefold;
 				gint _tmp2_;
+#line 110 "moonshot-identity-management-view.vala"
 				if (_vala_strcmp0 (search_text, "") == 0) {
+#line 567 "moonshot-identity-management-view.c"
 					_g_free0 (search_text);
+#line 111 "moonshot-identity-management-view.vala"
 					continue;
+#line 571 "moonshot-identity-management-view.c"
 				}
+#line 114 "moonshot-identity-management-view.vala"
 				search_text_casefold = g_utf8_casefold (search_text, -1);
+#line 116 "moonshot-identity-management-view.vala"
 				if (id_card_get_issuer (id_card) != NULL) {
+#line 577 "moonshot-identity-management-view.c"
 					char* issuer_casefold;
+#line 118 "moonshot-identity-management-view.vala"
 					issuer_casefold = g_strdup (id_card_get_issuer (id_card));
+#line 120 "moonshot-identity-management-view.vala"
 					if (string_contains (issuer_casefold, search_text_casefold)) {
+#line 583 "moonshot-identity-management-view.c"
 						result = TRUE;
 						_g_free0 (issuer_casefold);
 						_g_free0 (search_text_casefold);
@@ -504,14 +587,21 @@ static gboolean identity_manager_view_visible_func (IdentityManagerView* self, G
 						search_text_collection = (_vala_array_free (search_text_collection, search_text_collection_length1, (GDestroyNotify) g_free), NULL);
 						_g_free0 (entry_text);
 						_g_object_unref0 (id_card);
+#line 121 "moonshot-identity-management-view.vala"
 						return result;
+#line 593 "moonshot-identity-management-view.c"
 					}
 					_g_free0 (issuer_casefold);
 				}
+#line 124 "moonshot-identity-management-view.vala"
 				if (id_card_get_display_name (id_card) != NULL) {
+#line 599 "moonshot-identity-management-view.c"
 					char* display_name_casefold;
+#line 126 "moonshot-identity-management-view.vala"
 					display_name_casefold = g_utf8_casefold (id_card_get_display_name (id_card), -1);
+#line 128 "moonshot-identity-management-view.vala"
 					if (string_contains (display_name_casefold, search_text_casefold)) {
+#line 605 "moonshot-identity-management-view.c"
 						result = TRUE;
 						_g_free0 (display_name_casefold);
 						_g_free0 (search_text_casefold);
@@ -519,25 +609,34 @@ static gboolean identity_manager_view_visible_func (IdentityManagerView* self, G
 						search_text_collection = (_vala_array_free (search_text_collection, search_text_collection_length1, (GDestroyNotify) g_free), NULL);
 						_g_free0 (entry_text);
 						_g_object_unref0 (id_card);
+#line 129 "moonshot-identity-management-view.vala"
 						return result;
+#line 615 "moonshot-identity-management-view.c"
 					}
 					_g_free0 (display_name_casefold);
 				}
+#line 132 "moonshot-identity-management-view.vala"
 				if (_tmp2_ > 0) {
+#line 621 "moonshot-identity-management-view.c"
 					{
 						gint _tmp3_;
 						char** service_collection;
 						int service_collection_length1;
 						int service_it;
+#line 134 "moonshot-identity-management-view.vala"
 						service_collection = id_card_get_services (id_card, &_tmp3_);
+#line 629 "moonshot-identity-management-view.c"
 						service_collection_length1 = _tmp3_;
 						for (service_it = 0; service_it < _tmp3_; service_it = service_it + 1) {
 							char* service;
 							service = g_strdup (service_collection[service_it]);
 							{
 								char* service_casefold;
+#line 136 "moonshot-identity-management-view.vala"
 								service_casefold = g_utf8_casefold (service, -1);
+#line 138 "moonshot-identity-management-view.vala"
 								if (string_contains (service_casefold, search_text_casefold)) {
+#line 640 "moonshot-identity-management-view.c"
 									result = TRUE;
 									_g_free0 (service_casefold);
 									_g_free0 (service);
@@ -546,7 +645,9 @@ static gboolean identity_manager_view_visible_func (IdentityManagerView* self, G
 									search_text_collection = (_vala_array_free (search_text_collection, search_text_collection_length1, (GDestroyNotify) g_free), NULL);
 									_g_free0 (entry_text);
 									_g_object_unref0 (id_card);
+#line 139 "moonshot-identity-management-view.vala"
 									return result;
+#line 651 "moonshot-identity-management-view.c"
 								}
 								_g_free0 (service_casefold);
 								_g_free0 (service);
@@ -558,227 +659,379 @@ static gboolean identity_manager_view_visible_func (IdentityManagerView* self, G
 				_g_free0 (search_text);
 			}
 		}
+#line 108 "moonshot-identity-management-view.vala"
 		search_text_collection = (_vala_array_free (search_text_collection, search_text_collection_length1, (GDestroyNotify) g_free), NULL);
+#line 665 "moonshot-identity-management-view.c"
 	}
 	result = FALSE;
 	_g_free0 (entry_text);
 	_g_object_unref0 (id_card);
+#line 143 "moonshot-identity-management-view.vala"
 	return result;
+#line 672 "moonshot-identity-management-view.c"
 }
 
 
+#line 80 "moonshot-identity-management-view.vala"
 static gboolean _identity_manager_view_visible_func_gtk_tree_model_filter_visible_func (GtkTreeModel* model, GtkTreeIter* iter, gpointer self) {
+#line 678 "moonshot-identity-management-view.c"
 	gboolean result;
 	result = identity_manager_view_visible_func (self, model, iter);
 	return result;
 }
 
 
+#line 146 "moonshot-identity-management-view.vala"
 static void identity_manager_view_setup_list_model (IdentityManagerView* self) {
+#line 687 "moonshot-identity-management-view.c"
 	GtkTreeModelFilter* _tmp0_;
+#line 146 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 148 "moonshot-identity-management-view.vala"
 	self->priv->listmodel = gtk_list_store_new ((gint) IDENTITY_MANAGER_VIEW_COLUMNS_N_COLUMNS, TYPE_ID_CARD, GDK_TYPE_PIXBUF, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+#line 153 "moonshot-identity-management-view.vala"
 	self->priv->filter = (_tmp0_ = (GtkTreeModelFilter*) gtk_tree_model_filter_new ((GtkTreeModel*) self->priv->listmodel, NULL), _g_object_unref0 (self->priv->filter), _tmp0_);
+#line 155 "moonshot-identity-management-view.vala"
 	gtk_tree_model_filter_set_visible_func (self->priv->filter, _identity_manager_view_visible_func_gtk_tree_model_filter_visible_func, g_object_ref (self), g_object_unref);
+#line 697 "moonshot-identity-management-view.c"
 }
 
 
+#line 158 "moonshot-identity-management-view.vala"
 static void identity_manager_view_search_entry_icon_press_cb (IdentityManagerView* self, GtkEntryIconPosition pos, GdkEvent* event) {
+#line 158 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 158 "moonshot-identity-management-view.vala"
 	g_return_if_fail (event != NULL);
+#line 160 "moonshot-identity-management-view.vala"
 	if (pos == GTK_ENTRY_ICON_PRIMARY) {
+#line 162 "moonshot-identity-management-view.vala"
 		g_print ("Search entry icon pressed\n");
+#line 711 "moonshot-identity-management-view.c"
 	} else {
+#line 166 "moonshot-identity-management-view.vala"
 		gtk_entry_set_text (self->priv->search_entry, "");
+#line 715 "moonshot-identity-management-view.c"
 	}
 }
 
 
+#line 170 "moonshot-identity-management-view.vala"
 static void identity_manager_view_search_entry_text_changed_cb (IdentityManagerView* self) {
+#line 722 "moonshot-identity-management-view.c"
 	gboolean has_text;
+#line 170 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 172 "moonshot-identity-management-view.vala"
 	gtk_tree_model_filter_refilter (self->priv->filter);
+#line 173 "moonshot-identity-management-view.vala"
 	identity_manager_view_redraw_id_card_widgets (self);
+#line 175 "moonshot-identity-management-view.vala"
 	has_text = gtk_entry_get_text_length (self->priv->search_entry) > 0;
+#line 176 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_sensitive (self->priv->search_entry, GTK_ENTRY_ICON_PRIMARY, has_text);
+#line 177 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_sensitive (self->priv->search_entry, GTK_ENTRY_ICON_SECONDARY, has_text);
+#line 179 "moonshot-identity-management-view.vala"
 	gtk_widget_set_visible ((GtkWidget*) self->priv->vbox_right, FALSE);
+#line 738 "moonshot-identity-management-view.c"
 }
 
 
+#line 182 "moonshot-identity-management-view.vala"
 static gboolean identity_manager_view_search_entry_key_press_event_cb (IdentityManagerView* self, GdkEventKey* e) {
+#line 744 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
+#line 182 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 184 "moonshot-identity-management-view.vala"
 	if (_vala_strcmp0 (gdk_keyval_name ((*e).keyval), "Escape") == 0) {
+#line 185 "moonshot-identity-management-view.vala"
 		gtk_entry_set_text (self->priv->search_entry, "");
+#line 752 "moonshot-identity-management-view.c"
 	}
 	result = FALSE;
+#line 189 "moonshot-identity-management-view.vala"
 	return result;
+#line 757 "moonshot-identity-management-view.c"
 }
 
 
+#line 192 "moonshot-identity-management-view.vala"
 static void identity_manager_view_load_id_cards (IdentityManagerView* self) {
+#line 763 "moonshot-identity-management-view.c"
 	GList* children;
 	IdCard* _tmp0_;
 	GeeLinkedList* card_list;
+#line 192 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 193 "moonshot-identity-management-view.vala"
 	children = gtk_container_get_children ((GtkContainer*) self->priv->custom_vbox);
+#line 771 "moonshot-identity-management-view.c"
 	{
 		GList* id_card_widget_collection;
 		GList* id_card_widget_it;
+#line 194 "moonshot-identity-management-view.vala"
 		id_card_widget_collection = children;
+#line 777 "moonshot-identity-management-view.c"
 		for (id_card_widget_it = id_card_widget_collection; id_card_widget_it != NULL; id_card_widget_it = id_card_widget_it->next) {
 			GtkWidget* id_card_widget;
+#line 194 "moonshot-identity-management-view.vala"
 			id_card_widget = (GtkWidget*) id_card_widget_it->data;
+#line 782 "moonshot-identity-management-view.c"
 			{
+#line 195 "moonshot-identity-management-view.vala"
 				identity_manager_view_remove_id_card_widget (self, ID_CARD_WIDGET (id_card_widget));
+#line 786 "moonshot-identity-management-view.c"
 			}
 		}
 	}
+#line 198 "moonshot-identity-management-view.vala"
 	self->priv->default_id_card = (_tmp0_ = NULL, _g_object_unref0 (self->priv->default_id_card), _tmp0_);
+#line 199 "moonshot-identity-management-view.vala"
 	card_list = identity_manager_model_get_card_list (self->identities_manager);
+#line 200 "moonshot-identity-management-view.vala"
 	if (card_list == NULL) {
+#line 796 "moonshot-identity-management-view.c"
 		_g_object_unref0 (card_list);
 		_g_list_free0 (children);
+#line 201 "moonshot-identity-management-view.vala"
 		return;
+#line 801 "moonshot-identity-management-view.c"
 	}
 	{
 		GeeIterator* _id_card_it;
+#line 204 "moonshot-identity-management-view.vala"
 		_id_card_it = gee_abstract_collection_iterator ((GeeAbstractCollection*) card_list);
+#line 204 "moonshot-identity-management-view.vala"
 		while (TRUE) {
+#line 809 "moonshot-identity-management-view.c"
 			IdCard* id_card;
+#line 204 "moonshot-identity-management-view.vala"
 			if (!gee_iterator_next (_id_card_it)) {
+#line 204 "moonshot-identity-management-view.vala"
 				break;
+#line 815 "moonshot-identity-management-view.c"
 			}
+#line 204 "moonshot-identity-management-view.vala"
 			id_card = (IdCard*) gee_iterator_get (_id_card_it);
+#line 205 "moonshot-identity-management-view.vala"
 			identity_manager_view_add_id_card_data (self, id_card);
+#line 206 "moonshot-identity-management-view.vala"
 			identity_manager_view_add_id_card_widget (self, id_card);
+#line 823 "moonshot-identity-management-view.c"
 			_g_object_unref0 (id_card);
 		}
 		_g_object_unref0 (_id_card_it);
 	}
+#line 209 "moonshot-identity-management-view.vala"
 	if (gee_collection_get_size ((GeeCollection*) card_list) > 0) {
+#line 830 "moonshot-identity-management-view.c"
 		IdCard* _tmp1_;
+#line 210 "moonshot-identity-management-view.vala"
 		self->priv->default_id_card = (_tmp1_ = (IdCard*) gee_abstract_list_first ((GeeAbstractList*) card_list), _g_object_unref0 (self->priv->default_id_card), _tmp1_);
+#line 834 "moonshot-identity-management-view.c"
 	}
 	_g_object_unref0 (card_list);
 	_g_list_free0 (children);
 }
 
 
+#line 214 "moonshot-identity-management-view.vala"
 static void identity_manager_view_fill_details (IdentityManagerView* self, IdCardWidget* id_card_widget) {
+#line 843 "moonshot-identity-management-view.c"
 	IdCard* id_card;
 	char* _tmp0_;
 	GList* children;
+#line 214 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 214 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 216 "moonshot-identity-management-view.vala"
 	id_card = _g_object_ref0 (id_card_widget_get_id_card (id_card_widget));
+#line 217 "moonshot-identity-management-view.vala"
 	gtk_entry_set_text (self->priv->username_entry, id_card_get_username (id_card));
+#line 218 "moonshot-identity-management-view.vala"
 	_tmp0_ = g_strdup (id_card_get_password (id_card));
+#line 218 "moonshot-identity-management-view.vala"
 	if (_tmp0_ == NULL) {
+#line 859 "moonshot-identity-management-view.c"
 		char* _tmp1_;
+#line 218 "moonshot-identity-management-view.vala"
 		_tmp0_ = (_tmp1_ = g_strdup (""), _g_free0 (_tmp0_), _tmp1_);
+#line 863 "moonshot-identity-management-view.c"
 	}
+#line 218 "moonshot-identity-management-view.vala"
 	gtk_entry_set_text (self->priv->password_entry, _tmp0_);
+#line 220 "moonshot-identity-management-view.vala"
 	children = gtk_container_get_children ((GtkContainer*) self->priv->services_internal_vbox);
+#line 869 "moonshot-identity-management-view.c"
 	{
 		GList* hbox_collection;
 		GList* hbox_it;
+#line 221 "moonshot-identity-management-view.vala"
 		hbox_collection = children;
+#line 875 "moonshot-identity-management-view.c"
 		for (hbox_it = hbox_collection; hbox_it != NULL; hbox_it = hbox_it->next) {
 			GtkWidget* hbox;
+#line 221 "moonshot-identity-management-view.vala"
 			hbox = (GtkWidget*) hbox_it->data;
+#line 880 "moonshot-identity-management-view.c"
 			{
+#line 222 "moonshot-identity-management-view.vala"
 				gtk_object_destroy ((GtkObject*) hbox);
+#line 884 "moonshot-identity-management-view.c"
 			}
 		}
 	}
+#line 223 "moonshot-identity-management-view.vala"
 	identity_manager_view_fill_services_vbox (self, id_card_widget_get_id_card (id_card_widget));
+#line 890 "moonshot-identity-management-view.c"
 	_g_list_free0 (children);
 	_g_free0 (_tmp0_);
 	_g_object_unref0 (id_card);
 }
 
 
+#line 227 "moonshot-identity-management-view.vala"
 static void identity_manager_view_show_details (IdentityManagerView* self, IdCard* id_card) {
+#line 227 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 227 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 229 "moonshot-identity-management-view.vala"
 	gtk_widget_set_visible ((GtkWidget*) self->priv->vbox_right, !gtk_widget_get_visible ((GtkWidget*) self->priv->vbox_right));
+#line 231 "moonshot-identity-management-view.vala"
 	if (gtk_widget_get_visible ((GtkWidget*) self->priv->vbox_right) == FALSE) {
+#line 233 "moonshot-identity-management-view.vala"
 		gtk_window_resize ((GtkWindow*) self, IDENTITY_MANAGER_VIEW_WINDOW_WIDTH, IDENTITY_MANAGER_VIEW_WINDOW_HEIGHT);
+#line 909 "moonshot-identity-management-view.c"
 	}
 }
 
 
+#line 237 "moonshot-identity-management-view.vala"
 static void identity_manager_view_details_identity_cb (IdentityManagerView* self, IdCardWidget* id_card_widget) {
+#line 237 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 237 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 239 "moonshot-identity-management-view.vala"
 	identity_manager_view_fill_details (self, id_card_widget);
+#line 240 "moonshot-identity-management-view.vala"
 	identity_manager_view_show_details (self, id_card_widget_get_id_card (id_card_widget));
+#line 924 "moonshot-identity-management-view.c"
 }
 
 
+#line 243 "moonshot-identity-management-view.vala"
 static IdCard* identity_manager_view_get_id_card_data (IdentityManagerView* self, AddIdentityDialog* dialog) {
+#line 930 "moonshot-identity-management-view.c"
 	IdCard* result = NULL;
 	IdCard* id_card;
 	char** _tmp0_ = NULL;
 	char** _tmp1_;
 	gint _tmp1__length1;
 	char** _tmp2_;
+#line 243 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, NULL);
+#line 243 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (dialog != NULL, NULL);
+#line 245 "moonshot-identity-management-view.vala"
 	id_card = id_card_new ();
+#line 247 "moonshot-identity-management-view.vala"
 	id_card_set_display_name (id_card, add_identity_dialog_get_display_name (dialog));
+#line 248 "moonshot-identity-management-view.vala"
 	id_card_set_issuer (id_card, add_identity_dialog_get_issuer (dialog));
+#line 249 "moonshot-identity-management-view.vala"
 	if (_vala_strcmp0 (id_card_get_issuer (id_card), "") == 0) {
+#line 250 "moonshot-identity-management-view.vala"
 		id_card_set_issuer (id_card, "Issuer");
+#line 951 "moonshot-identity-management-view.c"
 	}
+#line 251 "moonshot-identity-management-view.vala"
 	id_card_set_username (id_card, add_identity_dialog_get_username (dialog));
+#line 252 "moonshot-identity-management-view.vala"
 	id_card_set_password (id_card, add_identity_dialog_get_password (dialog));
+#line 253 "moonshot-identity-management-view.vala"
 	_tmp2_ = (_tmp1_ = (_tmp0_ = g_new0 (char*, 0 + 1), _tmp0_), _tmp1__length1 = 0, _tmp1_);
+#line 253 "moonshot-identity-management-view.vala"
 	id_card_set_services (id_card, _tmp2_, 0);
+#line 961 "moonshot-identity-management-view.c"
 	_tmp1_ = (_vala_array_free (_tmp1_, _tmp1__length1, (GDestroyNotify) g_free), NULL);
+#line 254 "moonshot-identity-management-view.vala"
 	g_object_set_data_full ((GObject*) id_card, "pixbuf", find_icon ("avatar-default", 48), g_object_unref);
+#line 965 "moonshot-identity-management-view.c"
 	result = id_card;
+#line 256 "moonshot-identity-management-view.vala"
 	return result;
+#line 969 "moonshot-identity-management-view.c"
 }
 
 
+#line 259 "moonshot-identity-management-view.vala"
 static void identity_manager_view_add_id_card_data (IdentityManagerView* self, IdCard* id_card) {
+#line 975 "moonshot-identity-management-view.c"
 	GtkTreeIter iter = {0};
 	GdkPixbuf* pixbuf;
 	GdkPixbuf* _tmp0_;
+#line 259 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 259 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 983 "moonshot-identity-management-view.c"
 	pixbuf = NULL;
+#line 263 "moonshot-identity-management-view.vala"
 	gtk_list_store_append (self->priv->listmodel, &iter);
+#line 264 "moonshot-identity-management-view.vala"
 	pixbuf = (_tmp0_ = _g_object_ref0 ((GdkPixbuf*) g_object_get_data ((GObject*) id_card, "pixbuf")), _g_object_unref0 (pixbuf), _tmp0_);
+#line 265 "moonshot-identity-management-view.vala"
 	gtk_list_store_set (self->priv->listmodel, &iter, IDENTITY_MANAGER_VIEW_COLUMNS_IDCARD_COL, id_card, IDENTITY_MANAGER_VIEW_COLUMNS_LOGO_COL, pixbuf, IDENTITY_MANAGER_VIEW_COLUMNS_ISSUER_COL, id_card_get_issuer (id_card), IDENTITY_MANAGER_VIEW_COLUMNS_USERNAME_COL, id_card_get_username (id_card), IDENTITY_MANAGER_VIEW_COLUMNS_PASSWORD_COL, id_card_get_password (id_card), -1);
+#line 991 "moonshot-identity-management-view.c"
 	_g_object_unref0 (pixbuf);
 }
 
 
+#line 273 "moonshot-identity-management-view.vala"
 static void identity_manager_view_remove_id_card_data (IdentityManagerView* self, IdCard* id_card) {
+#line 998 "moonshot-identity-management-view.c"
 	GtkTreeIter iter = {0};
 	char* issuer;
+#line 273 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 273 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 1005 "moonshot-identity-management-view.c"
 	issuer = NULL;
+#line 278 "moonshot-identity-management-view.vala"
 	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->listmodel, &iter)) {
+#line 1009 "moonshot-identity-management-view.c"
 		{
 			gboolean _tmp0_;
+#line 280 "moonshot-identity-management-view.vala"
 			_tmp0_ = TRUE;
+#line 280 "moonshot-identity-management-view.vala"
 			while (TRUE) {
+#line 280 "moonshot-identity-management-view.vala"
 				if (!_tmp0_) {
+#line 291 "moonshot-identity-management-view.vala"
 					if (!gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->listmodel, &iter)) {
+#line 291 "moonshot-identity-management-view.vala"
 						break;
+#line 1022 "moonshot-identity-management-view.c"
 					}
 				}
+#line 280 "moonshot-identity-management-view.vala"
 				_tmp0_ = FALSE;
+#line 282 "moonshot-identity-management-view.vala"
 				gtk_tree_model_get ((GtkTreeModel*) self->priv->listmodel, &iter, IDENTITY_MANAGER_VIEW_COLUMNS_ISSUER_COL, &issuer, -1);
+#line 285 "moonshot-identity-management-view.vala"
 				if (_vala_strcmp0 (id_card_get_issuer (id_card), issuer) == 0) {
+#line 287 "moonshot-identity-management-view.vala"
 					gtk_list_store_remove (self->priv->listmodel, &iter);
+#line 288 "moonshot-identity-management-view.vala"
 					break;
+#line 1035 "moonshot-identity-management-view.c"
 				}
 			}
 		}
@@ -787,56 +1040,87 @@ static void identity_manager_view_remove_id_card_data (IdentityManagerView* self
 }
 
 
+#line 237 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_details_identity_cb_id_card_widget_details_id (IdCardWidget* _sender, gpointer self) {
+#line 1046 "moonshot-identity-management-view.c"
 	identity_manager_view_details_identity_cb (self, _sender);
 }
 
 
+#line 424 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_remove_identity_cb_id_card_widget_remove_id (IdCardWidget* _sender, gpointer self) {
+#line 1053 "moonshot-identity-management-view.c"
 	identity_manager_view_remove_identity_cb (self, _sender);
 }
 
 
+#line 301 "moonshot-identity-management-view.vala"
 static void _lambda2_ (IdCardWidget* w, IdentityManagerView* self) {
+#line 301 "moonshot-identity-management-view.vala"
 	g_return_if_fail (w != NULL);
+#line 301 "moonshot-identity-management-view.vala"
 	identity_manager_view_send_identity_cb (self, id_card_widget_get_id_card (w));
+#line 1064 "moonshot-identity-management-view.c"
 }
 
 
+#line 301 "moonshot-identity-management-view.vala"
 static void __lambda2__id_card_widget_send_id (IdCardWidget* _sender, gpointer self) {
+#line 1070 "moonshot-identity-management-view.c"
 	_lambda2_ (_sender, self);
 }
 
 
+#line 15 "moonshot-custom-vbox.vala"
 static void _custom_vbox_receive_expanded_event_id_card_widget_expanded (IdCardWidget* _sender, gpointer self) {
+#line 1077 "moonshot-identity-management-view.c"
 	custom_vbox_receive_expanded_event (self, _sender);
 }
 
 
+#line 214 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_fill_details_id_card_widget_expanded (IdCardWidget* _sender, gpointer self) {
+#line 1084 "moonshot-identity-management-view.c"
 	identity_manager_view_fill_details (self, _sender);
 }
 
 
+#line 295 "moonshot-identity-management-view.vala"
 static void identity_manager_view_add_id_card_widget (IdentityManagerView* self, IdCard* id_card) {
+#line 1091 "moonshot-identity-management-view.c"
 	IdCardWidget* id_card_widget;
+#line 295 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 295 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 297 "moonshot-identity-management-view.vala"
 	id_card_widget = g_object_ref_sink (id_card_widget_new (id_card));
+#line 298 "moonshot-identity-management-view.vala"
 	custom_vbox_add_id_card_widget (self->priv->custom_vbox, id_card_widget);
+#line 299 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (id_card_widget, "details-id", (GCallback) _identity_manager_view_details_identity_cb_id_card_widget_details_id, self, 0);
+#line 300 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (id_card_widget, "remove-id", (GCallback) _identity_manager_view_remove_identity_cb_id_card_widget_remove_id, self, 0);
+#line 301 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (id_card_widget, "send-id", (GCallback) __lambda2__id_card_widget_send_id, self, 0);
+#line 302 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (id_card_widget, "expanded", (GCallback) _custom_vbox_receive_expanded_event_id_card_widget_expanded, self->priv->custom_vbox, 0);
+#line 303 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (id_card_widget, "expanded", (GCallback) _identity_manager_view_fill_details_id_card_widget_expanded, self, 0);
+#line 1111 "moonshot-identity-management-view.c"
 	_g_object_unref0 (id_card_widget);
 }
 
 
+#line 307 "moonshot-identity-management-view.vala"
 gboolean identity_manager_view_display_name_is_valid (IdentityManagerView* self, const char* name, char** candidate) {
+#line 1118 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
+#line 307 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 307 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (name != NULL, FALSE);
+#line 1124 "moonshot-identity-management-view.c"
 	if (candidate != NULL) {
 		*candidate = NULL;
 	}
@@ -844,36 +1128,65 @@ gboolean identity_manager_view_display_name_is_valid (IdentityManagerView* self,
 		GeeLinkedList* _tmp0_;
 		GeeIterator* _tmp1_;
 		GeeIterator* _id_card_it;
+#line 310 "moonshot-identity-management-view.vala"
 		_id_card_it = (_tmp1_ = gee_abstract_collection_iterator ((GeeAbstractCollection*) (_tmp0_ = identity_manager_model_get_card_list (self->identities_manager))), _g_object_unref0 (_tmp0_), _tmp1_);
+#line 310 "moonshot-identity-management-view.vala"
 		while (TRUE) {
+#line 1136 "moonshot-identity-management-view.c"
 			IdCard* id_card;
+#line 310 "moonshot-identity-management-view.vala"
 			if (!gee_iterator_next (_id_card_it)) {
+#line 310 "moonshot-identity-management-view.vala"
 				break;
+#line 1142 "moonshot-identity-management-view.c"
 			}
+#line 310 "moonshot-identity-management-view.vala"
 			id_card = (IdCard*) gee_iterator_get (_id_card_it);
+#line 312 "moonshot-identity-management-view.vala"
 			if (_vala_strcmp0 (id_card_get_display_name (id_card), name) == 0) {
+#line 314 "moonshot-identity-management-view.vala"
 				if ((candidate) != NULL) {
+#line 1150 "moonshot-identity-management-view.c"
 					{
 						gint i;
+#line 316 "moonshot-identity-management-view.vala"
 						i = 0;
+#line 1155 "moonshot-identity-management-view.c"
 						{
 							gboolean _tmp2_;
+#line 316 "moonshot-identity-management-view.vala"
 							_tmp2_ = TRUE;
+#line 316 "moonshot-identity-management-view.vala"
 							while (TRUE) {
+#line 1162 "moonshot-identity-management-view.c"
 								char* tmp;
+#line 316 "moonshot-identity-management-view.vala"
 								if (!_tmp2_) {
+#line 316 "moonshot-identity-management-view.vala"
 									i++;
+#line 1168 "moonshot-identity-management-view.c"
 								}
+#line 316 "moonshot-identity-management-view.vala"
 								_tmp2_ = FALSE;
+#line 316 "moonshot-identity-management-view.vala"
 								if (!(i < 1000)) {
+#line 316 "moonshot-identity-management-view.vala"
 									break;
+#line 1176 "moonshot-identity-management-view.c"
 								}
+#line 318 "moonshot-identity-management-view.vala"
 								tmp = g_strdup_printf ("%s %d", name, i);
+#line 319 "moonshot-identity-management-view.vala"
 								if (identity_manager_view_display_name_is_valid (self, tmp, NULL)) {
+#line 1182 "moonshot-identity-management-view.c"
 									char* _tmp3_;
+#line 321 "moonshot-identity-management-view.vala"
 									*candidate = (_tmp3_ = g_strdup (tmp), _g_free0 (*candidate), _tmp3_);
+#line 1186 "moonshot-identity-management-view.c"
 									_g_free0 (tmp);
+#line 322 "moonshot-identity-management-view.vala"
 									break;
+#line 1190 "moonshot-identity-management-view.c"
 								}
 								_g_free0 (tmp);
 							}
@@ -883,130 +1196,210 @@ gboolean identity_manager_view_display_name_is_valid (IdentityManagerView* self,
 				result = FALSE;
 				_g_object_unref0 (id_card);
 				_g_object_unref0 (_id_card_it);
+#line 326 "moonshot-identity-management-view.vala"
 				return result;
+#line 1202 "moonshot-identity-management-view.c"
 			}
 			_g_object_unref0 (id_card);
 		}
 		_g_object_unref0 (_id_card_it);
 	}
 	result = TRUE;
+#line 330 "moonshot-identity-management-view.vala"
 	return result;
+#line 1211 "moonshot-identity-management-view.c"
 }
 
 
+#line 333 "moonshot-identity-management-view.vala"
 void identity_manager_view_insert_id_card (IdentityManagerView* self, IdCard* id_card) {
+#line 1217 "moonshot-identity-management-view.c"
 	char* candidate;
 	char* _tmp0_ = NULL;
 	gboolean _tmp1_;
 	char* _tmp2_;
+#line 333 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 333 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 1226 "moonshot-identity-management-view.c"
 	candidate = NULL;
+#line 337 "moonshot-identity-management-view.vala"
 	if (!(_tmp1_ = identity_manager_view_display_name_is_valid (self, id_card_get_display_name (id_card), &_tmp0_), candidate = (_tmp2_ = _tmp0_, _g_free0 (candidate), _tmp2_), _tmp1_)) {
+#line 339 "moonshot-identity-management-view.vala"
 		id_card_set_display_name (id_card, candidate);
+#line 1232 "moonshot-identity-management-view.c"
 	}
+#line 342 "moonshot-identity-management-view.vala"
 	identity_manager_model_add_card (self->identities_manager, id_card);
+#line 1236 "moonshot-identity-management-view.c"
 	_g_free0 (candidate);
 }
 
 
+#line 345 "moonshot-identity-management-view.vala"
 gboolean identity_manager_view_add_identity (IdentityManagerView* self, IdCard* id_card) {
+#line 1243 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
 	GtkMessageDialog* dialog;
 	gint ret;
+#line 345 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 345 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (id_card != NULL, FALSE);
+#line 355 "moonshot-identity-management-view.vala"
 	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) self, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Would you like to add '%s' ID Card to the ID Card Organizer?"), id_card_get_display_name (id_card)));
-	gtk_widget_show_all ((GtkWidget*) dialog);
+#line 362 "moonshot-identity-management-view.vala"
 	ret = gtk_dialog_run ((GtkDialog*) dialog);
-	gtk_widget_hide ((GtkWidget*) dialog);
+#line 363 "moonshot-identity-management-view.vala"
+	gtk_object_destroy ((GtkObject*) dialog);
+#line 366 "moonshot-identity-management-view.vala"
 	if (ret == GTK_RESPONSE_YES) {
+#line 367 "moonshot-identity-management-view.vala"
 		g_object_set_data_full ((GObject*) id_card, "pixbuf", find_icon ("avatar-default", 48), g_object_unref);
+#line 368 "moonshot-identity-management-view.vala"
 		identity_manager_view_insert_id_card (self, id_card);
+#line 1263 "moonshot-identity-management-view.c"
 		result = TRUE;
 		_g_object_unref0 (dialog);
+#line 369 "moonshot-identity-management-view.vala"
 		return result;
+#line 1268 "moonshot-identity-management-view.c"
 	}
 	result = FALSE;
 	_g_object_unref0 (dialog);
+#line 372 "moonshot-identity-management-view.vala"
 	return result;
+#line 1274 "moonshot-identity-management-view.c"
 }
 
 
+#line 375 "moonshot-identity-management-view.vala"
 static void identity_manager_view_add_identity_manual_cb (IdentityManagerView* self) {
+#line 1280 "moonshot-identity-management-view.c"
 	AddIdentityDialog* dialog;
 	gint _result_;
+#line 375 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 377 "moonshot-identity-management-view.vala"
 	dialog = g_object_ref_sink (add_identity_dialog_new ());
+#line 378 "moonshot-identity-management-view.vala"
 	_result_ = gtk_dialog_run ((GtkDialog*) dialog);
+#line 380 "moonshot-identity-management-view.vala"
 	switch (_result_) {
+#line 1291 "moonshot-identity-management-view.c"
 		case GTK_RESPONSE_OK:
 		{
 			IdCard* _tmp0_;
+#line 382 "moonshot-identity-management-view.vala"
 			identity_manager_view_insert_id_card (self, _tmp0_ = identity_manager_view_get_id_card_data (self, dialog));
+#line 1297 "moonshot-identity-management-view.c"
 			_g_object_unref0 (_tmp0_);
+#line 383 "moonshot-identity-management-view.vala"
 			break;
+#line 1301 "moonshot-identity-management-view.c"
 		}
 		default:
 		{
+#line 385 "moonshot-identity-management-view.vala"
 			break;
+#line 1307 "moonshot-identity-management-view.c"
 		}
 	}
+#line 387 "moonshot-identity-management-view.vala"
 	gtk_object_destroy ((GtkObject*) dialog);
+#line 1312 "moonshot-identity-management-view.c"
 	_g_object_unref0 (dialog);
 }
 
 
+#line 390 "moonshot-identity-management-view.vala"
 static void identity_manager_view_remove_id_card_widget (IdentityManagerView* self, IdCardWidget* id_card_widget) {
+#line 390 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 390 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 391 "moonshot-identity-management-view.vala"
 	custom_vbox_remove_id_card_widget (self->priv->custom_vbox, id_card_widget);
+#line 1325 "moonshot-identity-management-view.c"
 }
 
 
+#line 394 "moonshot-identity-management-view.vala"
 static void identity_manager_view_remove_identity (IdentityManagerView* self, IdCardWidget* id_card_widget) {
+#line 1331 "moonshot-identity-management-view.c"
 	IdCard* id_card;
+#line 394 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 394 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 396 "moonshot-identity-management-view.vala"
 	id_card = _g_object_ref0 (id_card_widget_get_id_card (id_card_widget));
+#line 397 "moonshot-identity-management-view.vala"
 	identity_manager_view_remove_id_card_widget (self, id_card_widget);
+#line 399 "moonshot-identity-management-view.vala"
 	identity_manager_model_remove_card (self->identities_manager, id_card);
+#line 1343 "moonshot-identity-management-view.c"
 	_g_object_unref0 (id_card);
 }
 
 
+#line 402 "moonshot-identity-management-view.vala"
 static void identity_manager_view_redraw_id_card_widgets (IdentityManagerView* self) {
+#line 1350 "moonshot-identity-management-view.c"
 	GtkTreeIter iter = {0};
 	IdCard* id_card;
 	GList* children;
+#line 402 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 1356 "moonshot-identity-management-view.c"
 	id_card = NULL;
+#line 407 "moonshot-identity-management-view.vala"
 	children = gtk_container_get_children ((GtkContainer*) self->priv->custom_vbox);
+#line 1360 "moonshot-identity-management-view.c"
 	{
 		GList* id_card_widget_collection;
 		GList* id_card_widget_it;
+#line 408 "moonshot-identity-management-view.vala"
 		id_card_widget_collection = children;
+#line 1366 "moonshot-identity-management-view.c"
 		for (id_card_widget_it = id_card_widget_collection; id_card_widget_it != NULL; id_card_widget_it = id_card_widget_it->next) {
 			GtkWidget* id_card_widget;
+#line 408 "moonshot-identity-management-view.vala"
 			id_card_widget = (GtkWidget*) id_card_widget_it->data;
+#line 1371 "moonshot-identity-management-view.c"
 			{
+#line 409 "moonshot-identity-management-view.vala"
 				gtk_object_destroy ((GtkObject*) id_card_widget);
+#line 1375 "moonshot-identity-management-view.c"
 			}
 		}
 	}
+#line 411 "moonshot-identity-management-view.vala"
 	if (gtk_tree_model_get_iter_first ((GtkTreeModel*) self->priv->filter, &iter)) {
+#line 1381 "moonshot-identity-management-view.c"
 		{
 			gboolean _tmp0_;
+#line 413 "moonshot-identity-management-view.vala"
 			_tmp0_ = TRUE;
+#line 413 "moonshot-identity-management-view.vala"
 			while (TRUE) {
+#line 413 "moonshot-identity-management-view.vala"
 				if (!_tmp0_) {
+#line 420 "moonshot-identity-management-view.vala"
 					if (!gtk_tree_model_iter_next ((GtkTreeModel*) self->priv->filter, &iter)) {
+#line 420 "moonshot-identity-management-view.vala"
 						break;
+#line 1394 "moonshot-identity-management-view.c"
 					}
 				}
+#line 413 "moonshot-identity-management-view.vala"
 				_tmp0_ = FALSE;
+#line 415 "moonshot-identity-management-view.vala"
 				gtk_tree_model_get ((GtkTreeModel*) self->priv->filter, &iter, IDENTITY_MANAGER_VIEW_COLUMNS_IDCARD_COL, &id_card, -1);
+#line 418 "moonshot-identity-management-view.vala"
 				identity_manager_view_add_id_card_widget (self, id_card);
+#line 1403 "moonshot-identity-management-view.c"
 			}
 		}
 	}
@@ -1015,27 +1408,43 @@ static void identity_manager_view_redraw_id_card_widgets (IdentityManagerView* s
 }
 
 
+#line 424 "moonshot-identity-management-view.vala"
 static void identity_manager_view_remove_identity_cb (IdentityManagerView* self, IdCardWidget* id_card_widget) {
+#line 1414 "moonshot-identity-management-view.c"
 	IdCard* id_card;
 	GtkMessageDialog* dialog;
 	gint _result_;
+#line 424 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 424 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 426 "moonshot-identity-management-view.vala"
 	id_card = _g_object_ref0 (id_card_widget_get_id_card (id_card_widget));
-	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new (NULL, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Are you sure you want to delete %s ID Card?"), id_card_get_issuer (id_card)));
+#line 428 "moonshot-identity-management-view.vala"
+	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) self, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Are you sure you want to delete %s ID Card?"), id_card_get_issuer (id_card)));
+#line 433 "moonshot-identity-management-view.vala"
 	_result_ = gtk_dialog_run ((GtkDialog*) dialog);
+#line 434 "moonshot-identity-management-view.vala"
 	switch (_result_) {
+#line 1430 "moonshot-identity-management-view.c"
 		case GTK_RESPONSE_YES:
 		{
+#line 436 "moonshot-identity-management-view.vala"
 			identity_manager_view_remove_identity (self, id_card_widget);
+#line 437 "moonshot-identity-management-view.vala"
 			break;
+#line 1437 "moonshot-identity-management-view.c"
 		}
 		default:
 		{
+#line 439 "moonshot-identity-management-view.vala"
 			break;
+#line 1443 "moonshot-identity-management-view.c"
 		}
 	}
+#line 441 "moonshot-identity-management-view.vala"
 	gtk_object_destroy ((GtkObject*) dialog);
+#line 1448 "moonshot-identity-management-view.c"
 	_g_object_unref0 (dialog);
 	_g_object_unref0 (id_card);
 }
@@ -1047,17 +1456,25 @@ static void _g_slist_free_g_free (GSList* self) {
 }
 
 
+#line 574 "moonshot-identity-management-view.vala"
 static gboolean _lambda3_ (Block1Data* _data1_) {
+#line 1462 "moonshot-identity-management-view.c"
 	IdentityManagerView * self;
 	gboolean result = FALSE;
 	self = _data1_->self;
+#line 574 "moonshot-identity-management-view.vala"
 	identity_manager_view_send_identity_cb (self, _data1_->identity);
+#line 1468 "moonshot-identity-management-view.c"
 	result = FALSE;
+#line 574 "moonshot-identity-management-view.vala"
 	return result;
+#line 1472 "moonshot-identity-management-view.c"
 }
 
 
+#line 574 "moonshot-identity-management-view.vala"
 static gboolean __lambda3__gsource_func (gpointer self) {
+#line 1478 "moonshot-identity-management-view.c"
 	gboolean result;
 	result = _lambda3_ (self);
 	return result;
@@ -1079,29 +1496,49 @@ static void block1_data_unref (Block1Data* _data1_) {
 }
 
 
+#line 444 "moonshot-identity-management-view.vala"
 void identity_manager_view_select_identity (IdentityManagerView* self, IdentityRequest* request) {
+#line 1502 "moonshot-identity-management-view.c"
 	Block1Data* _data1_;
 	gboolean _tmp0_ = FALSE;
+#line 444 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 444 "moonshot-identity-management-view.vala"
 	g_return_if_fail (request != NULL);
+#line 1509 "moonshot-identity-management-view.c"
 	_data1_ = g_slice_new0 (Block1Data);
 	_data1_->_ref_count_ = 1;
 	_data1_->self = g_object_ref (self);
 	_data1_->identity = NULL;
+#line 448 "moonshot-identity-management-view.vala"
 	g_queue_push_tail (self->request_queue, _g_object_ref0 (request));
+#line 450 "moonshot-identity-management-view.vala"
 	if (custom_vbox_get_current_idcard (self->priv->custom_vbox) != NULL) {
+#line 451 "moonshot-identity-management-view.vala"
 		_tmp0_ = id_card_widget_get_send_button (custom_vbox_get_current_idcard (self->priv->custom_vbox)) != NULL;
+#line 1520 "moonshot-identity-management-view.c"
 	} else {
+#line 450 "moonshot-identity-management-view.vala"
 		_tmp0_ = FALSE;
+#line 1524 "moonshot-identity-management-view.c"
 	}
+#line 450 "moonshot-identity-management-view.vala"
 	if (_tmp0_) {
+#line 452 "moonshot-identity-management-view.vala"
 		gtk_widget_set_sensitive ((GtkWidget*) id_card_widget_get_send_button (custom_vbox_get_current_idcard (self->priv->custom_vbox)), TRUE);
+#line 1530 "moonshot-identity-management-view.c"
 	}
+#line 454 "moonshot-identity-management-view.vala"
 	if (request->select_default) {
+#line 1534 "moonshot-identity-management-view.c"
 		IdCard* _tmp1_;
+#line 456 "moonshot-identity-management-view.vala"
 		_data1_->identity = (_tmp1_ = _g_object_ref0 (self->priv->default_id_card), _g_object_unref0 (_data1_->identity), _tmp1_);
+#line 1538 "moonshot-identity-management-view.c"
 	}
+#line 459 "moonshot-identity-management-view.vala"
 	if (_data1_->identity == NULL) {
+#line 1542 "moonshot-identity-management-view.c"
 		gboolean _tmp2_ = FALSE;
 		gboolean has_nai;
 		gboolean _tmp3_ = FALSE;
@@ -1109,60 +1546,103 @@ void identity_manager_view_select_identity (IdentityManagerView* self, IdentityR
 		gboolean confirm;
 		IdCard* nai_provided;
 		gboolean _tmp9_ = FALSE;
+#line 461 "moonshot-identity-management-view.vala"
 		if (request->nai != NULL) {
+#line 461 "moonshot-identity-management-view.vala"
 			_tmp2_ = _vala_strcmp0 (request->nai, "") != 0;
+#line 1554 "moonshot-identity-management-view.c"
 		} else {
+#line 461 "moonshot-identity-management-view.vala"
 			_tmp2_ = FALSE;
+#line 1558 "moonshot-identity-management-view.c"
 		}
+#line 461 "moonshot-identity-management-view.vala"
 		has_nai = _tmp2_;
+#line 462 "moonshot-identity-management-view.vala"
 		if (request->service != NULL) {
+#line 462 "moonshot-identity-management-view.vala"
 			_tmp3_ = _vala_strcmp0 (request->service, "") != 0;
+#line 1566 "moonshot-identity-management-view.c"
 		} else {
+#line 462 "moonshot-identity-management-view.vala"
 			_tmp3_ = FALSE;
+#line 1570 "moonshot-identity-management-view.c"
 		}
+#line 462 "moonshot-identity-management-view.vala"
 		has_srv = _tmp3_;
+#line 463 "moonshot-identity-management-view.vala"
 		confirm = FALSE;
+#line 464 "moonshot-identity-management-view.vala"
 		nai_provided = NULL;
+#line 1578 "moonshot-identity-management-view.c"
 		{
 			GeeLinkedList* _tmp4_;
 			GeeIterator* _tmp5_;
 			GeeIterator* _id_it;
+#line 466 "moonshot-identity-management-view.vala"
 			_id_it = (_tmp5_ = gee_abstract_collection_iterator ((GeeAbstractCollection*) (_tmp4_ = identity_manager_model_get_card_list (self->identities_manager))), _g_object_unref0 (_tmp4_), _tmp5_);
+#line 466 "moonshot-identity-management-view.vala"
 			while (TRUE) {
+#line 1587 "moonshot-identity-management-view.c"
 				IdCard* id;
 				gboolean _tmp6_ = FALSE;
+#line 466 "moonshot-identity-management-view.vala"
 				if (!gee_iterator_next (_id_it)) {
+#line 466 "moonshot-identity-management-view.vala"
 					break;
+#line 1594 "moonshot-identity-management-view.c"
 				}
+#line 466 "moonshot-identity-management-view.vala"
 				id = (IdCard*) gee_iterator_get (_id_it);
+#line 469 "moonshot-identity-management-view.vala"
 				if (has_nai) {
+#line 469 "moonshot-identity-management-view.vala"
 					_tmp6_ = _vala_strcmp0 (request->nai, id_card_get_nai (id)) == 0;
+#line 1602 "moonshot-identity-management-view.c"
 				} else {
+#line 469 "moonshot-identity-management-view.vala"
 					_tmp6_ = FALSE;
+#line 1606 "moonshot-identity-management-view.c"
 				}
+#line 469 "moonshot-identity-management-view.vala"
 				if (_tmp6_) {
+#line 1610 "moonshot-identity-management-view.c"
 					IdCard* _tmp7_;
+#line 471 "moonshot-identity-management-view.vala"
 					nai_provided = (_tmp7_ = _g_object_ref0 (id), _g_object_unref0 (nai_provided), _tmp7_);
+#line 472 "moonshot-identity-management-view.vala"
 					identity_manager_view_add_candidate (self, id);
+#line 1616 "moonshot-identity-management-view.c"
 					_g_object_unref0 (id);
+#line 473 "moonshot-identity-management-view.vala"
 					continue;
+#line 1620 "moonshot-identity-management-view.c"
 				}
+#line 477 "moonshot-identity-management-view.vala"
 				if (has_srv) {
+#line 1624 "moonshot-identity-management-view.c"
 					{
 						gint _tmp8_;
 						char** srv_collection;
 						int srv_collection_length1;
 						int srv_it;
+#line 479 "moonshot-identity-management-view.vala"
 						srv_collection = id_card_get_services (id, &_tmp8_);
+#line 1632 "moonshot-identity-management-view.c"
 						srv_collection_length1 = _tmp8_;
 						for (srv_it = 0; srv_it < _tmp8_; srv_it = srv_it + 1) {
 							char* srv;
 							srv = g_strdup (srv_collection[srv_it]);
 							{
+#line 481 "moonshot-identity-management-view.vala"
 								if (_vala_strcmp0 (request->service, srv) == 0) {
+#line 483 "moonshot-identity-management-view.vala"
 									identity_manager_view_add_candidate (self, id);
+#line 1642 "moonshot-identity-management-view.c"
 									_g_free0 (srv);
+#line 484 "moonshot-identity-management-view.vala"
 									continue;
+#line 1646 "moonshot-identity-management-view.c"
 								}
 								_g_free0 (srv);
 							}
@@ -1173,19 +1653,30 @@ void identity_manager_view_select_identity (IdentityManagerView* self, IdentityR
 			}
 			_g_object_unref0 (_id_it);
 		}
+#line 491 "moonshot-identity-management-view.vala"
 		if (has_srv) {
+#line 491 "moonshot-identity-management-view.vala"
 			_tmp9_ = g_slist_length (self->priv->candidates) > 1;
+#line 1661 "moonshot-identity-management-view.c"
 		} else {
+#line 491 "moonshot-identity-management-view.vala"
 			_tmp9_ = FALSE;
+#line 1665 "moonshot-identity-management-view.c"
 		}
+#line 491 "moonshot-identity-management-view.vala"
 		if (_tmp9_) {
+#line 1669 "moonshot-identity-management-view.c"
 			{
 				GSList* id_collection;
 				GSList* id_it;
+#line 493 "moonshot-identity-management-view.vala"
 				id_collection = self->priv->candidates;
+#line 1675 "moonshot-identity-management-view.c"
 				for (id_it = id_collection; id_it != NULL; id_it = id_it->next) {
 					IdCard* id;
+#line 493 "moonshot-identity-management-view.vala"
 					id = _g_object_ref0 ((IdCard*) id_it->data);
+#line 1680 "moonshot-identity-management-view.c"
 					{
 						gint i;
 						GSList* services_list;
@@ -1196,65 +1687,99 @@ void identity_manager_view_select_identity (IdentityManagerView* self, IdentityR
 						gint _tmp14_;
 						char** services;
 						char** _tmp17_;
+#line 495 "moonshot-identity-management-view.vala"
 						i = 0;
+#line 496 "moonshot-identity-management-view.vala"
 						services_list = NULL;
+#line 497 "moonshot-identity-management-view.vala"
 						has_service = FALSE;
+#line 1697 "moonshot-identity-management-view.c"
 						{
 							gint _tmp10_;
 							char** srv_collection;
 							int srv_collection_length1;
 							int srv_it;
+#line 499 "moonshot-identity-management-view.vala"
 							srv_collection = id_card_get_services (id, &_tmp10_);
+#line 1705 "moonshot-identity-management-view.c"
 							srv_collection_length1 = _tmp10_;
 							for (srv_it = 0; srv_it < _tmp10_; srv_it = srv_it + 1) {
 								char* srv;
 								srv = g_strdup (srv_collection[srv_it]);
 								{
+#line 501 "moonshot-identity-management-view.vala"
 									if (_vala_strcmp0 (srv, request->service) == 0) {
+#line 503 "moonshot-identity-management-view.vala"
 										has_service = TRUE;
+#line 1715 "moonshot-identity-management-view.c"
 										_g_free0 (srv);
+#line 504 "moonshot-identity-management-view.vala"
 										continue;
+#line 1719 "moonshot-identity-management-view.c"
 									}
+#line 506 "moonshot-identity-management-view.vala"
 									services_list = g_slist_append (services_list, g_strdup (srv));
+#line 1723 "moonshot-identity-management-view.c"
 									_g_free0 (srv);
 								}
 							}
 						}
+#line 509 "moonshot-identity-management-view.vala"
 						if (!has_service) {
+#line 1730 "moonshot-identity-management-view.c"
 							__g_slist_free_g_free0 (services_list);
 							_g_object_unref0 (id);
+#line 510 "moonshot-identity-management-view.vala"
 							continue;
+#line 1735 "moonshot-identity-management-view.c"
 						}
+#line 512 "moonshot-identity-management-view.vala"
 						if (g_slist_length (services_list) == 0) {
+#line 1739 "moonshot-identity-management-view.c"
 							char** _tmp11_ = NULL;
 							char** _tmp12_;
 							gint _tmp12__length1;
 							char** _tmp13_;
+#line 514 "moonshot-identity-management-view.vala"
 							_tmp13_ = (_tmp12_ = (_tmp11_ = g_new0 (char*, 0 + 1), _tmp11_), _tmp12__length1 = 0, _tmp12_);
+#line 514 "moonshot-identity-management-view.vala"
 							id_card_set_services (id, _tmp13_, 0);
+#line 1748 "moonshot-identity-management-view.c"
 							_tmp12_ = (_vala_array_free (_tmp12_, _tmp12__length1, (GDestroyNotify) g_free), NULL);
 							__g_slist_free_g_free0 (services_list);
 							_g_object_unref0 (id);
+#line 515 "moonshot-identity-management-view.vala"
 							continue;
+#line 1754 "moonshot-identity-management-view.c"
 						}
 						services = (_tmp15_ = g_new0 (char*, (_tmp14_ = g_slist_length (services_list)) + 1), services_length1 = _tmp14_, _services_size_ = services_length1, _tmp15_);
 						{
 							GSList* srv_collection;
 							GSList* srv_it;
+#line 519 "moonshot-identity-management-view.vala"
 							srv_collection = services_list;
+#line 1762 "moonshot-identity-management-view.c"
 							for (srv_it = srv_collection; srv_it != NULL; srv_it = srv_it->next) {
 								char* srv;
+#line 519 "moonshot-identity-management-view.vala"
 								srv = g_strdup ((const char*) srv_it->data);
+#line 1767 "moonshot-identity-management-view.c"
 								{
 									char* _tmp16_;
+#line 521 "moonshot-identity-management-view.vala"
 									services[i] = (_tmp16_ = g_strdup (srv), _g_free0 (services[i]), _tmp16_);
+#line 522 "moonshot-identity-management-view.vala"
 									i++;
+#line 1774 "moonshot-identity-management-view.c"
 									_g_free0 (srv);
 								}
 							}
 						}
+#line 525 "moonshot-identity-management-view.vala"
 						_tmp17_ = services;
+#line 525 "moonshot-identity-management-view.vala"
 						id_card_set_services (id, _tmp17_, services_length1);
+#line 1783 "moonshot-identity-management-view.c"
 						services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
 						__g_slist_free_g_free0 (services_list);
 						_g_object_unref0 (id);
@@ -1262,37 +1787,57 @@ void identity_manager_view_select_identity (IdentityManagerView* self, IdentityR
 				}
 			}
 		}
+#line 532 "moonshot-identity-management-view.vala"
 		if (g_slist_length (self->priv->candidates) == 0) {
+#line 1793 "moonshot-identity-management-view.c"
 			{
 				GeeLinkedList* _tmp18_;
 				GeeIterator* _tmp19_;
 				GeeIterator* _id_it;
+#line 534 "moonshot-identity-management-view.vala"
 				_id_it = (_tmp19_ = gee_abstract_collection_iterator ((GeeAbstractCollection*) (_tmp18_ = identity_manager_model_get_card_list (self->identities_manager))), _g_object_unref0 (_tmp18_), _tmp19_);
+#line 534 "moonshot-identity-management-view.vala"
 				while (TRUE) {
+#line 1802 "moonshot-identity-management-view.c"
 					IdCard* id;
+#line 534 "moonshot-identity-management-view.vala"
 					if (!gee_iterator_next (_id_it)) {
+#line 534 "moonshot-identity-management-view.vala"
 						break;
+#line 1808 "moonshot-identity-management-view.c"
 					}
+#line 534 "moonshot-identity-management-view.vala"
 					id = (IdCard*) gee_iterator_get (_id_it);
+#line 1812 "moonshot-identity-management-view.c"
 					{
 						gint _tmp20_;
 						Rule* rule_collection;
 						int rule_collection_length1;
 						int rule_it;
+#line 536 "moonshot-identity-management-view.vala"
 						rule_collection = id_card_get_rules (id, &_tmp20_);
+#line 1820 "moonshot-identity-management-view.c"
 						rule_collection_length1 = _tmp20_;
 						for (rule_it = 0; rule_it < _tmp20_; rule_it = rule_it + 1) {
 							Rule _tmp21_ = {0};
 							Rule rule;
 							rule = (rule_copy (&rule_collection[rule_it], &_tmp21_), _tmp21_);
 							{
+#line 538 "moonshot-identity-management-view.vala"
 								if (!identity_manager_view_match_service_pattern (self, request->service, rule.pattern)) {
+#line 1829 "moonshot-identity-management-view.c"
 									rule_destroy (&rule);
+#line 539 "moonshot-identity-management-view.vala"
 									continue;
+#line 1833 "moonshot-identity-management-view.c"
 								}
+#line 541 "moonshot-identity-management-view.vala"
 								self->priv->candidates = g_slist_append (self->priv->candidates, _g_object_ref0 (id));
+#line 543 "moonshot-identity-management-view.vala"
 								if (_vala_strcmp0 (rule.always_confirm, "true") == 0) {
+#line 544 "moonshot-identity-management-view.vala"
 									confirm = TRUE;
+#line 1841 "moonshot-identity-management-view.c"
 								}
 								rule_destroy (&rule);
 							}
@@ -1303,162 +1848,306 @@ void identity_manager_view_select_identity (IdentityManagerView* self, IdentityR
 				_g_object_unref0 (_id_it);
 			}
 		}
+#line 549 "moonshot-identity-management-view.vala"
 		if (g_slist_length (self->priv->candidates) > 1) {
+#line 1854 "moonshot-identity-management-view.c"
 			gboolean _tmp22_ = FALSE;
+#line 551 "moonshot-identity-management-view.vala"
 			if (has_nai) {
+#line 551 "moonshot-identity-management-view.vala"
 				_tmp22_ = nai_provided != NULL;
+#line 1860 "moonshot-identity-management-view.c"
 			} else {
+#line 551 "moonshot-identity-management-view.vala"
 				_tmp22_ = FALSE;
+#line 1864 "moonshot-identity-management-view.c"
 			}
+#line 551 "moonshot-identity-management-view.vala"
 			if (_tmp22_) {
+#line 1868 "moonshot-identity-management-view.c"
 				IdCard* _tmp23_;
+#line 553 "moonshot-identity-management-view.vala"
 				_data1_->identity = (_tmp23_ = _g_object_ref0 (nai_provided), _g_object_unref0 (_data1_->identity), _tmp23_);
+#line 554 "moonshot-identity-management-view.vala"
 				confirm = FALSE;
+#line 1874 "moonshot-identity-management-view.c"
 			} else {
+#line 557 "moonshot-identity-management-view.vala"
 				confirm = TRUE;
+#line 1878 "moonshot-identity-management-view.c"
 			}
 		} else {
 			IdCard* _tmp24_;
+#line 560 "moonshot-identity-management-view.vala"
 			_data1_->identity = (_tmp24_ = _g_object_ref0 ((IdCard*) g_slist_nth_data (self->priv->candidates, (guint) 0)), _g_object_unref0 (_data1_->identity), _tmp24_);
+#line 1884 "moonshot-identity-management-view.c"
 		}
+#line 564 "moonshot-identity-management-view.vala"
 		if (confirm) {
+#line 566 "moonshot-identity-management-view.vala"
 			gtk_tree_model_filter_refilter (self->priv->filter);
+#line 567 "moonshot-identity-management-view.vala"
 			identity_manager_view_redraw_id_card_widgets (self);
+#line 568 "moonshot-identity-management-view.vala"
 			gtk_widget_show ((GtkWidget*) self);
+#line 1894 "moonshot-identity-management-view.c"
 			_g_object_unref0 (nai_provided);
 			block1_data_unref (_data1_);
+#line 569 "moonshot-identity-management-view.vala"
 			return;
+#line 1899 "moonshot-identity-management-view.c"
 		}
 		_g_object_unref0 (nai_provided);
 	}
+#line 574 "moonshot-identity-management-view.vala"
 	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, __lambda3__gsource_func, block1_data_ref (_data1_), block1_data_unref);
+#line 1905 "moonshot-identity-management-view.c"
 	block1_data_unref (_data1_);
+#line 575 "moonshot-identity-management-view.vala"
 	return;
+#line 1909 "moonshot-identity-management-view.c"
 }
 
 
+#line 578 "moonshot-identity-management-view.vala"
 static gboolean identity_manager_view_match_service_pattern (IdentityManagerView* self, const char* service, const char* pattern) {
+#line 1915 "moonshot-identity-management-view.c"
 	gboolean result = FALSE;
 	GPatternSpec* pspec;
+#line 578 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 578 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (service != NULL, FALSE);
+#line 578 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (pattern != NULL, FALSE);
+#line 580 "moonshot-identity-management-view.vala"
 	pspec = g_pattern_spec_new (pattern);
+#line 1926 "moonshot-identity-management-view.c"
 	result = g_pattern_match_string (pspec, service);
 	_g_pattern_spec_free0 (pspec);
+#line 581 "moonshot-identity-management-view.vala"
 	return result;
+#line 1931 "moonshot-identity-management-view.c"
 }
 
 
+#line 584 "moonshot-identity-management-view.vala"
 void identity_manager_view_send_identity_cb (IdentityManagerView* self, IdCard* identity) {
+#line 1937 "moonshot-identity-management-view.c"
 	IdentityRequest* request;
 	gboolean reset_password;
 	gboolean _tmp0_ = FALSE;
-	GSList* _tmp12_;
+	GSList* _tmp13_;
+#line 584 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 584 "moonshot-identity-management-view.vala"
 	g_return_if_fail (identity != NULL);
+#line 586 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self->request_queue->length > 0);
+#line 588 "moonshot-identity-management-view.vala"
 	request = (IdentityRequest*) g_queue_pop_head (self->request_queue);
+#line 589 "moonshot-identity-management-view.vala"
 	reset_password = FALSE;
+#line 591 "moonshot-identity-management-view.vala"
 	if (request->service != NULL) {
+#line 591 "moonshot-identity-management-view.vala"
 		_tmp0_ = _vala_strcmp0 (request->service, "") != 0;
+#line 1956 "moonshot-identity-management-view.c"
 	} else {
+#line 591 "moonshot-identity-management-view.vala"
 		_tmp0_ = FALSE;
+#line 1960 "moonshot-identity-management-view.c"
 	}
+#line 591 "moonshot-identity-management-view.vala"
 	if (_tmp0_) {
-		gint services_length1;
-		gint _services_size_;
-		char** _tmp2_;
-		gint _tmp1_;
-		char** services;
-		gint _tmp7_;
-		gint _tmp8_;
-		char* _tmp9_;
-		char** _tmp10_;
-		services = (_tmp2_ = g_new0 (char*, (_tmp1_ + 1) + 1), services_length1 = _tmp1_ + 1, _services_size_ = services_length1, _tmp2_);
+#line 1964 "moonshot-identity-management-view.c"
+		gboolean duplicate_service;
+#line 593 "moonshot-identity-management-view.vala"
+		duplicate_service = FALSE;
+#line 1968 "moonshot-identity-management-view.c"
 		{
-			gint i;
-			i = 0;
-			{
-				gboolean _tmp3_;
-				_tmp3_ = TRUE;
-				while (TRUE) {
-					gint _tmp4_;
-					gint _tmp5_;
-					char* _tmp6_;
-					if (!_tmp3_) {
-						i++;
+			gint _tmp1_;
+			char** service_collection;
+			int service_collection_length1;
+			int service_it;
+#line 595 "moonshot-identity-management-view.vala"
+			service_collection = id_card_get_services (identity, &_tmp1_);
+#line 1976 "moonshot-identity-management-view.c"
+			service_collection_length1 = _tmp1_;
+			for (service_it = 0; service_it < _tmp1_; service_it = service_it + 1) {
+				char* service;
+				service = g_strdup (service_collection[service_it]);
+				{
+#line 597 "moonshot-identity-management-view.vala"
+					if (_vala_strcmp0 (service, request->service) == 0) {
+#line 598 "moonshot-identity-management-view.vala"
+						duplicate_service = TRUE;
+#line 1986 "moonshot-identity-management-view.c"
 					}
-					_tmp3_ = FALSE;
-					if (!(i < _tmp4_)) {
-						break;
-					}
-					services[i] = (_tmp6_ = g_strdup (id_card_get_services (identity, &_tmp5_)[i]), _g_free0 (services[i]), _tmp6_);
+					_g_free0 (service);
 				}
 			}
 		}
-		services[_tmp7_] = (_tmp9_ = g_strdup (request->service), _g_free0 (services[_tmp7_]), _tmp9_);
-		_tmp10_ = services;
-		id_card_set_services (identity, _tmp10_, services_length1);
-		identity_manager_model_update_card (self->identities_manager, identity);
-		services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
+#line 600 "moonshot-identity-management-view.vala"
+		if (duplicate_service == FALSE) {
+#line 1994 "moonshot-identity-management-view.c"
+			gint services_length1;
+			gint _services_size_;
+			char** _tmp3_;
+			gint _tmp2_;
+			char** services;
+			gint _tmp8_;
+			gint _tmp9_;
+			char* _tmp10_;
+			char** _tmp11_;
+			services = (_tmp3_ = g_new0 (char*, (_tmp2_ + 1) + 1), services_length1 = _tmp2_ + 1, _services_size_ = services_length1, _tmp3_);
+			{
+				gint i;
+#line 604 "moonshot-identity-management-view.vala"
+				i = 0;
+#line 2009 "moonshot-identity-management-view.c"
+				{
+					gboolean _tmp4_;
+#line 604 "moonshot-identity-management-view.vala"
+					_tmp4_ = TRUE;
+#line 604 "moonshot-identity-management-view.vala"
+					while (TRUE) {
+#line 2016 "moonshot-identity-management-view.c"
+						gint _tmp5_;
+						gint _tmp6_;
+						char* _tmp7_;
+#line 604 "moonshot-identity-management-view.vala"
+						if (!_tmp4_) {
+#line 604 "moonshot-identity-management-view.vala"
+							i++;
+#line 2024 "moonshot-identity-management-view.c"
+						}
+#line 604 "moonshot-identity-management-view.vala"
+						_tmp4_ = FALSE;
+#line 604 "moonshot-identity-management-view.vala"
+						if (!(i < _tmp5_)) {
+#line 604 "moonshot-identity-management-view.vala"
+							break;
+#line 2032 "moonshot-identity-management-view.c"
+						}
+#line 605 "moonshot-identity-management-view.vala"
+						services[i] = (_tmp7_ = g_strdup (id_card_get_services (identity, &_tmp6_)[i]), _g_free0 (services[i]), _tmp7_);
+#line 2036 "moonshot-identity-management-view.c"
+					}
+				}
+			}
+#line 607 "moonshot-identity-management-view.vala"
+			services[_tmp8_] = (_tmp10_ = g_strdup (request->service), _g_free0 (services[_tmp8_]), _tmp10_);
+#line 608 "moonshot-identity-management-view.vala"
+			_tmp11_ = services;
+#line 608 "moonshot-identity-management-view.vala"
+			id_card_set_services (identity, _tmp11_, services_length1);
+#line 610 "moonshot-identity-management-view.vala"
+			identity_manager_model_update_card (self->identities_manager, identity);
+#line 2048 "moonshot-identity-management-view.c"
+			services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
+		}
 	}
+#line 614 "moonshot-identity-management-view.vala"
 	if (id_card_get_password (identity) == NULL) {
+#line 2054 "moonshot-identity-management-view.c"
 		AddPasswordDialog* dialog;
 		gint _result_;
+#line 616 "moonshot-identity-management-view.vala"
 		dialog = g_object_ref_sink (add_password_dialog_new ());
+#line 617 "moonshot-identity-management-view.vala"
 		_result_ = gtk_dialog_run ((GtkDialog*) dialog);
+#line 619 "moonshot-identity-management-view.vala"
 		switch (_result_) {
+#line 2063 "moonshot-identity-management-view.c"
 			case GTK_RESPONSE_OK:
 			{
+#line 621 "moonshot-identity-management-view.vala"
 				id_card_set_password (identity, add_password_dialog_get_password (dialog));
+#line 622 "moonshot-identity-management-view.vala"
 				reset_password = !add_password_dialog_get_remember (dialog);
+#line 623 "moonshot-identity-management-view.vala"
 				break;
+#line 2072 "moonshot-identity-management-view.c"
 			}
 			default:
 			{
+#line 625 "moonshot-identity-management-view.vala"
 				identity = NULL;
+#line 626 "moonshot-identity-management-view.vala"
 				break;
+#line 2080 "moonshot-identity-management-view.c"
 			}
 		}
+#line 629 "moonshot-identity-management-view.vala"
 		gtk_object_destroy ((GtkObject*) dialog);
+#line 2085 "moonshot-identity-management-view.c"
 		_g_object_unref0 (dialog);
 	}
+#line 632 "moonshot-identity-management-view.vala"
 	if (g_queue_is_empty (self->request_queue)) {
+#line 633 "moonshot-identity-management-view.vala"
 		gtk_main_quit ();
+#line 2092 "moonshot-identity-management-view.c"
 	}
+#line 635 "moonshot-identity-management-view.vala"
 	if (identity != NULL) {
-		IdCard* _tmp11_;
-		self->priv->default_id_card = (_tmp11_ = _g_object_ref0 (identity), _g_object_unref0 (self->priv->default_id_card), _tmp11_);
+#line 2096 "moonshot-identity-management-view.c"
+		IdCard* _tmp12_;
+#line 636 "moonshot-identity-management-view.vala"
+		self->priv->default_id_card = (_tmp12_ = _g_object_ref0 (identity), _g_object_unref0 (self->priv->default_id_card), _tmp12_);
+#line 2100 "moonshot-identity-management-view.c"
 	}
+#line 638 "moonshot-identity-management-view.vala"
 	identity_request_return_identity (request, identity);
+#line 640 "moonshot-identity-management-view.vala"
 	if (reset_password) {
+#line 641 "moonshot-identity-management-view.vala"
 		id_card_set_password (identity, NULL);
+#line 2108 "moonshot-identity-management-view.c"
 	}
-	self->priv->candidates = (_tmp12_ = NULL, __g_slist_free_g_object_unref0 (self->priv->candidates), _tmp12_);
+#line 643 "moonshot-identity-management-view.vala"
+	self->priv->candidates = (_tmp13_ = NULL, __g_slist_free_g_object_unref0 (self->priv->candidates), _tmp13_);
+#line 2112 "moonshot-identity-management-view.c"
 	_g_object_unref0 (request);
 }
 
 
+#line 646 "moonshot-identity-management-view.vala"
 static void identity_manager_view_label_make_bold (IdentityManagerView* self, GtkLabel* label) {
+#line 2119 "moonshot-identity-management-view.c"
 	PangoFontDescription* font_desc;
+#line 646 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 646 "moonshot-identity-management-view.vala"
 	g_return_if_fail (label != NULL);
+#line 648 "moonshot-identity-management-view.vala"
 	font_desc = pango_font_description_new ();
+#line 650 "moonshot-identity-management-view.vala"
 	pango_font_description_set_weight (font_desc, PANGO_WEIGHT_BOLD);
+#line 657 "moonshot-identity-management-view.vala"
 	gtk_widget_modify_font ((GtkWidget*) label, font_desc);
+#line 2131 "moonshot-identity-management-view.c"
 	_pango_font_description_free0 (font_desc);
 }
 
 
+#line 685 "moonshot-identity-management-view.vala"
 static void _lambda1_ (GtkButton* remove_button, IdentityManagerView* self) {
+#line 2138 "moonshot-identity-management-view.c"
 	GtkMessageDialog* dialog;
 	gint ret;
+#line 685 "moonshot-identity-management-view.vala"
 	g_return_if_fail (remove_button != NULL);
+#line 687 "moonshot-identity-management-view.vala"
 	dialog = g_object_ref_sink ((GtkMessageDialog*) gtk_message_dialog_new ((GtkWindow*) self, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_QUESTION, GTK_BUTTONS_YES_NO, _ ("Are you sure you want to stop '%s' ID Card from being used with %s?"), id_card_get_display_name (id_card_widget_get_id_card (custom_vbox_get_current_idcard (self->priv->custom_vbox))), _ ("this service")));
+#line 694 "moonshot-identity-management-view.vala"
 	ret = gtk_dialog_run ((GtkDialog*) dialog);
+#line 695 "moonshot-identity-management-view.vala"
 	gtk_widget_hide ((GtkWidget*) dialog);
+#line 697 "moonshot-identity-management-view.vala"
 	if (ret == GTK_RESPONSE_YES) {
+#line 2151 "moonshot-identity-management-view.c"
 		IdCard* idcard;
 		char* candidate;
 		GSList* services;
@@ -1467,71 +2156,112 @@ static void _lambda1_ (GtkButton* remove_button, IdentityManagerView* self) {
 		gint _tmp2__length1;
 		char** _tmp3_;
 		GList* children;
+#line 699 "moonshot-identity-management-view.vala"
 		idcard = _g_object_ref0 (id_card_widget_get_id_card (custom_vbox_get_current_idcard (self->priv->custom_vbox)));
+#line 700 "moonshot-identity-management-view.vala"
 		candidate = g_strdup ((const char*) g_hash_table_lookup (self->priv->service_button_map, remove_button));
+#line 702 "moonshot-identity-management-view.vala"
 		services = NULL;
+#line 2166 "moonshot-identity-management-view.c"
 		{
 			gint _tmp0_;
 			char** srv_collection;
 			int srv_collection_length1;
 			int srv_it;
+#line 704 "moonshot-identity-management-view.vala"
 			srv_collection = id_card_get_services (idcard, &_tmp0_);
+#line 2174 "moonshot-identity-management-view.c"
 			srv_collection_length1 = _tmp0_;
 			for (srv_it = 0; srv_it < _tmp0_; srv_it = srv_it + 1) {
 				char* srv;
 				srv = g_strdup (srv_collection[srv_it]);
 				{
+#line 706 "moonshot-identity-management-view.vala"
 					if (_vala_strcmp0 (srv, candidate) == 0) {
+#line 2182 "moonshot-identity-management-view.c"
 						_g_free0 (srv);
+#line 707 "moonshot-identity-management-view.vala"
 						continue;
+#line 2186 "moonshot-identity-management-view.c"
 					}
+#line 708 "moonshot-identity-management-view.vala"
 					services = g_slist_append (services, g_strdup (srv));
+#line 2190 "moonshot-identity-management-view.c"
 					_g_free0 (srv);
 				}
 			}
 		}
+#line 711 "moonshot-identity-management-view.vala"
 		_tmp3_ = (_tmp2_ = g_new0 (char*, (_tmp1_ = g_slist_length (services)) + 1), _tmp2__length1 = _tmp1_, _tmp2_);
+#line 711 "moonshot-identity-management-view.vala"
 		id_card_set_services (idcard, _tmp3_, _tmp1_);
+#line 2199 "moonshot-identity-management-view.c"
 		_tmp2_ = (_vala_array_free (_tmp2_, _tmp2__length1, (GDestroyNotify) g_free), NULL);
 		{
 			gint j;
+#line 712 "moonshot-identity-management-view.vala"
 			j = 0;
+#line 2205 "moonshot-identity-management-view.c"
 			{
 				gboolean _tmp4_;
+#line 712 "moonshot-identity-management-view.vala"
 				_tmp4_ = TRUE;
+#line 712 "moonshot-identity-management-view.vala"
 				while (TRUE) {
+#line 2212 "moonshot-identity-management-view.c"
 					gint _tmp5_;
 					gint _tmp6_;
 					gint _tmp7_;
 					char* *_tmp8_;
 					char* _tmp9_;
+#line 712 "moonshot-identity-management-view.vala"
 					if (!_tmp4_) {
+#line 712 "moonshot-identity-management-view.vala"
 						j++;
+#line 2222 "moonshot-identity-management-view.c"
 					}
+#line 712 "moonshot-identity-management-view.vala"
 					_tmp4_ = FALSE;
+#line 712 "moonshot-identity-management-view.vala"
 					if (!(j < _tmp5_)) {
+#line 712 "moonshot-identity-management-view.vala"
 						break;
+#line 2230 "moonshot-identity-management-view.c"
 					}
+#line 714 "moonshot-identity-management-view.vala"
 					_tmp8_ = &id_card_get_services (idcard, &_tmp7_)[j];
+#line 714 "moonshot-identity-management-view.vala"
 					(*_tmp8_) = (_tmp9_ = g_strdup ((const char*) g_slist_nth_data (services, (guint) j)), _g_free0 ((*_tmp8_)), _tmp9_);
+#line 2236 "moonshot-identity-management-view.c"
 				}
 			}
 		}
+#line 717 "moonshot-identity-management-view.vala"
 		children = gtk_container_get_children ((GtkContainer*) self->priv->services_internal_vbox);
+#line 2242 "moonshot-identity-management-view.c"
 		{
 			GList* hbox_collection;
 			GList* hbox_it;
+#line 718 "moonshot-identity-management-view.vala"
 			hbox_collection = children;
+#line 2248 "moonshot-identity-management-view.c"
 			for (hbox_it = hbox_collection; hbox_it != NULL; hbox_it = hbox_it->next) {
 				GtkWidget* hbox;
+#line 718 "moonshot-identity-management-view.vala"
 				hbox = (GtkWidget*) hbox_it->data;
+#line 2253 "moonshot-identity-management-view.c"
 				{
+#line 719 "moonshot-identity-management-view.vala"
 					gtk_object_destroy ((GtkObject*) hbox);
+#line 2257 "moonshot-identity-management-view.c"
 				}
 			}
 		}
+#line 721 "moonshot-identity-management-view.vala"
 		identity_manager_view_fill_services_vbox (self, idcard);
+#line 722 "moonshot-identity-management-view.vala"
 		id_card_widget_update_id_card_label (custom_vbox_get_current_idcard (self->priv->custom_vbox));
+#line 2265 "moonshot-identity-management-view.c"
 		_g_list_free0 (children);
 		__g_slist_free_g_free0 (services);
 		_g_free0 (candidate);
@@ -1541,31 +2271,47 @@ static void _lambda1_ (GtkButton* remove_button, IdentityManagerView* self) {
 }
 
 
+#line 685 "moonshot-identity-management-view.vala"
 static void __lambda1__gtk_button_clicked (GtkButton* _sender, gpointer self) {
+#line 2277 "moonshot-identity-management-view.c"
 	_lambda1_ (_sender, self);
 }
 
 
+#line 660 "moonshot-identity-management-view.vala"
 static void identity_manager_view_fill_services_vbox (IdentityManagerView* self, IdCard* id_card) {
+#line 2284 "moonshot-identity-management-view.c"
 	gint i;
 	gint _tmp0_;
 	gint n_columns;
 	GtkTable* services_table;
+#line 660 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 660 "moonshot-identity-management-view.vala"
 	g_return_if_fail (id_card != NULL);
+#line 662 "moonshot-identity-management-view.vala"
 	i = 0;
+#line 663 "moonshot-identity-management-view.vala"
 	n_columns = _tmp0_;
+#line 665 "moonshot-identity-management-view.vala"
 	services_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) n_columns, (guint) 2, FALSE));
+#line 666 "moonshot-identity-management-view.vala"
 	gtk_table_set_col_spacings (services_table, (guint) 10);
+#line 667 "moonshot-identity-management-view.vala"
 	gtk_table_set_row_spacings (services_table, (guint) 10);
+#line 668 "moonshot-identity-management-view.vala"
 	gtk_container_add ((GtkContainer*) self->priv->services_internal_vbox, (GtkWidget*) services_table);
+#line 670 "moonshot-identity-management-view.vala"
 	g_hash_table_remove_all (self->priv->service_button_map);
+#line 2307 "moonshot-identity-management-view.c"
 	{
 		gint _tmp1_;
 		char** service_collection;
 		int service_collection_length1;
 		int service_it;
+#line 672 "moonshot-identity-management-view.vala"
 		service_collection = id_card_get_services (id_card, &_tmp1_);
+#line 2315 "moonshot-identity-management-view.c"
 		service_collection_length1 = _tmp1_;
 		for (service_it = 0; service_it < _tmp1_; service_it = service_it + 1) {
 			char* service;
@@ -1573,26 +2319,39 @@ static void identity_manager_view_fill_services_vbox (IdentityManagerView* self,
 			{
 				GtkLabel* label;
 				GtkButton* remove_button;
+#line 674 "moonshot-identity-management-view.vala"
 				label = g_object_ref_sink ((GtkLabel*) gtk_label_new (service));
+#line 675 "moonshot-identity-management-view.vala"
 				gtk_misc_set_alignment ((GtkMisc*) label, (float) 0, (float) 0.5);
+#line 679 "moonshot-identity-management-view.vala"
 				remove_button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock (GTK_STOCK_REMOVE));
+#line 683 "moonshot-identity-management-view.vala"
 				g_hash_table_insert (self->priv->service_button_map, _g_object_ref0 (remove_button), g_strdup (service));
+#line 685 "moonshot-identity-management-view.vala"
 				g_signal_connect_object (remove_button, "clicked", (GCallback) __lambda1__gtk_button_clicked, self, 0);
+#line 726 "moonshot-identity-management-view.vala"
 				gtk_table_attach_defaults (services_table, (GtkWidget*) label, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1));
+#line 727 "moonshot-identity-management-view.vala"
 				gtk_table_attach_defaults (services_table, (GtkWidget*) remove_button, (guint) 1, (guint) 2, (guint) i, (guint) (i + 1));
+#line 728 "moonshot-identity-management-view.vala"
 				i++;
+#line 2339 "moonshot-identity-management-view.c"
 				_g_object_unref0 (remove_button);
 				_g_object_unref0 (label);
 				_g_free0 (service);
 			}
 		}
 	}
+#line 730 "moonshot-identity-management-view.vala"
 	gtk_widget_show_all ((GtkWidget*) self->priv->services_internal_vbox);
+#line 2348 "moonshot-identity-management-view.c"
 	_g_object_unref0 (services_table);
 }
 
 
+#line 733 "moonshot-identity-management-view.vala"
 static void identity_manager_view_on_about_action (IdentityManagerView* self) {
+#line 2355 "moonshot-identity-management-view.c"
 	gint authors_length1;
 	gint _authors_size_;
 	char** _tmp1_;
@@ -1600,9 +2359,13 @@ static void identity_manager_view_on_about_action (IdentityManagerView* self) {
 	char** authors;
 	char* copyright;
 	char* license;
+#line 733 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 2365 "moonshot-identity-management-view.c"
 	authors = (_tmp1_ = (_tmp0_ = g_new0 (char*, 4 + 1), _tmp0_[0] = g_strdup ("Javier Jardón <jjardon@codethink.co.uk>"), _tmp0_[1] = g_strdup ("Sam Thursfield <samthursfield@codethink.co.uk>"), _tmp0_[2] = g_strdup ("Alberto Ruiz <alberto.ruiz@codethink.co.uk>"), _tmp0_[3] = NULL, _tmp0_), authors_length1 = 4, _authors_size_ = authors_length1, _tmp1_);
+#line 742 "moonshot-identity-management-view.vala"
 	copyright = g_strdup ("Copyright 2011 JANET");
+#line 745 "moonshot-identity-management-view.vala"
 	license = g_strdup ("\n" \
 "Copyright (c) 2011, JANET(UK)\n" \
 "All rights reserved.\n" \
@@ -1645,7 +2408,9 @@ static void identity_manager_view_on_about_action (IdentityManagerView* self) {
 "OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF" \
 "\n" \
 "SUCH DAMAGE.\n");
-	gtk_show_about_dialog ((GtkWindow*) self, "comments", _ ("Moonshot project UI"), "copyright", copyright, "website", "http://www.project-moonshot.org/", "license", license, "website-label", _ ("Visit the Moonshot project web site"), "authors", authors, "translator-credits", _ ("translator-credits"), NULL, NULL);
+#line 777 "moonshot-identity-management-view.vala"
+	gtk_show_about_dialog ((GtkWindow*) self, "comments", _ ("Moonshot project UI"), "copyright", copyright, "website", PACKAGE_URL, "version", PACKAGE_VERSION, "license", license, "website-label", _ ("Visit the Moonshot project web site"), "authors", authors, "translator-credits", _ ("translator-credits"), NULL, NULL);
+#line 2373 "moonshot-identity-management-view.c"
 	_g_free0 (license);
 	_g_free0 (copyright);
 	authors = (_vala_array_free (authors, authors_length1, (GDestroyNotify) g_free), NULL);
@@ -1661,7 +2426,9 @@ static void _vala_array_add1 (GtkActionEntry** array, int* length, int* size, co
 }
 
 
+#line 375 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_add_identity_manual_cb_gtk_action_callback (GtkAction* action, gpointer self) {
+#line 2391 "moonshot-identity-management-view.c"
 	identity_manager_view_add_identity_manual_cb (self);
 }
 
@@ -1675,7 +2442,9 @@ static void _vala_array_add2 (GtkActionEntry** array, int* length, int* size, co
 }
 
 
+#line 7766 "gtk+-2.0.vapi"
 static void _gtk_main_quit_gtk_action_callback (GtkAction* action, gpointer self) {
+#line 2407 "moonshot-identity-management-view.c"
 	gtk_main_quit ();
 }
 
@@ -1698,7 +2467,9 @@ static void _vala_array_add4 (GtkActionEntry** array, int* length, int* size, co
 }
 
 
+#line 733 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_on_about_action_gtk_action_callback (GtkAction* action, gpointer self) {
+#line 2432 "moonshot-identity-management-view.c"
 	identity_manager_view_on_about_action (self);
 }
 
@@ -1712,7 +2483,9 @@ static void _vala_array_add5 (GtkActionEntry** array, int* length, int* size, co
 }
 
 
+#line 790 "moonshot-identity-management-view.vala"
 static GtkActionEntry* identity_manager_view_create_actions (IdentityManagerView* self, int* result_length1) {
+#line 2448 "moonshot-identity-management-view.c"
 	GtkActionEntry* result = NULL;
 	gint actions_length1;
 	gint _actions_size_;
@@ -1729,39 +2502,65 @@ static GtkActionEntry* identity_manager_view_create_actions (IdentityManagerView
 	GtkActionEntry _tmp5_ = {0};
 	GtkActionEntry about;
 	GtkActionEntry* _tmp6_;
+#line 790 "moonshot-identity-management-view.vala"
 	g_return_val_if_fail (self != NULL, NULL);
+#line 2467 "moonshot-identity-management-view.c"
 	actions = (_tmp0_ = g_new0 (GtkActionEntry, 0), actions_length1 = 0, _actions_size_ = actions_length1, _tmp0_);
+#line 793 "moonshot-identity-management-view.vala"
 	filemenu = (_tmp1_.name = "FileMenuAction", _tmp1_.stock_id = NULL, _tmp1_.label = N_ ("_File"), _tmp1_.accelerator = NULL, _tmp1_.tooltip = NULL, _tmp1_.callback = (GCallback) NULL, _tmp1_);
+#line 797 "moonshot-identity-management-view.vala"
 	_vala_array_add1 (&actions, &actions_length1, &_actions_size_, &filemenu);
+#line 798 "moonshot-identity-management-view.vala"
 	add = (_tmp2_.name = "AddIdCardAction", _tmp2_.stock_id = GTK_STOCK_ADD, _tmp2_.label = N_ ("Add ID Card"), _tmp2_.accelerator = NULL, _tmp2_.tooltip = N_ ("Add a new ID Card"), _tmp2_.callback = (GCallback) _identity_manager_view_add_identity_manual_cb_gtk_action_callback, _tmp2_);
+#line 808 "moonshot-identity-management-view.vala"
 	_vala_array_add2 (&actions, &actions_length1, &_actions_size_, &add);
+#line 809 "moonshot-identity-management-view.vala"
 	quit = (_tmp3_.name = "QuitAction", _tmp3_.stock_id = GTK_STOCK_QUIT, _tmp3_.label = N_ ("Quit"), _tmp3_.accelerator = "<control>Q", _tmp3_.tooltip = N_ ("Quit the application"), _tmp3_.callback = (GCallback) _gtk_main_quit_gtk_action_callback, _tmp3_);
+#line 819 "moonshot-identity-management-view.vala"
 	_vala_array_add3 (&actions, &actions_length1, &_actions_size_, &quit);
+#line 821 "moonshot-identity-management-view.vala"
 	helpmenu = (_tmp4_.name = "HelpMenuAction", _tmp4_.stock_id = NULL, _tmp4_.label = N_ ("_Help"), _tmp4_.accelerator = NULL, _tmp4_.tooltip = NULL, _tmp4_.callback = (GCallback) NULL, _tmp4_);
+#line 825 "moonshot-identity-management-view.vala"
 	_vala_array_add4 (&actions, &actions_length1, &_actions_size_, &helpmenu);
+#line 826 "moonshot-identity-management-view.vala"
 	about = (_tmp5_.name = "AboutAction", _tmp5_.stock_id = GTK_STOCK_ABOUT, _tmp5_.label = N_ ("About"), _tmp5_.accelerator = NULL, _tmp5_.tooltip = N_ ("About this application"), _tmp5_.callback = (GCallback) _identity_manager_view_on_about_action_gtk_action_callback, _tmp5_);
+#line 836 "moonshot-identity-management-view.vala"
 	_vala_array_add5 (&actions, &actions_length1, &_actions_size_, &about);
+#line 2489 "moonshot-identity-management-view.c"
 	result = (_tmp6_ = actions, *result_length1 = actions_length1, _tmp6_);
+#line 838 "moonshot-identity-management-view.vala"
 	return result;
+#line 2493 "moonshot-identity-management-view.c"
 	actions = (g_free (actions), NULL);
 }
 
 
+#line 842 "moonshot-identity-management-view.vala"
 static void identity_manager_view_create_ui_manager (IdentityManagerView* self) {
+#line 2500 "moonshot-identity-management-view.c"
 	GtkActionGroup* action_group;
 	gint _tmp0_;
 	GtkActionEntry* _tmp1_;
 	gint _tmp1__length1;
 	GtkActionEntry* _tmp2_;
 	GError * _inner_error_ = NULL;
+#line 842 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 844 "moonshot-identity-management-view.vala"
 	action_group = gtk_action_group_new ("GeneralActionGroup");
+#line 845 "moonshot-identity-management-view.vala"
 	_tmp2_ = (_tmp1_ = identity_manager_view_create_actions (self, &_tmp0_), _tmp1__length1 = _tmp0_, _tmp1_);
+#line 845 "moonshot-identity-management-view.vala"
 	gtk_action_group_add_actions (action_group, _tmp2_, _tmp0_, self);
+#line 2515 "moonshot-identity-management-view.c"
 	_tmp1_ = (g_free (_tmp1_), NULL);
+#line 846 "moonshot-identity-management-view.vala"
 	gtk_ui_manager_insert_action_group (self->priv->ui_manager, action_group, 0);
+#line 2519 "moonshot-identity-management-view.c"
 	{
+#line 849 "moonshot-identity-management-view.vala"
 		gtk_ui_manager_add_ui_from_string (self->priv->ui_manager, IDENTITY_MANAGER_VIEW_layout, (gssize) (-1), &_inner_error_);
+#line 2523 "moonshot-identity-management-view.c"
 		if (_inner_error_ != NULL) {
 			goto __catch1_g_error;
 		}
@@ -1773,7 +2572,9 @@ static void identity_manager_view_create_ui_manager (IdentityManagerView* self) 
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
+#line 853 "moonshot-identity-management-view.vala"
 			fprintf (stderr, "%s\n", e->message);
+#line 2537 "moonshot-identity-management-view.c"
 			_g_error_free0 (e);
 		}
 	}
@@ -1784,29 +2585,39 @@ static void identity_manager_view_create_ui_manager (IdentityManagerView* self) 
 		g_clear_error (&_inner_error_);
 		return;
 	}
+#line 855 "moonshot-identity-management-view.vala"
 	gtk_ui_manager_ensure_update (self->priv->ui_manager);
+#line 2550 "moonshot-identity-management-view.c"
 	_g_object_unref0 (action_group);
 }
 
 
+#line 158 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_search_entry_icon_press_cb_gtk_entry_icon_press (GtkEntry* _sender, GtkEntryIconPosition p0, GdkEvent* p1, gpointer self) {
+#line 2557 "moonshot-identity-management-view.c"
 	identity_manager_view_search_entry_icon_press_cb (self, p0, p1);
 }
 
 
+#line 170 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_search_entry_text_changed_cb_g_object_notify (GObject* _sender, GParamSpec* pspec, gpointer self) {
+#line 2564 "moonshot-identity-management-view.c"
 	identity_manager_view_search_entry_text_changed_cb (self);
 }
 
 
+#line 182 "moonshot-identity-management-view.vala"
 static gboolean _identity_manager_view_search_entry_key_press_event_cb_gtk_widget_key_press_event (GtkWidget* _sender, GdkEventKey* event, gpointer self) {
+#line 2571 "moonshot-identity-management-view.c"
 	gboolean result;
 	result = identity_manager_view_search_entry_key_press_event_cb (self, event);
 	return result;
 }
 
 
+#line 858 "moonshot-identity-management-view.vala"
 static void identity_manager_view_build_ui (IdentityManagerView* self) {
+#line 2580 "moonshot-identity-management-view.c"
 	GtkEntry* _tmp0_;
 	GdkPixbuf* _tmp1_;
 	GdkPixbuf* _tmp2_;
@@ -1831,84 +2642,163 @@ static void identity_manager_view_build_ui (IdentityManagerView* self) {
 	GtkHBox* hbox;
 	GtkVBox* main_vbox;
 	GtkWidget* menubar;
+#line 858 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 860 "moonshot-identity-management-view.vala"
 	identity_manager_view_create_ui_manager (self);
+#line 862 "moonshot-identity-management-view.vala"
 	self->priv->search_entry = (_tmp0_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->search_entry), _tmp0_);
+#line 864 "moonshot-identity-management-view.vala"
 	identity_manager_view_set_atk_name_description (self, (GtkWidget*) self->priv->search_entry, _ ("Search entry"), _ ("Search for a specific ID Card"));
+#line 865 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_from_pixbuf (self->priv->search_entry, GTK_ENTRY_ICON_PRIMARY, _tmp1_ = find_icon_sized ("edit-find", GTK_ICON_SIZE_MENU));
+#line 2615 "moonshot-identity-management-view.c"
 	_g_object_unref0 (_tmp1_);
+#line 868 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_tooltip_text (self->priv->search_entry, GTK_ENTRY_ICON_PRIMARY, _ ("Search identity or service"));
+#line 870 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_sensitive (self->priv->search_entry, GTK_ENTRY_ICON_PRIMARY, FALSE);
+#line 872 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_from_pixbuf (self->priv->search_entry, GTK_ENTRY_ICON_SECONDARY, _tmp2_ = find_icon_sized ("process-stop", GTK_ICON_SIZE_MENU));
+#line 2623 "moonshot-identity-management-view.c"
 	_g_object_unref0 (_tmp2_);
+#line 875 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_tooltip_text (self->priv->search_entry, GTK_ENTRY_ICON_SECONDARY, _ ("Clear the current search"));
+#line 877 "moonshot-identity-management-view.vala"
 	gtk_entry_set_icon_sensitive (self->priv->search_entry, GTK_ENTRY_ICON_SECONDARY, FALSE);
+#line 880 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (self->priv->search_entry, "icon-press", (GCallback) _identity_manager_view_search_entry_icon_press_cb_gtk_entry_icon_press, self, 0);
+#line 881 "moonshot-identity-management-view.vala"
 	g_signal_connect_object ((GObject*) self->priv->search_entry, "notify::text", (GCallback) _identity_manager_view_search_entry_text_changed_cb_g_object_notify, self, 0);
+#line 882 "moonshot-identity-management-view.vala"
 	g_signal_connect_object ((GtkWidget*) self->priv->search_entry, "key-press-event", (GCallback) _identity_manager_view_search_entry_key_press_event_cb_gtk_widget_key_press_event, self, 0);
+#line 884 "moonshot-identity-management-view.vala"
 	self->priv->custom_vbox = (_tmp3_ = g_object_ref_sink (custom_vbox_new (self, FALSE, 6)), _g_object_unref0 (self->priv->custom_vbox), _tmp3_);
+#line 886 "moonshot-identity-management-view.vala"
 	viewport = g_object_ref_sink ((GtkViewport*) gtk_viewport_new (NULL, NULL));
+#line 887 "moonshot-identity-management-view.vala"
 	gtk_container_set_border_width ((GtkContainer*) viewport, (guint) 6);
+#line 888 "moonshot-identity-management-view.vala"
 	gtk_viewport_set_shadow_type (viewport, GTK_SHADOW_NONE);
+#line 889 "moonshot-identity-management-view.vala"
 	gtk_container_add ((GtkContainer*) viewport, (GtkWidget*) self->priv->custom_vbox);
+#line 890 "moonshot-identity-management-view.vala"
 	scroll = g_object_ref_sink ((GtkScrolledWindow*) gtk_scrolled_window_new (NULL, NULL));
+#line 891 "moonshot-identity-management-view.vala"
 	gtk_scrolled_window_set_policy (scroll, GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+#line 892 "moonshot-identity-management-view.vala"
 	gtk_scrolled_window_set_shadow_type (scroll, GTK_SHADOW_IN);
+#line 893 "moonshot-identity-management-view.vala"
 	gtk_scrolled_window_add_with_viewport (scroll, (GtkWidget*) viewport);
+#line 895 "moonshot-identity-management-view.vala"
 	vbox_left = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
+#line 896 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) vbox_left, (GtkWidget*) self->priv->search_entry, FALSE, FALSE, (guint) 6);
+#line 897 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) vbox_left, (GtkWidget*) scroll, TRUE, TRUE, (guint) 0);
+#line 898 "moonshot-identity-management-view.vala"
 	gtk_widget_set_size_request ((GtkWidget*) vbox_left, IDENTITY_MANAGER_VIEW_WINDOW_WIDTH, 0);
+#line 900 "moonshot-identity-management-view.vala"
 	login_vbox_title = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Login: ")));
+#line 901 "moonshot-identity-management-view.vala"
 	identity_manager_view_label_make_bold (self, login_vbox_title);
+#line 902 "moonshot-identity-management-view.vala"
 	gtk_misc_set_alignment ((GtkMisc*) login_vbox_title, (float) 0, (float) 0.5);
+#line 903 "moonshot-identity-management-view.vala"
 	username_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Username:")));
+#line 904 "moonshot-identity-management-view.vala"
 	gtk_misc_set_alignment ((GtkMisc*) username_label, (float) 1, (float) 0.5);
+#line 905 "moonshot-identity-management-view.vala"
 	self->priv->username_entry = (_tmp4_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->username_entry), _tmp4_);
+#line 906 "moonshot-identity-management-view.vala"
 	password_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Password:")));
+#line 907 "moonshot-identity-management-view.vala"
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (float) 1, (float) 0.5);
+#line 908 "moonshot-identity-management-view.vala"
 	self->priv->password_entry = (_tmp5_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->password_entry), _tmp5_);
+#line 909 "moonshot-identity-management-view.vala"
 	gtk_entry_set_invisible_char (self->priv->password_entry, (gunichar) '*');
+#line 910 "moonshot-identity-management-view.vala"
 	gtk_entry_set_visibility (self->priv->password_entry, FALSE);
+#line 911 "moonshot-identity-management-view.vala"
 	remember_checkbutton = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Remember password")));
+#line 912 "moonshot-identity-management-view.vala"
 	login_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 3, (guint) 3, FALSE));
+#line 913 "moonshot-identity-management-view.vala"
 	gtk_table_set_col_spacings (login_table, (guint) 10);
+#line 914 "moonshot-identity-management-view.vala"
 	gtk_table_set_row_spacings (login_table, (guint) 10);
+#line 915 "moonshot-identity-management-view.vala"
 	gtk_table_attach_defaults (login_table, (GtkWidget*) username_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
+#line 916 "moonshot-identity-management-view.vala"
 	gtk_table_attach_defaults (login_table, (GtkWidget*) self->priv->username_entry, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
+#line 917 "moonshot-identity-management-view.vala"
 	gtk_table_attach_defaults (login_table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 1, (guint) 2);
+#line 918 "moonshot-identity-management-view.vala"
 	gtk_table_attach_defaults (login_table, (GtkWidget*) self->priv->password_entry, (guint) 1, (guint) 2, (guint) 1, (guint) 2);
+#line 919 "moonshot-identity-management-view.vala"
 	gtk_table_attach_defaults (login_table, (GtkWidget*) remember_checkbutton, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
+#line 920 "moonshot-identity-management-view.vala"
 	login_vbox_alignment = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new ((float) 0, (float) 0, (float) 0, (float) 0));
+#line 921 "moonshot-identity-management-view.vala"
 	gtk_alignment_set_padding (login_vbox_alignment, (guint) 0, (guint) 0, (guint) 12, (guint) 0);
+#line 922 "moonshot-identity-management-view.vala"
 	gtk_container_add ((GtkContainer*) login_vbox_alignment, (GtkWidget*) login_table);
+#line 923 "moonshot-identity-management-view.vala"
 	login_vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
+#line 924 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) login_vbox, (GtkWidget*) login_vbox_title, FALSE, TRUE, (guint) 0);
+#line 925 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) login_vbox, (GtkWidget*) login_vbox_alignment, FALSE, TRUE, (guint) 0);
+#line 927 "moonshot-identity-management-view.vala"
 	services_vbox_title = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Services:")));
+#line 928 "moonshot-identity-management-view.vala"
 	identity_manager_view_label_make_bold (self, services_vbox_title);
+#line 929 "moonshot-identity-management-view.vala"
 	gtk_misc_set_alignment ((GtkMisc*) services_vbox_title, (float) 0, (float) 0.5);
+#line 930 "moonshot-identity-management-view.vala"
 	services_vbox_alignment = g_object_ref_sink ((GtkAlignment*) gtk_alignment_new ((float) 0, (float) 0, (float) 0, (float) 0));
+#line 931 "moonshot-identity-management-view.vala"
 	gtk_alignment_set_padding (services_vbox_alignment, (guint) 0, (guint) 0, (guint) 12, (guint) 0);
+#line 932 "moonshot-identity-management-view.vala"
 	self->priv->services_internal_vbox = (_tmp6_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (TRUE, 6)), _g_object_unref0 (self->priv->services_internal_vbox), _tmp6_);
+#line 933 "moonshot-identity-management-view.vala"
 	gtk_container_add ((GtkContainer*) services_vbox_alignment, (GtkWidget*) self->priv->services_internal_vbox);
+#line 934 "moonshot-identity-management-view.vala"
 	services_vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 6));
+#line 935 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) services_vbox, (GtkWidget*) services_vbox_title, FALSE, TRUE, (guint) 0);
+#line 936 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) services_vbox, (GtkWidget*) services_vbox_alignment, FALSE, TRUE, (guint) 0);
+#line 938 "moonshot-identity-management-view.vala"
 	self->priv->vbox_right = (_tmp7_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 18)), _g_object_unref0 (self->priv->vbox_right), _tmp7_);
+#line 939 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->vbox_right, (GtkWidget*) login_vbox, FALSE, TRUE, (guint) 0);
+#line 940 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->vbox_right, (GtkWidget*) services_vbox, FALSE, TRUE, (guint) 0);
+#line 942 "moonshot-identity-management-view.vala"
 	hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 12));
+#line 943 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) vbox_left, TRUE, TRUE, (guint) 0);
+#line 944 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) hbox, (GtkWidget*) self->priv->vbox_right, FALSE, FALSE, (guint) 0);
+#line 946 "moonshot-identity-management-view.vala"
 	main_vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
+#line 947 "moonshot-identity-management-view.vala"
 	gtk_container_set_border_width ((GtkContainer*) main_vbox, (guint) 12);
+#line 960 "moonshot-identity-management-view.vala"
 	menubar = _g_object_ref0 (gtk_ui_manager_get_widget (self->priv->ui_manager, "/MenuBar"));
+#line 961 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) main_vbox, menubar, FALSE, FALSE, (guint) 0);
+#line 963 "moonshot-identity-management-view.vala"
 	gtk_box_pack_start ((GtkBox*) main_vbox, (GtkWidget*) hbox, TRUE, TRUE, (guint) 0);
+#line 964 "moonshot-identity-management-view.vala"
 	gtk_container_add ((GtkContainer*) self, (GtkWidget*) main_vbox);
+#line 965 "moonshot-identity-management-view.vala"
 	gtk_widget_show_all ((GtkWidget*) main_vbox);
+#line 966 "moonshot-identity-management-view.vala"
 	gtk_widget_hide ((GtkWidget*) self->priv->vbox_right);
+#line 2761 "moonshot-identity-management-view.c"
 	_g_object_unref0 (menubar);
 	_g_object_unref0 (main_vbox);
 	_g_object_unref0 (hbox);
@@ -1928,33 +2818,52 @@ static void identity_manager_view_build_ui (IdentityManagerView* self) {
 }
 
 
+#line 969 "moonshot-identity-management-view.vala"
 static void identity_manager_view_set_atk_name_description (IdentityManagerView* self, GtkWidget* widget, const char* name, const char* description) {
+#line 2783 "moonshot-identity-management-view.c"
 	AtkObject* atk_widget;
+#line 969 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 969 "moonshot-identity-management-view.vala"
 	g_return_if_fail (widget != NULL);
+#line 969 "moonshot-identity-management-view.vala"
 	g_return_if_fail (name != NULL);
+#line 969 "moonshot-identity-management-view.vala"
 	g_return_if_fail (description != NULL);
+#line 971 "moonshot-identity-management-view.vala"
 	atk_widget = _g_object_ref0 (gtk_widget_get_accessible (widget));
+#line 973 "moonshot-identity-management-view.vala"
 	atk_object_set_name (atk_widget, name);
+#line 974 "moonshot-identity-management-view.vala"
 	atk_object_set_description (atk_widget, description);
+#line 2799 "moonshot-identity-management-view.c"
 	_g_object_unref0 (atk_widget);
 }
 
 
+#line 7766 "gtk+-2.0.vapi"
 static void _gtk_main_quit_gtk_object_destroy (GtkObject* _sender, gpointer self) {
+#line 2806 "moonshot-identity-management-view.c"
 	gtk_main_quit ();
 }
 
 
+#line 71 "moonshot-identity-management-view.vala"
 static void _identity_manager_view_on_card_list_changed_identity_manager_model_card_list_changed (IdentityManagerModel* _sender, gpointer self) {
+#line 2813 "moonshot-identity-management-view.c"
 	identity_manager_view_on_card_list_changed (self);
 }
 
 
+#line 977 "moonshot-identity-management-view.vala"
 static void identity_manager_view_connect_signals (IdentityManagerView* self) {
+#line 977 "moonshot-identity-management-view.vala"
 	g_return_if_fail (self != NULL);
+#line 979 "moonshot-identity-management-view.vala"
 	g_signal_connect ((GtkObject*) self, "destroy", (GCallback) _gtk_main_quit_gtk_object_destroy, NULL);
+#line 980 "moonshot-identity-management-view.vala"
 	g_signal_connect_object (self->identities_manager, "card-list-changed", (GCallback) _identity_manager_view_on_card_list_changed_identity_manager_model_card_list_changed, self, 0);
+#line 2826 "moonshot-identity-management-view.c"
 }
 
 

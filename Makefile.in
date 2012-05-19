@@ -77,7 +77,7 @@ DIST_COMMON = $(am__configure_deps) $(include_HEADERS) \
 	ABOUT-NLS INSTALL build-aux/compile build-aux/config.guess \
 	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
 	build-aux/install-sh build-aux/ltmain.sh build-aux/missing \
-	examples_client_vala.stamp \
+	config.vapi examples_client_vala.stamp \
 	examples_service_selection_vala.stamp \
 	libmoonshot_libmoonshot_la_vala.stamp \
 	src/moonshot-add-dialog.c src/moonshot-custom-vbox.c \
@@ -213,7 +213,7 @@ src_moonshot_DEPENDENCIES = $(am__DEPENDENCIES_3) \
 	$(am__DEPENDENCIES_2)
 src_moonshot_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(src_moonshot_CFLAGS) \
-	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+	$(CFLAGS) $(src_moonshot_LDFLAGS) $(LDFLAGS) -o $@
 am_src_moonshot_webp_OBJECTS =  \
 	src/src_moonshot_webp-moonshot-webp-parser.$(OBJEXT) \
 	src/src_moonshot_webp-moonshot-provisioning-common.$(OBJEXT) \
@@ -492,12 +492,12 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 SUBDIRS = po
 lib_LTLIBRARIES = libmoonshot/libmoonshot.la
-AM_CFLAGS = 
-AM_CPPFLAGS = -include config.h -DLOCALEDIR=\""$(localedir)"\" \
+AM_CFLAGS = -g -O0
+AM_CPPFLAGS = -g -O0 -include config.h -DLOCALEDIR=\""$(localedir)"\" \
 	-I$(top_srcdir)/libmoonshot -I$(top_builddir)/libmoonshot \
 	$(am__append_1) $(am__append_3) $(am__append_7)
-AM_VALAFLAGS = config.vapi --vapidir=$(top_srcdir)/vapi --pkg gio-2.0 \
-	$(am__append_2) $(am__append_4) $(am__append_8) \
+AM_VALAFLAGS = -g config.vapi --vapidir=$(top_srcdir)/vapi --pkg \
+	gio-2.0 $(am__append_2) $(am__append_4) $(am__append_8) \
 	$(am__append_12) $(am__append_13)
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
@@ -527,6 +527,7 @@ src_moonshot_webp_SOURCES = \
 src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
 src_moonshot_LDADD = $(moonshot_LIBS) $(am__append_6)
+src_moonshot_LDFLAGS = -g -O0
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
@@ -1231,6 +1232,11 @@ $(srcdir)/src/moonshot-id.c: $(srcdir)/src_moonshot_webp_vala.stamp
 	@if test -f $@; then :; else \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_webp_vala.stamp; \
 	fi
+$(srcdir)/config.vapi: $(srcdir)/src_moonshot_webp_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/src_moonshot_webp_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_webp_vala.stamp; \
+	fi
 src_moonshot_webp_vala.stamp: $(src_moonshot_webp_SOURCES)
 	$(AM_V_VALAC)$(VALAC) $(src_moonshot_webp_VALAFLAGS) $(VALAFLAGS) -C $(src_moonshot_webp_SOURCES)
 	$(AM_V_at)touch $@
@@ -1306,6 +1312,11 @@ $(srcdir)/src/moonshot-provisioning-common.c: $(srcdir)/src_moonshot_vala.stamp
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
 	fi
 $(srcdir)/src/moonshot-utils.c: $(srcdir)/src_moonshot_vala.stamp
+	@if test -f $@; then :; else rm -f $(srcdir)/src_moonshot_vala.stamp; fi
+	@if test -f $@; then :; else \
+	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
+	fi
+$(srcdir)/config.vapi: $(srcdir)/src_moonshot_vala.stamp
 	@if test -f $@; then :; else rm -f $(srcdir)/src_moonshot_vala.stamp; fi
 	@if test -f $@; then :; else \
 	  $(am__cd) $(srcdir) && $(MAKE) $(AM_MAKEFLAGS) src_moonshot_vala.stamp; \
@@ -1776,6 +1787,7 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
+	-rm -f config.vapi
 	-rm -f examples_client_vala.stamp
 	-rm -f examples_service_selection_vala.stamp
 	-rm -f libmoonshot_libmoonshot_la_vala.stamp

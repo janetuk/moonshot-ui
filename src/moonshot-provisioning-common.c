@@ -148,39 +148,64 @@ static int _vala_strcmp0 (const char * str1, const char * str2);
 
 
 
+#line 6 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_check_stack (GSList* stack, char** reference, int reference_length1) {
+#line 154 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
+#line 9 "moonshot-provisioning-common.vala"
 	if (g_slist_length (stack) < reference_length1) {
+#line 158 "moonshot-provisioning-common.c"
 		result = FALSE;
+#line 10 "moonshot-provisioning-common.vala"
 		return result;
+#line 162 "moonshot-provisioning-common.c"
 	}
 	{
 		gint i;
+#line 12 "moonshot-provisioning-common.vala"
 		i = 0;
+#line 168 "moonshot-provisioning-common.c"
 		{
 			gboolean _tmp0_;
+#line 12 "moonshot-provisioning-common.vala"
 			_tmp0_ = TRUE;
+#line 12 "moonshot-provisioning-common.vala"
 			while (TRUE) {
+#line 12 "moonshot-provisioning-common.vala"
 				if (!_tmp0_) {
+#line 12 "moonshot-provisioning-common.vala"
 					i++;
+#line 179 "moonshot-provisioning-common.c"
 				}
+#line 12 "moonshot-provisioning-common.vala"
 				_tmp0_ = FALSE;
+#line 12 "moonshot-provisioning-common.vala"
 				if (!(i < reference_length1)) {
+#line 12 "moonshot-provisioning-common.vala"
 					break;
+#line 187 "moonshot-provisioning-common.c"
 				}
+#line 14 "moonshot-provisioning-common.vala"
 				if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) i), reference[i]) != 0) {
+#line 191 "moonshot-provisioning-common.c"
 					result = FALSE;
+#line 15 "moonshot-provisioning-common.vala"
 					return result;
+#line 195 "moonshot-provisioning-common.c"
 				}
 			}
 		}
 	}
 	result = TRUE;
+#line 18 "moonshot-provisioning-common.vala"
 	return result;
+#line 203 "moonshot-provisioning-common.c"
 }
 
 
+#line 21 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_always_confirm_handler (GSList* stack) {
+#line 209 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint always_confirm_path_length1;
 	gint _always_confirm_path_size_;
@@ -190,11 +215,15 @@ gboolean web_provisioning_always_confirm_handler (GSList* stack) {
 	always_confirm_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 5 + 1), _tmp0_[0] = g_strdup ("always-confirm"), _tmp0_[1] = g_strdup ("rule"), _tmp0_[2] = g_strdup ("selection-rules"), _tmp0_[3] = g_strdup ("identity"), _tmp0_[4] = g_strdup ("identities"), _tmp0_), always_confirm_path_length1 = 5, _always_confirm_path_size_ = always_confirm_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, always_confirm_path, always_confirm_path_length1);
 	always_confirm_path = (_vala_array_free (always_confirm_path, always_confirm_path_length1, (GDestroyNotify) g_free), NULL);
+#line 26 "moonshot-provisioning-common.vala"
 	return result;
+#line 221 "moonshot-provisioning-common.c"
 }
 
 
+#line 29 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_pattern_handler (GSList* stack) {
+#line 227 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint pattern_path_length1;
 	gint _pattern_path_size_;
@@ -204,11 +233,15 @@ gboolean web_provisioning_pattern_handler (GSList* stack) {
 	pattern_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 5 + 1), _tmp0_[0] = g_strdup ("pattern"), _tmp0_[1] = g_strdup ("rule"), _tmp0_[2] = g_strdup ("selection-rules"), _tmp0_[3] = g_strdup ("identity"), _tmp0_[4] = g_strdup ("identities"), _tmp0_), pattern_path_length1 = 5, _pattern_path_size_ = pattern_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, pattern_path, pattern_path_length1);
 	pattern_path = (_vala_array_free (pattern_path, pattern_path_length1, (GDestroyNotify) g_free), NULL);
+#line 34 "moonshot-provisioning-common.vala"
 	return result;
+#line 239 "moonshot-provisioning-common.c"
 }
 
 
+#line 37 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_server_cert_handler (GSList* stack) {
+#line 245 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint server_cert_path_length1;
 	gint _server_cert_path_size_;
@@ -218,11 +251,15 @@ gboolean web_provisioning_server_cert_handler (GSList* stack) {
 	server_cert_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 4 + 1), _tmp0_[0] = g_strdup ("server-cert"), _tmp0_[1] = g_strdup ("trust-anchor"), _tmp0_[2] = g_strdup ("identity"), _tmp0_[3] = g_strdup ("identities"), _tmp0_), server_cert_path_length1 = 4, _server_cert_path_size_ = server_cert_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, server_cert_path, server_cert_path_length1);
 	server_cert_path = (_vala_array_free (server_cert_path, server_cert_path_length1, (GDestroyNotify) g_free), NULL);
+#line 42 "moonshot-provisioning-common.vala"
 	return result;
+#line 257 "moonshot-provisioning-common.c"
 }
 
 
+#line 45 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_subject_alt_handler (GSList* stack) {
+#line 263 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint subject_alt_path_length1;
 	gint _subject_alt_path_size_;
@@ -232,11 +269,15 @@ gboolean web_provisioning_subject_alt_handler (GSList* stack) {
 	subject_alt_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 4 + 1), _tmp0_[0] = g_strdup ("subject-alt"), _tmp0_[1] = g_strdup ("trust-anchor"), _tmp0_[2] = g_strdup ("identity"), _tmp0_[3] = g_strdup ("identities"), _tmp0_), subject_alt_path_length1 = 4, _subject_alt_path_size_ = subject_alt_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, subject_alt_path, subject_alt_path_length1);
 	subject_alt_path = (_vala_array_free (subject_alt_path, subject_alt_path_length1, (GDestroyNotify) g_free), NULL);
+#line 50 "moonshot-provisioning-common.vala"
 	return result;
+#line 275 "moonshot-provisioning-common.c"
 }
 
 
+#line 53 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_subject_handler (GSList* stack) {
+#line 281 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint subject_path_length1;
 	gint _subject_path_size_;
@@ -246,11 +287,15 @@ gboolean web_provisioning_subject_handler (GSList* stack) {
 	subject_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 4 + 1), _tmp0_[0] = g_strdup ("subject"), _tmp0_[1] = g_strdup ("trust-anchor"), _tmp0_[2] = g_strdup ("identity"), _tmp0_[3] = g_strdup ("identities"), _tmp0_), subject_path_length1 = 4, _subject_path_size_ = subject_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, subject_path, subject_path_length1);
 	subject_path = (_vala_array_free (subject_path, subject_path_length1, (GDestroyNotify) g_free), NULL);
+#line 58 "moonshot-provisioning-common.vala"
 	return result;
+#line 293 "moonshot-provisioning-common.c"
 }
 
 
+#line 61 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_ca_cert_handler (GSList* stack) {
+#line 299 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint ca_path_length1;
 	gint _ca_path_size_;
@@ -260,11 +305,15 @@ gboolean web_provisioning_ca_cert_handler (GSList* stack) {
 	ca_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 4 + 1), _tmp0_[0] = g_strdup ("ca-cert"), _tmp0_[1] = g_strdup ("trust-anchor"), _tmp0_[2] = g_strdup ("identity"), _tmp0_[3] = g_strdup ("identities"), _tmp0_), ca_path_length1 = 4, _ca_path_size_ = ca_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, ca_path, ca_path_length1);
 	ca_path = (_vala_array_free (ca_path, ca_path_length1, (GDestroyNotify) g_free), NULL);
+#line 66 "moonshot-provisioning-common.vala"
 	return result;
+#line 311 "moonshot-provisioning-common.c"
 }
 
 
+#line 69 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_realm_handler (GSList* stack) {
+#line 317 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint realm_path_length1;
 	gint _realm_path_size_;
@@ -274,11 +323,15 @@ gboolean web_provisioning_realm_handler (GSList* stack) {
 	realm_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 3 + 1), _tmp0_[0] = g_strdup ("realm"), _tmp0_[1] = g_strdup ("identity"), _tmp0_[2] = g_strdup ("identities"), _tmp0_), realm_path_length1 = 3, _realm_path_size_ = realm_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, realm_path, realm_path_length1);
 	realm_path = (_vala_array_free (realm_path, realm_path_length1, (GDestroyNotify) g_free), NULL);
+#line 74 "moonshot-provisioning-common.vala"
 	return result;
+#line 329 "moonshot-provisioning-common.c"
 }
 
 
+#line 77 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_password_handler (GSList* stack) {
+#line 335 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint password_path_length1;
 	gint _password_path_size_;
@@ -288,11 +341,15 @@ gboolean web_provisioning_password_handler (GSList* stack) {
 	password_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 3 + 1), _tmp0_[0] = g_strdup ("password"), _tmp0_[1] = g_strdup ("identity"), _tmp0_[2] = g_strdup ("identities"), _tmp0_), password_path_length1 = 3, _password_path_size_ = password_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, password_path, password_path_length1);
 	password_path = (_vala_array_free (password_path, password_path_length1, (GDestroyNotify) g_free), NULL);
+#line 82 "moonshot-provisioning-common.vala"
 	return result;
+#line 347 "moonshot-provisioning-common.c"
 }
 
 
+#line 85 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_user_handler (GSList* stack) {
+#line 353 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint user_path_length1;
 	gint _user_path_size_;
@@ -302,11 +359,15 @@ gboolean web_provisioning_user_handler (GSList* stack) {
 	user_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 3 + 1), _tmp0_[0] = g_strdup ("user"), _tmp0_[1] = g_strdup ("identity"), _tmp0_[2] = g_strdup ("identities"), _tmp0_), user_path_length1 = 3, _user_path_size_ = user_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, user_path, user_path_length1);
 	user_path = (_vala_array_free (user_path, user_path_length1, (GDestroyNotify) g_free), NULL);
+#line 90 "moonshot-provisioning-common.vala"
 	return result;
+#line 365 "moonshot-provisioning-common.c"
 }
 
 
+#line 93 "moonshot-provisioning-common.vala"
 gboolean web_provisioning_display_name_handler (GSList* stack) {
+#line 371 "moonshot-provisioning-common.c"
 	gboolean result = FALSE;
 	gint display_name_path_length1;
 	gint _display_name_path_size_;
@@ -316,7 +377,9 @@ gboolean web_provisioning_display_name_handler (GSList* stack) {
 	display_name_path = (_tmp1_ = (_tmp0_ = g_new0 (char*, 3 + 1), _tmp0_[0] = g_strdup ("display-name"), _tmp0_[1] = g_strdup ("identity"), _tmp0_[2] = g_strdup ("identities"), _tmp0_), display_name_path_length1 = 3, _display_name_path_size_ = display_name_path_length1, _tmp1_);
 	result = web_provisioning_check_stack (stack, display_name_path, display_name_path_length1);
 	display_name_path = (_vala_array_free (display_name_path, display_name_path_length1, (GDestroyNotify) g_free), NULL);
+#line 98 "moonshot-provisioning-common.vala"
 	return result;
+#line 383 "moonshot-provisioning-common.c"
 }
 
 
@@ -359,10 +422,15 @@ static void _vala_Rule_array_free (Rule* array, gint array_length) {
 }
 
 
+#line 101 "moonshot-provisioning-common.vala"
 void web_provisioning_start_element_func (GMarkupParseContext* context, const char* element_name, char** attribute_names, int attribute_names_length1, char** attribute_values, int attribute_values_length1, GError** error) {
+#line 101 "moonshot-provisioning-common.vala"
 	g_return_if_fail (context != NULL);
+#line 101 "moonshot-provisioning-common.vala"
 	g_return_if_fail (element_name != NULL);
+#line 107 "moonshot-provisioning-common.vala"
 	if (_vala_strcmp0 (element_name, "identity") == 0) {
+#line 434 "moonshot-provisioning-common.c"
 		gint tmp_cards_length1;
 		gint _tmp_cards_size_;
 		IdCard** _tmp1_;
@@ -372,31 +440,52 @@ void web_provisioning_start_element_func (GMarkupParseContext* context, const ch
 		IdCard* _tmp5_;
 		IdCard* _tmp6_;
 		tmp_cards = (_tmp1_ = (_tmp0_ = web_provisioning_cards, (_tmp0_ == NULL) ? ((gpointer) _tmp0_) : _vala_array_dup4 (_tmp0_, web_provisioning_cards_length1)), tmp_cards_length1 = web_provisioning_cards_length1, _tmp_cards_size_ = tmp_cards_length1, _tmp1_);
+#line 111 "moonshot-provisioning-common.vala"
 		web_provisioning_cards = (_tmp2_ = g_new0 (IdCard*, (tmp_cards_length1 + 1) + 1), web_provisioning_cards = (_vala_array_free (web_provisioning_cards, web_provisioning_cards_length1, (GDestroyNotify) g_object_unref), NULL), web_provisioning_cards_length1 = tmp_cards_length1 + 1, _web_provisioning_cards_size_ = web_provisioning_cards_length1, _tmp2_);
+#line 446 "moonshot-provisioning-common.c"
 		{
 			gint i;
+#line 112 "moonshot-provisioning-common.vala"
 			i = 0;
+#line 451 "moonshot-provisioning-common.c"
 			{
 				gboolean _tmp3_;
+#line 112 "moonshot-provisioning-common.vala"
 				_tmp3_ = TRUE;
+#line 112 "moonshot-provisioning-common.vala"
 				while (TRUE) {
+#line 458 "moonshot-provisioning-common.c"
 					IdCard* _tmp4_;
+#line 112 "moonshot-provisioning-common.vala"
 					if (!_tmp3_) {
+#line 112 "moonshot-provisioning-common.vala"
 						i++;
+#line 464 "moonshot-provisioning-common.c"
 					}
+#line 112 "moonshot-provisioning-common.vala"
 					_tmp3_ = FALSE;
+#line 112 "moonshot-provisioning-common.vala"
 					if (!(i < tmp_cards_length1)) {
+#line 112 "moonshot-provisioning-common.vala"
 						break;
+#line 472 "moonshot-provisioning-common.c"
 					}
+#line 114 "moonshot-provisioning-common.vala"
 					web_provisioning_cards[i] = (_tmp4_ = _g_object_ref0 (tmp_cards[i]), _g_object_unref0 (web_provisioning_cards[i]), _tmp4_);
+#line 476 "moonshot-provisioning-common.c"
 				}
 			}
 		}
+#line 116 "moonshot-provisioning-common.vala"
 		web_provisioning_card = (_tmp5_ = id_card_new (), _g_object_unref0 (web_provisioning_card), _tmp5_);
+#line 117 "moonshot-provisioning-common.vala"
 		web_provisioning_cards[tmp_cards_length1] = (_tmp6_ = _g_object_ref0 (web_provisioning_card), _g_object_unref0 (web_provisioning_cards[tmp_cards_length1]), _tmp6_);
+#line 484 "moonshot-provisioning-common.c"
 		tmp_cards = (_vala_array_free (tmp_cards, tmp_cards_length1, (GDestroyNotify) g_object_unref), NULL);
 	} else {
+#line 119 "moonshot-provisioning-common.vala"
 		if (_vala_strcmp0 (element_name, "rule") == 0) {
+#line 489 "moonshot-provisioning-common.c"
 			gint tmp_rules_length1;
 			gint _tmp_rules_size_;
 			Rule* _tmp9_;
@@ -412,35 +501,56 @@ void web_provisioning_start_element_func (GMarkupParseContext* context, const ch
 			Rule *_tmp21_;
 			Rule _tmp22_;
 			tmp_rules = (_tmp9_ = (_tmp8_ = id_card_get_rules (web_provisioning_card, &_tmp7_), (_tmp8_ == NULL) ? ((gpointer) _tmp8_) : _vala_array_dup5 (_tmp8_, _tmp7_)), tmp_rules_length1 = _tmp7_, _tmp_rules_size_ = tmp_rules_length1, _tmp9_);
+#line 122 "moonshot-provisioning-common.vala"
 			_tmp11_ = (_tmp10_ = g_new0 (Rule, tmp_rules_length1 + 1), _tmp10__length1 = tmp_rules_length1 + 1, _tmp10_);
+#line 122 "moonshot-provisioning-common.vala"
 			id_card_set_rules (web_provisioning_card, _tmp11_, tmp_rules_length1 + 1);
+#line 509 "moonshot-provisioning-common.c"
 			_tmp10_ = (_vala_Rule_array_free (_tmp10_, _tmp10__length1), NULL);
 			{
 				gint i;
+#line 123 "moonshot-provisioning-common.vala"
 				i = 0;
+#line 515 "moonshot-provisioning-common.c"
 				{
 					gboolean _tmp12_;
+#line 123 "moonshot-provisioning-common.vala"
 					_tmp12_ = TRUE;
+#line 123 "moonshot-provisioning-common.vala"
 					while (TRUE) {
+#line 522 "moonshot-provisioning-common.c"
 						gint _tmp13_;
 						Rule _tmp14_ = {0};
 						gint _tmp15_;
 						Rule *_tmp16_;
 						Rule _tmp17_;
+#line 123 "moonshot-provisioning-common.vala"
 						if (!_tmp12_) {
+#line 123 "moonshot-provisioning-common.vala"
 							i++;
+#line 532 "moonshot-provisioning-common.c"
 						}
+#line 123 "moonshot-provisioning-common.vala"
 						_tmp12_ = FALSE;
+#line 123 "moonshot-provisioning-common.vala"
 						if (!(i < tmp_rules_length1)) {
+#line 123 "moonshot-provisioning-common.vala"
 							break;
+#line 540 "moonshot-provisioning-common.c"
 						}
+#line 125 "moonshot-provisioning-common.vala"
 						_tmp16_ = &id_card_get_rules (web_provisioning_card, &_tmp15_)[i];
+#line 125 "moonshot-provisioning-common.vala"
 						(*_tmp16_) = (_tmp17_ = (rule_copy (&tmp_rules[i], &_tmp14_), _tmp14_), rule_destroy (&(*_tmp16_)), _tmp17_);
+#line 546 "moonshot-provisioning-common.c"
 					}
 				}
 			}
+#line 128 "moonshot-provisioning-common.vala"
 			_tmp21_ = &id_card_get_rules (web_provisioning_card, &_tmp20_)[tmp_rules_length1];
+#line 128 "moonshot-provisioning-common.vala"
 			(*_tmp21_) = (_tmp22_ = (memset (&_tmp19_, 0, sizeof (Rule)), _tmp19_), rule_destroy (&(*_tmp21_)), _tmp22_);
+#line 554 "moonshot-provisioning-common.c"
 			tmp_rules = (_vala_Rule_array_free (tmp_rules, tmp_rules_length1), NULL);
 		}
 	}
@@ -458,51 +568,93 @@ static char** _vala_array_dup6 (char** self, int length) {
 }
 
 
+#line 132 "moonshot-provisioning-common.vala"
 void web_provisioning_text_element_func (GMarkupParseContext* context, const char* text, gsize text_len, GError** error) {
+#line 574 "moonshot-provisioning-common.c"
 	GSList* stack;
 	gboolean _tmp0_ = FALSE;
+#line 132 "moonshot-provisioning-common.vala"
 	g_return_if_fail (context != NULL);
+#line 132 "moonshot-provisioning-common.vala"
 	g_return_if_fail (text != NULL);
+#line 137 "moonshot-provisioning-common.vala"
 	stack = g_markup_parse_context_get_element_stack (context);
+#line 139 "moonshot-provisioning-common.vala"
 	if (text_len < 1) {
+#line 140 "moonshot-provisioning-common.vala"
 		return;
+#line 587 "moonshot-provisioning-common.c"
 	}
+#line 142 "moonshot-provisioning-common.vala"
 	if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "display-name") == 0) {
+#line 142 "moonshot-provisioning-common.vala"
 		_tmp0_ = web_provisioning_display_name_handler (stack);
+#line 593 "moonshot-provisioning-common.c"
 	} else {
+#line 142 "moonshot-provisioning-common.vala"
 		_tmp0_ = FALSE;
+#line 597 "moonshot-provisioning-common.c"
 	}
+#line 142 "moonshot-provisioning-common.vala"
 	if (_tmp0_) {
+#line 144 "moonshot-provisioning-common.vala"
 		id_card_set_display_name (web_provisioning_card, text);
+#line 603 "moonshot-provisioning-common.c"
 	} else {
 		gboolean _tmp1_ = FALSE;
+#line 146 "moonshot-provisioning-common.vala"
 		if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "user") == 0) {
+#line 146 "moonshot-provisioning-common.vala"
 			_tmp1_ = web_provisioning_user_handler (stack);
+#line 610 "moonshot-provisioning-common.c"
 		} else {
+#line 146 "moonshot-provisioning-common.vala"
 			_tmp1_ = FALSE;
+#line 614 "moonshot-provisioning-common.c"
 		}
+#line 146 "moonshot-provisioning-common.vala"
 		if (_tmp1_) {
+#line 148 "moonshot-provisioning-common.vala"
 			id_card_set_username (web_provisioning_card, text);
+#line 620 "moonshot-provisioning-common.c"
 		} else {
 			gboolean _tmp2_ = FALSE;
+#line 150 "moonshot-provisioning-common.vala"
 			if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "password") == 0) {
+#line 150 "moonshot-provisioning-common.vala"
 				_tmp2_ = web_provisioning_password_handler (stack);
+#line 627 "moonshot-provisioning-common.c"
 			} else {
+#line 150 "moonshot-provisioning-common.vala"
 				_tmp2_ = FALSE;
+#line 631 "moonshot-provisioning-common.c"
 			}
+#line 150 "moonshot-provisioning-common.vala"
 			if (_tmp2_) {
+#line 152 "moonshot-provisioning-common.vala"
 				id_card_set_password (web_provisioning_card, text);
+#line 637 "moonshot-provisioning-common.c"
 			} else {
 				gboolean _tmp3_ = FALSE;
+#line 154 "moonshot-provisioning-common.vala"
 				if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "realm") == 0) {
+#line 154 "moonshot-provisioning-common.vala"
 					_tmp3_ = web_provisioning_realm_handler (stack);
+#line 644 "moonshot-provisioning-common.c"
 				} else {
+#line 154 "moonshot-provisioning-common.vala"
 					_tmp3_ = FALSE;
+#line 648 "moonshot-provisioning-common.c"
 				}
+#line 154 "moonshot-provisioning-common.vala"
 				if (_tmp3_) {
+#line 156 "moonshot-provisioning-common.vala"
 					id_card_set_issuer (web_provisioning_card, text);
+#line 654 "moonshot-provisioning-common.c"
 				} else {
+#line 158 "moonshot-provisioning-common.vala"
 					if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "service") == 0) {
+#line 658 "moonshot-provisioning-common.c"
 						gint services_length1;
 						gint _services_size_;
 						char** _tmp6_;
@@ -517,107 +669,187 @@ void web_provisioning_text_element_func (GMarkupParseContext* context, const cha
 						char* *_tmp16_;
 						char* _tmp17_;
 						services = (_tmp6_ = (_tmp5_ = id_card_get_services (web_provisioning_card, &_tmp4_), (_tmp5_ == NULL) ? ((gpointer) _tmp5_) : _vala_array_dup6 (_tmp5_, _tmp4_)), services_length1 = _tmp4_, _services_size_ = services_length1, _tmp6_);
+#line 161 "moonshot-provisioning-common.vala"
 						_tmp8_ = (_tmp7_ = g_new0 (char*, (services_length1 + 1) + 1), _tmp7__length1 = services_length1 + 1, _tmp7_);
+#line 161 "moonshot-provisioning-common.vala"
 						id_card_set_services (web_provisioning_card, _tmp8_, services_length1 + 1);
+#line 677 "moonshot-provisioning-common.c"
 						_tmp7_ = (_vala_array_free (_tmp7_, _tmp7__length1, (GDestroyNotify) g_free), NULL);
 						{
 							gint i;
+#line 162 "moonshot-provisioning-common.vala"
 							i = 0;
+#line 683 "moonshot-provisioning-common.c"
 							{
 								gboolean _tmp9_;
+#line 162 "moonshot-provisioning-common.vala"
 								_tmp9_ = TRUE;
+#line 162 "moonshot-provisioning-common.vala"
 								while (TRUE) {
+#line 690 "moonshot-provisioning-common.c"
 									gint _tmp10_;
 									gint _tmp11_;
 									char* *_tmp12_;
 									char* _tmp13_;
+#line 162 "moonshot-provisioning-common.vala"
 									if (!_tmp9_) {
+#line 162 "moonshot-provisioning-common.vala"
 										i++;
+#line 699 "moonshot-provisioning-common.c"
 									}
+#line 162 "moonshot-provisioning-common.vala"
 									_tmp9_ = FALSE;
+#line 162 "moonshot-provisioning-common.vala"
 									if (!(i < services_length1)) {
+#line 162 "moonshot-provisioning-common.vala"
 										break;
+#line 707 "moonshot-provisioning-common.c"
 									}
+#line 164 "moonshot-provisioning-common.vala"
 									_tmp12_ = &id_card_get_services (web_provisioning_card, &_tmp11_)[i];
+#line 164 "moonshot-provisioning-common.vala"
 									(*_tmp12_) = (_tmp13_ = g_strdup (services[i]), _g_free0 ((*_tmp12_)), _tmp13_);
+#line 713 "moonshot-provisioning-common.c"
 								}
 							}
 						}
+#line 166 "moonshot-provisioning-common.vala"
 						_tmp16_ = &id_card_get_services (web_provisioning_card, &_tmp15_)[services_length1];
+#line 166 "moonshot-provisioning-common.vala"
 						(*_tmp16_) = (_tmp17_ = g_strdup (text), _g_free0 ((*_tmp16_)), _tmp17_);
+#line 721 "moonshot-provisioning-common.c"
 						services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
 					} else {
 						gboolean _tmp18_ = FALSE;
+#line 169 "moonshot-provisioning-common.vala"
 						if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "pattern") == 0) {
+#line 169 "moonshot-provisioning-common.vala"
 							_tmp18_ = web_provisioning_pattern_handler (stack);
+#line 729 "moonshot-provisioning-common.c"
 						} else {
+#line 169 "moonshot-provisioning-common.vala"
 							_tmp18_ = FALSE;
+#line 733 "moonshot-provisioning-common.c"
 						}
+#line 169 "moonshot-provisioning-common.vala"
 						if (_tmp18_) {
+#line 737 "moonshot-provisioning-common.c"
 							gint _tmp19_;
 							gint _tmp20_;
 							char* *_tmp21_;
 							char* _tmp22_;
+#line 171 "moonshot-provisioning-common.vala"
 							_tmp21_ = &id_card_get_rules (web_provisioning_card, &_tmp19_)[_tmp20_ - 1].pattern;
+#line 171 "moonshot-provisioning-common.vala"
 							(*_tmp21_) = (_tmp22_ = g_strdup (text), _g_free0 ((*_tmp21_)), _tmp22_);
+#line 746 "moonshot-provisioning-common.c"
 						} else {
 							gboolean _tmp23_ = FALSE;
+#line 173 "moonshot-provisioning-common.vala"
 							if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "always-confirm") == 0) {
+#line 173 "moonshot-provisioning-common.vala"
 								_tmp23_ = web_provisioning_always_confirm_handler (stack);
+#line 753 "moonshot-provisioning-common.c"
 							} else {
+#line 173 "moonshot-provisioning-common.vala"
 								_tmp23_ = FALSE;
+#line 757 "moonshot-provisioning-common.c"
 							}
+#line 173 "moonshot-provisioning-common.vala"
 							if (_tmp23_) {
+#line 761 "moonshot-provisioning-common.c"
 								gboolean _tmp24_ = FALSE;
+#line 175 "moonshot-provisioning-common.vala"
 								if (_vala_strcmp0 (text, "true") == 0) {
+#line 175 "moonshot-provisioning-common.vala"
 									_tmp24_ = TRUE;
+#line 767 "moonshot-provisioning-common.c"
 								} else {
+#line 175 "moonshot-provisioning-common.vala"
 									_tmp24_ = _vala_strcmp0 (text, "false") == 0;
+#line 771 "moonshot-provisioning-common.c"
 								}
+#line 175 "moonshot-provisioning-common.vala"
 								if (_tmp24_) {
+#line 775 "moonshot-provisioning-common.c"
 									gint _tmp25_;
 									gint _tmp26_;
 									char* *_tmp27_;
 									char* _tmp28_;
+#line 176 "moonshot-provisioning-common.vala"
 									_tmp27_ = &id_card_get_rules (web_provisioning_card, &_tmp25_)[_tmp26_ - 1].always_confirm;
+#line 176 "moonshot-provisioning-common.vala"
 									(*_tmp27_) = (_tmp28_ = g_strdup (text), _g_free0 ((*_tmp27_)), _tmp28_);
+#line 784 "moonshot-provisioning-common.c"
 								}
 							} else {
 								gboolean _tmp29_ = FALSE;
+#line 179 "moonshot-provisioning-common.vala"
 								if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "ca-cert") == 0) {
+#line 179 "moonshot-provisioning-common.vala"
 									_tmp29_ = web_provisioning_ca_cert_handler (stack);
+#line 792 "moonshot-provisioning-common.c"
 								} else {
+#line 179 "moonshot-provisioning-common.vala"
 									_tmp29_ = FALSE;
+#line 796 "moonshot-provisioning-common.c"
 								}
+#line 179 "moonshot-provisioning-common.vala"
 								if (_tmp29_) {
+#line 181 "moonshot-provisioning-common.vala"
 									trust_anchor_set_ca_cert (id_card_get_trust_anchor (web_provisioning_card), text);
+#line 802 "moonshot-provisioning-common.c"
 								} else {
 									gboolean _tmp30_ = FALSE;
+#line 183 "moonshot-provisioning-common.vala"
 									if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "subject") == 0) {
+#line 183 "moonshot-provisioning-common.vala"
 										_tmp30_ = web_provisioning_subject_handler (stack);
+#line 809 "moonshot-provisioning-common.c"
 									} else {
+#line 183 "moonshot-provisioning-common.vala"
 										_tmp30_ = FALSE;
+#line 813 "moonshot-provisioning-common.c"
 									}
+#line 183 "moonshot-provisioning-common.vala"
 									if (_tmp30_) {
+#line 185 "moonshot-provisioning-common.vala"
 										trust_anchor_set_subject (id_card_get_trust_anchor (web_provisioning_card), text);
+#line 819 "moonshot-provisioning-common.c"
 									} else {
 										gboolean _tmp31_ = FALSE;
+#line 187 "moonshot-provisioning-common.vala"
 										if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "subject-alt") == 0) {
+#line 187 "moonshot-provisioning-common.vala"
 											_tmp31_ = web_provisioning_subject_alt_handler (stack);
+#line 826 "moonshot-provisioning-common.c"
 										} else {
+#line 187 "moonshot-provisioning-common.vala"
 											_tmp31_ = FALSE;
+#line 830 "moonshot-provisioning-common.c"
 										}
+#line 187 "moonshot-provisioning-common.vala"
 										if (_tmp31_) {
+#line 189 "moonshot-provisioning-common.vala"
 											trust_anchor_set_subject_alt (id_card_get_trust_anchor (web_provisioning_card), text);
+#line 836 "moonshot-provisioning-common.c"
 										} else {
 											gboolean _tmp32_ = FALSE;
+#line 191 "moonshot-provisioning-common.vala"
 											if (_vala_strcmp0 ((const char*) g_slist_nth_data (stack, (guint) 0), "server-cert") == 0) {
+#line 191 "moonshot-provisioning-common.vala"
 												_tmp32_ = web_provisioning_server_cert_handler (stack);
+#line 843 "moonshot-provisioning-common.c"
 											} else {
+#line 191 "moonshot-provisioning-common.vala"
 												_tmp32_ = FALSE;
+#line 847 "moonshot-provisioning-common.c"
 											}
+#line 191 "moonshot-provisioning-common.vala"
 											if (_tmp32_) {
+#line 193 "moonshot-provisioning-common.vala"
 												trust_anchor_set_server_cert (id_card_get_trust_anchor (web_provisioning_card), text);
+#line 853 "moonshot-provisioning-common.c"
 											}
 										}
 									}
@@ -632,53 +864,77 @@ void web_provisioning_text_element_func (GMarkupParseContext* context, const cha
 }
 
 
+#line 101 "moonshot-provisioning-common.vala"
 static void _web_provisioning_start_element_func_gmarkup_parser_start_element_func (GMarkupParseContext* context, const char* element_name, char** attribute_names, char** attribute_values, gpointer self, GError** error) {
+#line 870 "moonshot-provisioning-common.c"
 	web_provisioning_start_element_func (context, element_name, attribute_names, _vala_array_length (attribute_names), attribute_values, _vala_array_length (attribute_values), error);
 }
 
 
+#line 132 "moonshot-provisioning-common.vala"
 static void _web_provisioning_text_element_func_gmarkup_parser_text_func (GMarkupParseContext* context, const char* text, gsize text_len, gpointer self, GError** error) {
+#line 877 "moonshot-provisioning-common.c"
 	web_provisioning_text_element_func (context, text, text_len, error);
 }
 
 
+#line 202 "moonshot-provisioning-common.vala"
 WebProvisioningParser* web_provisioning_parser_construct (GType object_type, const char* path) {
+#line 884 "moonshot-provisioning-common.c"
 	WebProvisioningParser* self = (WebProvisioningParser*) g_type_create_instance (object_type);
 	char* _tmp0_;
 	char* _tmp1_;
 	GFile* file;
 	GMarkupParser _tmp8_ = {0};
 	GError * _inner_error_ = NULL;
+#line 202 "moonshot-provisioning-common.vala"
 	g_return_val_if_fail (path != NULL, NULL);
+#line 204 "moonshot-provisioning-common.vala"
 	self->priv->text = (_tmp0_ = g_strdup (""), _g_free0 (self->priv->text), _tmp0_);
+#line 205 "moonshot-provisioning-common.vala"
 	self->priv->path = (_tmp1_ = g_strdup (path), _g_free0 (self->priv->path), _tmp1_);
+#line 207 "moonshot-provisioning-common.vala"
 	file = g_file_new_for_path (path);
+#line 899 "moonshot-provisioning-common.c"
 	{
 		GFileInputStream* _tmp2_;
 		GFileInputStream* _tmp3_;
 		GDataInputStream* _tmp4_;
 		GDataInputStream* dis;
 		char* line;
+#line 211 "moonshot-provisioning-common.vala"
 		_tmp2_ = g_file_read (file, NULL, &_inner_error_);
+#line 908 "moonshot-provisioning-common.c"
 		if (_inner_error_ != NULL) {
 			goto __catch5_g_error;
 		}
+#line 211 "moonshot-provisioning-common.vala"
 		dis = (_tmp4_ = g_data_input_stream_new ((GInputStream*) (_tmp3_ = _tmp2_)), _g_object_unref0 (_tmp3_), _tmp4_);
+#line 914 "moonshot-provisioning-common.c"
 		line = NULL;
+#line 213 "moonshot-provisioning-common.vala"
 		while (TRUE) {
+#line 918 "moonshot-provisioning-common.c"
 			char* _tmp5_;
 			char* _tmp6_;
 			char* _tmp7_;
+#line 213 "moonshot-provisioning-common.vala"
 			_tmp5_ = g_data_input_stream_read_line (dis, NULL, NULL, &_inner_error_);
+#line 924 "moonshot-provisioning-common.c"
 			if (_inner_error_ != NULL) {
 				_g_free0 (line);
 				_g_object_unref0 (dis);
 				goto __catch5_g_error;
 			}
+#line 213 "moonshot-provisioning-common.vala"
 			if (!((line = (_tmp6_ = _tmp5_, _g_free0 (line), _tmp6_)) != NULL)) {
+#line 213 "moonshot-provisioning-common.vala"
 				break;
+#line 934 "moonshot-provisioning-common.c"
 			}
+#line 214 "moonshot-provisioning-common.vala"
 			self->priv->text = (_tmp7_ = g_strconcat (self->priv->text, line, NULL), _g_free0 (self->priv->text), _tmp7_);
+#line 938 "moonshot-provisioning-common.c"
 		}
 		_g_free0 (line);
 		_g_object_unref0 (dis);
@@ -690,7 +946,9 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
+#line 218 "moonshot-provisioning-common.vala"
 			g_error ("moonshot-provisioning-common.vala:218: Could not retreive file size");
+#line 952 "moonshot-provisioning-common.c"
 			_g_error_free0 (e);
 		}
 	}
@@ -701,14 +959,19 @@ WebProvisioningParser* web_provisioning_parser_construct (GType object_type, con
 		g_clear_error (&_inner_error_);
 		return NULL;
 	}
+#line 221 "moonshot-provisioning-common.vala"
 	self->priv->parser = (_tmp8_.start_element = _web_provisioning_start_element_func_gmarkup_parser_start_element_func, _tmp8_.end_element = NULL, _tmp8_.text = _web_provisioning_text_element_func_gmarkup_parser_text_func, _tmp8_.passthrough = NULL, _tmp8_.error = NULL, _tmp8_);
+#line 965 "moonshot-provisioning-common.c"
 	_g_object_unref0 (file);
 	return self;
 }
 
 
+#line 202 "moonshot-provisioning-common.vala"
 WebProvisioningParser* web_provisioning_parser_new (const char* path) {
+#line 202 "moonshot-provisioning-common.vala"
 	return web_provisioning_parser_construct (WEB_PROVISIONING_TYPE_PARSER, path);
+#line 975 "moonshot-provisioning-common.c"
 }
 
 
@@ -716,17 +979,26 @@ static glong string_get_length (const char* self) {
 	glong result;
 	g_return_val_if_fail (self != NULL, 0L);
 	result = g_utf8_strlen (self, (gssize) (-1));
+#line 1194 "glib-2.0.vapi"
 	return result;
+#line 985 "moonshot-provisioning-common.c"
 }
 
 
+#line 224 "moonshot-provisioning-common.vala"
 void web_provisioning_parser_parse (WebProvisioningParser* self) {
+#line 991 "moonshot-provisioning-common.c"
 	GMarkupParseContext* ctx;
 	GError * _inner_error_ = NULL;
+#line 224 "moonshot-provisioning-common.vala"
 	g_return_if_fail (self != NULL);
+#line 227 "moonshot-provisioning-common.vala"
 	ctx = g_markup_parse_context_new (&self->priv->parser, 0, NULL, NULL);
+#line 998 "moonshot-provisioning-common.c"
 	{
+#line 231 "moonshot-provisioning-common.vala"
 		g_markup_parse_context_parse (ctx, self->priv->text, (gssize) string_get_length (self->priv->text), &_inner_error_);
+#line 1002 "moonshot-provisioning-common.c"
 		if (_inner_error_ != NULL) {
 			goto __catch6_g_error;
 		}
@@ -738,8 +1010,10 @@ void web_provisioning_parser_parse (WebProvisioningParser* self) {
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
+#line 235 "moonshot-provisioning-common.vala"
 			g_error ("moonshot-provisioning-common.vala:235: Could not parse %s, invalid con" \
 "tent", self->priv->path);
+#line 1016 "moonshot-provisioning-common.c"
 			_g_error_free0 (e);
 		}
 	}

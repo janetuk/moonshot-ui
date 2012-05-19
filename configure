@@ -633,7 +633,7 @@ PACKAGE_TARNAME='moonshot-ui'
 PACKAGE_VERSION='0.1'
 PACKAGE_STRING='Moonshot-ui 0.1'
 PACKAGE_BUGREPORT='moonshot-community@jiscmail.ac.uk'
-PACKAGE_URL=''
+PACKAGE_URL='http://www.project-moonshot.org/'
 
 ac_unique_file="configure.ac"
 # Factoring default headers for most tests.
@@ -1571,6 +1571,7 @@ Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
 
 Report bugs to <moonshot-community@jiscmail.ac.uk>.
+Moonshot-ui home page: <http://www.project-moonshot.org/>.
 _ACEOF
 ac_status=$?
 fi
@@ -2259,6 +2260,10 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
 ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
 ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
+
+
+# Remove this when we can depend on autoconf >= 2.64
+PACKAGE_URL=http://www.project-moonshot.org/
 
 
 ac_config_headers="$ac_config_headers config.h"
@@ -16816,7 +16821,8 @@ $config_headers
 Configuration commands:
 $config_commands
 
-Report bugs to <moonshot-community@jiscmail.ac.uk>."
+Report bugs to <moonshot-community@jiscmail.ac.uk>.
+Moonshot-ui home page: <http://www.project-moonshot.org/>."
 
 _ACEOF
 cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1

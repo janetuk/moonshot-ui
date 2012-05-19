@@ -57,7 +57,6 @@ typedef struct _MoonshotServerClass MoonshotServerClass;
 #define _g_object_unref0(var) ((var == NULL) ? NULL : (var = (g_object_unref (var), NULL)))
 #define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 typedef struct _ParamSpecIdentityManagerApp ParamSpecIdentityManagerApp;
-#define _g_free0(var) (var = (g_free (var), NULL))
 #define _identity_manager_app_unref0(var) ((var == NULL) ? NULL : (var = (identity_manager_app_unref (var), NULL)))
 
 struct _IdentityManagerApp {
@@ -122,35 +121,56 @@ gint _vala_main (char** args, int args_length1);
 
 
 
+#line 25 "moonshot-identity-manager-app.vala"
 void identity_manager_app_show (IdentityManagerApp* self) {
+#line 25 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
+#line 26 "moonshot-identity-manager-app.vala"
 	gtk_widget_show ((GtkWidget*) self->priv->view);
+#line 131 "moonshot-identity-manager-app.c"
 }
 
 
+#line 29 "moonshot-identity-manager-app.vala"
 IdentityManagerApp* identity_manager_app_construct (GType object_type) {
+#line 137 "moonshot-identity-manager-app.c"
 	IdentityManagerApp* self = (IdentityManagerApp*) g_type_create_instance (object_type);
 	IdentityManagerModel* _tmp0_;
 	IdentityManagerView* _tmp1_;
+#line 30 "moonshot-identity-manager-app.vala"
 	self->model = (_tmp0_ = identity_manager_model_new (self), _g_object_unref0 (self->model), _tmp0_);
+#line 31 "moonshot-identity-manager-app.vala"
 	self->priv->view = (_tmp1_ = g_object_ref_sink (identity_manager_view_new (self)), _g_object_unref0 (self->priv->view), _tmp1_);
+#line 32 "moonshot-identity-manager-app.vala"
 	identity_manager_app_init_ipc_server (self);
+#line 43 "moonshot-identity-manager-app.vala"
 	gtk_widget_show ((GtkWidget*) self->priv->view);
+#line 149 "moonshot-identity-manager-app.c"
 	return self;
 }
 
 
+#line 29 "moonshot-identity-manager-app.vala"
 IdentityManagerApp* identity_manager_app_new (void) {
+#line 29 "moonshot-identity-manager-app.vala"
 	return identity_manager_app_construct (TYPE_IDENTITY_MANAGER_APP);
+#line 158 "moonshot-identity-manager-app.c"
 }
 
 
+#line 78 "moonshot-identity-manager-app.vala"
 static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBusConnection* conn) {
+#line 164 "moonshot-identity-manager-app.c"
 	GError * _inner_error_ = NULL;
+#line 78 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
+#line 78 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
+#line 170 "moonshot-identity-manager-app.c"
 	{
+#line 81 "moonshot-identity-manager-app.vala"
 		moonshot_server_register_object (self->priv->ipc_server, conn, "/org/janet/moonshot", &_inner_error_);
+#line 174 "moonshot-identity-manager-app.c"
 		if (_inner_error_ != NULL) {
 			goto __catch0_g_error;
 		}
@@ -162,7 +182,9 @@ static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBu
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
+#line 85 "moonshot-identity-manager-app.vala"
 			fprintf (stderr, "%s\n", e->message);
+#line 188 "moonshot-identity-manager-app.c"
 			_g_error_free0 (e);
 		}
 	}
@@ -175,39 +197,60 @@ static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBu
 }
 
 
+#line 78 "moonshot-identity-manager-app.vala"
 static void _identity_manager_app_bus_acquired_cb_gbus_acquired_callback (GDBusConnection* connection, const char* name, gpointer self) {
+#line 203 "moonshot-identity-manager-app.c"
 	identity_manager_app_bus_acquired_cb (self, connection);
 }
 
 
+#line 96 "moonshot-identity-manager-app.vala"
 static void _lambda6_ (GDBusConnection* conn, const char* name, IdentityManagerApp* self) {
+#line 96 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
+#line 96 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (name != NULL);
+#line 214 "moonshot-identity-manager-app.c"
 }
 
 
+#line 96 "moonshot-identity-manager-app.vala"
 static void __lambda6__gbus_name_acquired_callback (GDBusConnection* connection, const char* name, gpointer self) {
+#line 220 "moonshot-identity-manager-app.c"
 	_lambda6_ (connection, name, self);
 }
 
 
+#line 97 "moonshot-identity-manager-app.vala"
 static void _lambda7_ (GDBusConnection* conn, const char* name, IdentityManagerApp* self) {
+#line 97 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
+#line 97 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (name != NULL);
-	g_error ("moonshot-identity-manager-app.vala:79: Couldn't own name %s on DBus.", name);
+#line 98 "moonshot-identity-manager-app.vala"
+	g_error ("moonshot-identity-manager-app.vala:98: Couldn't own name %s on DBus.", name);
+#line 233 "moonshot-identity-manager-app.c"
 }
 
 
+#line 97 "moonshot-identity-manager-app.vala"
 static void __lambda7__gbus_name_lost_callback (GDBusConnection* connection, const char* name, gpointer self) {
+#line 239 "moonshot-identity-manager-app.c"
 	_lambda7_ (connection, name, self);
 }
 
 
+#line 89 "moonshot-identity-manager-app.vala"
 static void identity_manager_app_init_ipc_server (IdentityManagerApp* self) {
+#line 246 "moonshot-identity-manager-app.c"
 	MoonshotServer* _tmp0_;
+#line 89 "moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
+#line 91 "moonshot-identity-manager-app.vala"
 	self->priv->ipc_server = (_tmp0_ = moonshot_server_new ((GtkWindow*) self->priv->view), _g_object_unref0 (self->priv->ipc_server), _tmp0_);
+#line 92 "moonshot-identity-manager-app.vala"
 	g_bus_own_name_with_closures (G_BUS_TYPE_SESSION, "org.janet.Moonshot", G_BUS_NAME_OWNER_FLAGS_NONE, (GClosure*) g_cclosure_new ((GCallback) _identity_manager_app_bus_acquired_cb_gbus_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda6__gbus_name_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref), (GClosure*) g_cclosure_new ((GCallback) __lambda7__gbus_name_lost_callback, identity_manager_app_ref (self), identity_manager_app_unref));
+#line 254 "moonshot-identity-manager-app.c"
 }
 
 
@@ -375,41 +418,41 @@ void identity_manager_app_unref (gpointer instance) {
 }
 
 
+#line 105 "moonshot-identity-manager-app.vala"
 gint _vala_main (char** args, int args_length1) {
+#line 424 "moonshot-identity-manager-app.c"
 	gint result = 0;
 	IdentityManagerApp* app;
+#line 106 "moonshot-identity-manager-app.vala"
 	gtk_init (&args_length1, &args);
-	fprintf (stdout, "Hello\n");
-	{
-		char** arg_collection;
-		int arg_collection_length1;
-		int arg_it;
-		arg_collection = args;
-		arg_collection_length1 = args_length1;
-		for (arg_it = 0; arg_it < args_length1; arg_it = arg_it + 1) {
-			char* arg;
-			arg = g_strdup (arg_collection[arg_it]);
-			{
-				fprintf (stdout, "arg %s\n", arg);
-				_g_free0 (arg);
-			}
-		}
-	}
+#line 115 "moonshot-identity-manager-app.vala"
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+#line 116 "moonshot-identity-manager-app.vala"
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+#line 117 "moonshot-identity-manager-app.vala"
 	textdomain (GETTEXT_PACKAGE);
+#line 120 "moonshot-identity-manager-app.vala"
 	app = identity_manager_app_new ();
+#line 122 "moonshot-identity-manager-app.vala"
 	identity_manager_app_show (app);
+#line 124 "moonshot-identity-manager-app.vala"
 	gtk_main ();
+#line 441 "moonshot-identity-manager-app.c"
 	result = 0;
 	_identity_manager_app_unref0 (app);
+#line 126 "moonshot-identity-manager-app.vala"
 	return result;
+#line 446 "moonshot-identity-manager-app.c"
 }
 
 
+#line 105 "moonshot-identity-manager-app.vala"
 int main (int argc, char ** argv) {
+#line 105 "moonshot-identity-manager-app.vala"
 	g_type_init ();
+#line 105 "moonshot-identity-manager-app.vala"
 	return _vala_main (argv, argc);
+#line 456 "moonshot-identity-manager-app.c"
 }
 
 

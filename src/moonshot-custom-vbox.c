@@ -137,68 +137,111 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 8 "moonshot-custom-vbox.vala"
 CustomVBox* custom_vbox_construct (GType object_type, IdentityManagerView* window, gboolean homogeneous, gint spacing) {
+#line 143 "moonshot-custom-vbox.c"
 	CustomVBox * self;
 	IdentityManagerView* _tmp0_;
+#line 8 "moonshot-custom-vbox.vala"
 	g_return_val_if_fail (window != NULL, NULL);
+#line 148 "moonshot-custom-vbox.c"
 	self = g_object_newv (object_type, 0, NULL);
+#line 10 "moonshot-custom-vbox.vala"
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (window), _g_object_unref0 (self->priv->main_window), _tmp0_);
+#line 11 "moonshot-custom-vbox.vala"
 	gtk_box_set_homogeneous ((GtkBox*) self, homogeneous);
+#line 12 "moonshot-custom-vbox.vala"
 	gtk_box_set_spacing ((GtkBox*) self, spacing);
+#line 156 "moonshot-custom-vbox.c"
 	return self;
 }
 
 
+#line 8 "moonshot-custom-vbox.vala"
 CustomVBox* custom_vbox_new (IdentityManagerView* window, gboolean homogeneous, gint spacing) {
+#line 8 "moonshot-custom-vbox.vala"
 	return custom_vbox_construct (TYPE_CUSTOM_VBOX, window, homogeneous, spacing);
+#line 165 "moonshot-custom-vbox.c"
 }
 
 
+#line 15 "moonshot-custom-vbox.vala"
 void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card_widget) {
+#line 171 "moonshot-custom-vbox.c"
 	GList* list;
 	gboolean _tmp0_ = FALSE;
+#line 15 "moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
+#line 15 "moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 17 "moonshot-custom-vbox.vala"
 	list = gtk_container_get_children ((GtkContainer*) self);
+#line 180 "moonshot-custom-vbox.c"
 	{
 		GList* id_card_collection;
 		GList* id_card_it;
+#line 18 "moonshot-custom-vbox.vala"
 		id_card_collection = list;
+#line 186 "moonshot-custom-vbox.c"
 		for (id_card_it = id_card_collection; id_card_it != NULL; id_card_it = id_card_it->next) {
 			GtkWidget* id_card;
+#line 18 "moonshot-custom-vbox.vala"
 			id_card = _g_object_ref0 ((GtkWidget*) id_card_it->data);
+#line 191 "moonshot-custom-vbox.c"
 			{
+#line 20 "moonshot-custom-vbox.vala"
 				if (id_card != GTK_WIDGET (id_card_widget)) {
+#line 21 "moonshot-custom-vbox.vala"
 					id_card_widget_collapse (ID_CARD_WIDGET (id_card));
+#line 197 "moonshot-custom-vbox.c"
 				}
 				_g_object_unref0 (id_card);
 			}
 		}
 	}
+#line 23 "moonshot-custom-vbox.vala"
 	custom_vbox_set_current_idcard (self, id_card_widget);
+#line 25 "moonshot-custom-vbox.vala"
 	if (self->priv->_current_idcard != NULL) {
+#line 25 "moonshot-custom-vbox.vala"
 		_tmp0_ = self->priv->main_window->request_queue->length > 0;
+#line 209 "moonshot-custom-vbox.c"
 	} else {
+#line 25 "moonshot-custom-vbox.vala"
 		_tmp0_ = FALSE;
+#line 213 "moonshot-custom-vbox.c"
 	}
+#line 25 "moonshot-custom-vbox.vala"
 	if (_tmp0_) {
+#line 26 "moonshot-custom-vbox.vala"
 		gtk_widget_set_sensitive ((GtkWidget*) id_card_widget_get_send_button (self->priv->_current_idcard), TRUE);
+#line 219 "moonshot-custom-vbox.c"
 	}
 	_g_list_free0 (list);
 }
 
 
+#line 29 "moonshot-custom-vbox.vala"
 void custom_vbox_add_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget) {
+#line 29 "moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
+#line 29 "moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 31 "moonshot-custom-vbox.vala"
 	gtk_box_pack_start ((GtkBox*) self, (GtkWidget*) id_card_widget, FALSE, FALSE, 0);
+#line 233 "moonshot-custom-vbox.c"
 }
 
 
+#line 34 "moonshot-custom-vbox.vala"
 void custom_vbox_remove_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget) {
+#line 34 "moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
+#line 34 "moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
+#line 36 "moonshot-custom-vbox.vala"
 	gtk_container_remove ((GtkContainer*) self, (GtkWidget*) id_card_widget);
+#line 245 "moonshot-custom-vbox.c"
 }
 
 
@@ -206,7 +249,9 @@ IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self) {
 	IdCardWidget* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_current_idcard;
+#line 5 "moonshot-custom-vbox.vala"
 	return result;
+#line 255 "moonshot-custom-vbox.c"
 }
 
 

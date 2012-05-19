@@ -20,14 +20,21 @@ GdkPixbuf* find_icon (const char* name, gint size);
 
 
 
+#line 5 "moonshot-utils.vala"
 GdkPixbuf* find_icon_sized (const char* name, GtkIconSize icon_size) {
+#line 26 "moonshot-utils.c"
 	GdkPixbuf* result = NULL;
 	gint width = 0;
 	gint height = 0;
+#line 5 "moonshot-utils.vala"
 	g_return_val_if_fail (name != NULL, NULL);
+#line 8 "moonshot-utils.vala"
 	gtk_icon_size_lookup (icon_size, &width, &height);
+#line 34 "moonshot-utils.c"
 	result = find_icon (name, width);
+#line 9 "moonshot-utils.vala"
 	return result;
+#line 38 "moonshot-utils.c"
 }
 
 
@@ -36,23 +43,31 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 17 "moonshot-utils.vala"
 GdkPixbuf* find_icon (const char* name, gint size) {
+#line 49 "moonshot-utils.c"
 	GdkPixbuf* result = NULL;
 	GError * _inner_error_ = NULL;
+#line 17 "moonshot-utils.vala"
 	g_return_val_if_fail (name != NULL, NULL);
+#line 54 "moonshot-utils.c"
 	{
 		GtkIconTheme* icon_theme;
 		GdkPixbuf* _tmp0_;
-		g_print ("Linux\n");
+#line 33 "moonshot-utils.vala"
 		icon_theme = _g_object_ref0 (gtk_icon_theme_get_default ());
+#line 34 "moonshot-utils.vala"
 		_tmp0_ = gtk_icon_theme_load_icon (icon_theme, name, size, GTK_ICON_LOOKUP_FORCE_SIZE, &_inner_error_);
+#line 62 "moonshot-utils.c"
 		if (_inner_error_ != NULL) {
 			_g_object_unref0 (icon_theme);
 			goto __catch7_g_error;
 		}
 		result = _tmp0_;
 		_g_object_unref0 (icon_theme);
+#line 34 "moonshot-utils.vala"
 		return result;
+#line 71 "moonshot-utils.c"
 	}
 	goto __finally7;
 	__catch7_g_error:
@@ -61,10 +76,14 @@ GdkPixbuf* find_icon (const char* name, gint size) {
 		e = _inner_error_;
 		_inner_error_ = NULL;
 		{
+#line 39 "moonshot-utils.vala"
 			fprintf (stdout, "Error loading icon '%s': %s\n", name, e->message);
+#line 82 "moonshot-utils.c"
 			result = NULL;
 			_g_error_free0 (e);
+#line 40 "moonshot-utils.vala"
 			return result;
+#line 87 "moonshot-utils.c"
 		}
 	}
 	__finally7:

@@ -64,7 +64,9 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 16 "moonshot-password-dialog.vala"
 AddPasswordDialog* add_password_dialog_construct (GType object_type) {
+#line 70 "moonshot-password-dialog.c"
 	AddPasswordDialog * self;
 	GtkWidget* content_area;
 	GtkLabel* password_label;
@@ -73,33 +75,61 @@ AddPasswordDialog* add_password_dialog_construct (GType object_type) {
 	GtkTable* table;
 	GtkVBox* vbox;
 	self = g_object_newv (object_type, 0, NULL);
+#line 18 "moonshot-password-dialog.vala"
 	gtk_window_set_title ((GtkWindow*) self, _ ("Please enter your password"));
+#line 19 "moonshot-password-dialog.vala"
 	gtk_window_set_modal ((GtkWindow*) self, TRUE);
+#line 21 "moonshot-password-dialog.vala"
 	gtk_dialog_add_buttons ((GtkDialog*) self, _ ("Send"), GTK_RESPONSE_OK, _ ("Return to application"), GTK_RESPONSE_CANCEL, NULL);
+#line 23 "moonshot-password-dialog.vala"
 	gtk_dialog_set_default_response ((GtkDialog*) self, (gint) GTK_RESPONSE_OK);
+#line 25 "moonshot-password-dialog.vala"
 	content_area = _g_object_ref0 (gtk_dialog_get_content_area ((GtkDialog*) self));
+#line 26 "moonshot-password-dialog.vala"
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
+#line 28 "moonshot-password-dialog.vala"
 	password_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Password:")));
+#line 29 "moonshot-password-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (float) 1, (float) 0.5);
+#line 30 "moonshot-password-dialog.vala"
 	self->priv->password_entry = (_tmp0_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->password_entry), _tmp0_);
+#line 31 "moonshot-password-dialog.vala"
 	gtk_entry_set_invisible_char (self->priv->password_entry, (gunichar) '*');
+#line 32 "moonshot-password-dialog.vala"
 	gtk_entry_set_visibility (self->priv->password_entry, FALSE);
+#line 33 "moonshot-password-dialog.vala"
 	gtk_entry_set_activates_default (self->priv->password_entry, TRUE);
+#line 34 "moonshot-password-dialog.vala"
 	self->priv->remember_checkbutton = (_tmp1_ = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Remember password"))), _g_object_unref0 (self->priv->remember_checkbutton), _tmp1_);
+#line 36 "moonshot-password-dialog.vala"
 	add_password_dialog_set_atk_relation (self, (GtkWidget*) self->priv->password_entry, (GtkWidget*) self->priv->password_entry, ATK_RELATION_LABEL_FOR);
+#line 38 "moonshot-password-dialog.vala"
 	table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 2, (guint) 2, FALSE));
+#line 39 "moonshot-password-dialog.vala"
 	gtk_table_set_col_spacings (table, (guint) 10);
+#line 40 "moonshot-password-dialog.vala"
 	gtk_table_set_row_spacings (table, (guint) 10);
+#line 41 "moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
+#line 42 "moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->password_entry, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
+#line 43 "moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->remember_checkbutton, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
+#line 45 "moonshot-password-dialog.vala"
 	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
+#line 46 "moonshot-password-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) vbox, (guint) 6);
+#line 47 "moonshot-password-dialog.vala"
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) table, FALSE, FALSE, (guint) 0);
+#line 49 "moonshot-password-dialog.vala"
 	gtk_container_add (GTK_CONTAINER (content_area), (GtkWidget*) vbox);
+#line 51 "moonshot-password-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) self, (guint) 6);
+#line 52 "moonshot-password-dialog.vala"
 	gtk_window_set_resizable ((GtkWindow*) self, FALSE);
+#line 53 "moonshot-password-dialog.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
+#line 133 "moonshot-password-dialog.c"
 	_g_object_unref0 (vbox);
 	_g_object_unref0 (table);
 	_g_object_unref0 (password_label);
@@ -108,20 +138,32 @@ AddPasswordDialog* add_password_dialog_construct (GType object_type) {
 }
 
 
+#line 16 "moonshot-password-dialog.vala"
 AddPasswordDialog* add_password_dialog_new (void) {
+#line 16 "moonshot-password-dialog.vala"
 	return add_password_dialog_construct (TYPE_ADD_PASSWORD_DIALOG);
+#line 146 "moonshot-password-dialog.c"
 }
 
 
+#line 56 "moonshot-password-dialog.vala"
 static void add_password_dialog_set_atk_relation (AddPasswordDialog* self, GtkWidget* widget, GtkWidget* target_widget, AtkRelationType relationship) {
+#line 152 "moonshot-password-dialog.c"
 	AtkObject* atk_widget;
 	AtkObject* atk_target_widget;
+#line 56 "moonshot-password-dialog.vala"
 	g_return_if_fail (self != NULL);
+#line 56 "moonshot-password-dialog.vala"
 	g_return_if_fail (widget != NULL);
+#line 56 "moonshot-password-dialog.vala"
 	g_return_if_fail (target_widget != NULL);
+#line 58 "moonshot-password-dialog.vala"
 	atk_widget = _g_object_ref0 (gtk_widget_get_accessible (widget));
+#line 59 "moonshot-password-dialog.vala"
 	atk_target_widget = _g_object_ref0 (gtk_widget_get_accessible (target_widget));
+#line 61 "moonshot-password-dialog.vala"
 	atk_object_add_relationship (atk_widget, relationship, atk_target_widget);
+#line 167 "moonshot-password-dialog.c"
 	_g_object_unref0 (atk_target_widget);
 	_g_object_unref0 (atk_widget);
 }
@@ -131,7 +173,9 @@ const char* add_password_dialog_get_password (AddPasswordDialog* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = gtk_entry_get_text (self->priv->password_entry);
+#line 9 "moonshot-password-dialog.vala"
 	return result;
+#line 179 "moonshot-password-dialog.c"
 }
 
 
@@ -139,7 +183,9 @@ gboolean add_password_dialog_get_remember (AddPasswordDialog* self) {
 	gboolean result;
 	g_return_val_if_fail (self != NULL, FALSE);
 	result = gtk_toggle_button_get_active ((GtkToggleButton*) self->priv->remember_checkbutton);
+#line 13 "moonshot-password-dialog.vala"
 	return result;
+#line 189 "moonshot-password-dialog.c"
 }
 
 

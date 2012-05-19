@@ -70,7 +70,9 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 26 "moonshot-add-dialog.vala"
 AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
+#line 76 "moonshot-add-dialog.c"
 	AddIdentityDialog * self;
 	GtkWidget* content_area;
 	GtkLabel* displayname_label;
@@ -85,49 +87,93 @@ AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 	GtkTable* table;
 	GtkVBox* vbox;
 	self = g_object_newv (object_type, 0, NULL);
+#line 28 "moonshot-add-dialog.vala"
 	gtk_window_set_title ((GtkWindow*) self, _ ("Add ID Card"));
+#line 29 "moonshot-add-dialog.vala"
 	gtk_window_set_modal ((GtkWindow*) self, TRUE);
+#line 31 "moonshot-add-dialog.vala"
 	gtk_dialog_add_buttons ((GtkDialog*) self, _ ("Add ID Card"), GTK_RESPONSE_OK, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
+#line 38 "moonshot-add-dialog.vala"
 	content_area = _g_object_ref0 (gtk_dialog_get_content_area ((GtkDialog*) self));
+#line 39 "moonshot-add-dialog.vala"
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
+#line 41 "moonshot-add-dialog.vala"
 	displayname_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Display Name:")));
+#line 42 "moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) displayname_label, (float) 1, (float) 0.5);
+#line 43 "moonshot-add-dialog.vala"
 	self->priv->displayname_entry = (_tmp0_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->displayname_entry), _tmp0_);
+#line 44 "moonshot-add-dialog.vala"
 	issuer_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Issuer:")));
+#line 45 "moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) issuer_label, (float) 1, (float) 0.5);
+#line 46 "moonshot-add-dialog.vala"
 	self->priv->issuer_entry = (_tmp1_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->issuer_entry), _tmp1_);
+#line 47 "moonshot-add-dialog.vala"
 	username_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Username:")));
+#line 48 "moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) username_label, (float) 1, (float) 0.5);
+#line 49 "moonshot-add-dialog.vala"
 	self->priv->username_entry = (_tmp2_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->username_entry), _tmp2_);
+#line 50 "moonshot-add-dialog.vala"
 	password_label = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ ("Password:")));
+#line 51 "moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (float) 1, (float) 0.5);
+#line 52 "moonshot-add-dialog.vala"
 	self->priv->password_entry = (_tmp3_ = g_object_ref_sink ((GtkEntry*) gtk_entry_new ()), _g_object_unref0 (self->priv->password_entry), _tmp3_);
+#line 53 "moonshot-add-dialog.vala"
 	gtk_entry_set_invisible_char (self->priv->password_entry, (gunichar) '*');
+#line 54 "moonshot-add-dialog.vala"
 	gtk_entry_set_visibility (self->priv->password_entry, FALSE);
+#line 55 "moonshot-add-dialog.vala"
 	remember_checkbutton = g_object_ref_sink ((GtkCheckButton*) gtk_check_button_new_with_label (_ ("Remember password")));
+#line 57 "moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) displayname_label, (GtkWidget*) self->priv->displayname_entry, ATK_RELATION_LABEL_FOR);
+#line 58 "moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) issuer_label, (GtkWidget*) self->priv->issuer_entry, ATK_RELATION_LABEL_FOR);
+#line 59 "moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) username_label, (GtkWidget*) self->priv->username_entry, ATK_RELATION_LABEL_FOR);
+#line 60 "moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) self->priv->password_entry, (GtkWidget*) self->priv->password_entry, ATK_RELATION_LABEL_FOR);
+#line 62 "moonshot-add-dialog.vala"
 	table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) 5, (guint) 5, FALSE));
+#line 63 "moonshot-add-dialog.vala"
 	gtk_table_set_col_spacings (table, (guint) 10);
+#line 64 "moonshot-add-dialog.vala"
 	gtk_table_set_row_spacings (table, (guint) 10);
+#line 66 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) displayname_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
+#line 67 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->displayname_entry, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
+#line 68 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) issuer_label, (guint) 0, (guint) 1, (guint) 1, (guint) 2);
+#line 69 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->issuer_entry, (guint) 1, (guint) 2, (guint) 1, (guint) 2);
+#line 70 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) username_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
+#line 71 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->username_entry, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
+#line 72 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 3, (guint) 4);
+#line 73 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) self->priv->password_entry, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
+#line 74 "moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) remember_checkbutton, (guint) 1, (guint) 2, (guint) 4, (guint) 5);
+#line 76 "moonshot-add-dialog.vala"
 	vbox = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
+#line 77 "moonshot-add-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) vbox, (guint) 6);
+#line 78 "moonshot-add-dialog.vala"
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) table, FALSE, FALSE, (guint) 0);
+#line 80 "moonshot-add-dialog.vala"
 	gtk_container_add (GTK_CONTAINER (content_area), (GtkWidget*) vbox);
+#line 82 "moonshot-add-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) self, (guint) 6);
+#line 83 "moonshot-add-dialog.vala"
 	gtk_window_set_resizable ((GtkWindow*) self, FALSE);
+#line 84 "moonshot-add-dialog.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
+#line 177 "moonshot-add-dialog.c"
 	_g_object_unref0 (vbox);
 	_g_object_unref0 (table);
 	_g_object_unref0 (remember_checkbutton);
@@ -140,20 +186,32 @@ AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 }
 
 
+#line 26 "moonshot-add-dialog.vala"
 AddIdentityDialog* add_identity_dialog_new (void) {
+#line 26 "moonshot-add-dialog.vala"
 	return add_identity_dialog_construct (TYPE_ADD_IDENTITY_DIALOG);
+#line 194 "moonshot-add-dialog.c"
 }
 
 
+#line 87 "moonshot-add-dialog.vala"
 static void add_identity_dialog_set_atk_relation (AddIdentityDialog* self, GtkWidget* widget, GtkWidget* target_widget, AtkRelationType relationship) {
+#line 200 "moonshot-add-dialog.c"
 	AtkObject* atk_widget;
 	AtkObject* atk_target_widget;
+#line 87 "moonshot-add-dialog.vala"
 	g_return_if_fail (self != NULL);
+#line 87 "moonshot-add-dialog.vala"
 	g_return_if_fail (widget != NULL);
+#line 87 "moonshot-add-dialog.vala"
 	g_return_if_fail (target_widget != NULL);
+#line 89 "moonshot-add-dialog.vala"
 	atk_widget = _g_object_ref0 (gtk_widget_get_accessible (widget));
+#line 90 "moonshot-add-dialog.vala"
 	atk_target_widget = _g_object_ref0 (gtk_widget_get_accessible (target_widget));
+#line 92 "moonshot-add-dialog.vala"
 	atk_object_add_relationship (atk_widget, relationship, atk_target_widget);
+#line 215 "moonshot-add-dialog.c"
 	_g_object_unref0 (atk_target_widget);
 	_g_object_unref0 (atk_widget);
 }
@@ -163,7 +221,9 @@ const char* add_identity_dialog_get_display_name (AddIdentityDialog* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = gtk_entry_get_text (self->priv->displayname_entry);
+#line 11 "moonshot-add-dialog.vala"
 	return result;
+#line 227 "moonshot-add-dialog.c"
 }
 
 
@@ -171,7 +231,9 @@ const char* add_identity_dialog_get_issuer (AddIdentityDialog* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = gtk_entry_get_text (self->priv->issuer_entry);
+#line 15 "moonshot-add-dialog.vala"
 	return result;
+#line 237 "moonshot-add-dialog.c"
 }
 
 
@@ -179,7 +241,9 @@ const char* add_identity_dialog_get_username (AddIdentityDialog* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = gtk_entry_get_text (self->priv->username_entry);
+#line 19 "moonshot-add-dialog.vala"
 	return result;
+#line 247 "moonshot-add-dialog.c"
 }
 
 
@@ -187,7 +251,9 @@ const char* add_identity_dialog_get_password (AddIdentityDialog* self) {
 	const char* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = gtk_entry_get_text (self->priv->password_entry);
+#line 23 "moonshot-add-dialog.vala"
 	return result;
+#line 257 "moonshot-add-dialog.c"
 }
 
 

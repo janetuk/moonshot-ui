@@ -44,23 +44,35 @@ GeeLinkedList* iidentity_card_store_get_card_list (IIdentityCardStore* self);
 
 
 
+#line 136 "moonshot-local-flat-file-store.vala"
 void iidentity_card_store_add_card (IIdentityCardStore* self, IdCard* card) {
+#line 136 "moonshot-local-flat-file-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->add_card (self, card);
+#line 52 "moonshot-idcard-store.c"
 }
 
 
+#line 136 "moonshot-local-flat-file-store.vala"
 void iidentity_card_store_remove_card (IIdentityCardStore* self, IdCard* card) {
+#line 136 "moonshot-local-flat-file-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->remove_card (self, card);
+#line 60 "moonshot-idcard-store.c"
 }
 
 
+#line 136 "moonshot-local-flat-file-store.vala"
 void iidentity_card_store_update_card (IIdentityCardStore* self, IdCard* card) {
+#line 136 "moonshot-local-flat-file-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->update_card (self, card);
+#line 68 "moonshot-idcard-store.c"
 }
 
 
+#line 136 "moonshot-local-flat-file-store.vala"
 GeeLinkedList* iidentity_card_store_get_card_list (IIdentityCardStore* self) {
+#line 136 "moonshot-local-flat-file-store.vala"
 	return IIDENTITY_CARD_STORE_GET_INTERFACE (self)->get_card_list (self);
+#line 76 "moonshot-idcard-store.c"
 }
 
 

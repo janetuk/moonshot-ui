@@ -269,7 +269,7 @@ void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
 static void _vala_Rule_array_free (Rule* array, gint array_length);
 Rule* id_card_get_rules (IdCard* self, int* result_length1);
 gboolean identity_manager_view_add_identity (IdentityManagerView* self, IdCard* id_card);
-gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* file_name);
+gint moonshot_server_install_from_file (MoonshotServer* self, const char* file_name);
 WebProvisioningParser* web_provisioning_parser_new (const char* path);
 WebProvisioningParser* web_provisioning_parser_construct (GType object_type, const char* path);
 gpointer web_provisioning_parser_ref (gpointer instance);
@@ -337,7 +337,7 @@ static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card
 static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_id_card_out[] = {&_moonshot_server_dbus_arg_info_install_id_card_result, NULL};
 static const GDBusMethodInfo _moonshot_server_dbus_method_info_install_id_card = {-1, "InstallIdCard", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_id_card_out)};
 static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_from_file_file_name = {-1, "file_name", "s"};
-static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_from_file_result = {-1, "result", "b"};
+static const GDBusArgInfo _moonshot_server_dbus_arg_info_install_from_file_result = {-1, "result", "i"};
 static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_from_file_in[] = {&_moonshot_server_dbus_arg_info_install_from_file_file_name, NULL};
 static const GDBusArgInfo * const _moonshot_server_dbus_arg_info_install_from_file_out[] = {&_moonshot_server_dbus_arg_info_install_from_file_result, NULL};
 static const GDBusMethodInfo _moonshot_server_dbus_method_info_install_from_file = {-1, "InstallFromFile", (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_from_file_in), (GDBusArgInfo **) (&_moonshot_server_dbus_arg_info_install_from_file_out)};
@@ -353,18 +353,27 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 8 "moonshot-server.vala"
 MoonshotServer* moonshot_server_construct (GType object_type, GtkWindow* window) {
+#line 359 "moonshot-server.c"
 	MoonshotServer * self = NULL;
 	IdentityManagerView* _tmp0_;
+#line 8 "moonshot-server.vala"
 	g_return_val_if_fail (window != NULL, NULL);
+#line 8 "moonshot-server.vala"
 	self = (MoonshotServer*) g_object_new (object_type, NULL);
+#line 10 "moonshot-server.vala"
 	self->priv->main_window = (_tmp0_ = _g_object_ref0 (IDENTITY_MANAGER_VIEW (window)), _g_object_unref0 (self->priv->main_window), _tmp0_);
+#line 368 "moonshot-server.c"
 	return self;
 }
 
 
+#line 8 "moonshot-server.vala"
 MoonshotServer* moonshot_server_new (GtkWindow* window) {
+#line 8 "moonshot-server.vala"
 	return moonshot_server_construct (TYPE_MOONSHOT_SERVER, window);
+#line 377 "moonshot-server.c"
 }
 
 
@@ -421,15 +430,22 @@ static void moonshot_server_get_identity_ready (GObject* source_object, GAsyncRe
 }
 
 
+#line 27 "moonshot-server.vala"
 static void _lambda4_ (IdentityRequest* IdentityRequest, Block3Data* _data3_) {
+#line 436 "moonshot-server.c"
 	MoonshotServer * self;
 	self = _data3_->self;
+#line 27 "moonshot-server.vala"
 	g_return_if_fail (IdentityRequest != NULL);
+#line 27 "moonshot-server.vala"
 	moonshot_server_get_identity_co (_data3_->_async_data_);
+#line 443 "moonshot-server.c"
 }
 
 
+#line 27 "moonshot-server.vala"
 static void __lambda4__return_identity_callback (IdentityRequest* request, gpointer self) {
+#line 449 "moonshot-server.c"
 	_lambda4_ (request, self);
 }
 
@@ -463,43 +479,78 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 	data->_data3_->self = g_object_ref (data->self);
 	data->_data3_->_async_data_ = data;
 	data->request = identity_request_new (data->self->priv->main_window, data->nai, data->password, data->service);
+#line 27 "moonshot-server.vala"
 	identity_request_set_callback (data->request, __lambda4__return_identity_callback, block3_data_ref (data->_data3_), block3_data_unref);
+#line 28 "moonshot-server.vala"
 	identity_request_execute (data->request);
+#line 487 "moonshot-server.c"
 	data->_state_ = 1;
 	return FALSE;
 	_state_1:
 	;
+#line 31 "moonshot-server.vala"
 	data->nai_out = (data->_tmp0_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp0_);
+#line 32 "moonshot-server.vala"
 	data->password_out = (data->_tmp1_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp1_);
+#line 33 "moonshot-server.vala"
 	data->server_certificate_hash = (data->_tmp2_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp2_);
+#line 34 "moonshot-server.vala"
 	data->ca_certificate = (data->_tmp3_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp3_);
+#line 35 "moonshot-server.vala"
 	data->subject_name_constraint = (data->_tmp4_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp4_);
+#line 36 "moonshot-server.vala"
 	data->subject_alt_name_constraint = (data->_tmp5_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp5_);
+#line 504 "moonshot-server.c"
 	data->id_card = _g_object_ref0 (data->request->id_card);
+#line 40 "moonshot-server.vala"
 	if (data->id_card != NULL) {
+#line 41 "moonshot-server.vala"
 		data->nai_out = (data->_tmp6_ = g_strdup (id_card_get_nai (data->id_card)), _g_free0 (data->nai_out), data->_tmp6_);
+#line 42 "moonshot-server.vala"
 		data->password_out = (data->_tmp7_ = g_strdup (id_card_get_password (data->id_card)), _g_free0 (data->password_out), data->_tmp7_);
+#line 44 "moonshot-server.vala"
 		data->server_certificate_hash = (data->_tmp8_ = g_strdup (trust_anchor_get_server_cert (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->server_certificate_hash), data->_tmp8_);
+#line 45 "moonshot-server.vala"
 		data->ca_certificate = (data->_tmp9_ = g_strdup (trust_anchor_get_ca_cert (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->ca_certificate), data->_tmp9_);
+#line 46 "moonshot-server.vala"
 		data->subject_name_constraint = (data->_tmp10_ = g_strdup (trust_anchor_get_subject (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->subject_name_constraint), data->_tmp10_);
+#line 47 "moonshot-server.vala"
 		data->subject_alt_name_constraint = (data->_tmp11_ = g_strdup (trust_anchor_get_subject_alt (id_card_get_trust_anchor (data->id_card))), _g_free0 (data->subject_alt_name_constraint), data->_tmp11_);
+#line 49 "moonshot-server.vala"
 		if (data->nai_out == NULL) {
+#line 50 "moonshot-server.vala"
 			data->nai_out = (data->_tmp12_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp12_);
+#line 524 "moonshot-server.c"
 		}
+#line 51 "moonshot-server.vala"
 		if (data->password_out == NULL) {
+#line 52 "moonshot-server.vala"
 			data->password_out = (data->_tmp13_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp13_);
+#line 530 "moonshot-server.c"
 		}
+#line 53 "moonshot-server.vala"
 		if (data->server_certificate_hash == NULL) {
+#line 54 "moonshot-server.vala"
 			data->server_certificate_hash = (data->_tmp14_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp14_);
+#line 536 "moonshot-server.c"
 		}
+#line 55 "moonshot-server.vala"
 		if (data->ca_certificate == NULL) {
+#line 56 "moonshot-server.vala"
 			data->ca_certificate = (data->_tmp15_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp15_);
+#line 542 "moonshot-server.c"
 		}
+#line 57 "moonshot-server.vala"
 		if (data->subject_name_constraint == NULL) {
+#line 58 "moonshot-server.vala"
 			data->subject_name_constraint = (data->_tmp16_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp16_);
+#line 548 "moonshot-server.c"
 		}
+#line 59 "moonshot-server.vala"
 		if (data->subject_alt_name_constraint == NULL) {
+#line 60 "moonshot-server.vala"
 			data->subject_alt_name_constraint = (data->_tmp17_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp17_);
+#line 554 "moonshot-server.c"
 		}
 		data->result = TRUE;
 		_g_object_unref0 (data->id_card);
@@ -590,15 +641,22 @@ static void moonshot_server_get_default_identity_ready (GObject* source_object, 
 }
 
 
+#line 76 "moonshot-server.vala"
 static void _lambda5_ (IdentityRequest* IdentityRequest, Block4Data* _data4_) {
+#line 647 "moonshot-server.c"
 	MoonshotServer * self;
 	self = _data4_->self;
+#line 76 "moonshot-server.vala"
 	g_return_if_fail (IdentityRequest != NULL);
+#line 76 "moonshot-server.vala"
 	moonshot_server_get_default_identity_co (_data4_->_async_data_);
+#line 654 "moonshot-server.c"
 }
 
 
+#line 76 "moonshot-server.vala"
 static void __lambda5__return_identity_callback (IdentityRequest* request, gpointer self) {
+#line 660 "moonshot-server.c"
 	_lambda5_ (request, self);
 }
 
@@ -632,42 +690,76 @@ static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaul
 	data->_data4_->self = g_object_ref (data->self);
 	data->_data4_->_async_data_ = data;
 	data->request = identity_request_new_default (data->self->priv->main_window);
+#line 76 "moonshot-server.vala"
 	identity_request_set_callback (data->request, __lambda5__return_identity_callback, block4_data_ref (data->_data4_), block4_data_unref);
+#line 77 "moonshot-server.vala"
 	identity_request_execute (data->request);
+#line 698 "moonshot-server.c"
 	data->_state_ = 2;
 	return FALSE;
 	_state_2:
 	;
+#line 80 "moonshot-server.vala"
 	data->nai_out = (data->_tmp0_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp0_);
+#line 81 "moonshot-server.vala"
 	data->password_out = (data->_tmp1_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp1_);
+#line 82 "moonshot-server.vala"
 	data->server_certificate_hash = (data->_tmp2_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp2_);
+#line 83 "moonshot-server.vala"
 	data->ca_certificate = (data->_tmp3_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp3_);
+#line 84 "moonshot-server.vala"
 	data->subject_name_constraint = (data->_tmp4_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp4_);
+#line 85 "moonshot-server.vala"
 	data->subject_alt_name_constraint = (data->_tmp5_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp5_);
+#line 87 "moonshot-server.vala"
 	if (data->request->id_card != NULL) {
+#line 89 "moonshot-server.vala"
 		data->nai_out = (data->_tmp6_ = g_strdup (id_card_get_nai (data->request->id_card)), _g_free0 (data->nai_out), data->_tmp6_);
+#line 90 "moonshot-server.vala"
 		data->password_out = (data->_tmp7_ = g_strdup (id_card_get_password (data->request->id_card)), _g_free0 (data->password_out), data->_tmp7_);
+#line 92 "moonshot-server.vala"
 		data->server_certificate_hash = (data->_tmp8_ = g_strdup (trust_anchor_get_server_cert (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->server_certificate_hash), data->_tmp8_);
+#line 93 "moonshot-server.vala"
 		data->ca_certificate = (data->_tmp9_ = g_strdup (trust_anchor_get_ca_cert (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->ca_certificate), data->_tmp9_);
+#line 94 "moonshot-server.vala"
 		data->subject_name_constraint = (data->_tmp10_ = g_strdup (trust_anchor_get_subject (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->subject_name_constraint), data->_tmp10_);
+#line 95 "moonshot-server.vala"
 		data->subject_alt_name_constraint = (data->_tmp11_ = g_strdup (trust_anchor_get_subject_alt (id_card_get_trust_anchor (data->request->id_card))), _g_free0 (data->subject_alt_name_constraint), data->_tmp11_);
+#line 97 "moonshot-server.vala"
 		if (data->nai_out == NULL) {
+#line 98 "moonshot-server.vala"
 			data->nai_out = (data->_tmp12_ = g_strdup (""), _g_free0 (data->nai_out), data->_tmp12_);
+#line 733 "moonshot-server.c"
 		}
+#line 99 "moonshot-server.vala"
 		if (data->password_out == NULL) {
+#line 100 "moonshot-server.vala"
 			data->password_out = (data->_tmp13_ = g_strdup (""), _g_free0 (data->password_out), data->_tmp13_);
+#line 739 "moonshot-server.c"
 		}
+#line 101 "moonshot-server.vala"
 		if (data->server_certificate_hash == NULL) {
+#line 102 "moonshot-server.vala"
 			data->server_certificate_hash = (data->_tmp14_ = g_strdup (""), _g_free0 (data->server_certificate_hash), data->_tmp14_);
+#line 745 "moonshot-server.c"
 		}
+#line 103 "moonshot-server.vala"
 		if (data->ca_certificate == NULL) {
+#line 104 "moonshot-server.vala"
 			data->ca_certificate = (data->_tmp15_ = g_strdup (""), _g_free0 (data->ca_certificate), data->_tmp15_);
+#line 751 "moonshot-server.c"
 		}
+#line 105 "moonshot-server.vala"
 		if (data->subject_name_constraint == NULL) {
+#line 106 "moonshot-server.vala"
 			data->subject_name_constraint = (data->_tmp16_ = g_strdup (""), _g_free0 (data->subject_name_constraint), data->_tmp16_);
+#line 757 "moonshot-server.c"
 		}
+#line 107 "moonshot-server.vala"
 		if (data->subject_alt_name_constraint == NULL) {
+#line 108 "moonshot-server.vala"
 			data->subject_alt_name_constraint = (data->_tmp17_ = g_strdup (""), _g_free0 (data->subject_alt_name_constraint), data->_tmp17_);
+#line 763 "moonshot-server.c"
 		}
 		data->result = TRUE;
 		_g_object_unref0 (data->request);
@@ -719,44 +811,64 @@ static void _vala_Rule_array_free (Rule* array, gint array_length) {
 }
 
 
+#line 116 "moonshot-server.vala"
 gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* display_name, const char* user_name, const char* password, const char* realm, char** rules_patterns, int rules_patterns_length1, char** rules_always_confirm, int rules_always_confirm_length1, char** services, int services_length1, const char* ca_cert, const char* subject, const char* subject_alt, const char* server_cert) {
+#line 817 "moonshot-server.c"
 	gboolean result = FALSE;
 	IdCard* idcard;
 	char** _tmp0_;
+#line 116 "moonshot-server.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 116 "moonshot-server.vala"
 	g_return_val_if_fail (display_name != NULL, FALSE);
+#line 116 "moonshot-server.vala"
 	g_return_val_if_fail (user_name != NULL, FALSE);
-	g_return_val_if_fail (password != NULL, FALSE);
-	g_return_val_if_fail (realm != NULL, FALSE);
-	g_return_val_if_fail (ca_cert != NULL, FALSE);
-	g_return_val_if_fail (subject != NULL, FALSE);
-	g_return_val_if_fail (subject_alt != NULL, FALSE);
-	g_return_val_if_fail (server_cert != NULL, FALSE);
+#line 128 "moonshot-server.vala"
 	idcard = id_card_new ();
+#line 130 "moonshot-server.vala"
 	id_card_set_display_name (idcard, display_name);
+#line 131 "moonshot-server.vala"
 	id_card_set_username (idcard, user_name);
+#line 132 "moonshot-server.vala"
 	id_card_set_password (idcard, password);
+#line 133 "moonshot-server.vala"
 	id_card_set_issuer (idcard, realm);
+#line 134 "moonshot-server.vala"
 	_tmp0_ = services;
+#line 134 "moonshot-server.vala"
 	id_card_set_services (idcard, _tmp0_, services_length1);
+#line 135 "moonshot-server.vala"
 	trust_anchor_set_ca_cert (id_card_get_trust_anchor (idcard), ca_cert);
+#line 136 "moonshot-server.vala"
 	trust_anchor_set_subject (id_card_get_trust_anchor (idcard), subject);
+#line 137 "moonshot-server.vala"
 	trust_anchor_set_subject_alt (id_card_get_trust_anchor (idcard), subject_alt);
+#line 138 "moonshot-server.vala"
 	trust_anchor_set_server_cert (id_card_get_trust_anchor (idcard), server_cert);
+#line 140 "moonshot-server.vala"
 	if (rules_patterns_length1 == rules_always_confirm_length1) {
+#line 851 "moonshot-server.c"
 		Rule* _tmp1_;
 		gint _tmp1__length1;
 		Rule* _tmp2_;
+#line 142 "moonshot-server.vala"
 		_tmp2_ = (_tmp1_ = g_new0 (Rule, rules_patterns_length1), _tmp1__length1 = rules_patterns_length1, _tmp1_);
+#line 142 "moonshot-server.vala"
 		id_card_set_rules (idcard, _tmp2_, rules_patterns_length1);
+#line 859 "moonshot-server.c"
 		_tmp1_ = (_vala_Rule_array_free (_tmp1_, _tmp1__length1), NULL);
 		{
 			gint i;
+#line 144 "moonshot-server.vala"
 			i = 0;
+#line 865 "moonshot-server.c"
 			{
 				gboolean _tmp3_;
+#line 144 "moonshot-server.vala"
 				_tmp3_ = TRUE;
+#line 144 "moonshot-server.vala"
 				while (TRUE) {
+#line 872 "moonshot-server.c"
 					gint _tmp4_;
 					gint _tmp5_;
 					char* *_tmp6_;
@@ -764,41 +876,68 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const char* disp
 					gint _tmp8_;
 					char* *_tmp9_;
 					char* _tmp10_;
+#line 144 "moonshot-server.vala"
 					if (!_tmp3_) {
+#line 144 "moonshot-server.vala"
 						i++;
+#line 884 "moonshot-server.c"
 					}
+#line 144 "moonshot-server.vala"
 					_tmp3_ = FALSE;
+#line 144 "moonshot-server.vala"
 					if (!(i < _tmp4_)) {
+#line 144 "moonshot-server.vala"
 						break;
+#line 892 "moonshot-server.c"
 					}
+#line 146 "moonshot-server.vala"
 					_tmp6_ = &id_card_get_rules (idcard, &_tmp5_)[i].pattern;
+#line 146 "moonshot-server.vala"
 					(*_tmp6_) = (_tmp7_ = g_strdup (rules_patterns[i]), _g_free0 ((*_tmp6_)), _tmp7_);
+#line 147 "moonshot-server.vala"
 					_tmp9_ = &id_card_get_rules (idcard, &_tmp8_)[i].always_confirm;
+#line 147 "moonshot-server.vala"
 					(*_tmp9_) = (_tmp10_ = g_strdup (rules_always_confirm[i]), _g_free0 ((*_tmp9_)), _tmp10_);
+#line 902 "moonshot-server.c"
 				}
 			}
 		}
 	}
 	result = identity_manager_view_add_identity (self->priv->main_window, idcard);
 	_g_object_unref0 (idcard);
+#line 151 "moonshot-server.vala"
 	return result;
+#line 911 "moonshot-server.c"
 }
 
 
-gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* file_name) {
-	gboolean result = FALSE;
+#line 155 "moonshot-server.vala"
+gint moonshot_server_install_from_file (MoonshotServer* self, const char* file_name) {
+#line 917 "moonshot-server.c"
+	gint result = 0;
 	WebProvisioningParser* webp;
 	gboolean _result_;
-	g_return_val_if_fail (self != NULL, FALSE);
-	g_return_val_if_fail (file_name != NULL, FALSE);
+	gint installed_cards;
+#line 155 "moonshot-server.vala"
+	g_return_val_if_fail (self != NULL, 0);
+#line 155 "moonshot-server.vala"
+	g_return_val_if_fail (file_name != NULL, 0);
+#line 157 "moonshot-server.vala"
 	webp = web_provisioning_parser_new (file_name);
+#line 159 "moonshot-server.vala"
 	web_provisioning_parser_parse (webp);
+#line 160 "moonshot-server.vala"
 	_result_ = FALSE;
+#line 161 "moonshot-server.vala"
+	installed_cards = 0;
+#line 934 "moonshot-server.c"
 	{
 		IdCard** card_collection;
 		int card_collection_length1;
 		int card_it;
+#line 162 "moonshot-server.vala"
 		card_collection = web_provisioning_cards;
+#line 941 "moonshot-server.c"
 		card_collection_length1 = web_provisioning_cards_length1;
 		for (card_it = 0; card_it < web_provisioning_cards_length1; card_it = card_it + 1) {
 			IdCard* card;
@@ -818,21 +957,29 @@ gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* fi
 				gint _tmp13_;
 				rules_patterns = (_tmp1_ = (_tmp0_ = g_new0 (char*, 0 + 1), _tmp0_), rules_patterns_length1 = 0, _rules_patterns_size_ = rules_patterns_length1, _tmp1_);
 				rules_always_confirm = (_tmp3_ = (_tmp2_ = g_new0 (char*, 0 + 1), _tmp2_), rules_always_confirm_length1 = 0, _rules_always_confirm_size_ = rules_always_confirm_length1, _tmp3_);
+#line 167 "moonshot-server.vala"
 				if (_tmp4_ > 0) {
+#line 963 "moonshot-server.c"
 					gint i;
 					gint _tmp5_;
 					char** _tmp6_;
 					gint _tmp7_;
 					char** _tmp8_;
+#line 169 "moonshot-server.vala"
 					i = 0;
+#line 170 "moonshot-server.vala"
 					rules_patterns = (_tmp6_ = g_new0 (char*, _tmp5_ + 1), rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL), rules_patterns_length1 = _tmp5_, _rules_patterns_size_ = rules_patterns_length1, _tmp6_);
+#line 171 "moonshot-server.vala"
 					rules_always_confirm = (_tmp8_ = g_new0 (char*, _tmp7_ + 1), rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL), rules_always_confirm_length1 = _tmp7_, _rules_always_confirm_size_ = rules_always_confirm_length1, _tmp8_);
+#line 975 "moonshot-server.c"
 					{
 						gint _tmp9_;
 						Rule* r_collection;
 						int r_collection_length1;
 						int r_it;
+#line 172 "moonshot-server.vala"
 						r_collection = id_card_get_rules (card, &_tmp9_);
+#line 983 "moonshot-server.c"
 						r_collection_length1 = _tmp9_;
 						for (r_it = 0; r_it < _tmp9_; r_it = r_it + 1) {
 							Rule _tmp12_ = {0};
@@ -841,24 +988,37 @@ gboolean moonshot_server_install_from_file (MoonshotServer* self, const char* fi
 							{
 								char* _tmp10_;
 								char* _tmp11_;
+#line 174 "moonshot-server.vala"
 								rules_patterns[i] = (_tmp10_ = g_strdup (r.pattern), _g_free0 (rules_patterns[i]), _tmp10_);
+#line 175 "moonshot-server.vala"
 								rules_always_confirm[i] = (_tmp11_ = g_strdup (r.always_confirm), _g_free0 (rules_always_confirm[i]), _tmp11_);
+#line 176 "moonshot-server.vala"
 								i++;
+#line 998 "moonshot-server.c"
 								rule_destroy (&r);
 							}
 						}
 					}
 				}
+#line 180 "moonshot-server.vala"
 				_result_ = moonshot_server_install_id_card (self, id_card_get_display_name (card), id_card_get_username (card), id_card_get_password (card), id_card_get_issuer (card), rules_patterns, rules_patterns_length1, rules_always_confirm, rules_always_confirm_length1, id_card_get_services (card, &_tmp13_), _tmp13_, trust_anchor_get_ca_cert (id_card_get_trust_anchor (card)), trust_anchor_get_subject (id_card_get_trust_anchor (card)), trust_anchor_get_subject_alt (id_card_get_trust_anchor (card)), trust_anchor_get_server_cert (id_card_get_trust_anchor (card)));
+#line 191 "moonshot-server.vala"
+				if (_result_) {
+#line 192 "moonshot-server.vala"
+					installed_cards++;
+#line 1010 "moonshot-server.c"
+				}
 				rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
 				rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
 				_g_object_unref0 (card);
 			}
 		}
 	}
-	result = TRUE;
+	result = installed_cards;
 	_web_provisioning_parser_unref0 (webp);
+#line 195 "moonshot-server.vala"
 	return result;
+#line 1022 "moonshot-server.c"
 }
 
 
@@ -1153,7 +1313,7 @@ static void _dbus_moonshot_server_install_from_file (MoonshotServer* self, GVari
 	GError* error;
 	char* file_name = NULL;
 	GVariant* _tmp23_;
-	gboolean result;
+	gint result;
 	GVariantIter _arguments_iter;
 	GVariant* _reply;
 	GVariantBuilder _reply_builder;
@@ -1165,7 +1325,7 @@ static void _dbus_moonshot_server_install_from_file (MoonshotServer* self, GVari
 	result = moonshot_server_install_from_file (self, file_name);
 	g_variant_builder_init (&_reply_builder, G_VARIANT_TYPE_TUPLE);
 	_g_free0 (file_name);
-	g_variant_builder_add_value (&_reply_builder, g_variant_new_boolean (result));
+	g_variant_builder_add_value (&_reply_builder, g_variant_new_int32 (result));
 	_reply = g_variant_builder_end (&_reply_builder);
 	g_dbus_method_invocation_return_value (invocation, _reply);
 }

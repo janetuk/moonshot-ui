@@ -102,106 +102,176 @@ static void id_card_widget_set_property (GObject * object, guint property_id, co
 
 
 
+#line 22 "moonshot-idcard-widget.vala"
 void id_card_widget_collapse (IdCardWidget* self) {
+#line 22 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 24 "moonshot-idcard-widget.vala"
 	gtk_widget_set_visible ((GtkWidget*) self->priv->hbutton_box, FALSE);
+#line 26 "moonshot-idcard-widget.vala"
 	id_card_widget_set_idcard_color (self);
+#line 114 "moonshot-idcard-widget.c"
 }
 
 
+#line 29 "moonshot-idcard-widget.vala"
 static gboolean id_card_widget_button_press_cb (IdCardWidget* self) {
+#line 120 "moonshot-idcard-widget.c"
 	gboolean result = FALSE;
+#line 29 "moonshot-idcard-widget.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
+#line 31 "moonshot-idcard-widget.vala"
 	gtk_widget_set_visible ((GtkWidget*) self->priv->hbutton_box, !gtk_widget_get_visible ((GtkWidget*) self->priv->hbutton_box));
+#line 33 "moonshot-idcard-widget.vala"
 	id_card_widget_set_idcard_color (self);
+#line 35 "moonshot-idcard-widget.vala"
 	if (gtk_widget_get_visible ((GtkWidget*) self->priv->hbutton_box) == TRUE) {
+#line 36 "moonshot-idcard-widget.vala"
 		g_signal_emit_by_name (self, "expanded");
+#line 132 "moonshot-idcard-widget.c"
 	}
 	result = FALSE;
+#line 38 "moonshot-idcard-widget.vala"
 	return result;
+#line 137 "moonshot-idcard-widget.c"
 }
 
 
+#line 41 "moonshot-idcard-widget.vala"
 static void id_card_widget_delete_button_cb (IdCardWidget* self) {
+#line 41 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 43 "moonshot-idcard-widget.vala"
 	g_signal_emit_by_name (self, "remove-id");
+#line 147 "moonshot-idcard-widget.c"
 }
 
 
+#line 46 "moonshot-idcard-widget.vala"
 static void id_card_widget_details_button_cb (IdCardWidget* self) {
+#line 46 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 48 "moonshot-idcard-widget.vala"
 	g_signal_emit_by_name (self, "details-id");
+#line 157 "moonshot-idcard-widget.c"
 }
 
 
+#line 51 "moonshot-idcard-widget.vala"
 static void id_card_widget_send_button_cb (IdCardWidget* self) {
+#line 51 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 53 "moonshot-idcard-widget.vala"
 	g_signal_emit_by_name (self, "send-id");
+#line 167 "moonshot-idcard-widget.c"
 }
 
 
+#line 56 "moonshot-idcard-widget.vala"
 static void id_card_widget_set_idcard_color (IdCardWidget* self) {
+#line 173 "moonshot-idcard-widget.c"
 	GdkColor color = {0};
 	GtkStateType state;
+#line 56 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 178 "moonshot-idcard-widget.c"
 	memset (&color, 0, sizeof (GdkColor));
+#line 60 "moonshot-idcard-widget.vala"
 	if (gtk_widget_get_visible ((GtkWidget*) self->priv->hbutton_box) == FALSE) {
+#line 62 "moonshot-idcard-widget.vala"
 		color.red = (guint16) 65535;
+#line 63 "moonshot-idcard-widget.vala"
 		color.green = (guint16) 65535;
+#line 64 "moonshot-idcard-widget.vala"
 		color.blue = (guint16) 65535;
+#line 188 "moonshot-idcard-widget.c"
 	} else {
+#line 68 "moonshot-idcard-widget.vala"
 		color.red = (guint16) 33333;
+#line 69 "moonshot-idcard-widget.vala"
 		color.green = (guint16) 33333;
+#line 70 "moonshot-idcard-widget.vala"
 		color.blue = (guint16) 60000;
+#line 196 "moonshot-idcard-widget.c"
 	}
+#line 72 "moonshot-idcard-widget.vala"
 	state = gtk_widget_get_state ((GtkWidget*) self);
+#line 73 "moonshot-idcard-widget.vala"
 	gtk_widget_modify_bg ((GtkWidget*) self->priv->event_box, state, &color);
+#line 202 "moonshot-idcard-widget.c"
 }
 
 
+#line 76 "moonshot-idcard-widget.vala"
 void id_card_widget_update_id_card_label (IdCardWidget* self) {
+#line 208 "moonshot-idcard-widget.c"
 	char* services_text;
 	char* display_name;
 	char* _tmp8_;
 	char* _tmp9_;
+#line 76 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 79 "moonshot-idcard-widget.vala"
 	services_text = g_strdup ("");
+#line 81 "moonshot-idcard-widget.vala"
 	display_name = g_markup_printf_escaped ("<big>%s</big>", id_card_get_display_name (self->priv->_id_card));
+#line 219 "moonshot-idcard-widget.c"
 	{
 		gint i;
+#line 82 "moonshot-idcard-widget.vala"
 		i = 0;
+#line 224 "moonshot-idcard-widget.c"
 		{
 			gboolean _tmp0_;
+#line 82 "moonshot-idcard-widget.vala"
 			_tmp0_ = TRUE;
+#line 82 "moonshot-idcard-widget.vala"
 			while (TRUE) {
+#line 231 "moonshot-idcard-widget.c"
 				gint _tmp1_;
 				gint _tmp2_;
 				char* service;
 				gint _tmp3_;
+#line 82 "moonshot-idcard-widget.vala"
 				if (!_tmp0_) {
+#line 82 "moonshot-idcard-widget.vala"
 					i++;
+#line 240 "moonshot-idcard-widget.c"
 				}
+#line 82 "moonshot-idcard-widget.vala"
 				_tmp0_ = FALSE;
+#line 82 "moonshot-idcard-widget.vala"
 				if (!(i < _tmp1_)) {
+#line 82 "moonshot-idcard-widget.vala"
 					break;
+#line 248 "moonshot-idcard-widget.c"
 				}
+#line 84 "moonshot-idcard-widget.vala"
 				service = g_strdup (id_card_get_services (self->priv->_id_card, &_tmp2_)[i]);
+#line 86 "moonshot-idcard-widget.vala"
 				if (i == (_tmp3_ - 1)) {
+#line 254 "moonshot-idcard-widget.c"
 					char* _tmp4_;
 					char* _tmp5_;
+#line 87 "moonshot-idcard-widget.vala"
 					services_text = (_tmp5_ = g_strconcat (services_text, _tmp4_ = g_markup_printf_escaped ("<i>%s</i>", service), NULL), _g_free0 (services_text), _tmp5_);
+#line 259 "moonshot-idcard-widget.c"
 					_g_free0 (_tmp4_);
 				} else {
 					char* _tmp6_;
 					char* _tmp7_;
+#line 89 "moonshot-idcard-widget.vala"
 					services_text = (_tmp7_ = g_strconcat (services_text, _tmp6_ = g_markup_printf_escaped ("<i>%s, </i>", service), NULL), _g_free0 (services_text), _tmp7_);
+#line 266 "moonshot-idcard-widget.c"
 					_g_free0 (_tmp6_);
 				}
 				_g_free0 (service);
 			}
 		}
 	}
+#line 91 "moonshot-idcard-widget.vala"
 	gtk_label_set_markup (self->priv->label, _tmp9_ = g_strconcat (_tmp8_ = g_strconcat (display_name, "\n", NULL), services_text, NULL));
+#line 275 "moonshot-idcard-widget.c"
 	_g_free0 (_tmp9_);
 	_g_free0 (_tmp8_);
 	_g_free0 (display_name);
@@ -209,29 +279,39 @@ void id_card_widget_update_id_card_label (IdCardWidget* self) {
 }
 
 
+#line 41 "moonshot-idcard-widget.vala"
 static void _id_card_widget_delete_button_cb_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+#line 285 "moonshot-idcard-widget.c"
 	id_card_widget_delete_button_cb (self);
 }
 
 
+#line 46 "moonshot-idcard-widget.vala"
 static void _id_card_widget_details_button_cb_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+#line 292 "moonshot-idcard-widget.c"
 	id_card_widget_details_button_cb (self);
 }
 
 
+#line 51 "moonshot-idcard-widget.vala"
 static void _id_card_widget_send_button_cb_gtk_button_clicked (GtkButton* _sender, gpointer self) {
+#line 299 "moonshot-idcard-widget.c"
 	id_card_widget_send_button_cb (self);
 }
 
 
+#line 29 "moonshot-idcard-widget.vala"
 static gboolean _id_card_widget_button_press_cb_gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self) {
+#line 306 "moonshot-idcard-widget.c"
 	gboolean result;
 	result = id_card_widget_button_press_cb (self);
 	return result;
 }
 
 
+#line 94 "moonshot-idcard-widget.vala"
 IdCardWidget* id_card_widget_construct (GType object_type, IdCard* id_card) {
+#line 315 "moonshot-idcard-widget.c"
 	IdCardWidget * self;
 	GtkImage* image;
 	GtkLabel* _tmp0_;
@@ -242,52 +322,95 @@ IdCardWidget* id_card_widget_construct (GType object_type, IdCard* id_card) {
 	GtkHButtonBox* _tmp5_;
 	GtkVBox* _tmp6_;
 	GtkEventBox* _tmp7_;
+#line 94 "moonshot-idcard-widget.vala"
 	g_return_val_if_fail (id_card != NULL, NULL);
+#line 328 "moonshot-idcard-widget.c"
 	self = g_object_newv (object_type, 0, NULL);
+#line 96 "moonshot-idcard-widget.vala"
 	id_card_widget_set_id_card (self, id_card);
+#line 98 "moonshot-idcard-widget.vala"
 	image = g_object_ref_sink ((GtkImage*) gtk_image_new_from_pixbuf ((GdkPixbuf*) g_object_get_data ((GObject*) id_card, "pixbuf")));
+#line 100 "moonshot-idcard-widget.vala"
 	self->priv->label = (_tmp0_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (NULL)), _g_object_unref0 (self->priv->label), _tmp0_);
+#line 101 "moonshot-idcard-widget.vala"
 	gtk_misc_set_alignment ((GtkMisc*) self->priv->label, (float) 0, (float) 0.5);
+#line 102 "moonshot-idcard-widget.vala"
 	gtk_label_set_ellipsize (self->priv->label, PANGO_ELLIPSIZE_END);
+#line 103 "moonshot-idcard-widget.vala"
 	id_card_widget_update_id_card_label (self);
+#line 105 "moonshot-idcard-widget.vala"
 	self->priv->table = (_tmp1_ = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6)), _g_object_unref0 (self->priv->table), _tmp1_);
+#line 106 "moonshot-idcard-widget.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->table, (GtkWidget*) image, FALSE, FALSE, (guint) 0);
+#line 107 "moonshot-idcard-widget.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->table, (GtkWidget*) self->priv->label, TRUE, TRUE, (guint) 0);
+#line 109 "moonshot-idcard-widget.vala"
 	id_card_widget_set_delete_button (self, _tmp2_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Delete"))));
+#line 350 "moonshot-idcard-widget.c"
 	_g_object_unref0 (_tmp2_);
+#line 110 "moonshot-idcard-widget.vala"
 	id_card_widget_set_details_button (self, _tmp3_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("View details"))));
+#line 354 "moonshot-idcard-widget.c"
 	_g_object_unref0 (_tmp3_);
+#line 111 "moonshot-idcard-widget.vala"
 	id_card_widget_set_send_button (self, _tmp4_ = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Send"))));
+#line 358 "moonshot-idcard-widget.c"
 	_g_object_unref0 (_tmp4_);
+#line 112 "moonshot-idcard-widget.vala"
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_delete_button, _ ("Delete"), _ ("Delete this ID Card"));
+#line 113 "moonshot-idcard-widget.vala"
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_details_button, _ ("Details"), _ ("View the details of this ID Card"));
+#line 114 "moonshot-idcard-widget.vala"
 	id_card_widget_set_atk_name_description (self, (GtkWidget*) self->priv->_send_button, _ ("Send"), _ ("Send this ID Card"));
+#line 115 "moonshot-idcard-widget.vala"
 	self->priv->hbutton_box = (_tmp5_ = g_object_ref_sink ((GtkHButtonBox*) gtk_hbutton_box_new ()), _g_object_unref0 (self->priv->hbutton_box), _tmp5_);
+#line 116 "moonshot-idcard-widget.vala"
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_delete_button, TRUE, TRUE, 0);
+#line 117 "moonshot-idcard-widget.vala"
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_details_button, TRUE, TRUE, 0);
+#line 118 "moonshot-idcard-widget.vala"
 	gtk_box_pack_end ((GtkBox*) self->priv->hbutton_box, (GtkWidget*) self->priv->_send_button, TRUE, TRUE, 0);
+#line 119 "moonshot-idcard-widget.vala"
 	gtk_widget_set_sensitive ((GtkWidget*) self->priv->_send_button, FALSE);
+#line 121 "moonshot-idcard-widget.vala"
 	g_signal_connect_object (self->priv->_delete_button, "clicked", (GCallback) _id_card_widget_delete_button_cb_gtk_button_clicked, self, 0);
+#line 122 "moonshot-idcard-widget.vala"
 	g_signal_connect_object (self->priv->_details_button, "clicked", (GCallback) _id_card_widget_details_button_cb_gtk_button_clicked, self, 0);
+#line 123 "moonshot-idcard-widget.vala"
 	g_signal_connect_object (self->priv->_send_button, "clicked", (GCallback) _id_card_widget_send_button_cb_gtk_button_clicked, self, 0);
+#line 125 "moonshot-idcard-widget.vala"
 	self->priv->main_vbox = (_tmp6_ = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 12)), _g_object_unref0 (self->priv->main_vbox), _tmp6_);
+#line 126 "moonshot-idcard-widget.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->main_vbox, (GtkWidget*) self->priv->table, TRUE, TRUE, (guint) 0);
+#line 127 "moonshot-idcard-widget.vala"
 	gtk_box_pack_start ((GtkBox*) self->priv->main_vbox, (GtkWidget*) self->priv->hbutton_box, FALSE, FALSE, (guint) 0);
+#line 128 "moonshot-idcard-widget.vala"
 	gtk_container_set_border_width ((GtkContainer*) self->priv->main_vbox, (guint) 12);
+#line 130 "moonshot-idcard-widget.vala"
 	self->priv->event_box = (_tmp7_ = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ()), _g_object_unref0 (self->priv->event_box), _tmp7_);
+#line 131 "moonshot-idcard-widget.vala"
 	gtk_container_add ((GtkContainer*) self->priv->event_box, (GtkWidget*) self->priv->main_vbox);
+#line 132 "moonshot-idcard-widget.vala"
 	g_signal_connect_object ((GtkWidget*) self->priv->event_box, "button-press-event", (GCallback) _id_card_widget_button_press_cb_gtk_widget_button_press_event, self, 0);
+#line 133 "moonshot-idcard-widget.vala"
 	gtk_box_pack_start ((GtkBox*) self, (GtkWidget*) self->priv->event_box, TRUE, TRUE, 0);
+#line 135 "moonshot-idcard-widget.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
+#line 136 "moonshot-idcard-widget.vala"
 	gtk_widget_hide ((GtkWidget*) self->priv->hbutton_box);
+#line 138 "moonshot-idcard-widget.vala"
 	id_card_widget_set_idcard_color (self);
+#line 404 "moonshot-idcard-widget.c"
 	_g_object_unref0 (image);
 	return self;
 }
 
 
+#line 94 "moonshot-idcard-widget.vala"
 IdCardWidget* id_card_widget_new (IdCard* id_card) {
+#line 94 "moonshot-idcard-widget.vala"
 	return id_card_widget_construct (TYPE_ID_CARD_WIDGET, id_card);
+#line 414 "moonshot-idcard-widget.c"
 }
 
 
@@ -296,15 +419,25 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
+#line 141 "moonshot-idcard-widget.vala"
 static void id_card_widget_set_atk_name_description (IdCardWidget* self, GtkWidget* widget, const char* name, const char* description) {
+#line 425 "moonshot-idcard-widget.c"
 	AtkObject* atk_widget;
+#line 141 "moonshot-idcard-widget.vala"
 	g_return_if_fail (self != NULL);
+#line 141 "moonshot-idcard-widget.vala"
 	g_return_if_fail (widget != NULL);
+#line 141 "moonshot-idcard-widget.vala"
 	g_return_if_fail (name != NULL);
+#line 141 "moonshot-idcard-widget.vala"
 	g_return_if_fail (description != NULL);
+#line 143 "moonshot-idcard-widget.vala"
 	atk_widget = _g_object_ref0 (gtk_widget_get_accessible (widget));
+#line 145 "moonshot-idcard-widget.vala"
 	atk_object_set_name (atk_widget, name);
+#line 146 "moonshot-idcard-widget.vala"
 	atk_object_set_description (atk_widget, description);
+#line 441 "moonshot-idcard-widget.c"
 	_g_object_unref0 (atk_widget);
 }
 
@@ -313,7 +446,9 @@ IdCard* id_card_widget_get_id_card (IdCardWidget* self) {
 	IdCard* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_id_card;
+#line 5 "moonshot-idcard-widget.vala"
 	return result;
+#line 452 "moonshot-idcard-widget.c"
 }
 
 
@@ -329,7 +464,9 @@ GtkButton* id_card_widget_get_delete_button (IdCardWidget* self) {
 	GtkButton* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_delete_button;
+#line 9 "moonshot-idcard-widget.vala"
 	return result;
+#line 470 "moonshot-idcard-widget.c"
 }
 
 
@@ -345,7 +482,9 @@ GtkButton* id_card_widget_get_details_button (IdCardWidget* self) {
 	GtkButton* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_details_button;
+#line 10 "moonshot-idcard-widget.vala"
 	return result;
+#line 488 "moonshot-idcard-widget.c"
 }
 
 
@@ -361,7 +500,9 @@ GtkButton* id_card_widget_get_send_button (IdCardWidget* self) {
 	GtkButton* result;
 	g_return_val_if_fail (self != NULL, NULL);
 	result = self->priv->_send_button;
+#line 11 "moonshot-idcard-widget.vala"
 	return result;
+#line 506 "moonshot-idcard-widget.c"
 }
 
 

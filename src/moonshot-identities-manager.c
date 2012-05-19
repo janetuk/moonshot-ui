@@ -117,35 +117,59 @@ static void identity_manager_model_finalize (GObject* obj);
 
 
 
+#line 7 "moonshot-identities-manager.vala"
 GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self) {
+#line 123 "moonshot-identities-manager.c"
 	GeeLinkedList* result = NULL;
+#line 7 "moonshot-identities-manager.vala"
 	g_return_val_if_fail (self != NULL, NULL);
+#line 127 "moonshot-identities-manager.c"
 	result = iidentity_card_store_get_card_list (self->priv->store);
+#line 8 "moonshot-identities-manager.vala"
 	return result;
+#line 131 "moonshot-identities-manager.c"
 }
 
 
+#line 12 "moonshot-identities-manager.vala"
 void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card) {
+#line 12 "moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
+#line 12 "moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
+#line 13 "moonshot-identities-manager.vala"
 	iidentity_card_store_add_card (self->priv->store, card);
+#line 14 "moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
+#line 145 "moonshot-identities-manager.c"
 }
 
 
+#line 17 "moonshot-identities-manager.vala"
 void identity_manager_model_update_card (IdentityManagerModel* self, IdCard* card) {
+#line 17 "moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
+#line 17 "moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
+#line 18 "moonshot-identities-manager.vala"
 	iidentity_card_store_update_card (self->priv->store, card);
+#line 19 "moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
+#line 159 "moonshot-identities-manager.c"
 }
 
 
+#line 22 "moonshot-identities-manager.vala"
 void identity_manager_model_remove_card (IdentityManagerModel* self, IdCard* card) {
+#line 22 "moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
+#line 22 "moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
+#line 23 "moonshot-identities-manager.vala"
 	iidentity_card_store_remove_card (self->priv->store, card);
+#line 24 "moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
+#line 173 "moonshot-identities-manager.c"
 }
 
 
@@ -154,20 +178,30 @@ static gpointer _identity_manager_app_ref0 (gpointer self) {
 }
 
 
+#line 29 "moonshot-identities-manager.vala"
 IdentityManagerModel* identity_manager_model_construct (GType object_type, IdentityManagerApp* parent_app) {
+#line 184 "moonshot-identities-manager.c"
 	IdentityManagerModel * self = NULL;
 	IdentityManagerApp* _tmp0_;
 	IIdentityCardStore* _tmp1_;
+#line 29 "moonshot-identities-manager.vala"
 	g_return_val_if_fail (parent_app != NULL, NULL);
+#line 29 "moonshot-identities-manager.vala"
 	self = (IdentityManagerModel*) g_object_new (object_type, NULL);
+#line 30 "moonshot-identities-manager.vala"
 	self->priv->parent = (_tmp0_ = _identity_manager_app_ref0 (parent_app), _identity_manager_app_unref0 (self->priv->parent), _tmp0_);
+#line 31 "moonshot-identities-manager.vala"
 	self->priv->store = (_tmp1_ = (IIdentityCardStore*) local_flat_file_store_new (), _g_object_unref0 (self->priv->store), _tmp1_);
+#line 196 "moonshot-identities-manager.c"
 	return self;
 }
 
 
+#line 29 "moonshot-identities-manager.vala"
 IdentityManagerModel* identity_manager_model_new (IdentityManagerApp* parent_app) {
+#line 29 "moonshot-identities-manager.vala"
 	return identity_manager_model_construct (TYPE_IDENTITY_MANAGER_MODEL, parent_app);
+#line 205 "moonshot-identities-manager.c"
 }
 
 
