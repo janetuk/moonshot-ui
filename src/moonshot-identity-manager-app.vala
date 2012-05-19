@@ -5,21 +5,40 @@ class IdentityManagerApp {
     public IdentityManagerModel model;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;
+
 #if OS_MACOS
 	public OSXApplication osxApp;
+  
+    // the signal handler function.
+    // the current instance of our app class is passed in the 
+    // id_manager_app_instanceparameter 
+	public static bool on_osx_open_files (OSXApplication osx_app_instance, 
+                                        string file_name, 
+                                        IdentityManagerApp id_manager_app_instance ) {
+    int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
+    return true;
+	}
 #endif
+
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
         view.show();    
     }
+	
     public IdentityManagerApp () {
         model = new IdentityManagerModel(this);
         view = new IdentityManagerView(this);
         init_ipc_server ();
+
 #if OS_MACOS
- 		osxApp = OSXApplication.get_instance();
- 		osxApp.ns_application_open_file.connect(ipc_server.install_from_file);
+
+        osxApp = OSXApplication.get_instance();
+        // The 'correct' way of connrcting wont work in Mac OS with Vala 0.12	e.g.	
+        // 		osxApp.ns_application_open_file.connect(install_from_file);
+        // so we have to use this old way
+        Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
+
 #endif
         view.show();
     }   
@@ -85,9 +104,6 @@ class IdentityManagerApp {
 
 public static int main(string[] args){
         Gtk.init(ref args);
-		stdout.printf("Hello\n");
-        foreach (string arg in args)
-			stdout.printf("arg %s\n", arg);
 
 #if OS_WIN32
         // Force specific theme settings on Windows without requiring a gtkrc file

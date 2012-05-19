@@ -14,7 +14,7 @@
     -->
       <prefix name="default">${env:JHBUILD_PREFIX}</prefix>
       <prefix name="installer-dir">${env:HOME}/moonshot/mac-client-installer/moonshot-ui/</prefix>
-	  <prefix name="dbus-source-dir">${env:HOME}/gtk/source/dbus-1.4.1/</prefix>
+	  <prefix name="dbus-source-dir">${env:HOME}/gtk/source/dbus-1.4.16/</prefix>
 
     <!-- The project directory is the default location of the created
          app. If you leave out the path, the current directory is

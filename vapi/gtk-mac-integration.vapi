@@ -40,8 +40,14 @@
 	    public bool use_quartz_accelerators();
 
     /* Signals */
-
+/*
        [CCode(cname="NSApplicationOpenFile")]
         public signal bool ns_application_open_file(string file_name);
+*/
+
+       [CCode(cname="nsapplicationopenfile")]
+  
+        public signal bool nsapplicationopenfile(string file_name);
+
     }
 

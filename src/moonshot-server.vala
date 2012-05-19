@@ -115,15 +115,15 @@ public class MoonshotServer : Object {
 
     public bool install_id_card (string   display_name,
                                  string   user_name,
-                                 string   password,
-                                 string   realm,
-                                 string[] rules_patterns,
-                                 string[] rules_always_confirm,
-                                 string[] services,
-                                 string   ca_cert,
-                                 string   subject,
-                                 string   subject_alt,
-                                 string   server_cert)
+                                 string   ?password,
+                                 string   ?realm,
+                                 string[] ?rules_patterns,
+                                 string[] ?rules_always_confirm,
+                                 string[] ?services,
+                                 string   ?ca_cert,
+                                 string   ?subject,
+                                 string   ?subject_alt,
+                                 string   ?server_cert)
     {
       IdCard idcard = new IdCard ();
 
@@ -148,16 +148,17 @@ public class MoonshotServer : Object {
         }
       }
 
-      return this.main_window.add_identity (idcard);
+      return main_window.add_identity (idcard);
     }
 
 
-    public bool install_from_file (string file_name)
+    public int install_from_file (string file_name)
     {
     var webp = new WebProvisioning.Parser (file_name);
+
     webp.parse();
     bool result = false;
-    
+    int installed_cards = 0;
     foreach (IdCard card in WebProvisioning.cards)
     {
       string[] rules_patterns = {};
@@ -175,6 +176,7 @@ public class MoonshotServer : Object {
           i++;
         }
       } 
+
       result = install_id_card (card.display_name,
                                 card.username,
                                 card.password,
@@ -186,11 +188,12 @@ public class MoonshotServer : Object {
                                 card.trust_anchor.subject,
                                 card.trust_anchor.subject_alt,
                                 card.trust_anchor.server_cert);
-       }
-
-    return true;
+      if (result) {
+        installed_cards++;
+      }
     }
-
+    return installed_cards;
+  }
 }
 
 

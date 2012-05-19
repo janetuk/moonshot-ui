@@ -2,7 +2,11 @@ AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
         [0.1],
         [moonshot-community@jiscmail.ac.uk],
-        [moonshot-ui])
+        [moonshot-ui],
+        [http://www.project-moonshot.org/])
+
+# Remove this when we can depend on autoconf >= 2.64
+AC_SUBST(PACKAGE_URL, [http://www.project-moonshot.org/])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
