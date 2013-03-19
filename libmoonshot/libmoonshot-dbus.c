@@ -33,6 +33,8 @@
  */
 
 #include <assert.h>
+#include <string.h>
+#include <unistd.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
 #include <dbus/dbus-glib-lowlevel.h>
@@ -63,11 +65,43 @@ void moonshot_free (void *data)
 {
     g_free (data);
 }
+static char *moonshot_launch_argv[] = {
+  MOONSHOT_LAUNCH_SCRIPT, NULL
+};
 
 static DBusConnection *dbus_launch_moonshot()
 {
-  return NULL;
+    DBusConnection *connection = NULL;
+    DBusError dbus_error;
+    GPid child_pid;
+    gint fd_stdin = -1, fd_stdout = -1;
+    ssize_t addresslen;
+    char dbus_address[1024];
+  
+    if (g_spawn_async_with_pipes( NULL /*cwd*/,
+				  moonshot_launch_argv, NULL /*environ*/,
+				  0 /*flags*/, NULL /*setup*/, NULL,
+				  &child_pid, &fd_stdin, &fd_stdout,
+				  NULL /*stderr*/, NULL /*error*/) == 0 ) {
+      return NULL;
+    }
+    addresslen = read( fd_stdout, dbus_address, sizeof dbus_address);
+    /* we require at least 2 octets of address because we trim the newline*/
+    if (addresslen <= 1) {
+    fail: close(fd_stdin);
+      close(fd_stdout);
+      g_spawn_close_pid(child_pid);
+      return NULL;
+    }
+    dbus_error_init(&dbus_error);
+    dbus_address[addresslen-1] = '\0';
+    connection = dbus_connection_open(dbus_address, &dbus_error);
+    if (dbus_error_is_set(&dbus_error)) {
+      dbus_error_free(&dbus_error);
+      goto fail;
+    } else return connection;
 }
+
 
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {

@@ -9,11 +9,12 @@ bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp
 
-AM_CFLAGS = -g -O0
+AM_CFLAGS = -g -O0 -Wall
 
-AM_CPPFLAGS = -g -O0 \
+AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
+	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
