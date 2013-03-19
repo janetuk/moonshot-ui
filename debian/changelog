@@ -1,3 +1,10 @@
+moonshot-ui (0.0.2+20130319-1) unstable; urgency=low
+
+  * Merge in upstream changes
+  * Script for auto dbus launch in headless
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 19 Mar 2013 10:45:15 -0400
+
 moonshot-ui (0.0.2+20120131-2) unstable; urgency=low
 
   * Update from master branch
