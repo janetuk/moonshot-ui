@@ -18,6 +18,7 @@
 
 
 
+
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -38,7 +39,6 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = src/moonshot$(EXEEXT) src/moonshot-webp$(EXEEXT)
-pkglibexec_PROGRAMS = moonshot-dbus-launch$(EXEEXT)
 @OS_WIN32_TRUE@am__append_1 = -DOS_WIN32
 @OS_WIN32_TRUE@am__append_2 = --define=OS_WIN32
 @OS_MACOS_TRUE@am__append_3 = -DOS_MACOS $(MAC_CFLAGS)
@@ -78,10 +78,9 @@ DIST_COMMON = $(am__configure_deps) $(include_HEADERS) \
 	config.vapi examples_client_vala.stamp \
 	examples_service_selection_vala.stamp \
 	libmoonshot_libmoonshot_la_vala.stamp \
-	moonshot_dbus_launch_vala.stamp src/moonshot-add-dialog.c \
-	src/moonshot-custom-vbox.c src/moonshot-id.c \
-	src/moonshot-idcard-store.c src/moonshot-idcard-widget.c \
-	src/moonshot-identities-manager.c \
+	src/moonshot-add-dialog.c src/moonshot-custom-vbox.c \
+	src/moonshot-id.c src/moonshot-idcard-store.c \
+	src/moonshot-idcard-widget.c src/moonshot-identities-manager.c \
 	src/moonshot-identity-management-view.c \
 	src/moonshot-identity-manager-app.c \
 	src/moonshot-identity-request.c \
@@ -158,7 +157,7 @@ libmoonshot_libmoonshot_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(AM_CFLAGS) $(CFLAGS) $(libmoonshot_libmoonshot_la_LDFLAGS) \
 	$(LDFLAGS) -o $@
-PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS) $(pkglibexec_PROGRAMS)
+PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
 am_examples_client_OBJECTS =  \
 	examples/examples_client-client.$(OBJEXT)
 examples_client_OBJECTS = $(am_examples_client_OBJECTS)
@@ -172,9 +171,6 @@ am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2)
 examples_service_selection_DEPENDENCIES =  \
 	${top_builddir}/libmoonshot/libmoonshot.la \
 	$(am__DEPENDENCIES_3)
-moonshot_dbus_launch_SOURCES = moonshot-dbus-launch.c
-moonshot_dbus_launch_OBJECTS = moonshot-dbus-launch.$(OBJEXT)
-moonshot_dbus_launch_LDADD = $(LDADD)
 am_src_moonshot_OBJECTS =  \
 	src/src_moonshot-moonshot-identity-manager-app.$(OBJEXT) \
 	src/src_moonshot-moonshot-identity-management-view.$(OBJEXT) \
@@ -213,6 +209,7 @@ am_tests_basic_OBJECTS = tests/tests_basic-basic.$(OBJEXT)
 tests_basic_OBJECTS = $(am_tests_basic_OBJECTS)
 tests_basic_DEPENDENCIES = ${top_builddir}/libmoonshot/libmoonshot.la \
 	$(am__DEPENDENCIES_3)
+SCRIPTS = $(pkglibexec_SCRIPTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
 am__depfiles_maybe = depfiles
@@ -249,14 +246,13 @@ am__v_GEN_0 = @echo "  GEN   " $@;
 SOURCES = $(libmoonshot_libmoonshot_la_SOURCES) \
 	$(nodist_libmoonshot_libmoonshot_la_SOURCES) \
 	$(examples_client_SOURCES) \
-	$(examples_service_selection_SOURCES) moonshot-dbus-launch.c \
-	$(src_moonshot_SOURCES) $(nodist_src_moonshot_SOURCES) \
-	$(src_moonshot_webp_SOURCES) $(tests_basic_SOURCES)
+	$(examples_service_selection_SOURCES) $(src_moonshot_SOURCES) \
+	$(nodist_src_moonshot_SOURCES) $(src_moonshot_webp_SOURCES) \
+	$(tests_basic_SOURCES)
 DIST_SOURCES = $(am__libmoonshot_libmoonshot_la_SOURCES_DIST) \
 	$(examples_client_SOURCES) \
-	$(examples_service_selection_SOURCES) moonshot-dbus-launch.c \
-	$(src_moonshot_SOURCES) $(src_moonshot_webp_SOURCES) \
-	$(tests_basic_SOURCES)
+	$(examples_service_selection_SOURCES) $(src_moonshot_SOURCES) \
+	$(src_moonshot_webp_SOURCES) $(tests_basic_SOURCES)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-dvi-recursive install-exec-recursive \
@@ -474,6 +470,7 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 SUBDIRS = po
 lib_LTLIBRARIES = libmoonshot/libmoonshot.la
+pkglibexec_SCRIPTS = moonshot-dbus-launch
 AM_CFLAGS = -g -O0 -Wall
 AM_CPPFLAGS = -include config.h -DLOCALEDIR=\""$(localedir)"\" \
 	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
@@ -724,49 +721,6 @@ clean-noinstPROGRAMS:
 	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
 	echo " rm -f" $$list; \
 	rm -f $$list
-install-pkglibexecPROGRAMS: $(pkglibexec_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	test -z "$(pkglibexecdir)" || $(MKDIR_P) "$(DESTDIR)$(pkglibexecdir)"
-	@list='$(pkglibexec_PROGRAMS)'; test -n "$(pkglibexecdir)" || list=; \
-	for p in $$list; do echo "$$p $$p"; done | \
-	sed 's/$(EXEEXT)$$//' | \
-	while read p p1; do if test -f $$p || test -f $$p1; \
-	  then echo "$$p"; echo "$$p"; else :; fi; \
-	done | \
-	sed -e 'p;s,.*/,,;n;h' -e 's|.*|.|' \
-	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
-	sed 'N;N;N;s,\n, ,g' | \
-	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
-	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
-	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
-	    else { print "f", $$3 "/" $$4, $$1; } } \
-	  END { for (d in files) print "f", d, files[d] }' | \
-	while read type dir files; do \
-	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
-	    test -z "$$files" || { \
-	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(pkglibexecdir)$$dir'"; \
-	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(pkglibexecdir)$$dir" || exit $$?; \
-	    } \
-	; done
-
-uninstall-pkglibexecPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(pkglibexec_PROGRAMS)'; test -n "$(pkglibexecdir)" || list=; \
-	files=`for p in $$list; do echo "$$p"; done | \
-	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
-	      -e 's/$$/$(EXEEXT)/' `; \
-	test -n "$$list" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(pkglibexecdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(pkglibexecdir)" && rm -f $$files
-
-clean-pkglibexecPROGRAMS:
-	@list='$(pkglibexec_PROGRAMS)'; test -n "$$list" || exit 0; \
-	echo " rm -f" $$list; \
-	rm -f $$list || exit $$?; \
-	test -n "$(EXEEXT)" || exit 0; \
-	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
-	echo " rm -f" $$list; \
-	rm -f $$list
 examples/$(am__dirstamp):
 	@$(MKDIR_P) examples
 	@: > examples/$(am__dirstamp)
@@ -783,9 +737,6 @@ examples/examples_service_selection-service-selection.$(OBJEXT):  \
 examples/service-selection$(EXEEXT): $(examples_service_selection_OBJECTS) $(examples_service_selection_DEPENDENCIES) examples/$(am__dirstamp)
 	@rm -f examples/service-selection$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(examples_service_selection_OBJECTS) $(examples_service_selection_LDADD) $(LIBS)
-moonshot-dbus-launch$(EXEEXT): $(moonshot_dbus_launch_OBJECTS) $(moonshot_dbus_launch_DEPENDENCIES) 
-	@rm -f moonshot-dbus-launch$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(moonshot_dbus_launch_OBJECTS) $(moonshot_dbus_launch_LDADD) $(LIBS)
 src/$(am__dirstamp):
 	@$(MKDIR_P) src
 	@: > src/$(am__dirstamp)
@@ -846,6 +797,40 @@ tests/tests_basic-basic.$(OBJEXT): tests/$(am__dirstamp) \
 tests/basic$(EXEEXT): $(tests_basic_OBJECTS) $(tests_basic_DEPENDENCIES) tests/$(am__dirstamp)
 	@rm -f tests/basic$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tests_basic_OBJECTS) $(tests_basic_LDADD) $(LIBS)
+install-pkglibexecSCRIPTS: $(pkglibexec_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	test -z "$(pkglibexecdir)" || $(MKDIR_P) "$(DESTDIR)$(pkglibexecdir)"
+	@list='$(pkglibexec_SCRIPTS)'; test -n "$(pkglibexecdir)" || list=; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  if test -f "$$d$$p"; then echo "$$d$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n' \
+	    -e 'h;s|.*|.|' \
+	    -e 'p;x;s,.*/,,;$(transform)' | sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1; } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) { files[d] = files[d] " " $$1; \
+	      if (++n[d] == $(am__install_max)) { \
+		print "f", d, files[d]; n[d] = 0; files[d] = "" } } \
+	    else { print "f", d "/" $$4, $$1 } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	     if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	     test -z "$$files" || { \
+	       echo " $(INSTALL_SCRIPT) $$files '$(DESTDIR)$(pkglibexecdir)$$dir'"; \
+	       $(INSTALL_SCRIPT) $$files "$(DESTDIR)$(pkglibexecdir)$$dir" || exit $$?; \
+	     } \
+	; done
+
+uninstall-pkglibexecSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(pkglibexec_SCRIPTS)'; test -n "$(pkglibexecdir)" || exit 0; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	       sed -e 's,.*/,,;$(transform)'`; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(pkglibexecdir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(pkglibexecdir)" && rm -f $$files
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -882,7 +867,6 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/moonshot-dbus-launch.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/$(DEPDIR)/examples_client-client.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@examples/$(DEPDIR)/examples_service_selection-service-selection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@libmoonshot/$(DEPDIR)/libmoonshot_libmoonshot_la-libmoonshot-common.Plo@am__quote@
@@ -1410,9 +1394,6 @@ $(srcdir)/config.vapi: $(srcdir)/src_moonshot_vala.stamp
 src_moonshot_vala.stamp: $(src_moonshot_SOURCES)
 	$(AM_V_VALAC)$(VALAC) $(src_moonshot_VALAFLAGS) $(VALAFLAGS) -C $(src_moonshot_SOURCES)
 	$(AM_V_at)touch $@
-moonshot_dbus_launch_vala.stamp: $(moonshot_dbus_launch_SOURCES)
-	$(AM_V_VALAC)$(VALAC) $(AM_VALAFLAGS) $(VALAFLAGS) -C $(moonshot_dbus_launch_SOURCES)
-	$(AM_V_at)touch $@
 examples_client_vala.stamp: $(examples_client_SOURCES)
 	$(AM_V_VALAC)$(VALAC) $(AM_VALAFLAGS) $(VALAFLAGS) -C $(examples_client_SOURCES)
 	$(AM_V_at)touch $@
@@ -1825,8 +1806,8 @@ distcleancheck: distclean
 check-am: all-am
 check: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) check-recursive
-all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(DATA) $(HEADERS) \
-		config.h
+all-am: Makefile $(LTLIBRARIES) $(PROGRAMS) $(SCRIPTS) $(DATA) \
+		$(HEADERS) config.h
 install-binPROGRAMS: install-libLTLIBRARIES
 
 installdirs: installdirs-recursive
@@ -1874,7 +1855,6 @@ maintainer-clean-generic:
 	-rm -f examples_client_vala.stamp
 	-rm -f examples_service_selection_vala.stamp
 	-rm -f libmoonshot_libmoonshot_la_vala.stamp
-	-rm -f moonshot_dbus_launch_vala.stamp
 	-rm -f src/moonshot-add-dialog.c
 	-rm -f src/moonshot-custom-vbox.c
 	-rm -f src/moonshot-id.c
@@ -1897,12 +1877,11 @@ maintainer-clean-generic:
 clean: clean-recursive
 
 clean-am: clean-binPROGRAMS clean-generic clean-libLTLIBRARIES \
-	clean-libtool clean-noinstPROGRAMS clean-pkglibexecPROGRAMS \
-	mostlyclean-am
+	clean-libtool clean-noinstPROGRAMS mostlyclean-am
 
 distclean: distclean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf ./$(DEPDIR) examples/$(DEPDIR) libmoonshot/$(DEPDIR) src/$(DEPDIR) tests/$(DEPDIR)
+	-rm -rf examples/$(DEPDIR) libmoonshot/$(DEPDIR) src/$(DEPDIR) tests/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -1927,7 +1906,7 @@ install-dvi: install-dvi-recursive
 install-dvi-am:
 
 install-exec-am: install-binPROGRAMS install-libLTLIBRARIES \
-	install-pkglibexecPROGRAMS
+	install-pkglibexecSCRIPTS
 
 install-html: install-html-recursive
 
@@ -1952,7 +1931,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-recursive
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf ./$(DEPDIR) examples/$(DEPDIR) libmoonshot/$(DEPDIR) src/$(DEPDIR) tests/$(DEPDIR)
+	-rm -rf examples/$(DEPDIR) libmoonshot/$(DEPDIR) src/$(DEPDIR) tests/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
@@ -1972,7 +1951,7 @@ ps-am:
 uninstall-am: uninstall-binPROGRAMS uninstall-dbusserviceDATA \
 	uninstall-dotdesktopDATA uninstall-includeHEADERS \
 	uninstall-libLTLIBRARIES uninstall-mimeDATA \
-	uninstall-pkglibexecPROGRAMS
+	uninstall-pkglibexecSCRIPTS
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all check \
 	ctags-recursive install install-am install-strip \
@@ -1981,19 +1960,19 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dbusserviceDATA \
 .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
 	all all-am am--refresh check check-am clean clean-binPROGRAMS \
 	clean-generic clean-libLTLIBRARIES clean-libtool \
-	clean-noinstPROGRAMS clean-pkglibexecPROGRAMS ctags \
-	ctags-recursive dist dist-all dist-bzip2 dist-gzip dist-lzma \
-	dist-shar dist-tarZ dist-xz dist-zip distcheck distclean \
-	distclean-compile distclean-generic distclean-hdr \
-	distclean-libtool distclean-tags distcleancheck distdir \
-	distuninstallcheck dvi dvi-am html html-am info info-am \
-	install install-am install-binPROGRAMS install-data \
-	install-data-am install-dbusserviceDATA install-dotdesktopDATA \
-	install-dvi install-dvi-am install-exec install-exec-am \
-	install-html install-html-am install-includeHEADERS \
-	install-info install-info-am install-libLTLIBRARIES \
-	install-man install-mimeDATA install-pdf install-pdf-am \
-	install-pkglibexecPROGRAMS install-ps install-ps-am \
+	clean-noinstPROGRAMS ctags ctags-recursive dist dist-all \
+	dist-bzip2 dist-gzip dist-lzma dist-shar dist-tarZ dist-xz \
+	dist-zip distcheck distclean distclean-compile \
+	distclean-generic distclean-hdr distclean-libtool \
+	distclean-tags distcleancheck distdir distuninstallcheck dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am \
+	install-dbusserviceDATA install-dotdesktopDATA install-dvi \
+	install-dvi-am install-exec install-exec-am install-html \
+	install-html-am install-includeHEADERS install-info \
+	install-info-am install-libLTLIBRARIES install-man \
+	install-mimeDATA install-pdf install-pdf-am \
+	install-pkglibexecSCRIPTS install-ps install-ps-am \
 	install-strip installcheck installcheck-am installdirs \
 	installdirs-am maintainer-clean maintainer-clean-generic \
 	mostlyclean mostlyclean-compile mostlyclean-generic \
@@ -2001,7 +1980,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dbusserviceDATA \
 	uninstall uninstall-am uninstall-binPROGRAMS \
 	uninstall-dbusserviceDATA uninstall-dotdesktopDATA \
 	uninstall-includeHEADERS uninstall-libLTLIBRARIES \
-	uninstall-mimeDATA uninstall-pkglibexecPROGRAMS
+	uninstall-mimeDATA uninstall-pkglibexecSCRIPTS
 
 
 # Build the MSVC lib. The sed hack fixes execution in the case that
