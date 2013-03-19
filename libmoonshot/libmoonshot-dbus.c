@@ -85,21 +85,27 @@ static DBusConnection *dbus_launch_moonshot()
 				  NULL /*stderr*/, NULL /*error*/) == 0 ) {
       return NULL;
     }
+
+    dbus_error_init(&dbus_error);
     addresslen = read( fd_stdout, dbus_address, sizeof dbus_address);
+    close(fd_stdout);
     /* we require at least 2 octets of address because we trim the newline*/
     if (addresslen <= 1) {
-    fail: close(fd_stdin);
-      close(fd_stdout);
+    fail: dbus_error_free(&dbus_error);
+      if (connection != NULL)
+	dbus_connection_unref(connection);
+      close(fd_stdin);
       g_spawn_close_pid(child_pid);
       return NULL;
     }
-    dbus_error_init(&dbus_error);
     dbus_address[addresslen-1] = '\0';
     connection = dbus_connection_open(dbus_address, &dbus_error);
     if (dbus_error_is_set(&dbus_error)) {
-      dbus_error_free(&dbus_error);
       goto fail;
-    } else return connection;
+    }
+    if (!dbus_bus_register(connection, &dbus_error))
+      goto fail;
+	return connection;
 }
 
 
