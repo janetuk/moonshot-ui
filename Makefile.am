@@ -8,12 +8,14 @@ lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp
+pkglibexec_PROGRAMS = moonshot-dbus-launch
 
-AM_CFLAGS = -g -O0
+AM_CFLAGS = -g -O0 -Wall
 
-AM_CPPFLAGS = -g -O0 \
+AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
+	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
@@ -108,7 +110,7 @@ if IPC_MSRPC
 AM_CPPFLAGS += -Isrc
 
 AM_VALAFLAGS += \
-	--pkg msrpc-1.0 \
+	--pkg moonshot-msrpc.vapi --pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
 BUILT_SOURCES = libmoonshot/moonshot-msrpc.h \
@@ -126,8 +128,6 @@ libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
 libmoonshot_libmoonshot_la_SOURCES += \
         libmoonshot/libmoonshot-msrpc.c
 
-src_moonshot_SOURCES += \
-        src/moonshot-msrpc.vapi
 
 nodist_src_moonshot_SOURCES = \
         libmoonshot/moonshot-msrpc_s.c
@@ -239,7 +239,7 @@ icons:
 	cp mac/icons/process-stop.png share/icons
 	cp mac/icons/edit-find.png share/icons
 	cp mac/icons/avatar-default.png share/icons
-	
+
 ## 2. App bundle
 ## gtk-app-bundler must be installed
 ## moonshot-ui.app will be built in moonshot/mac-client-installer/moonshot-ui/
@@ -250,5 +250,4 @@ app-bundle:
 
 installerdir = $(HOME)/moonshot/mac-client-installer
 
-	
 endif

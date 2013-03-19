@@ -7,7 +7,7 @@ AC_INIT([Moonshot-ui],
 
 # Remove this when we can depend on autoconf >= 2.64
 AC_SUBST(PACKAGE_URL, [http://www.project-moonshot.org/])
-
+AC_DEFINE(PACKAGE_URL,["http://www.project-moonshot.org"],[package URL])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
