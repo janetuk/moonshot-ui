@@ -8,6 +8,7 @@ lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp
+pkglibexec_PROGRAMS = moonshot-dbus-launch
 
 AM_CFLAGS = -g -O0 -Wall
 
