@@ -32,8 +32,12 @@
  * Author: Sam Thursfield <samthursfield@codethink.co.uk>
  */
 
+#include <assert.h>
 #include <dbus/dbus-glib.h>
 #include <dbus/dbus.h>
+#include <dbus/dbus-glib-lowlevel.h>
+#include <glib/gspawn.h>
+
 
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
@@ -60,13 +64,18 @@ void moonshot_free (void *data)
     g_free (data);
 }
 
+static DBusConnection *dbus_launch_moonshot()
+{
+  return NULL;
+}
+
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {
     DBusConnection  *connection;
     DBusError        dbus_error;
     DBusGConnection *g_connection;
     DBusGProxy      *g_proxy;
-    GError          *g_error;
+    GError          *g_error = NULL;
     dbus_bool_t      name_has_owner;
 
     g_return_val_if_fail (*error == NULL, NULL);
@@ -80,7 +89,16 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 
     connection = dbus_bus_get (DBUS_BUS_SESSION, &dbus_error);
 
-    if (dbus_error_is_set (&dbus_error)) {
+    if (dbus_error_has_name(&dbus_error, DBUS_ERROR_NOT_SUPPORTED)) {
+      /*Generally this means autolaunch failed because probably DISPLAY is unset*/
+      connection = dbus_launch_moonshot();
+      if (connection != NULL) {
+	dbus_error_free(&dbus_error);
+	dbus_error_init(&dbus_error);
+      }
+    }
+
+      if (dbus_error_is_set (&dbus_error)) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                      "DBus error: %s",
                                      dbus_error.message);
@@ -127,16 +145,8 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     /* Now the service should be running */
     g_error = NULL;
 
-    g_connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
-
-    if (g_error != NULL) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                     "DBus error: %s",
-                                     g_error->message);
-        g_error_free (g_error);
-        return NULL;
-    }
-
+    g_connection = dbus_connection_get_g_connection(connection);
+    assert (g_connection != NULL);
     g_proxy = dbus_g_proxy_new_for_name_owner (g_connection,
                                                MOONSHOT_DBUS_NAME,
                                                MOONSHOT_DBUS_PATH,
