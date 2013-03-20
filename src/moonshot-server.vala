@@ -3,11 +3,11 @@
 [DBus (name = "org.janet.Moonshot")]
 public class MoonshotServer : Object {
 
-    private IdentityManagerView main_window;
+    private IdentityManagerApp parent_app;
 
-    public MoonshotServer (Gtk.Window window)
+    public MoonshotServer (IdentityManagerApp app)
     {
-        this.main_window = (IdentityManagerView) window;
+        this.parent_app = app;
     }
 
     public async bool get_identity (string nai,
@@ -20,7 +20,7 @@ public class MoonshotServer : Object {
                                     out string subject_name_constraint,
                                     out string subject_alt_name_constraint)
     {
-        var request = new IdentityRequest (main_window,
+        var request = new IdentityRequest (parent_app,
                                            nai,
                                            password,
                                            service);
@@ -72,7 +72,7 @@ public class MoonshotServer : Object {
                                             out string subject_name_constraint,
                                             out string subject_alt_name_constraint)
     {
-        var request = new IdentityRequest.default (main_window);
+        var request = new IdentityRequest.default (parent_app);
         request.set_callback ((IdentityRequest) => get_default_identity.callback());
         request.execute ();
         yield;
@@ -148,7 +148,7 @@ public class MoonshotServer : Object {
         }
       }
 
-      return main_window.add_identity (idcard);
+      return parent_app.add_identity (idcard);
     }
 
 

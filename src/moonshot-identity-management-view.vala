@@ -1,7 +1,7 @@
 using Gee;
 using Gtk;
 
-class IdentityManagerView : Window {
+public class IdentityManagerView : Window {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
@@ -21,9 +21,8 @@ class IdentityManagerView : Window {
     private TreeModelFilter filter;
 
     public IdentityManagerModel identities_manager;
-    private SList<IdCard>    candidates;
+    private unowned SList<IdCard>    candidates;
 
-    private IdCard default_id_card;
     public GLib.Queue<IdentityRequest> request_queue;
 
     private HashTable<Gtk.Button, string> service_button_map;
@@ -72,11 +71,6 @@ class IdentityManagerView : Window {
         load_id_cards();
     }
     
-    public void add_candidate (IdCard idcard)
-    {
-        candidates.append (idcard);
-    }
-
     private bool visible_func (TreeModel model, TreeIter iter)
     {
         IdCard id_card;
@@ -195,7 +189,6 @@ class IdentityManagerView : Window {
         remove_id_card_widget((IdCardWidget)id_card_widget);
         }   
 
-        this.default_id_card = null;
         LinkedList<IdCard> card_list = identities_manager.get_card_list() ;
         if (card_list == null) {
             return;
@@ -204,10 +197,6 @@ class IdentityManagerView : Window {
         foreach (IdCard id_card in card_list) {
             add_id_card_data (id_card);
             add_id_card_widget (id_card);
-        }
-
-        if (card_list.size > 0){
-            this.default_id_card = card_list.first();
         }
     }
     
@@ -441,175 +430,25 @@ class IdentityManagerView : Window {
         dialog.destroy ();
     }
 
-    public void select_identity (IdentityRequest request)
+    public void queue_identity_request(IdentityRequest request)
     {
-        IdCard identity = null;
-
+        if (this.request_queue.is_empty())
+        { /* setup widgets */
+            candidates = request.candidates;
+            filter.refilter();
+            redraw_id_card_widgets ();
+            show ();
+        }
         this.request_queue.push_tail (request);
-        
-        if (custom_vbox.current_idcard != null &&
-            custom_vbox.current_idcard.send_button != null)
-          custom_vbox.current_idcard.send_button.set_sensitive (true);
-
-        if (request.select_default)
-        {
-            identity = default_id_card;
-        }
-
-        if (identity == null)
-        {
-            bool has_nai = request.nai != null && request.nai != "";
-            bool has_srv = request.service != null && request.service != "";
-            bool confirm = false;
-            IdCard nai_provided = null;
-
-            foreach (IdCard id in identities_manager.get_card_list())
-            {
-                /* If NAI matches we add id card to the candidate list */
-                if (has_nai && request.nai == id.nai)
-                {
-                    nai_provided = id;
-                    add_candidate (id);
-                    continue;
-                }
-
-                /* If any service matches we add id card to the candidate list */
-                if (has_srv)
-                {
-                    foreach (string srv in id.services)
-                    {
-                        if (request.service == srv)
-                        {
-                            add_candidate (id);
-                            continue;
-                        }
-                    }
-                }
-            }
-
-            /* If more than one candidate we dissasociate service from all ids */
-            if (has_srv && candidates.length() > 1)
-            {
-                foreach (IdCard id in candidates)
-                {
-                    int i = 0;
-                    SList<string> services_list = null;
-                    bool has_service = false;
-
-                    foreach (string srv in id.services)
-                    {
-                        if (srv == request.service)
-                        {
-                            has_service = true;
-                            continue;
-                        }
-                        services_list.append (srv);
-                    }
-                    
-                    if (!has_service)
-                        continue;
-
-                    if (services_list.length () == 0)
-                    {
-                        id.services = {};
-                        continue;
-                    }
-
-                    string[] services = new string[services_list.length ()];
-                    foreach (string srv in services_list)
-                    {
-                        services[i] = srv;
-                        i++;
-                    }
-
-                    id.services = services;
-                }
-            }
-
-//            identities_manager.store_id_cards ();
-
-            /* If there are no candidates we use the service matching rules */
-            if (candidates.length () == 0)
-            {
-                foreach (IdCard id in identities_manager.get_card_list())
-                {
-                    foreach (Rule rule in id.rules)
-                    {
-                        if (!match_service_pattern (request.service, rule.pattern))
-                            continue;
-
-                        candidates.append (id);
-
-                        if (rule.always_confirm == "true")
-                            confirm = true;
-                    }
-                }
-            }
-            
-            if (candidates.length () > 1)
-            {
-                if (has_nai && nai_provided != null)
-                {
-                    identity = nai_provided;
-                    confirm = false;
-                }
-                else
-                    confirm = true;
-            }
-            else
-                identity = candidates.nth_data (0);
-
-            /* TODO: If candidate list empty return fail */
-            
-            if (confirm)
-            {
-                filter.refilter();
-                redraw_id_card_widgets ();
-                show ();
-                return;
-            }
-        }
-        // Send back the identity (we can't directly run the
-        // callback because we may be being called from a 'yield')
-        Idle.add (() => { send_identity_cb (identity); return false; });
-        return;
-    }
-    
-    private bool match_service_pattern (string service, string pattern)
-    {
-        var pspec = new PatternSpec (pattern);
-        return pspec.match_string (service);
     }
 
     public void send_identity_cb (IdCard identity)
     {
         return_if_fail (request_queue.length > 0);
 
+	candidates = null;
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
-
-        if (request.service != null && request.service != "")
-        {
-            bool duplicate_service = false;
-
-            foreach (string service in identity.services)
-            {
-                if (service == request.service)
-                    duplicate_service = true;
-            }
-            if (duplicate_service == false)
-            {
-                string[] services = new string[identity.services.length + 1];
-
-                for (int i = 0; i < identity.services.length; i++)
-                    services[i] = identity.services[i];
-
-                services[identity.services.length] = request.service;
-                identity.services = services;
-
-                identities_manager.update_card (identity);
-            }
-        }
 
         if (identity.password == null)
         {
@@ -630,17 +469,23 @@ class IdentityManagerView : Window {
         }
 
         if (this.request_queue.is_empty())
+        {
+            candidates = null;
             Gtk.main_quit ();
+        } else {
+            candidates = this.request_queue.peek_head().candidates;
+            filter.refilter();
+            redraw_id_card_widgets ();
+        }
 
         if (identity != null)
-            this.default_id_card = identity;
+            parent_app.default_id_card = identity;
 
         request.return_identity (identity);
 
         if (reset_password)
             identity.password = null;
 
-        candidates = null;
     }
 
     private void label_make_bold (Label label)
