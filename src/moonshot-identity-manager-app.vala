@@ -247,10 +247,10 @@ public class IdentityManagerApp {
 
 
 public static int main(string[] args){
-#if IPC_DBUS_GLIB
-        bool headless = GLib.Environment.get_variable("DISPLAY") != null;
-#else
+#if IPC_MSRPC
 	bool headless = false;
+#else
+        bool headless = GLib.Environment.get_variable("DISPLAY") == null;
 #endif
         if (!headless)
             Gtk.init(ref args);
@@ -272,7 +272,7 @@ public static int main(string[] args){
         app.show();
 
         if (headless) {
-#if IPC_DBUS_GLIB
+#if !IPC_MSRPC
             MainLoop loop = new MainLoop();
             loop.run();
 #endif
