@@ -69,13 +69,15 @@ static char *moonshot_launch_argv[] = {
   MOONSHOT_LAUNCH_SCRIPT, NULL
 };
 
-static DBusConnection *dbus_launch_moonshot()
+static DBusGConnection *dbus_launch_moonshot()
 {
-    DBusConnection *connection = NULL;
+    DBusGConnection *connection = NULL;
+    GError *error = NULL;
     DBusError dbus_error;
     GPid child_pid;
     gint fd_stdin = -1, fd_stdout = -1;
     ssize_t addresslen;
+    dbus_error_init(&dbus_error);
     char dbus_address[1024];
   
     if (g_spawn_async_with_pipes( NULL /*cwd*/,
@@ -86,24 +88,25 @@ static DBusConnection *dbus_launch_moonshot()
       return NULL;
     }
 
-    dbus_error_init(&dbus_error);
     addresslen = read( fd_stdout, dbus_address, sizeof dbus_address);
     close(fd_stdout);
     /* we require at least 2 octets of address because we trim the newline*/
     if (addresslen <= 1) {
     fail: dbus_error_free(&dbus_error);
       if (connection != NULL)
-	dbus_connection_unref(connection);
+	dbus_g_connection_unref(connection);
       close(fd_stdin);
       g_spawn_close_pid(child_pid);
       return NULL;
     }
     dbus_address[addresslen-1] = '\0';
-    connection = dbus_connection_open(dbus_address, &dbus_error);
-    if (dbus_error_is_set(&dbus_error)) {
+    connection = dbus_g_connection_open(dbus_address, &error);
+    if (error) {
+      g_error_free(error);
       goto fail;
     }
-    if (!dbus_bus_register(connection, &dbus_error))
+    if (!dbus_bus_register(dbus_g_connection_get_connection(connection),
+			   &dbus_error))
       goto fail;
 	return connection;
 }
@@ -111,9 +114,9 @@ static DBusConnection *dbus_launch_moonshot()
 
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {
-    DBusConnection  *connection;
+    DBusConnection  *dbconnection;
     DBusError        dbus_error;
-    DBusGConnection *g_connection;
+    DBusGConnection *connection;
     DBusGProxy      *g_proxy;
     GError          *g_error = NULL;
     dbus_bool_t      name_has_owner;
@@ -127,26 +130,27 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
      * If/when we move to GDBus this code can become a one-liner.
      */
 
-    connection = dbus_bus_get (DBUS_BUS_SESSION, &dbus_error);
+    connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
-    if (dbus_error_has_name(&dbus_error, DBUS_ERROR_NOT_SUPPORTED)) {
+    if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
       /*Generally this means autolaunch failed because probably DISPLAY is unset*/
       connection = dbus_launch_moonshot();
       if (connection != NULL) {
-	dbus_error_free(&dbus_error);
-	dbus_error_init(&dbus_error);
+	g_error_free(g_error);
+	g_error = NULL;
       }
     }
 
-      if (dbus_error_is_set (&dbus_error)) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                     "DBus error: %s",
-                                     dbus_error.message);
-        dbus_error_free (&dbus_error);
+    if (g_error != NULL) {
+      *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+				   "DBus error: %s",
+				   g_error->message);
+      g_error_free (g_error);
         return NULL;
     }
 
-    name_has_owner  = dbus_bus_name_has_owner (connection,
+    dbconnection = dbus_g_connection_get_connection(connection);
+    name_has_owner  = dbus_bus_name_has_owner (dbconnection,
                                                MOONSHOT_DBUS_NAME,
                                                &dbus_error);
 
@@ -159,7 +163,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     }
 
     if (! name_has_owner) {
-        dbus_bus_start_service_by_name (connection,
+        dbus_bus_start_service_by_name (dbconnection,
                                         MOONSHOT_DBUS_NAME,
                                         0,
                                         NULL,
@@ -185,9 +189,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     /* Now the service should be running */
     g_error = NULL;
 
-    g_connection = dbus_connection_get_g_connection(connection);
-    assert (g_connection != NULL);
-    g_proxy = dbus_g_proxy_new_for_name_owner (g_connection,
+    g_proxy = dbus_g_proxy_new_for_name_owner (connection,
                                                MOONSHOT_DBUS_NAME,
                                                MOONSHOT_DBUS_PATH,
                                                MOONSHOT_DBUS_NAME,
