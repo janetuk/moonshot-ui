@@ -166,6 +166,8 @@ public class IdentityManagerApp {
             }
             if (identity == null)
                 identity = request.candidates.nth_data (0);
+            if (identity == null)
+                confirm = true;
 
             /* TODO: If candidate list empty return fail */
             
