@@ -1,8 +1,10 @@
+using Gee;
 using Gtk;
 
 
-class IdentityManagerApp {
+public class IdentityManagerApp {
     public IdentityManagerModel model;
+    public IdCard default_id_card;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;
 
@@ -23,12 +25,17 @@ class IdentityManagerApp {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
-        view.show();    
+        if (view != null) view.show();    
     }
 	
-    public IdentityManagerApp () {
+    public IdentityManagerApp (bool headless) {
         model = new IdentityManagerModel(this);
-        view = new IdentityManagerView(this);
+        if (!headless)
+            view = new IdentityManagerView(this);
+        LinkedList<IdCard> card_list = model.get_card_list() ;
+        if (card_list.size > 0)
+            this.default_id_card = card_list.first();
+
         init_ipc_server ();
 
 #if OS_MACOS
@@ -40,7 +47,146 @@ class IdentityManagerApp {
         Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
 
 #endif
-        view.show();
+        if (view != null) view.show();
+    }
+
+    public bool add_identity (IdCard id) {
+        /* TODO: add to store here irrespective of view's existence */
+        if (view != null) return view.add_identity(id);
+        return false;
+    }
+
+    public void select_identity (IdentityRequest request) {
+        IdCard identity = null;
+
+        if (request.select_default)
+        {
+            identity = default_id_card;
+        }
+
+        if (identity == null)
+        {
+            bool has_nai = request.nai != null && request.nai != "";
+            bool has_srv = request.service != null && request.service != "";
+            bool confirm = false;
+            IdCard nai_provided = null;
+
+            foreach (IdCard id in model.get_card_list())
+            {
+                /* If NAI matches we add id card to the candidate list */
+                if (has_nai && request.nai == id.nai)
+                {
+                    nai_provided = id;
+                    request.candidates.append (id);
+                    continue;
+                }
+
+                /* If any service matches we add id card to the candidate list */
+                if (has_srv)
+                {
+                    foreach (string srv in id.services)
+                    {
+                        if (request.service == srv)
+                        {
+                            request.candidates.append (id);
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            /* If more than one candidate we dissasociate service from all ids */
+            if (has_srv && request.candidates.length() > 1)
+            {
+                foreach (IdCard id in request.candidates)
+                {
+                    int i = 0;
+                    SList<string> services_list = null;
+                    bool has_service = false;
+
+                    foreach (string srv in id.services)
+                    {
+                        if (srv == request.service)
+                        {
+                            has_service = true;
+                            continue;
+                        }
+                        services_list.append (srv);
+                    }
+                    
+                    if (!has_service)
+                        continue;
+
+                    if (services_list.length () == 0)
+                    {
+                        id.services = {};
+                        continue;
+                    }
+
+                    string[] services = new string[services_list.length ()];
+                    foreach (string srv in services_list)
+                    {
+                        services[i] = srv;
+                        i++;
+                    }
+
+                    id.services = services;
+                }
+            }
+
+//            model.store_id_cards ();
+
+            /* If there are no candidates we use the service matching rules */
+            if (request.candidates.length () == 0)
+            {
+                foreach (IdCard id in model.get_card_list())
+                {
+                    foreach (Rule rule in id.rules)
+                    {
+                        if (!match_service_pattern (request.service, rule.pattern))
+                            continue;
+
+                        request.candidates.append (id);
+
+                        if (rule.always_confirm == "true")
+                            confirm = true;
+                    }
+                }
+            }
+            
+            if (request.candidates.length () > 1)
+            {
+                if (has_nai && nai_provided != null)
+                {
+                    identity = nai_provided;
+                    confirm = false;
+                }
+                else
+                    confirm = true;
+            }
+            if (identity == null)
+                identity = request.candidates.nth_data (0);
+            if (identity == null)
+                confirm = true;
+
+            /* TODO: If candidate list empty return fail */
+            
+            if (confirm && (view != null))
+            {
+		view.queue_identity_request(request);
+                return;
+            }
+        }
+        // Send back the identity (we can't directly run the
+        // callback because we may be being called from a 'yield')
+        Idle.add (() => { request.return_identity (identity); return false; });
+        return;
+    }
+
+    private bool match_service_pattern (string service, string pattern)
+    {
+        var pspec = new PatternSpec (pattern);
+        return pspec.match_string (service);
     }   
     
 #if IPC_MSRPC
@@ -66,7 +212,7 @@ class IdentityManagerApp {
             uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
             assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
 
-            this.ipc_server = new MoonshotServer (this.view);
+            this.ipc_server = new MoonshotServer (this);
             conn.register_object ("/org/janet/moonshot", ipc_server);
         }
         catch (DBus.Error e)
@@ -88,7 +234,7 @@ class IdentityManagerApp {
 
     private void init_ipc_server ()
     {
-        this.ipc_server = new MoonshotServer (this.view);
+        this.ipc_server = new MoonshotServer (this);
         GLib.Bus.own_name (GLib.BusType.SESSION,
                            "org.janet.Moonshot",
                            GLib.BusNameOwnerFlags.NONE,
@@ -103,7 +249,13 @@ class IdentityManagerApp {
 
 
 public static int main(string[] args){
-        Gtk.init(ref args);
+#if IPC_MSRPC
+	bool headless = false;
+#else
+        bool headless = GLib.Environment.get_variable("DISPLAY") == null;
+#endif
+        if (!headless)
+            Gtk.init(ref args);
 
 #if OS_WIN32
         // Force specific theme settings on Windows without requiring a gtkrc file
@@ -117,11 +269,18 @@ public static int main(string[] args){
         Intl.textdomain (Config.GETTEXT_PACKAGE);
        
 	   
-        var app = new IdentityManagerApp();
+        var app = new IdentityManagerApp(headless);
         
         app.show();
 
-        Gtk.main();
+        if (headless) {
+#if !IPC_MSRPC
+            MainLoop loop = new MainLoop();
+            loop.run();
+#endif
+        } else {
+            Gtk.main();
+        }
 
         return 0;
     }

@@ -1,6 +1,6 @@
 using Gee;
 
-class IdentityManagerModel : Object {
+public class IdentityManagerModel : Object {
     private const string FILE_NAME = "identities.txt";
 
     private IIdentityCardStore store;
