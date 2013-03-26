@@ -1,3 +1,10 @@
+moonshot-ui (0.5+20130326-1) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Fixes headless operation
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 26 Mar 2013 12:51:47 -0400
+
 moonshot-ui (0.0.2+20130319-1) unstable; urgency=low
 
   * Merge in upstream changes
