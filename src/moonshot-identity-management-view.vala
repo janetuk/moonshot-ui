@@ -58,7 +58,7 @@ public class IdentityManagerView : Window {
 	   identities_manager = parent_app.model;
        request_queue = new GLib.Queue<IdentityRequest>();
        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
-       this.title = "Moonshoot";
+       this.title = "Moonshot Identity Selector";
        this.set_position (WindowPosition.CENTER);
        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
        build_ui();
