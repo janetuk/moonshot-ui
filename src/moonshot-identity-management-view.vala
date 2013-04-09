@@ -565,6 +565,7 @@ public class IdentityManagerView : Window {
                 
                 fill_services_vbox (idcard);
                 custom_vbox.current_idcard.update_id_card_label ();
+                identities_manager.update_card(idcard);
               }
               
             });
