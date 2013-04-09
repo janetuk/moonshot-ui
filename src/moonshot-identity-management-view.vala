@@ -395,7 +395,7 @@ public class IdentityManagerView : Window {
 
         var children = this.custom_vbox.get_children ();
         foreach (var id_card_widget in children)
-            id_card_widget.destroy();
+            remove_id_card_widget((IdCardWidget )id_card_widget); //id_card_widget.destroy();
 
         if (filter.get_iter_first (out iter))
         {
