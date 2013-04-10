@@ -147,17 +147,17 @@ static void local_flat_file_store_real_add_card (IIdentityCardStore* base, IdCar
 	LocalFlatFileStore * self;
 	GeeLinkedList* _tmp0_;
 	IdCard* _tmp1_;
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) base;
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_if_fail (card != NULL);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = self->priv->id_card_list;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = card;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	gee_abstract_collection_add ((GeeAbstractCollection*) _tmp0_, _tmp1_);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_store_id_cards (self);
 #line 163 "moonshot-local-flat-file-store.c"
 }
@@ -169,23 +169,23 @@ static void local_flat_file_store_real_update_card (IIdentityCardStore* base, Id
 	IdCard* _tmp1_;
 	GeeLinkedList* _tmp2_;
 	IdCard* _tmp3_;
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) base;
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_if_fail (card != NULL);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = self->priv->id_card_list;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = card;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	gee_abstract_collection_remove ((GeeAbstractCollection*) _tmp0_, _tmp1_);
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp2_ = self->priv->id_card_list;
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp3_ = card;
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	gee_abstract_collection_add ((GeeAbstractCollection*) _tmp2_, _tmp3_);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_store_id_cards (self);
 #line 191 "moonshot-local-flat-file-store.c"
 }
@@ -195,24 +195,24 @@ static void local_flat_file_store_real_remove_card (IIdentityCardStore* base, Id
 	LocalFlatFileStore * self;
 	GeeLinkedList* _tmp0_;
 	IdCard* _tmp1_;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) base;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_if_fail (card != NULL);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = self->priv->id_card_list;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = card;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	gee_abstract_collection_remove ((GeeAbstractCollection*) _tmp0_, _tmp1_);
-#line 20 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 20 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_store_id_cards (self);
 #line 211 "moonshot-local-flat-file-store.c"
 }
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 218 "moonshot-local-flat-file-store.c"
 }
@@ -223,33 +223,33 @@ static GeeLinkedList* local_flat_file_store_real_get_card_list (IIdentityCardSto
 	GeeLinkedList* result = NULL;
 	GeeLinkedList* _tmp0_;
 	GeeLinkedList* _tmp1_;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) base;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = self->priv->id_card_list;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	result = _tmp1_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return result;
 #line 237 "moonshot-local-flat-file-store.c"
 }
 
 
 static void _vala_Rule_array_free (Rule* array, gint array_length) {
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	if (array != NULL) {
 #line 244 "moonshot-local-flat-file-store.c"
 		int i;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		for (i = 0; i < array_length; i = i + 1) {
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rule_destroy (&array[i]);
 #line 250 "moonshot-local-flat-file-store.c"
 		}
 	}
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_free (array);
 #line 255 "moonshot-local-flat-file-store.c"
 }
@@ -273,37 +273,37 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 	gchar** _tmp13_;
 	gint _tmp13__length1;
 	GError * _inner_error_ = NULL;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_if_fail (self != NULL);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = self->priv->id_card_list;
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	gee_abstract_collection_clear ((GeeAbstractCollection*) _tmp0_);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = g_key_file_new ();
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	key_file = _tmp1_;
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp2_ = local_flat_file_store_get_data_dir (self);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	path = _tmp2_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp3_ = path;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp4_ = g_build_filename (_tmp3_, LOCAL_FLAT_FILE_STORE_FILE_NAME, NULL);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	filename = _tmp4_;
 #line 297 "moonshot-local-flat-file-store.c"
 	{
 		GKeyFile* _tmp5_;
 		const gchar* _tmp6_;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp5_ = key_file;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp6_ = filename;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_key_file_load_from_file (_tmp5_, _tmp6_, G_KEY_FILE_NONE, &_inner_error_);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		if (_inner_error_ != NULL) {
 #line 309 "moonshot-local-flat-file-store.c"
 			goto __catch2_g_error;
@@ -316,60 +316,60 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 		FILE* _tmp7_;
 		GError* _tmp8_;
 		const gchar* _tmp9_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		e = _inner_error_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_inner_error_ = NULL;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp7_ = stdout;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp8_ = e;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp9_ = _tmp8_->message;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		fprintf (_tmp7_, "Error: %s\n", _tmp9_);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_error_free0 (e);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (filename);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (path);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_key_file_free0 (key_file);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		return;
 #line 342 "moonshot-local-flat-file-store.c"
 	}
 	__finally2:
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	if (_inner_error_ != NULL) {
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (filename);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (path);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_key_file_free0 (key_file);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_clear_error (&_inner_error_);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		return;
 #line 359 "moonshot-local-flat-file-store.c"
 	}
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp10_ = key_file;
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp12_ = g_key_file_get_groups (_tmp10_, &_tmp11_);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	identities_uris = _tmp12_;
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	identities_uris_length1 = _tmp11_;
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_identities_uris_size_ = identities_uris_length1;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp13_ = identities_uris;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp13__length1 = identities_uris_length1;
 #line 375 "moonshot-local-flat-file-store.c"
 	{
@@ -377,18 +377,18 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 		gint identity_collection_length1 = 0;
 		gint _identity_collection_size_ = 0;
 		gint identity_it = 0;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		identity_collection = _tmp13_;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		identity_collection_length1 = _tmp13__length1;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		for (identity_it = 0; identity_it < _tmp13__length1; identity_it = identity_it + 1) {
 #line 387 "moonshot-local-flat-file-store.c"
 			gchar* _tmp14_;
 			gchar* identity = NULL;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp14_ = g_strdup (identity_collection[identity_it]);
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			identity = _tmp14_;
 #line 394 "moonshot-local-flat-file-store.c"
 			{
@@ -471,185 +471,185 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 					gchar* _tmp121_;
 					GeeLinkedList* _tmp122_;
 					IdCard* _tmp123_;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp15_ = id_card_new ();
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card = _tmp15_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp16_ = key_file;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp17_ = identity;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp18_ = g_key_file_get_string (_tmp16_, _tmp17_, "Issuer", &_inner_error_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp19_ = _tmp18_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 491 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp20_ = id_card;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp21_ = _tmp19_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card_set_issuer (_tmp20_, _tmp21_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp21_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp22_ = key_file;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp23_ = identity;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp24_ = g_key_file_get_string (_tmp22_, _tmp23_, "Username", &_inner_error_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp25_ = _tmp24_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 514 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp26_ = id_card;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp27_ = _tmp25_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card_set_username (_tmp26_, _tmp27_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp27_);
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp28_ = key_file;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp29_ = identity;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp30_ = g_key_file_get_string (_tmp28_, _tmp29_, "Password", &_inner_error_);
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp31_ = _tmp30_;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 537 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp32_ = id_card;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp33_ = _tmp31_;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card_set_password (_tmp32_, _tmp33_);
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp33_);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp34_ = key_file;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp35_ = identity;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp37_ = g_key_file_get_string_list (_tmp34_, _tmp35_, "Services", &_tmp36_, &_inner_error_);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp38_ = _tmp37_;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp38__length1 = _tmp36_;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					__tmp38__size_ = _tmp38__length1;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 564 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp39_ = id_card;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp40_ = _tmp38_;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp40__length1 = _tmp38__length1;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card_set_services (_tmp39_, _tmp40_, _tmp38__length1);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp40_ = (_vala_array_free (_tmp40_, _tmp40__length1, (GDestroyNotify) g_free), NULL);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp41_ = key_file;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp42_ = identity;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp43_ = g_key_file_get_string (_tmp41_, _tmp42_, "DisplayName", &_inner_error_);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp44_ = _tmp43_;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 589 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp45_ = id_card;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp46_ = _tmp44_;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					id_card_set_display_name (_tmp45_, _tmp46_);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp46_);
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp47_ = id_card;
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp48_ = find_icon ("avatar-default", 48);
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					g_object_set_data_full ((GObject*) _tmp47_, "pixbuf", _tmp48_, g_object_unref);
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp50_ = key_file;
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp51_ = identity;
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp52_ = g_key_file_has_key (_tmp50_, _tmp51_, "Rules-Patterns", &_inner_error_);
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp53_ = _tmp52_;
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 618 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_tmp53_) {
 #line 623 "moonshot-local-flat-file-store.c"
 						GKeyFile* _tmp54_;
 						const gchar* _tmp55_;
 						gboolean _tmp56_ = FALSE;
 						gboolean _tmp57_;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp54_ = key_file;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp55_ = identity;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp56_ = g_key_file_has_key (_tmp54_, _tmp55_, "Rules-AlwaysConfirm", &_inner_error_);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp57_ = _tmp56_;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (_inner_error_ != NULL) {
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_g_object_unref0 (id_card);
 #line 640 "moonshot-local-flat-file-store.c"
 							goto __catch3_g_error;
 						}
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp49_ = _tmp57_;
 #line 645 "moonshot-local-flat-file-store.c"
 					} else {
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp49_ = FALSE;
 #line 649 "moonshot-local-flat-file-store.c"
 					}
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp58_ = _tmp49_;
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_tmp58_) {
 #line 655 "moonshot-local-flat-file-store.c"
 						GKeyFile* _tmp59_;
@@ -670,55 +670,55 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 						gint _tmp67__length1;
 						gchar** _tmp68_;
 						gint _tmp68__length1;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp59_ = key_file;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp60_ = identity;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp62_ = g_key_file_get_string_list (_tmp59_, _tmp60_, "Rules-Patterns", &_tmp61_, &_inner_error_);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_patterns = _tmp62_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_patterns_length1 = _tmp61_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_rules_patterns_size_ = rules_patterns_length1;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (_inner_error_ != NULL) {
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_g_object_unref0 (id_card);
 #line 690 "moonshot-local-flat-file-store.c"
 							goto __catch3_g_error;
 						}
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp63_ = key_file;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp64_ = identity;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp66_ = g_key_file_get_string_list (_tmp63_, _tmp64_, "Rules-AlwaysConfirm", &_tmp65_, &_inner_error_);
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_always_conf = _tmp66_;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_always_conf_length1 = _tmp65_;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_rules_always_conf_size_ = rules_always_conf_length1;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (_inner_error_ != NULL) {
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_g_object_unref0 (id_card);
 #line 711 "moonshot-local-flat-file-store.c"
 							goto __catch3_g_error;
 						}
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp67_ = rules_patterns;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp67__length1 = rules_patterns_length1;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp68_ = rules_always_conf;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp68__length1 = rules_always_conf_length1;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (_tmp67__length1 == _tmp68__length1) {
 #line 724 "moonshot-local-flat-file-store.c"
 							gchar** _tmp69_;
@@ -730,29 +730,29 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 							IdCard* _tmp88_;
 							Rule* _tmp89_;
 							gint _tmp89__length1;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp69_ = rules_patterns;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp69__length1 = rules_patterns_length1;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp70_ = g_new0 (Rule, _tmp69__length1);
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							rules = _tmp70_;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							rules_length1 = _tmp69__length1;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_rules_size_ = rules_length1;
 #line 746 "moonshot-local-flat-file-store.c"
 							{
 								gint i;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 								i = 0;
 #line 751 "moonshot-local-flat-file-store.c"
 								{
 									gboolean _tmp71_;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 									_tmp71_ = TRUE;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 									while (TRUE) {
 #line 758 "moonshot-local-flat-file-store.c"
 										gboolean _tmp72_;
@@ -774,209 +774,209 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 										gchar* _tmp85_;
 										Rule _tmp86_ = {0};
 										Rule _tmp87_;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp72_ = _tmp71_;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										if (!_tmp72_) {
 #line 782 "moonshot-local-flat-file-store.c"
 											gint _tmp73_;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 											_tmp73_ = i;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 											i = _tmp73_ + 1;
 #line 788 "moonshot-local-flat-file-store.c"
 										}
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp71_ = FALSE;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp74_ = i;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp75_ = rules_patterns;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp75__length1 = rules_patterns_length1;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										if (!(_tmp74_ < _tmp75__length1)) {
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 											break;
 #line 802 "moonshot-local-flat-file-store.c"
 										}
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp76_ = rules;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp76__length1 = rules_length1;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp77_ = i;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp78_ = rules_patterns;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp78__length1 = rules_patterns_length1;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp79_ = i;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp80_ = _tmp78_[_tmp79_];
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp81_ = g_strdup (_tmp80_);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp82_ = rules_always_conf;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp82__length1 = rules_always_conf_length1;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp83_ = i;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp84_ = _tmp82_[_tmp83_];
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp85_ = g_strdup (_tmp84_);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_g_free0 (_tmp86_.pattern);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp86_.pattern = _tmp81_;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_g_free0 (_tmp86_.always_confirm);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp86_.always_confirm = _tmp85_;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										rule_destroy (&_tmp76_[_tmp77_]);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp76_[_tmp77_] = _tmp86_;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 										_tmp87_ = _tmp76_[_tmp77_];
 #line 844 "moonshot-local-flat-file-store.c"
 									}
 								}
 							}
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp88_ = id_card;
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp89_ = rules;
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp89__length1 = rules_length1;
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							id_card_set_rules (_tmp88_, _tmp89_, _tmp89__length1);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							rules = (_vala_Rule_array_free (rules, rules_length1), NULL);
 #line 858 "moonshot-local-flat-file-store.c"
 						}
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_always_conf = (_vala_array_free (rules_always_conf, rules_always_conf_length1, (GDestroyNotify) g_free), NULL);
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
 #line 864 "moonshot-local-flat-file-store.c"
 					}
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp90_ = key_file;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp91_ = identity;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp92_ = g_key_file_get_string (_tmp90_, _tmp91_, "CA-Cert", &_inner_error_);
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp93_ = _tmp92_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 878 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp94_ = id_card;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp95_ = id_card_get_trust_anchor (_tmp94_);
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp96_ = _tmp95_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp97_ = _tmp93_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					trust_anchor_set_ca_cert (_tmp96_, _tmp97_);
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp97_);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp98_ = key_file;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp99_ = identity;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp100_ = g_key_file_get_string (_tmp98_, _tmp99_, "Subject", &_inner_error_);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp101_ = _tmp100_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 905 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp102_ = id_card;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp103_ = id_card_get_trust_anchor (_tmp102_);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp104_ = _tmp103_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp105_ = _tmp101_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					trust_anchor_set_subject (_tmp104_, _tmp105_);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp105_);
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp106_ = key_file;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp107_ = identity;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp108_ = g_key_file_get_string (_tmp106_, _tmp107_, "SubjectAlt", &_inner_error_);
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp109_ = _tmp108_;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 932 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp110_ = id_card;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp111_ = id_card_get_trust_anchor (_tmp110_);
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp112_ = _tmp111_;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp113_ = _tmp109_;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					trust_anchor_set_subject_alt (_tmp112_, _tmp113_);
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp113_);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp114_ = key_file;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp115_ = identity;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp116_ = g_key_file_get_string (_tmp114_, _tmp115_, "ServerCert", &_inner_error_);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp117_ = _tmp116_;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					if (_inner_error_ != NULL) {
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_object_unref0 (id_card);
 #line 959 "moonshot-local-flat-file-store.c"
 						goto __catch3_g_error;
 					}
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp118_ = id_card;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp119_ = id_card_get_trust_anchor (_tmp118_);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp120_ = _tmp119_;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp121_ = _tmp117_;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					trust_anchor_set_server_cert (_tmp120_, _tmp121_);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (_tmp121_);
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp122_ = self->priv->id_card_list;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp123_ = id_card;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					gee_abstract_collection_add ((GeeAbstractCollection*) _tmp122_, _tmp123_);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_object_unref0 (id_card);
 #line 982 "moonshot-local-flat-file-store.c"
 				}
@@ -987,56 +987,56 @@ static void local_flat_file_store_load_id_cards (LocalFlatFileStore* self) {
 					FILE* _tmp124_;
 					GError* _tmp125_;
 					const gchar* _tmp126_;
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					e = _inner_error_;
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_inner_error_ = NULL;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp124_ = stdout;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp125_ = e;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp126_ = _tmp125_->message;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					fprintf (_tmp124_, "Error:  %s\n", _tmp126_);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_error_free0 (e);
 #line 1005 "moonshot-local-flat-file-store.c"
 				}
 				__finally3:
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				if (_inner_error_ != NULL) {
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (identity);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					identities_uris = (_vala_array_free (identities_uris, identities_uris_length1, (GDestroyNotify) g_free), NULL);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (filename);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_free0 (path);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_g_key_file_free0 (key_file);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					g_clear_error (&_inner_error_);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					return;
 #line 1026 "moonshot-local-flat-file-store.c"
 				}
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (identity);
 #line 1030 "moonshot-local-flat-file-store.c"
 			}
 		}
 	}
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	identities_uris = (_vala_array_free (identities_uris, identities_uris_length1, (GDestroyNotify) g_free), NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_free0 (filename);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_free0 (path);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_key_file_free0 (key_file);
 #line 1042 "moonshot-local-flat-file-store.c"
 }
@@ -1049,33 +1049,33 @@ static gchar* local_flat_file_store_get_data_dir (LocalFlatFileStore* self) {
 	gchar* _tmp1_ = NULL;
 	const gchar* _tmp2_;
 	gboolean _tmp3_ = FALSE;
-#line 82 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 82 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = g_get_user_data_dir ();
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp1_ = g_build_filename (_tmp0_, PACKAGE_TARNAME, NULL);
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_free0 (path);
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	path = _tmp1_;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp2_ = path;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp3_ = g_file_test (_tmp2_, G_FILE_TEST_EXISTS);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	if (!_tmp3_) {
 #line 1069 "moonshot-local-flat-file-store.c"
 		const gchar* _tmp4_;
-#line 88 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 88 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp4_ = path;
-#line 88 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 88 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_mkdir_with_parents (_tmp4_, 0700);
 #line 1075 "moonshot-local-flat-file-store.c"
 	}
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	result = path;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return result;
 #line 1081 "moonshot-local-flat-file-store.c"
 }
@@ -1084,19 +1084,19 @@ static gchar* local_flat_file_store_get_data_dir (LocalFlatFileStore* self) {
 static gchar** _vala_array_dup1 (gchar** self, int length) {
 	gchar** result;
 	int i;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	result = g_new0 (gchar*, length + 1);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	for (i = 0; i < length; i++) {
 #line 1092 "moonshot-local-flat-file-store.c"
 		gchar* _tmp0_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp0_ = g_strdup (self[i]);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		result[i] = _tmp0_;
 #line 1098 "moonshot-local-flat-file-store.c"
 	}
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return result;
 #line 1102 "moonshot-local-flat-file-store.c"
 }
@@ -1109,11 +1109,11 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 	gchar* _tmp177_ = NULL;
 	gchar* text;
 	GError * _inner_error_ = NULL;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_return_if_fail (self != NULL);
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = g_key_file_new ();
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	key_file = _tmp0_;
 #line 1119 "moonshot-local-flat-file-store.c"
 	{
@@ -1125,23 +1125,23 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 		gint _tmp5_;
 		gint _id_card_size;
 		gint _id_card_index;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp1_ = self->priv->id_card_list;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp2_ = _g_object_ref0 (_tmp1_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_id_card_list = _tmp2_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp3_ = _id_card_list;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp4_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp3_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp5_ = _tmp4_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_id_card_size = _tmp5_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_id_card_index = -1;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		while (TRUE) {
 #line 1147 "moonshot-local-flat-file-store.c"
 			gint _tmp6_;
@@ -1288,71 +1288,71 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 			const gchar* _tmp173_;
 			const gchar* _tmp174_;
 			const gchar* _tmp175_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp6_ = _id_card_index;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_id_card_index = _tmp6_ + 1;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp7_ = _id_card_index;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp8_ = _id_card_size;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (!(_tmp7_ < _tmp8_)) {
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				break;
 #line 1304 "moonshot-local-flat-file-store.c"
 			}
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp9_ = _id_card_list;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp10_ = _id_card_index;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp11_ = gee_abstract_list_get ((GeeAbstractList*) _tmp9_, _tmp10_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			id_card = (IdCard*) _tmp11_;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp12_ = id_card;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp13_ = id_card_get_rules (_tmp12_, &_tmp13__length1);
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp14_ = _tmp13_;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp14__length1 = _tmp13__length1;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp15_ = g_new0 (gchar*, _tmp14__length1 + 1);
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_patterns = _tmp15_;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_patterns_length1 = _tmp14__length1;
-#line 96 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 96 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_rules_patterns_size_ = rules_patterns_length1;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp16_ = id_card;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp17_ = id_card_get_rules (_tmp16_, &_tmp17__length1);
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp18_ = _tmp17_;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp18__length1 = _tmp17__length1;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp19_ = g_new0 (gchar*, _tmp18__length1 + 1);
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_always_conf = _tmp19_;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_always_conf_length1 = _tmp18__length1;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_rules_always_conf_size_ = rules_always_conf_length1;
 #line 1346 "moonshot-local-flat-file-store.c"
 			{
 				gint i;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				i = 0;
 #line 1351 "moonshot-local-flat-file-store.c"
 				{
 					gboolean _tmp20_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					_tmp20_ = TRUE;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 					while (TRUE) {
 #line 1358 "moonshot-local-flat-file-store.c"
 						gboolean _tmp21_;
@@ -1388,301 +1388,301 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 						const gchar* _tmp44_;
 						gchar* _tmp45_;
 						gchar* _tmp46_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp21_ = _tmp20_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (!_tmp21_) {
 #line 1396 "moonshot-local-flat-file-store.c"
 							gint _tmp22_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							_tmp22_ = i;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							i = _tmp22_ + 1;
 #line 1402 "moonshot-local-flat-file-store.c"
 						}
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp20_ = FALSE;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp23_ = i;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp24_ = id_card;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp25_ = id_card_get_rules (_tmp24_, &_tmp25__length1);
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp26_ = _tmp25_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp26__length1 = _tmp25__length1;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						if (!(_tmp23_ < _tmp26__length1)) {
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 							break;
 #line 1420 "moonshot-local-flat-file-store.c"
 						}
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp27_ = rules_patterns;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp27__length1 = rules_patterns_length1;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp28_ = i;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp29_ = id_card;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp30_ = id_card_get_rules (_tmp29_, &_tmp30__length1);
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp31_ = _tmp30_;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp31__length1 = _tmp30__length1;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp32_ = i;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp33_ = _tmp31_[_tmp32_];
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp34_ = _tmp33_.pattern;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp35_ = g_strdup (_tmp34_);
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_free0 (_tmp27_[_tmp28_]);
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp27_[_tmp28_] = _tmp35_;
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp36_ = _tmp27_[_tmp28_];
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp37_ = rules_always_conf;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp37__length1 = rules_always_conf_length1;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp38_ = i;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp39_ = id_card;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp40_ = id_card_get_rules (_tmp39_, &_tmp40__length1);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp41_ = _tmp40_;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp41__length1 = _tmp40__length1;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp42_ = i;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp43_ = _tmp41_[_tmp42_];
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp44_ = _tmp43_.always_confirm;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp45_ = g_strdup (_tmp44_);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_g_free0 (_tmp37_[_tmp38_]);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp37_[_tmp38_] = _tmp45_;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 						_tmp46_ = _tmp37_[_tmp38_];
 #line 1478 "moonshot-local-flat-file-store.c"
 					}
 				}
 			}
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp47_ = id_card;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp48_ = id_card_get_issuer (_tmp47_);
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp49_ = _tmp48_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp50_ = g_strdup (_tmp49_);
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp51_ = _tmp50_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp52_ = _tmp51_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp52_ == NULL) {
 #line 1496 "moonshot-local-flat-file-store.c"
 				gchar* _tmp53_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp53_ = g_strdup ("");
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp51_);
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp51_ = _tmp53_;
 #line 1504 "moonshot-local-flat-file-store.c"
 			}
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp54_ = key_file;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp55_ = id_card;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp56_ = id_card_get_display_name (_tmp55_);
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp57_ = _tmp56_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp58_ = _tmp51_;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp54_, _tmp57_, "Issuer", _tmp58_);
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp59_ = id_card;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp60_ = id_card_get_display_name (_tmp59_);
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp61_ = _tmp60_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp62_ = g_strdup (_tmp61_);
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp63_ = _tmp62_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp64_ = _tmp63_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp64_ == NULL) {
 #line 1532 "moonshot-local-flat-file-store.c"
 				gchar* _tmp65_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp65_ = g_strdup ("");
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp63_);
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp63_ = _tmp65_;
 #line 1540 "moonshot-local-flat-file-store.c"
 			}
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp66_ = key_file;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp67_ = id_card;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp68_ = id_card_get_display_name (_tmp67_);
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp69_ = _tmp68_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp70_ = _tmp63_;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp66_, _tmp69_, "DisplayName", _tmp70_);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp71_ = id_card;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp72_ = id_card_get_username (_tmp71_);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp73_ = _tmp72_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp74_ = g_strdup (_tmp73_);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp75_ = _tmp74_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp76_ = _tmp75_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp76_ == NULL) {
 #line 1568 "moonshot-local-flat-file-store.c"
 				gchar* _tmp77_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp77_ = g_strdup ("");
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp75_);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp75_ = _tmp77_;
 #line 1576 "moonshot-local-flat-file-store.c"
 			}
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp78_ = key_file;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp79_ = id_card;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp80_ = id_card_get_display_name (_tmp79_);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp81_ = _tmp80_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp82_ = _tmp75_;
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp78_, _tmp81_, "Username", _tmp82_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp83_ = id_card;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp84_ = id_card_get_password (_tmp83_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp85_ = _tmp84_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp86_ = g_strdup (_tmp85_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp87_ = _tmp86_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp88_ = _tmp87_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp88_ == NULL) {
 #line 1604 "moonshot-local-flat-file-store.c"
 				gchar* _tmp89_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp89_ = g_strdup ("");
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp87_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp87_ = _tmp89_;
 #line 1612 "moonshot-local-flat-file-store.c"
 			}
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp90_ = key_file;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp91_ = id_card;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp92_ = id_card_get_display_name (_tmp91_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp93_ = _tmp92_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp94_ = _tmp87_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp90_, _tmp93_, "Password", _tmp94_);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp95_ = id_card;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp96_ = id_card_get_services (_tmp95_, &_tmp96__length1);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp97_ = _tmp96_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp97__length1 = _tmp96__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp98_ = (_tmp97_ != NULL) ? _vala_array_dup1 (_tmp97_, _tmp97__length1) : ((gpointer) _tmp97_);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp98__length1 = _tmp97__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp99_ = _tmp98_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp99__length1 = _tmp98__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			__tmp99__size_ = _tmp99__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp100_ = _tmp99_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp100__length1 = _tmp99__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp100_ == NULL) {
 #line 1650 "moonshot-local-flat-file-store.c"
 				gchar** _tmp101_ = NULL;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp101_ = g_new0 (gchar*, 0 + 1);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp99_ = (_vala_array_free (_tmp99_, _tmp99__length1, (GDestroyNotify) g_free), NULL);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp99_ = _tmp101_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp99__length1 = 0;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				__tmp99__size_ = _tmp99__length1;
 #line 1662 "moonshot-local-flat-file-store.c"
 			}
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp102_ = key_file;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp103_ = id_card;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp104_ = id_card_get_display_name (_tmp103_);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp105_ = _tmp104_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp106_ = _tmp99_;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp106__length1 = _tmp99__length1;
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string_list (_tmp102_, _tmp105_, "Services", (const gchar* const*) _tmp106_, _tmp106__length1);
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp107_ = id_card;
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp108_ = id_card_get_rules (_tmp107_, &_tmp108__length1);
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp109_ = _tmp108_;
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp109__length1 = _tmp108__length1;
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp109__length1 > 0) {
 #line 1688 "moonshot-local-flat-file-store.c"
 				GKeyFile* _tmp110_;
@@ -1697,231 +1697,231 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 				const gchar* _tmp118_;
 				gchar** _tmp119_;
 				gint _tmp119__length1;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp110_ = key_file;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp111_ = id_card;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp112_ = id_card_get_display_name (_tmp111_);
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp113_ = _tmp112_;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp114_ = rules_patterns;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp114__length1 = rules_patterns_length1;
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				g_key_file_set_string_list (_tmp110_, _tmp113_, "Rules-Patterns", (const gchar* const*) _tmp114_, _tmp114__length1);
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp115_ = key_file;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp116_ = id_card;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp117_ = id_card_get_display_name (_tmp116_);
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp118_ = _tmp117_;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp119_ = rules_always_conf;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp119__length1 = rules_always_conf_length1;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				g_key_file_set_string_list (_tmp115_, _tmp118_, "Rules-AlwaysConfirm", (const gchar* const*) _tmp119_, _tmp119__length1);
 #line 1729 "moonshot-local-flat-file-store.c"
 			}
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp120_ = id_card;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp121_ = id_card_get_trust_anchor (_tmp120_);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp122_ = _tmp121_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp123_ = trust_anchor_get_ca_cert (_tmp122_);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp124_ = _tmp123_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp125_ = g_strdup (_tmp124_);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp126_ = _tmp125_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp127_ = _tmp126_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp127_ == NULL) {
 #line 1749 "moonshot-local-flat-file-store.c"
 				gchar* _tmp128_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp128_ = g_strdup ("");
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp126_);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp126_ = _tmp128_;
 #line 1757 "moonshot-local-flat-file-store.c"
 			}
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp129_ = key_file;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp130_ = id_card;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp131_ = id_card_get_display_name (_tmp130_);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp132_ = _tmp131_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp133_ = _tmp126_;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp129_, _tmp132_, "CA-Cert", _tmp133_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp134_ = id_card;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp135_ = id_card_get_trust_anchor (_tmp134_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp136_ = _tmp135_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp137_ = trust_anchor_get_subject (_tmp136_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp138_ = _tmp137_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp139_ = g_strdup (_tmp138_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp140_ = _tmp139_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp141_ = _tmp140_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp141_ == NULL) {
 #line 1789 "moonshot-local-flat-file-store.c"
 				gchar* _tmp142_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp142_ = g_strdup ("");
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp140_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp140_ = _tmp142_;
 #line 1797 "moonshot-local-flat-file-store.c"
 			}
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp143_ = key_file;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp144_ = id_card;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp145_ = id_card_get_display_name (_tmp144_);
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp146_ = _tmp145_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp147_ = _tmp140_;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp143_, _tmp146_, "Subject", _tmp147_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp148_ = id_card;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp149_ = id_card_get_trust_anchor (_tmp148_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp150_ = _tmp149_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp151_ = trust_anchor_get_subject_alt (_tmp150_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp152_ = _tmp151_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp153_ = g_strdup (_tmp152_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp154_ = _tmp153_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp155_ = _tmp154_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp155_ == NULL) {
 #line 1829 "moonshot-local-flat-file-store.c"
 				gchar* _tmp156_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp156_ = g_strdup ("");
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp154_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp154_ = _tmp156_;
 #line 1837 "moonshot-local-flat-file-store.c"
 			}
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp157_ = key_file;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp158_ = id_card;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp159_ = id_card_get_display_name (_tmp158_);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp160_ = _tmp159_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp161_ = _tmp154_;
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp157_, _tmp160_, "SubjectAlt", _tmp161_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp162_ = id_card;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp163_ = id_card_get_trust_anchor (_tmp162_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp164_ = _tmp163_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp165_ = trust_anchor_get_server_cert (_tmp164_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp166_ = _tmp165_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp167_ = g_strdup (_tmp166_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp168_ = _tmp167_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp169_ = _tmp168_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			if (_tmp169_ == NULL) {
 #line 1869 "moonshot-local-flat-file-store.c"
 				gchar* _tmp170_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp170_ = g_strdup ("");
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_g_free0 (_tmp168_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 				_tmp168_ = _tmp170_;
 #line 1877 "moonshot-local-flat-file-store.c"
 			}
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp171_ = key_file;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp172_ = id_card;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp173_ = id_card_get_display_name (_tmp172_);
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp174_ = _tmp173_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp175_ = _tmp168_;
-#line 119 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 119 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			g_key_file_set_string (_tmp171_, _tmp174_, "ServerCert", _tmp175_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp168_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp154_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp140_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp126_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_tmp99_ = (_vala_array_free (_tmp99_, _tmp99__length1, (GDestroyNotify) g_free), NULL);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp87_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp75_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp63_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (_tmp51_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_always_conf = (_vala_array_free (rules_always_conf, rules_always_conf_length1, (GDestroyNotify) g_free), NULL);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_object_unref0 (id_card);
 #line 1915 "moonshot-local-flat-file-store.c"
 		}
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_object_unref0 (_id_card_list);
 #line 1919 "moonshot-local-flat-file-store.c"
 	}
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp176_ = key_file;
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp177_ = g_key_file_to_data (_tmp176_, NULL, NULL);
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	text = _tmp177_;
 #line 1927 "moonshot-local-flat-file-store.c"
 	{
@@ -1929,28 +1929,28 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 		gchar* path;
 		gchar* _tmp179_ = NULL;
 		gchar* filename;
-#line 125 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 125 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp178_ = local_flat_file_store_get_data_dir (self);
-#line 125 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 125 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		path = _tmp178_;
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp179_ = g_build_filename (path, LOCAL_FLAT_FILE_STORE_FILE_NAME, NULL);
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		filename = _tmp179_;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_file_set_contents (filename, text, (gssize) (-1), &_inner_error_);
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		if (_inner_error_ != NULL) {
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (filename);
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 			_g_free0 (path);
 #line 1949 "moonshot-local-flat-file-store.c"
 			goto __catch4_g_error;
 		}
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (filename);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (path);
 #line 1956 "moonshot-local-flat-file-store.c"
 	}
@@ -1961,42 +1961,42 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 		FILE* _tmp180_;
 		GError* _tmp181_;
 		const gchar* _tmp182_;
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		e = _inner_error_;
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_inner_error_ = NULL;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp180_ = stdout;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp181_ = e;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_tmp182_ = _tmp181_->message;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		fprintf (_tmp180_, "Error:  %s\n", _tmp182_);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_error_free0 (e);
 #line 1979 "moonshot-local-flat-file-store.c"
 	}
 	__finally4:
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	if (_inner_error_ != NULL) {
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_free0 (text);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		_g_key_file_free0 (key_file);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		g_clear_error (&_inner_error_);
-#line 124 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 124 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 		return;
 #line 1994 "moonshot-local-flat-file-store.c"
 	}
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_load_id_cards (self);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_free0 (text);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_key_file_free0 (key_file);
 #line 2002 "moonshot-local-flat-file-store.c"
 }
@@ -2005,57 +2005,57 @@ void local_flat_file_store_store_id_cards (LocalFlatFileStore* self) {
 LocalFlatFileStore* local_flat_file_store_construct (GType object_type) {
 	LocalFlatFileStore * self = NULL;
 	GeeLinkedList* _tmp0_;
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) g_object_new (object_type, NULL);
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_tmp0_ = gee_linked_list_new (TYPE_ID_CARD, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL);
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_object_unref0 (self->priv->id_card_list);
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self->priv->id_card_list = _tmp0_;
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_load_id_cards (self);
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return self;
 #line 2021 "moonshot-local-flat-file-store.c"
 }
 
 
 LocalFlatFileStore* local_flat_file_store_new (void) {
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	return local_flat_file_store_construct (TYPE_LOCAL_FLAT_FILE_STORE);
 #line 2028 "moonshot-local-flat-file-store.c"
 }
 
 
 static void local_flat_file_store_class_init (LocalFlatFileStoreClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	g_type_class_add_private (klass, sizeof (LocalFlatFileStorePrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	G_OBJECT_CLASS (klass)->finalize = local_flat_file_store_finalize;
 #line 2039 "moonshot-local-flat-file-store.c"
 }
 
 
 static void local_flat_file_store_iidentity_card_store_interface_init (IIdentityCardStoreIface * iface) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	local_flat_file_store_iidentity_card_store_parent_iface = g_type_interface_peek_parent (iface);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	iface->add_card = (void (*)(IIdentityCardStore*, IdCard*)) local_flat_file_store_real_add_card;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	iface->update_card = (void (*)(IIdentityCardStore*, IdCard*)) local_flat_file_store_real_update_card;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	iface->remove_card = (void (*)(IIdentityCardStore*, IdCard*)) local_flat_file_store_real_remove_card;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	iface->get_card_list = (GeeLinkedList* (*)(IIdentityCardStore*)) local_flat_file_store_real_get_card_list;
 #line 2054 "moonshot-local-flat-file-store.c"
 }
 
 
 static void local_flat_file_store_instance_init (LocalFlatFileStore * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self->priv = LOCAL_FLAT_FILE_STORE_GET_PRIVATE (self);
 #line 2061 "moonshot-local-flat-file-store.c"
 }
@@ -2063,11 +2063,11 @@ static void local_flat_file_store_instance_init (LocalFlatFileStore * self) {
 
 static void local_flat_file_store_finalize (GObject* obj) {
 	LocalFlatFileStore * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	self = LOCAL_FLAT_FILE_STORE (obj);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	_g_object_unref0 (self->priv->id_card_list);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-local-flat-file-store.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-local-flat-file-store.vala"
 	G_OBJECT_CLASS (local_flat_file_store_parent_class)->finalize (obj);
 #line 2073 "moonshot-local-flat-file-store.c"
 }

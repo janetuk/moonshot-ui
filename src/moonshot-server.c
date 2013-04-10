@@ -442,7 +442,7 @@ static const GDBusInterfaceInfo _moonshot_server_dbus_interface_info = {-1, "org
 static const GDBusInterfaceVTable _moonshot_server_dbus_interface_vtable = {moonshot_server_dbus_interface_method_call, moonshot_server_dbus_interface_get_property, moonshot_server_dbus_interface_set_property};
 
 static gpointer _identity_manager_app_ref0 (gpointer self) {
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return self ? identity_manager_app_ref (self) : NULL;
 #line 448 "moonshot-server.c"
 }
@@ -452,26 +452,26 @@ MoonshotServer* moonshot_server_construct (GType object_type, IdentityManagerApp
 	MoonshotServer * self = NULL;
 	IdentityManagerApp* _tmp0_;
 	IdentityManagerApp* _tmp1_;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (app != NULL, NULL);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self = (MoonshotServer*) g_object_new (object_type, NULL);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp0_ = app;
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp1_ = _identity_manager_app_ref0 (_tmp0_);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_identity_manager_app_unref0 (self->priv->parent_app);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self->priv->parent_app = _tmp1_;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return self;
 #line 470 "moonshot-server.c"
 }
 
 
 MoonshotServer* moonshot_server_new (IdentityManagerApp* app) {
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return moonshot_server_construct (TYPE_MOONSHOT_SERVER, app);
 #line 477 "moonshot-server.c"
 }
@@ -480,22 +480,22 @@ MoonshotServer* moonshot_server_new (IdentityManagerApp* app) {
 static void moonshot_server_get_identity_data_free (gpointer _data) {
 	MoonshotServerGetIdentityData* _data_;
 	_data_ = _data;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->nai);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->password);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->service);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->self);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_slice_free (MoonshotServerGetIdentityData, _data_);
 #line 494 "moonshot-server.c"
 }
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 501 "moonshot-server.c"
 }
@@ -510,35 +510,35 @@ void moonshot_server_get_identity (MoonshotServer* self, const gchar* nai, const
 	gchar* _tmp4_;
 	const gchar* _tmp5_;
 	gchar* _tmp6_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_ = g_slice_new0 (MoonshotServerGetIdentityData);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_async_result = g_simple_async_result_new (G_OBJECT (self), _callback_, _user_data_, moonshot_server_get_identity);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_simple_async_result_set_op_res_gpointer (_data_->_async_result, _data_, moonshot_server_get_identity_data_free);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp0_ = _g_object_ref0 (self);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->self = _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp1_ = nai;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp2_ = g_strdup (_tmp1_);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->nai = _tmp2_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp3_ = password;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp4_ = g_strdup (_tmp3_);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->password = _tmp4_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp5_ = service;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp6_ = g_strdup (_tmp5_);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->service = _tmp6_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	moonshot_server_get_identity_co (_data_);
 #line 544 "moonshot-server.c"
 }
@@ -547,92 +547,92 @@ void moonshot_server_get_identity (MoonshotServer* self, const gchar* nai, const
 gboolean moonshot_server_get_identity_finish (MoonshotServer* self, GAsyncResult* _res_, gchar** nai_out, gchar** password_out, gchar** server_certificate_hash, gchar** ca_certificate, gchar** subject_name_constraint, gchar** subject_alt_name_constraint) {
 	gboolean result;
 	MoonshotServerGetIdentityData* _data_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_ = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (_res_));
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (nai_out) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*nai_out = _data_->nai_out;
 #line 557 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->nai_out);
 #line 561 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->nai_out = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (password_out) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*password_out = _data_->password_out;
 #line 569 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->password_out);
 #line 573 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->password_out = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (server_certificate_hash) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*server_certificate_hash = _data_->server_certificate_hash;
 #line 581 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->server_certificate_hash);
 #line 585 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->server_certificate_hash = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (ca_certificate) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*ca_certificate = _data_->ca_certificate;
 #line 593 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->ca_certificate);
 #line 597 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->ca_certificate = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (subject_name_constraint) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*subject_name_constraint = _data_->subject_name_constraint;
 #line 605 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_name_constraint);
 #line 609 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_name_constraint = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (subject_alt_name_constraint) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*subject_alt_name_constraint = _data_->subject_alt_name_constraint;
 #line 617 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_alt_name_constraint);
 #line 621 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_alt_name_constraint = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	result = _data_->result;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return result;
 #line 629 "moonshot-server.c"
 }
 
 
 static Block2Data* block2_data_ref (Block2Data* _data2_) {
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_atomic_int_inc (&_data2_->_ref_count_);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return _data2_;
 #line 638 "moonshot-server.c"
 }
@@ -641,15 +641,15 @@ static Block2Data* block2_data_ref (Block2Data* _data2_) {
 static void block2_data_unref (void * _userdata_) {
 	Block2Data* _data2_;
 	_data2_ = (Block2Data*) _userdata_;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (g_atomic_int_dec_and_test (&_data2_->_ref_count_)) {
 #line 647 "moonshot-server.c"
 		MoonshotServer * self;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		self = _data2_->self;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_object_unref0 (self);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_slice_free (Block2Data, _data2_);
 #line 655 "moonshot-server.c"
 	}
@@ -658,354 +658,354 @@ static void block2_data_unref (void * _userdata_) {
 
 static void __lambda5_ (Block2Data* _data2_, IdentityRequest* IdentityRequest) {
 	MoonshotServer * self;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self = _data2_->self;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_if_fail (IdentityRequest != NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	moonshot_server_get_identity_co (_data2_->_async_data_);
 #line 668 "moonshot-server.c"
 }
 
 
 static void ___lambda5__return_identity_callback (IdentityRequest* request, gpointer self) {
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	__lambda5_ (self, request);
 #line 675 "moonshot-server.c"
 }
 
 
 static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* _data_) {
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	switch (_data_->_state_) {
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		case 0:
 #line 684 "moonshot-server.c"
 		goto _state_0;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		case 1:
 #line 688 "moonshot-server.c"
 		goto _state_1;
 		default:
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_assert_not_reached ();
 #line 693 "moonshot-server.c"
 	}
 	_state_0:
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_ = g_slice_new0 (Block2Data);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_->_ref_count_ = 1;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_->self = g_object_ref (_data_->self);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_->_async_data_ = _data_;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp0_ = _data_->self->priv->parent_app;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp1_ = _data_->nai;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp2_ = _data_->password;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp3_ = _data_->service;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp4_ = identity_request_new (_data_->_tmp0_, _data_->_tmp1_, _data_->_tmp2_, _data_->_tmp3_);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->request = _data_->_tmp4_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp5_ = _data_->request;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	identity_request_set_callback (_data_->_tmp5_, ___lambda5__return_identity_callback, block2_data_ref (_data_->_data2_), block2_data_unref);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp6_ = _data_->request;
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	identity_request_execute (_data_->_tmp6_);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_state_ = 1;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
 #line 728 "moonshot-server.c"
 	_state_1:
 	;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp7_ = g_strdup ("");
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->nai_out);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->nai_out = _data_->_tmp7_;
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp8_ = g_strdup ("");
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->password_out);
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->password_out = _data_->_tmp8_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp9_ = g_strdup ("");
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->server_certificate_hash);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->server_certificate_hash = _data_->_tmp9_;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp10_ = g_strdup ("");
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->ca_certificate);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->ca_certificate = _data_->_tmp10_;
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp11_ = g_strdup ("");
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->subject_name_constraint);
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_name_constraint = _data_->_tmp11_;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp12_ = g_strdup ("");
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->subject_alt_name_constraint);
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_alt_name_constraint = _data_->_tmp12_;
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp13_ = _data_->request;
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp14_ = _data_->_tmp13_->id_card;
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp15_ = _g_object_ref0 (_data_->_tmp14_);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->id_card = _data_->_tmp15_;
-#line 40 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 40 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp16_ = _data_->id_card;
-#line 40 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 40 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_tmp16_ != NULL) {
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp17_ = _data_->id_card;
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp18_ = id_card_get_nai (_data_->_tmp17_);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp19_ = _data_->_tmp18_;
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp20_ = g_strdup (_data_->_tmp19_);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->nai_out);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->nai_out = _data_->_tmp20_;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp21_ = _data_->id_card;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp22_ = id_card_get_password (_data_->_tmp21_);
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp23_ = _data_->_tmp22_;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp24_ = g_strdup (_data_->_tmp23_);
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->password_out);
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->password_out = _data_->_tmp24_;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp25_ = _data_->id_card;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp26_ = id_card_get_trust_anchor (_data_->_tmp25_);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp27_ = _data_->_tmp26_;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp28_ = trust_anchor_get_server_cert (_data_->_tmp27_);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp29_ = _data_->_tmp28_;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp30_ = g_strdup (_data_->_tmp29_);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->server_certificate_hash);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->server_certificate_hash = _data_->_tmp30_;
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp31_ = _data_->id_card;
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp32_ = id_card_get_trust_anchor (_data_->_tmp31_);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp33_ = _data_->_tmp32_;
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp34_ = trust_anchor_get_ca_cert (_data_->_tmp33_);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp35_ = _data_->_tmp34_;
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp36_ = g_strdup (_data_->_tmp35_);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->ca_certificate);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->ca_certificate = _data_->_tmp36_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp37_ = _data_->id_card;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp38_ = id_card_get_trust_anchor (_data_->_tmp37_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp39_ = _data_->_tmp38_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp40_ = trust_anchor_get_subject (_data_->_tmp39_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp41_ = _data_->_tmp40_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp42_ = g_strdup (_data_->_tmp41_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_name_constraint);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->subject_name_constraint = _data_->_tmp42_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp43_ = _data_->id_card;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp44_ = id_card_get_trust_anchor (_data_->_tmp43_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp45_ = _data_->_tmp44_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp46_ = trust_anchor_get_subject_alt (_data_->_tmp45_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp47_ = _data_->_tmp46_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp48_ = g_strdup (_data_->_tmp47_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_alt_name_constraint);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->subject_alt_name_constraint = _data_->_tmp48_;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp49_ = _data_->nai_out;
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp49_ == NULL) {
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp50_ = g_strdup ("");
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->nai_out);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->nai_out = _data_->_tmp50_;
 #line 877 "moonshot-server.c"
 		}
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp51_ = _data_->password_out;
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp51_ == NULL) {
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp52_ = g_strdup ("");
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->password_out);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->password_out = _data_->_tmp52_;
 #line 889 "moonshot-server.c"
 		}
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp53_ = _data_->server_certificate_hash;
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp53_ == NULL) {
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp54_ = g_strdup ("");
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->server_certificate_hash);
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->server_certificate_hash = _data_->_tmp54_;
 #line 901 "moonshot-server.c"
 		}
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp55_ = _data_->ca_certificate;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp55_ == NULL) {
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp56_ = g_strdup ("");
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->ca_certificate);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->ca_certificate = _data_->_tmp56_;
 #line 913 "moonshot-server.c"
 		}
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp57_ = _data_->subject_name_constraint;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp57_ == NULL) {
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp58_ = g_strdup ("");
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->subject_name_constraint);
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->subject_name_constraint = _data_->_tmp58_;
 #line 925 "moonshot-server.c"
 		}
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp59_ = _data_->subject_alt_name_constraint;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp59_ == NULL) {
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp60_ = g_strdup ("");
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->subject_alt_name_constraint);
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->subject_alt_name_constraint = _data_->_tmp60_;
 #line 937 "moonshot-server.c"
 		}
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->result = TRUE;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_object_unref0 (_data_->id_card);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_object_unref0 (_data_->request);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		block2_data_unref (_data_->_data2_);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_data2_ = NULL;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_state_ == 0) {
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 953 "moonshot-server.c"
 		} else {
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			g_simple_async_result_complete (_data_->_async_result);
 #line 957 "moonshot-server.c"
 		}
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_object_unref (_data_->_async_result);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		return FALSE;
 #line 963 "moonshot-server.c"
 	}
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->result = FALSE;
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->id_card);
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->request);
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	block2_data_unref (_data_->_data2_);
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_ = NULL;
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_state_ == 0) {
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 979 "moonshot-server.c"
 	} else {
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete (_data_->_async_result);
 #line 983 "moonshot-server.c"
 	}
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_object_unref (_data_->_async_result);
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->id_card);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->request);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	block2_data_unref (_data_->_data2_);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data2_ = NULL;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_state_ == 0) {
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 1001 "moonshot-server.c"
 	} else {
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete (_data_->_async_result);
 #line 1005 "moonshot-server.c"
 	}
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_object_unref (_data_->_async_result);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
 #line 1011 "moonshot-server.c"
 }
@@ -1014,9 +1014,9 @@ static gboolean moonshot_server_get_identity_co (MoonshotServerGetIdentityData* 
 static void moonshot_server_get_default_identity_data_free (gpointer _data) {
 	MoonshotServerGetDefaultIdentityData* _data_;
 	_data_ = _data;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->self);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_slice_free (MoonshotServerGetDefaultIdentityData, _data_);
 #line 1022 "moonshot-server.c"
 }
@@ -1025,17 +1025,17 @@ static void moonshot_server_get_default_identity_data_free (gpointer _data) {
 void moonshot_server_get_default_identity (MoonshotServer* self, GAsyncReadyCallback _callback_, gpointer _user_data_) {
 	MoonshotServerGetDefaultIdentityData* _data_;
 	MoonshotServer* _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_ = g_slice_new0 (MoonshotServerGetDefaultIdentityData);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_async_result = g_simple_async_result_new (G_OBJECT (self), _callback_, _user_data_, moonshot_server_get_default_identity);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_simple_async_result_set_op_res_gpointer (_data_->_async_result, _data_, moonshot_server_get_default_identity_data_free);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp0_ = _g_object_ref0 (self);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->self = _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	moonshot_server_get_default_identity_co (_data_);
 #line 1041 "moonshot-server.c"
 }
@@ -1044,92 +1044,92 @@ void moonshot_server_get_default_identity (MoonshotServer* self, GAsyncReadyCall
 gboolean moonshot_server_get_default_identity_finish (MoonshotServer* self, GAsyncResult* _res_, gchar** nai_out, gchar** password_out, gchar** server_certificate_hash, gchar** ca_certificate, gchar** subject_name_constraint, gchar** subject_alt_name_constraint) {
 	gboolean result;
 	MoonshotServerGetDefaultIdentityData* _data_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_ = g_simple_async_result_get_op_res_gpointer (G_SIMPLE_ASYNC_RESULT (_res_));
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (nai_out) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*nai_out = _data_->nai_out;
 #line 1054 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->nai_out);
 #line 1058 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->nai_out = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (password_out) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*password_out = _data_->password_out;
 #line 1066 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->password_out);
 #line 1070 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->password_out = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (server_certificate_hash) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*server_certificate_hash = _data_->server_certificate_hash;
 #line 1078 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->server_certificate_hash);
 #line 1082 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->server_certificate_hash = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (ca_certificate) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*ca_certificate = _data_->ca_certificate;
 #line 1090 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->ca_certificate);
 #line 1094 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->ca_certificate = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (subject_name_constraint) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*subject_name_constraint = _data_->subject_name_constraint;
 #line 1102 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_name_constraint);
 #line 1106 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_name_constraint = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (subject_alt_name_constraint) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		*subject_alt_name_constraint = _data_->subject_alt_name_constraint;
 #line 1114 "moonshot-server.c"
 	} else {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_alt_name_constraint);
 #line 1118 "moonshot-server.c"
 	}
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_alt_name_constraint = NULL;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	result = _data_->result;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return result;
 #line 1126 "moonshot-server.c"
 }
 
 
 static Block3Data* block3_data_ref (Block3Data* _data3_) {
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_atomic_int_inc (&_data3_->_ref_count_);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return _data3_;
 #line 1135 "moonshot-server.c"
 }
@@ -1138,15 +1138,15 @@ static Block3Data* block3_data_ref (Block3Data* _data3_) {
 static void block3_data_unref (void * _userdata_) {
 	Block3Data* _data3_;
 	_data3_ = (Block3Data*) _userdata_;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (g_atomic_int_dec_and_test (&_data3_->_ref_count_)) {
 #line 1144 "moonshot-server.c"
 		MoonshotServer * self;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		self = _data3_->self;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_object_unref0 (self);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_slice_free (Block3Data, _data3_);
 #line 1152 "moonshot-server.c"
 	}
@@ -1155,366 +1155,366 @@ static void block3_data_unref (void * _userdata_) {
 
 static void __lambda6_ (Block3Data* _data3_, IdentityRequest* IdentityRequest) {
 	MoonshotServer * self;
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self = _data3_->self;
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_if_fail (IdentityRequest != NULL);
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	moonshot_server_get_default_identity_co (_data3_->_async_data_);
 #line 1165 "moonshot-server.c"
 }
 
 
 static void ___lambda6__return_identity_callback (IdentityRequest* request, gpointer self) {
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	__lambda6_ (self, request);
 #line 1172 "moonshot-server.c"
 }
 
 
 static gboolean moonshot_server_get_default_identity_co (MoonshotServerGetDefaultIdentityData* _data_) {
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	switch (_data_->_state_) {
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		case 0:
 #line 1181 "moonshot-server.c"
 		goto _state_0;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		case 1:
 #line 1185 "moonshot-server.c"
 		goto _state_1;
 		default:
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_assert_not_reached ();
 #line 1190 "moonshot-server.c"
 	}
 	_state_0:
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_ = g_slice_new0 (Block3Data);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_->_ref_count_ = 1;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_->self = g_object_ref (_data_->self);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_->_async_data_ = _data_;
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp0_ = _data_->self->priv->parent_app;
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp1_ = identity_request_new_default (_data_->_tmp0_);
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->request = _data_->_tmp1_;
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp2_ = _data_->request;
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	identity_request_set_callback (_data_->_tmp2_, ___lambda6__return_identity_callback, block3_data_ref (_data_->_data3_), block3_data_unref);
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp3_ = _data_->request;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	identity_request_execute (_data_->_tmp3_);
-#line 78 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 78 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_state_ = 1;
-#line 78 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 78 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
 #line 1219 "moonshot-server.c"
 	_state_1:
 	;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp4_ = g_strdup ("");
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->nai_out);
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->nai_out = _data_->_tmp4_;
-#line 81 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 81 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp5_ = g_strdup ("");
-#line 81 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 81 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->password_out);
-#line 81 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 81 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->password_out = _data_->_tmp5_;
-#line 82 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 82 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp6_ = g_strdup ("");
-#line 82 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 82 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->server_certificate_hash);
-#line 82 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 82 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->server_certificate_hash = _data_->_tmp6_;
-#line 83 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 83 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp7_ = g_strdup ("");
-#line 83 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 83 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->ca_certificate);
-#line 83 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 83 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->ca_certificate = _data_->_tmp7_;
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp8_ = g_strdup ("");
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->subject_name_constraint);
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_name_constraint = _data_->_tmp8_;
-#line 85 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 85 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp9_ = g_strdup ("");
-#line 85 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 85 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_free0 (_data_->subject_alt_name_constraint);
-#line 85 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 85 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->subject_alt_name_constraint = _data_->_tmp9_;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp10_ = _data_->request;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_tmp11_ = _data_->_tmp10_->id_card;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_tmp11_ != NULL) {
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp12_ = _data_->request;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp13_ = _data_->_tmp12_->id_card;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp14_ = id_card_get_nai (_data_->_tmp13_);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp15_ = _data_->_tmp14_;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp16_ = g_strdup (_data_->_tmp15_);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->nai_out);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->nai_out = _data_->_tmp16_;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp17_ = _data_->request;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp18_ = _data_->_tmp17_->id_card;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp19_ = id_card_get_password (_data_->_tmp18_);
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp20_ = _data_->_tmp19_;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp21_ = g_strdup (_data_->_tmp20_);
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->password_out);
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->password_out = _data_->_tmp21_;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp22_ = _data_->request;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp23_ = _data_->_tmp22_->id_card;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp24_ = id_card_get_trust_anchor (_data_->_tmp23_);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp25_ = _data_->_tmp24_;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp26_ = trust_anchor_get_server_cert (_data_->_tmp25_);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp27_ = _data_->_tmp26_;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp28_ = g_strdup (_data_->_tmp27_);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->server_certificate_hash);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->server_certificate_hash = _data_->_tmp28_;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp29_ = _data_->request;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp30_ = _data_->_tmp29_->id_card;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp31_ = id_card_get_trust_anchor (_data_->_tmp30_);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp32_ = _data_->_tmp31_;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp33_ = trust_anchor_get_ca_cert (_data_->_tmp32_);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp34_ = _data_->_tmp33_;
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp35_ = g_strdup (_data_->_tmp34_);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->ca_certificate);
-#line 93 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 93 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->ca_certificate = _data_->_tmp35_;
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp36_ = _data_->request;
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp37_ = _data_->_tmp36_->id_card;
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp38_ = id_card_get_trust_anchor (_data_->_tmp37_);
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp39_ = _data_->_tmp38_;
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp40_ = trust_anchor_get_subject (_data_->_tmp39_);
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp41_ = _data_->_tmp40_;
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp42_ = g_strdup (_data_->_tmp41_);
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_name_constraint);
-#line 94 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 94 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->subject_name_constraint = _data_->_tmp42_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp43_ = _data_->request;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp44_ = _data_->_tmp43_->id_card;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp45_ = id_card_get_trust_anchor (_data_->_tmp44_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp46_ = _data_->_tmp45_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp47_ = trust_anchor_get_subject_alt (_data_->_tmp46_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp48_ = _data_->_tmp47_;
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp49_ = g_strdup (_data_->_tmp48_);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_free0 (_data_->subject_alt_name_constraint);
-#line 95 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 95 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->subject_alt_name_constraint = _data_->_tmp49_;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp50_ = _data_->nai_out;
-#line 97 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 97 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp50_ == NULL) {
-#line 98 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 98 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp51_ = g_strdup ("");
-#line 98 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 98 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->nai_out);
-#line 98 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 98 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->nai_out = _data_->_tmp51_;
 #line 1374 "moonshot-server.c"
 		}
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp52_ = _data_->password_out;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp52_ == NULL) {
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp53_ = g_strdup ("");
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->password_out);
-#line 100 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 100 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->password_out = _data_->_tmp53_;
 #line 1386 "moonshot-server.c"
 		}
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp54_ = _data_->server_certificate_hash;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp54_ == NULL) {
-#line 102 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 102 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp55_ = g_strdup ("");
-#line 102 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 102 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->server_certificate_hash);
-#line 102 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 102 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->server_certificate_hash = _data_->_tmp55_;
 #line 1398 "moonshot-server.c"
 		}
-#line 103 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 103 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp56_ = _data_->ca_certificate;
-#line 103 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 103 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp56_ == NULL) {
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp57_ = g_strdup ("");
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->ca_certificate);
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->ca_certificate = _data_->_tmp57_;
 #line 1410 "moonshot-server.c"
 		}
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp58_ = _data_->subject_name_constraint;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp58_ == NULL) {
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp59_ = g_strdup ("");
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->subject_name_constraint);
-#line 106 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 106 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->subject_name_constraint = _data_->_tmp59_;
 #line 1422 "moonshot-server.c"
 		}
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_tmp60_ = _data_->subject_alt_name_constraint;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_tmp60_ == NULL) {
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->_tmp61_ = g_strdup ("");
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_g_free0 (_data_->subject_alt_name_constraint);
-#line 108 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 108 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_data_->subject_alt_name_constraint = _data_->_tmp61_;
 #line 1434 "moonshot-server.c"
 		}
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->result = TRUE;
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_g_object_unref0 (_data_->request);
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		block3_data_unref (_data_->_data3_);
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_data_->_data3_ = NULL;
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		if (_data_->_state_ == 0) {
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 1448 "moonshot-server.c"
 		} else {
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			g_simple_async_result_complete (_data_->_async_result);
 #line 1452 "moonshot-server.c"
 		}
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_object_unref (_data_->_async_result);
-#line 110 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 110 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		return FALSE;
 #line 1458 "moonshot-server.c"
 	}
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->result = FALSE;
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->request);
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	block3_data_unref (_data_->_data3_);
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_ = NULL;
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_state_ == 0) {
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 1472 "moonshot-server.c"
 	} else {
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete (_data_->_async_result);
 #line 1476 "moonshot-server.c"
 	}
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_object_unref (_data_->_async_result);
-#line 113 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 113 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (_data_->request);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	block3_data_unref (_data_->_data3_);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_data_->_data3_ = NULL;
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_data_->_state_ == 0) {
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete_in_idle (_data_->_async_result);
 #line 1492 "moonshot-server.c"
 	} else {
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		g_simple_async_result_complete (_data_->_async_result);
 #line 1496 "moonshot-server.c"
 	}
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_object_unref (_data_->_async_result);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return FALSE;
 #line 1502 "moonshot-server.c"
 }
 
 
 static void _vala_Rule_array_free (Rule* array, gint array_length) {
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (array != NULL) {
 #line 1509 "moonshot-server.c"
 		int i;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		for (i = 0; i < array_length; i = i + 1) {
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			rule_destroy (&array[i]);
 #line 1515 "moonshot-server.c"
 		}
 	}
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_free (array);
 #line 1520 "moonshot-server.c"
 }
@@ -1558,97 +1558,97 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const gchar* dis
 	IdentityManagerApp* _tmp56_;
 	IdCard* _tmp57_;
 	gboolean _tmp58_ = FALSE;
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (display_name != NULL, FALSE);
-#line 116 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 116 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (user_name != NULL, FALSE);
-#line 128 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 128 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp0_ = id_card_new ();
-#line 128 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 128 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	idcard = _tmp0_;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp1_ = idcard;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp2_ = display_name;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	id_card_set_display_name (_tmp1_, _tmp2_);
-#line 131 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 131 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp3_ = idcard;
-#line 131 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 131 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp4_ = user_name;
-#line 131 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 131 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	id_card_set_username (_tmp3_, _tmp4_);
-#line 132 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 132 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp5_ = idcard;
-#line 132 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 132 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp6_ = password;
-#line 132 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 132 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	id_card_set_password (_tmp5_, _tmp6_);
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp7_ = idcard;
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp8_ = realm;
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	id_card_set_issuer (_tmp7_, _tmp8_);
-#line 134 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 134 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp9_ = idcard;
-#line 134 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 134 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp10_ = services;
-#line 134 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 134 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp10__length1 = services_length1;
-#line 134 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 134 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	id_card_set_services (_tmp9_, _tmp10_, _tmp10__length1);
-#line 135 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 135 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp11_ = idcard;
-#line 135 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 135 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp12_ = id_card_get_trust_anchor (_tmp11_);
-#line 135 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 135 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp13_ = _tmp12_;
-#line 135 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 135 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp14_ = ca_cert;
-#line 135 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 135 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	trust_anchor_set_ca_cert (_tmp13_, _tmp14_);
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp15_ = idcard;
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp16_ = id_card_get_trust_anchor (_tmp15_);
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp17_ = _tmp16_;
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp18_ = subject;
-#line 136 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 136 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	trust_anchor_set_subject (_tmp17_, _tmp18_);
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp19_ = idcard;
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp20_ = id_card_get_trust_anchor (_tmp19_);
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp21_ = _tmp20_;
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp22_ = subject_alt;
-#line 137 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 137 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	trust_anchor_set_subject_alt (_tmp21_, _tmp22_);
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp23_ = idcard;
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp24_ = id_card_get_trust_anchor (_tmp23_);
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp25_ = _tmp24_;
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp26_ = server_cert;
-#line 138 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 138 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	trust_anchor_set_server_cert (_tmp25_, _tmp26_);
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp27_ = rules_patterns;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp27__length1 = rules_patterns_length1;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp28_ = rules_always_confirm;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp28__length1 = rules_always_confirm_length1;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	if (_tmp27__length1 == _tmp28__length1) {
 #line 1654 "moonshot-server.c"
 		IdCard* _tmp29_;
@@ -1657,33 +1657,33 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const gchar* dis
 		Rule* _tmp31_ = NULL;
 		Rule* _tmp32_;
 		gint _tmp32__length1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp29_ = idcard;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp30_ = rules_patterns;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp30__length1 = rules_patterns_length1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp31_ = g_new0 (Rule, _tmp30__length1);
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp32_ = _tmp31_;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp32__length1 = _tmp30__length1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		id_card_set_rules (_tmp29_, _tmp32_, _tmp30__length1);
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		_tmp32_ = (_vala_Rule_array_free (_tmp32_, _tmp32__length1), NULL);
 #line 1677 "moonshot-server.c"
 		{
 			gint i;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			i = 0;
 #line 1682 "moonshot-server.c"
 			{
 				gboolean _tmp33_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp33_ = TRUE;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				while (TRUE) {
 #line 1689 "moonshot-server.c"
 					gboolean _tmp34_;
@@ -1715,100 +1715,100 @@ gboolean moonshot_server_install_id_card (MoonshotServer* self, const gchar* dis
 					gint _tmp53_;
 					const gchar* _tmp54_;
 					gchar* _tmp55_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp34_ = _tmp33_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					if (!_tmp34_) {
 #line 1723 "moonshot-server.c"
 						gint _tmp35_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						_tmp35_ = i;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						i = _tmp35_ + 1;
 #line 1729 "moonshot-server.c"
 					}
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp33_ = FALSE;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp36_ = i;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp37_ = idcard;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp38_ = id_card_get_rules (_tmp37_, &_tmp38__length1);
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp39_ = _tmp38_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp39__length1 = _tmp38__length1;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					if (!(_tmp36_ < _tmp39__length1)) {
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						break;
 #line 1747 "moonshot-server.c"
 					}
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp40_ = idcard;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp41_ = id_card_get_rules (_tmp40_, &_tmp41__length1);
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp42_ = _tmp41_;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp42__length1 = _tmp41__length1;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp43_ = i;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp44_ = rules_patterns;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp44__length1 = rules_patterns_length1;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp45_ = i;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp46_ = _tmp44_[_tmp45_];
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp47_ = g_strdup (_tmp46_);
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_g_free0 (_tmp42_[_tmp43_].pattern);
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp42_[_tmp43_].pattern = _tmp47_;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp48_ = idcard;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp49_ = id_card_get_rules (_tmp48_, &_tmp49__length1);
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp50_ = _tmp49_;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp50__length1 = _tmp49__length1;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp51_ = i;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp52_ = rules_always_confirm;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp52__length1 = rules_always_confirm_length1;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp53_ = i;
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp54_ = _tmp52_[_tmp53_];
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp55_ = g_strdup (_tmp54_);
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_g_free0 (_tmp50_[_tmp51_].always_confirm);
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp50_[_tmp51_].always_confirm = _tmp55_;
 #line 1797 "moonshot-server.c"
 				}
 			}
 		}
 	}
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp56_ = self->priv->parent_app;
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp57_ = idcard;
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp58_ = identity_manager_app_add_identity (_tmp56_, _tmp57_);
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	result = _tmp58_;
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_g_object_unref0 (idcard);
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return result;
 #line 1814 "moonshot-server.c"
 }
@@ -1824,27 +1824,27 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 	gint installed_cards;
 	IdCard** _tmp3_;
 	gint _tmp3__length1;
-#line 155 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 155 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (self != NULL, 0);
-#line 155 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 155 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_return_val_if_fail (file_name != NULL, 0);
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp0_ = file_name;
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp1_ = web_provisioning_parser_new (_tmp0_);
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	webp = _tmp1_;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp2_ = webp;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	web_provisioning_parser_parse (_tmp2_);
-#line 160 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 160 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_result_ = FALSE;
-#line 161 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 161 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	installed_cards = 0;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp3_ = web_provisioning_cards;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_tmp3__length1 = web_provisioning_cards_length1;
 #line 1850 "moonshot-server.c"
 	{
@@ -1852,18 +1852,18 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 		gint card_collection_length1 = 0;
 		gint _card_collection_size_ = 0;
 		gint card_it = 0;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		card_collection = _tmp3_;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		card_collection_length1 = _tmp3__length1;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 		for (card_it = 0; card_it < _tmp3__length1; card_it = card_it + 1) {
 #line 1862 "moonshot-server.c"
 			IdCard* _tmp4_;
 			IdCard* card = NULL;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			_tmp4_ = _g_object_ref0 (card_collection[card_it]);
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 			card = _tmp4_;
 #line 1869 "moonshot-server.c"
 			{
@@ -1923,31 +1923,31 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 				const gchar* _tmp71_;
 				gboolean _tmp72_ = FALSE;
 				gboolean _tmp73_;
-#line 164 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 164 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp5_ = g_new0 (gchar*, 0 + 1);
-#line 164 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 164 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_patterns = _tmp5_;
-#line 164 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 164 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_patterns_length1 = 0;
-#line 164 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 164 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_rules_patterns_size_ = rules_patterns_length1;
-#line 165 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 165 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp6_ = g_new0 (gchar*, 0 + 1);
-#line 165 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 165 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_always_confirm = _tmp6_;
-#line 165 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 165 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_always_confirm_length1 = 0;
-#line 165 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 165 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_rules_always_confirm_size_ = rules_always_confirm_length1;
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp7_ = card;
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp8_ = id_card_get_rules (_tmp7_, &_tmp8__length1);
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp9_ = _tmp8_;
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp9__length1 = _tmp8__length1;
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				if (_tmp9__length1 > 0) {
 #line 1953 "moonshot-server.c"
 					gint i;
@@ -1968,51 +1968,51 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 					gint _tmp19__length1;
 					Rule* _tmp20_;
 					gint _tmp20__length1;
-#line 169 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 169 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					i = 0;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp10_ = card;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp11_ = id_card_get_rules (_tmp10_, &_tmp11__length1);
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp12_ = _tmp11_;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp12__length1 = _tmp11__length1;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp13_ = g_new0 (gchar*, _tmp12__length1 + 1);
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_patterns = _tmp13_;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_patterns_length1 = _tmp12__length1;
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_rules_patterns_size_ = rules_patterns_length1;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp14_ = card;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp15_ = id_card_get_rules (_tmp14_, &_tmp15__length1);
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp16_ = _tmp15_;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp16__length1 = _tmp15__length1;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp17_ = g_new0 (gchar*, _tmp16__length1 + 1);
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_always_confirm = _tmp17_;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					rules_always_confirm_length1 = _tmp16__length1;
-#line 171 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 171 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_rules_always_confirm_size_ = rules_always_confirm_length1;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp18_ = card;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp19_ = id_card_get_rules (_tmp18_, &_tmp19__length1);
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp20_ = _tmp19_;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp20__length1 = _tmp19__length1;
 #line 2018 "moonshot-server.c"
 					{
@@ -2020,18 +2020,18 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 						gint r_collection_length1 = 0;
 						gint _r_collection_size_ = 0;
 						gint r_it = 0;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						r_collection = _tmp20_;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						r_collection_length1 = _tmp20__length1;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 						for (r_it = 0; r_it < _tmp20__length1; r_it = r_it + 1) {
 #line 2030 "moonshot-server.c"
 							Rule _tmp21_ = {0};
 							Rule r = {0};
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 							rule_copy (&r_collection[r_it], &_tmp21_);
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 							r = _tmp21_;
 #line 2037 "moonshot-server.c"
 							{
@@ -2050,182 +2050,182 @@ gint moonshot_server_install_from_file (MoonshotServer* self, const gchar* file_
 								gchar* _tmp32_;
 								gchar* _tmp33_;
 								gint _tmp34_;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp22_ = rules_patterns;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp22__length1 = rules_patterns_length1;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp23_ = i;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp24_ = r;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp25_ = _tmp24_.pattern;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp26_ = g_strdup (_tmp25_);
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_g_free0 (_tmp22_[_tmp23_]);
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp22_[_tmp23_] = _tmp26_;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp27_ = _tmp22_[_tmp23_];
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp28_ = rules_always_confirm;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp28__length1 = rules_always_confirm_length1;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp29_ = i;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp30_ = r;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp31_ = _tmp30_.always_confirm;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp32_ = g_strdup (_tmp31_);
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_g_free0 (_tmp28_[_tmp29_]);
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp28_[_tmp29_] = _tmp32_;
-#line 175 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 175 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp33_ = _tmp28_[_tmp29_];
-#line 176 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 176 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								_tmp34_ = i;
-#line 176 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 176 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								i = _tmp34_ + 1;
-#line 172 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 172 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 								rule_destroy (&r);
 #line 2096 "moonshot-server.c"
 							}
 						}
 					}
 				}
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp35_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp36_ = id_card_get_display_name (_tmp35_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp37_ = _tmp36_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp38_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp39_ = id_card_get_username (_tmp38_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp40_ = _tmp39_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp41_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp42_ = id_card_get_password (_tmp41_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp43_ = _tmp42_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp44_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp45_ = id_card_get_issuer (_tmp44_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp46_ = _tmp45_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp47_ = rules_patterns;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp47__length1 = rules_patterns_length1;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp48_ = rules_always_confirm;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp48__length1 = rules_always_confirm_length1;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp49_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp50_ = id_card_get_services (_tmp49_, &_tmp50__length1);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp51_ = _tmp50_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp51__length1 = _tmp50__length1;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp52_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp53_ = id_card_get_trust_anchor (_tmp52_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp54_ = _tmp53_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp55_ = trust_anchor_get_ca_cert (_tmp54_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp56_ = _tmp55_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp57_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp58_ = id_card_get_trust_anchor (_tmp57_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp59_ = _tmp58_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp60_ = trust_anchor_get_subject (_tmp59_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp61_ = _tmp60_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp62_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp63_ = id_card_get_trust_anchor (_tmp62_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp64_ = _tmp63_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp65_ = trust_anchor_get_subject_alt (_tmp64_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp66_ = _tmp65_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp67_ = card;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp68_ = id_card_get_trust_anchor (_tmp67_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp69_ = _tmp68_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp70_ = trust_anchor_get_server_cert (_tmp69_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp71_ = _tmp70_;
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp72_ = moonshot_server_install_id_card (self, _tmp37_, _tmp40_, _tmp43_, _tmp46_, _tmp47_, _tmp47__length1, _tmp48_, _tmp48__length1, _tmp51_, _tmp51__length1, _tmp56_, _tmp61_, _tmp66_, _tmp71_);
-#line 180 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 180 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_result_ = _tmp72_;
-#line 191 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 191 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_tmp73_ = _result_;
-#line 191 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 191 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				if (_tmp73_) {
 #line 2189 "moonshot-server.c"
 					gint _tmp74_;
-#line 192 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 192 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					_tmp74_ = installed_cards;
-#line 192 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 192 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 					installed_cards = _tmp74_ + 1;
 #line 2195 "moonshot-server.c"
 				}
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_always_confirm = (_vala_array_free (rules_always_confirm, rules_always_confirm_length1, (GDestroyNotify) g_free), NULL);
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				rules_patterns = (_vala_array_free (rules_patterns, rules_patterns_length1, (GDestroyNotify) g_free), NULL);
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 				_g_object_unref0 (card);
 #line 2203 "moonshot-server.c"
 			}
 		}
 	}
-#line 195 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 195 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	result = installed_cards;
-#line 195 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 195 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_web_provisioning_parser_unref0 (webp);
-#line 195 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 195 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	return result;
 #line 2213 "moonshot-server.c"
 }
 
 
 static void moonshot_server_class_init (MoonshotServerClass * klass) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	moonshot_server_parent_class = g_type_class_peek_parent (klass);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	g_type_class_add_private (klass, sizeof (MoonshotServerPrivate));
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	G_OBJECT_CLASS (klass)->finalize = moonshot_server_finalize;
 #line 2224 "moonshot-server.c"
 }
 
 
 static void moonshot_server_instance_init (MoonshotServer * self) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self->priv = MOONSHOT_SERVER_GET_PRIVATE (self);
 #line 2231 "moonshot-server.c"
 }
@@ -2233,11 +2233,11 @@ static void moonshot_server_instance_init (MoonshotServer * self) {
 
 static void moonshot_server_finalize (GObject* obj) {
 	MoonshotServer * self;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	self = MOONSHOT_SERVER (obj);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	_identity_manager_app_unref0 (self->priv->parent_app);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-server.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-server.vala"
 	G_OBJECT_CLASS (moonshot_server_parent_class)->finalize (obj);
 #line 2243 "moonshot-server.c"
 }

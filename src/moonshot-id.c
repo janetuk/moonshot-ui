@@ -157,16 +157,16 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 TrustAnchor* trust_anchor_construct (GType object_type) {
 	TrustAnchor * self = NULL;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self = (TrustAnchor*) g_object_new (object_type, NULL);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return self;
 #line 165 "moonshot-id.c"
 }
 
 
 TrustAnchor* trust_anchor_new (void) {
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return trust_anchor_construct (TYPE_TRUST_ANCHOR);
 #line 172 "moonshot-id.c"
 }
@@ -175,13 +175,13 @@ TrustAnchor* trust_anchor_new (void) {
 const gchar* trust_anchor_get_ca_cert (TrustAnchor* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_ca_cert;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 187 "moonshot-id.c"
 }
@@ -190,17 +190,17 @@ const gchar* trust_anchor_get_ca_cert (TrustAnchor* self) {
 void trust_anchor_set_ca_cert (TrustAnchor* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_ca_cert);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_ca_cert = _tmp1_;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "ca-cert");
 #line 206 "moonshot-id.c"
 }
@@ -209,13 +209,13 @@ void trust_anchor_set_ca_cert (TrustAnchor* self, const gchar* value) {
 const gchar* trust_anchor_get_subject (TrustAnchor* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_subject;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 221 "moonshot-id.c"
 }
@@ -224,17 +224,17 @@ const gchar* trust_anchor_get_subject (TrustAnchor* self) {
 void trust_anchor_set_subject (TrustAnchor* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_subject);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_subject = _tmp1_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "subject");
 #line 240 "moonshot-id.c"
 }
@@ -243,13 +243,13 @@ void trust_anchor_set_subject (TrustAnchor* self, const gchar* value) {
 const gchar* trust_anchor_get_subject_alt (TrustAnchor* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_subject_alt;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 255 "moonshot-id.c"
 }
@@ -258,17 +258,17 @@ const gchar* trust_anchor_get_subject_alt (TrustAnchor* self) {
 void trust_anchor_set_subject_alt (TrustAnchor* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_subject_alt);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_subject_alt = _tmp1_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "subject-alt");
 #line 274 "moonshot-id.c"
 }
@@ -277,13 +277,13 @@ void trust_anchor_set_subject_alt (TrustAnchor* self, const gchar* value) {
 const gchar* trust_anchor_get_server_cert (TrustAnchor* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_server_cert;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 289 "moonshot-id.c"
 }
@@ -292,40 +292,40 @@ const gchar* trust_anchor_get_server_cert (TrustAnchor* self) {
 void trust_anchor_set_server_cert (TrustAnchor* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_server_cert);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_server_cert = _tmp1_;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "server-cert");
 #line 308 "moonshot-id.c"
 }
 
 
 static void trust_anchor_class_init (TrustAnchorClass * klass) {
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	trust_anchor_parent_class = g_type_class_peek_parent (klass);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_type_class_add_private (klass, sizeof (TrustAnchorPrivate));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->get_property = _vala_trust_anchor_get_property;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->set_property = _vala_trust_anchor_set_property;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->finalize = trust_anchor_finalize;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_CA_CERT, g_param_spec_string ("ca-cert", "ca-cert", "ca-cert", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SUBJECT, g_param_spec_string ("subject", "subject", "subject", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SUBJECT_ALT, g_param_spec_string ("subject-alt", "subject-alt", "subject-alt", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), TRUST_ANCHOR_SERVER_CERT, g_param_spec_string ("server-cert", "server-cert", "server-cert", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 #line 331 "moonshot-id.c"
 }
@@ -336,23 +336,23 @@ static void trust_anchor_instance_init (TrustAnchor * self) {
 	gchar* _tmp1_;
 	gchar* _tmp2_;
 	gchar* _tmp3_;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv = TRUST_ANCHOR_GET_PRIVATE (self);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = g_strdup ("");
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_ca_cert = _tmp0_;
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup ("");
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_subject = _tmp1_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp2_ = g_strdup ("");
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_subject_alt = _tmp2_;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp3_ = g_strdup ("");
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_server_cert = _tmp3_;
 #line 358 "moonshot-id.c"
 }
@@ -360,17 +360,17 @@ static void trust_anchor_instance_init (TrustAnchor * self) {
 
 static void trust_anchor_finalize (GObject* obj) {
 	TrustAnchor * self;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self = TRUST_ANCHOR (obj);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_ca_cert);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_subject);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_subject_alt);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_server_cert);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (trust_anchor_parent_class)->finalize (obj);
 #line 376 "moonshot-id.c"
 }
@@ -391,37 +391,37 @@ GType trust_anchor_get_type (void) {
 static void _vala_trust_anchor_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
 	TrustAnchor * self;
 	self = TRUST_ANCHOR (object);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	switch (property_id) {
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_CA_CERT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, trust_anchor_get_ca_cert (self));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SUBJECT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, trust_anchor_get_subject (self));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SUBJECT_ALT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, trust_anchor_get_subject_alt (self));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SERVER_CERT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, trust_anchor_get_server_cert (self));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 421 "moonshot-id.c"
 		default:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 427 "moonshot-id.c"
 	}
@@ -431,37 +431,37 @@ static void _vala_trust_anchor_get_property (GObject * object, guint property_id
 static void _vala_trust_anchor_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
 	TrustAnchor * self;
 	self = TRUST_ANCHOR (object);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	switch (property_id) {
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_CA_CERT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		trust_anchor_set_ca_cert (self, g_value_get_string (value));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SUBJECT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		trust_anchor_set_subject (self, g_value_get_string (value));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SUBJECT_ALT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		trust_anchor_set_subject_alt (self, g_value_get_string (value));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case TRUST_ANCHOR_SERVER_CERT:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		trust_anchor_set_server_cert (self, g_value_get_string (value));
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 461 "moonshot-id.c"
 		default:
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 1 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 1 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 467 "moonshot-id.c"
 	}
@@ -473,30 +473,30 @@ void rule_copy (const Rule* self, Rule* dest) {
 	gchar* _tmp1_;
 	const gchar* _tmp2_;
 	gchar* _tmp3_;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = (*self).pattern;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 ((*dest).pattern);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	(*dest).pattern = _tmp1_;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp2_ = (*self).always_confirm;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp3_ = g_strdup (_tmp2_);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 ((*dest).always_confirm);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	(*dest).always_confirm = _tmp3_;
 #line 493 "moonshot-id.c"
 }
 
 
 void rule_destroy (Rule* self) {
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 ((*self).pattern);
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 ((*self).always_confirm);
 #line 502 "moonshot-id.c"
 }
@@ -504,20 +504,20 @@ void rule_destroy (Rule* self) {
 
 Rule* rule_dup (const Rule* self) {
 	Rule* dup;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	dup = g_new0 (Rule, 1);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	rule_copy (self, dup);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return dup;
 #line 514 "moonshot-id.c"
 }
 
 
 void rule_free (Rule* self) {
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	rule_destroy (self);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_free (self);
 #line 523 "moonshot-id.c"
 }
@@ -535,18 +535,18 @@ GType rule_get_type (void) {
 
 
 static void _vala_Rule_array_free (Rule* array, gint array_length) {
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	if (array != NULL) {
 #line 541 "moonshot-id.c"
 		int i;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		for (i = 0; i < array_length; i = i + 1) {
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 			rule_destroy (&array[i]);
 #line 547 "moonshot-id.c"
 		}
 	}
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_free (array);
 #line 552 "moonshot-id.c"
 }
@@ -554,16 +554,16 @@ static void _vala_Rule_array_free (Rule* array, gint array_length) {
 
 IdCard* id_card_construct (GType object_type) {
 	IdCard * self = NULL;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self = (IdCard*) g_object_new (object_type, NULL);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return self;
 #line 562 "moonshot-id.c"
 }
 
 
 IdCard* id_card_new (void) {
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return id_card_construct (TYPE_ID_CARD);
 #line 569 "moonshot-id.c"
 }
@@ -572,13 +572,13 @@ IdCard* id_card_new (void) {
 const gchar* id_card_get_display_name (IdCard* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_display_name;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 584 "moonshot-id.c"
 }
@@ -587,17 +587,17 @@ const gchar* id_card_get_display_name (IdCard* self) {
 void id_card_set_display_name (IdCard* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_display_name);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_display_name = _tmp1_;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "display-name");
 #line 603 "moonshot-id.c"
 }
@@ -606,13 +606,13 @@ void id_card_set_display_name (IdCard* self, const gchar* value) {
 const gchar* id_card_get_username (IdCard* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_username;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 618 "moonshot-id.c"
 }
@@ -621,17 +621,17 @@ const gchar* id_card_get_username (IdCard* self) {
 void id_card_set_username (IdCard* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_username);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_username = _tmp1_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "username");
 #line 637 "moonshot-id.c"
 }
@@ -640,13 +640,13 @@ void id_card_set_username (IdCard* self, const gchar* value) {
 const gchar* id_card_get_password (IdCard* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_password;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 652 "moonshot-id.c"
 }
@@ -655,17 +655,17 @@ const gchar* id_card_get_password (IdCard* self) {
 void id_card_set_password (IdCard* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_password);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_password = _tmp1_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "password");
 #line 671 "moonshot-id.c"
 }
@@ -674,13 +674,13 @@ void id_card_set_password (IdCard* self, const gchar* value) {
 const gchar* id_card_get_issuer (IdCard* self) {
 	const gchar* result;
 	const gchar* _tmp0_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_issuer;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 686 "moonshot-id.c"
 }
@@ -689,17 +689,17 @@ const gchar* id_card_get_issuer (IdCard* self) {
 void id_card_set_issuer (IdCard* self, const gchar* value) {
 	const gchar* _tmp0_;
 	gchar* _tmp1_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup (_tmp0_);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_issuer);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_issuer = _tmp1_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "issuer");
 #line 705 "moonshot-id.c"
 }
@@ -711,25 +711,25 @@ Rule* id_card_get_rules (IdCard* self, int* result_length1) {
 	gint _tmp0__length1;
 	Rule* _tmp1_;
 	gint _tmp1__length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_rules;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0__length1 = self->priv->_rules_length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = _tmp0_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	if (result_length1) {
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		*result_length1 = _tmp1__length1;
 #line 729 "moonshot-id.c"
 	}
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp1_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 735 "moonshot-id.c"
 }
@@ -738,19 +738,19 @@ Rule* id_card_get_rules (IdCard* self, int* result_length1) {
 static Rule* _vala_array_dup2 (Rule* self, int length) {
 	Rule* result;
 	int i;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = g_new0 (Rule, length);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	for (i = 0; i < length; i++) {
 #line 746 "moonshot-id.c"
 		Rule _tmp0_ = {0};
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		rule_copy (&self[i], &_tmp0_);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		result[i] = _tmp0_;
 #line 752 "moonshot-id.c"
 	}
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 756 "moonshot-id.c"
 }
@@ -761,23 +761,23 @@ void id_card_set_rules (IdCard* self, Rule* value, int value_length1) {
 	gint _tmp0__length1;
 	Rule* _tmp1_;
 	gint _tmp1__length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0__length1 = value_length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup2 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules = _tmp1_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules_length1 = _tmp1__length1;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->__rules_size_ = self->priv->_rules_length1;
 #line 783 "moonshot-id.c"
 }
@@ -789,25 +789,25 @@ gchar** id_card_get_services (IdCard* self, int* result_length1) {
 	gint _tmp0__length1;
 	gchar** _tmp1_;
 	gint _tmp1__length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_services;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0__length1 = self->priv->_services_length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = _tmp0_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	if (result_length1) {
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		*result_length1 = _tmp1__length1;
 #line 807 "moonshot-id.c"
 	}
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp1_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 813 "moonshot-id.c"
 }
@@ -816,19 +816,19 @@ gchar** id_card_get_services (IdCard* self, int* result_length1) {
 static gchar** _vala_array_dup3 (gchar** self, int length) {
 	gchar** result;
 	int i;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = g_new0 (gchar*, length + 1);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	for (i = 0; i < length; i++) {
 #line 824 "moonshot-id.c"
 		gchar* _tmp0_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		_tmp0_ = g_strdup (self[i]);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		result[i] = _tmp0_;
 #line 830 "moonshot-id.c"
 	}
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 834 "moonshot-id.c"
 }
@@ -839,25 +839,25 @@ void id_card_set_services (IdCard* self, gchar** value, int value_length1) {
 	gint _tmp0__length1;
 	gchar** _tmp1_;
 	gint _tmp1__length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0__length1 = value_length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup3 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services = _tmp1_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services_length1 = _tmp1__length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->__services_size_ = self->priv->_services_length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "services");
 #line 863 "moonshot-id.c"
 }
@@ -866,20 +866,20 @@ void id_card_set_services (IdCard* self, gchar** value, int value_length1) {
 TrustAnchor* id_card_get_trust_anchor (IdCard* self) {
 	TrustAnchor* result;
 	TrustAnchor* _tmp0_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_trust_anchor;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 878 "moonshot-id.c"
 }
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 885 "moonshot-id.c"
 }
@@ -888,17 +888,17 @@ static gpointer _g_object_ref0 (gpointer self) {
 void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value) {
 	TrustAnchor* _tmp0_;
 	TrustAnchor* _tmp1_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_object_unref0 (self->priv->_trust_anchor);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_trust_anchor = _tmp1_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "trust-anchor");
 #line 904 "moonshot-id.c"
 }
@@ -907,13 +907,13 @@ void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value) {
 GdkPixbuf* id_card_get_pixbuf (IdCard* self) {
 	GdkPixbuf* result;
 	GdkPixbuf* _tmp0_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_pixbuf;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp0_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 919 "moonshot-id.c"
 }
@@ -922,17 +922,17 @@ GdkPixbuf* id_card_get_pixbuf (IdCard* self) {
 void id_card_set_pixbuf (IdCard* self, GdkPixbuf* value) {
 	GdkPixbuf* _tmp0_;
 	GdkPixbuf* _tmp1_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_if_fail (self != NULL);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = value;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_object_unref0 (self->priv->_pixbuf);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_pixbuf = _tmp1_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_notify ((GObject *) self, "pixbuf");
 #line 938 "moonshot-id.c"
 }
@@ -946,60 +946,60 @@ const gchar* id_card_get_nai (IdCard* self) {
 	const gchar* _tmp3_;
 	gchar* _tmp4_;
 	const gchar* _tmp5_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = self->priv->_username;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strconcat (_tmp0_, "@", NULL);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp2_ = _tmp1_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp3_ = self->priv->_issuer;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp4_ = g_strconcat (_tmp2_, _tmp3_, NULL);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_nai);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_nai = _tmp4_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (_tmp2_);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp5_ = self->priv->_nai;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	result = _tmp5_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	return result;
 #line 974 "moonshot-id.c"
 }
 
 
 static void id_card_class_init (IdCardClass * klass) {
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	id_card_parent_class = g_type_class_peek_parent (klass);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_type_class_add_private (klass, sizeof (IdCardPrivate));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->get_property = _vala_id_card_get_property;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->set_property = _vala_id_card_set_property;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (klass)->finalize = id_card_finalize;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_DISPLAY_NAME, g_param_spec_string ("display-name", "display-name", "display-name", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_USERNAME, g_param_spec_string ("username", "username", "username", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_PASSWORD, g_param_spec_string ("password", "password", "password", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_ISSUER, g_param_spec_string ("issuer", "issuer", "issuer", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_SERVICES, g_param_spec_boxed ("services", "services", "services", G_TYPE_STRV, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_TRUST_ANCHOR, g_param_spec_object ("trust-anchor", "trust-anchor", "trust-anchor", TYPE_TRUST_ANCHOR, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_PIXBUF, g_param_spec_object ("pixbuf", "pixbuf", "pixbuf", GDK_TYPE_PIXBUF, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ID_CARD_NAI, g_param_spec_string ("nai", "nai", "nai", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 #line 1005 "moonshot-id.c"
 }
@@ -1012,43 +1012,43 @@ static void id_card_instance_init (IdCard * self) {
 	Rule* _tmp3_ = NULL;
 	gchar** _tmp4_ = NULL;
 	TrustAnchor* _tmp5_;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv = ID_CARD_GET_PRIVATE (self);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp0_ = g_strdup ("");
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_display_name = _tmp0_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp1_ = g_strdup ("");
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_username = _tmp1_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_password = NULL;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp2_ = g_strdup ("");
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_issuer = _tmp2_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp3_ = g_new0 (Rule, 0);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules = _tmp3_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules_length1 = 0;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->__rules_size_ = self->priv->_rules_length1;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp4_ = g_new0 (gchar*, 0 + 1);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services = _tmp4_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services_length1 = 0;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->__services_size_ = self->priv->_services_length1;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_tmp5_ = trust_anchor_new ();
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_trust_anchor = _tmp5_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_pixbuf = NULL;
 #line 1054 "moonshot-id.c"
 }
@@ -1056,27 +1056,27 @@ static void id_card_instance_init (IdCard * self) {
 
 static void id_card_finalize (GObject* obj) {
 	IdCard * self;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self = ID_CARD (obj);
-#line 17 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 17 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_nai);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_display_name);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_username);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_password);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_free0 (self->priv->_issuer);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_rules = (_vala_Rule_array_free (self->priv->_rules, self->priv->_rules_length1), NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	self->priv->_services = (_vala_array_free (self->priv->_services, self->priv->_services_length1, (GDestroyNotify) g_free), NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_object_unref0 (self->priv->_trust_anchor);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	_g_object_unref0 (self->priv->_pixbuf);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	G_OBJECT_CLASS (id_card_parent_class)->finalize (obj);
 #line 1082 "moonshot-id.c"
 }
@@ -1097,66 +1097,66 @@ GType id_card_get_type (void) {
 static void _vala_id_card_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
 	IdCard * self;
 	self = ID_CARD (object);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	switch (property_id) {
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_DISPLAY_NAME:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, id_card_get_display_name (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_USERNAME:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, id_card_get_username (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_PASSWORD:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, id_card_get_password (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_ISSUER:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, id_card_get_issuer (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_SERVICES:
 #line 1129 "moonshot-id.c"
 		{
 			int length;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 			g_value_set_boxed (value, id_card_get_services (self, &length));
 #line 1134 "moonshot-id.c"
 		}
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_TRUST_ANCHOR:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_object (value, id_card_get_trust_anchor (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_PIXBUF:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_object (value, id_card_get_pixbuf (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_NAI:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		g_value_set_string (value, id_card_get_nai (self));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 1156 "moonshot-id.c"
 		default:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 1162 "moonshot-id.c"
 	}
@@ -1166,62 +1166,62 @@ static void _vala_id_card_get_property (GObject * object, guint property_id, GVa
 static void _vala_id_card_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
 	IdCard * self;
 	self = ID_CARD (object);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 	switch (property_id) {
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_DISPLAY_NAME:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_display_name (self, g_value_get_string (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_USERNAME:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_username (self, g_value_get_string (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_PASSWORD:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_password (self, g_value_get_string (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_ISSUER:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_issuer (self, g_value_get_string (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_SERVICES:
 #line 1198 "moonshot-id.c"
 		{
 			gpointer boxed;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 			boxed = g_value_get_boxed (value);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 			id_card_set_services (self, boxed, g_strv_length (boxed));
 #line 1205 "moonshot-id.c"
 		}
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_TRUST_ANCHOR:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_trust_anchor (self, g_value_get_object (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		case ID_CARD_PIXBUF:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		id_card_set_pixbuf (self, g_value_get_object (value));
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 1221 "moonshot-id.c"
 		default:
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-id.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-id.vala"
 		break;
 #line 1227 "moonshot-id.c"
 	}

@@ -127,23 +127,23 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 
 static void _g_object_unref0_ (gpointer var) {
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	(var == NULL) ? NULL : (var = (g_object_unref (var), NULL));
 #line 133 "moonshot-identity-request.c"
 }
 
 
 static void _g_slist_free__g_object_unref0_ (GSList* self) {
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_slist_foreach (self, (GFunc) _g_object_unref0_, NULL);
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_slist_free (self);
 #line 142 "moonshot-identity-request.c"
 }
 
 
 static gpointer _identity_manager_app_ref0 (gpointer self) {
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return self ? identity_manager_app_ref (self) : NULL;
 #line 149 "moonshot-identity-request.c"
 }
@@ -159,56 +159,56 @@ IdentityRequest* identity_request_construct (GType object_type, IdentityManagerA
 	gchar* _tmp5_;
 	const gchar* _tmp6_;
 	gchar* _tmp7_;
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (app != NULL, NULL);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (nai != NULL, NULL);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (password != NULL, NULL);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (service != NULL, NULL);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self = (IdentityRequest*) g_object_new (object_type, NULL);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0_ = app;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp1_ = _identity_manager_app_ref0 (_tmp0_);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_identity_manager_app_unref0 (self->priv->parent_app);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->parent_app = _tmp1_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp2_ = nai;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp3_ = g_strdup (_tmp2_);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->nai);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->nai = _tmp3_;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp4_ = password;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp5_ = g_strdup (_tmp4_);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->password);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->password = _tmp5_;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp6_ = service;
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp7_ = g_strdup (_tmp6_);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->service);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->service = _tmp7_;
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return self;
 #line 207 "moonshot-identity-request.c"
 }
 
 
 IdentityRequest* identity_request_new (IdentityManagerApp* app, const gchar* nai, const gchar* password, const gchar* service) {
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return identity_request_construct (TYPE_IDENTITY_REQUEST, app, nai, password, service);
 #line 214 "moonshot-identity-request.c"
 }
@@ -218,28 +218,28 @@ IdentityRequest* identity_request_construct_default (GType object_type, Identity
 	IdentityRequest * self = NULL;
 	IdentityManagerApp* _tmp0_;
 	IdentityManagerApp* _tmp1_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (app != NULL, NULL);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self = (IdentityRequest*) g_object_new (object_type, NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0_ = app;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp1_ = _identity_manager_app_ref0 (_tmp0_);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_identity_manager_app_unref0 (self->priv->parent_app);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->parent_app = _tmp1_;
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->select_default = TRUE;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return self;
 #line 238 "moonshot-identity-request.c"
 }
 
 
 IdentityRequest* identity_request_new_default (IdentityManagerApp* app) {
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return identity_request_construct_default (TYPE_IDENTITY_REQUEST, app);
 #line 245 "moonshot-identity-request.c"
 }
@@ -249,37 +249,37 @@ void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallbac
 	ReturnIdentityCallback _tmp0_;
 	void* _tmp0__target;
 	GDestroyNotify _tmp0__target_destroy_notify;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_if_fail (self != NULL);
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0_ = cb;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0__target = cb_target;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0__target_destroy_notify = cb_target_destroy_notify;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	cb_target_destroy_notify = NULL;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	(self->priv->callback_target_destroy_notify == NULL) ? NULL : (self->priv->callback_target_destroy_notify (self->priv->callback_target), NULL);
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback = NULL;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target = NULL;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target_destroy_notify = NULL;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback = _tmp0_;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target = _tmp0__target;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target_destroy_notify = _tmp0__target_destroy_notify;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	(cb_target_destroy_notify == NULL) ? NULL : (cb_target_destroy_notify (cb_target), NULL);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	cb = NULL;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	cb_target = NULL;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	cb_target_destroy_notify = NULL;
 #line 285 "moonshot-identity-request.c"
 }
@@ -288,22 +288,22 @@ void identity_request_set_callback (IdentityRequest* self, ReturnIdentityCallbac
 gboolean identity_request_execute (IdentityRequest* self) {
 	gboolean result = FALSE;
 	IdentityManagerApp* _tmp0_;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0_ = self->priv->parent_app;
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	identity_manager_app_select_identity (_tmp0_, self);
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	result = FALSE;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return result;
 #line 302 "moonshot-identity-request.c"
 }
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 309 "moonshot-identity-request.c"
 }
@@ -321,53 +321,53 @@ void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
 	void* _tmp48__target;
 	ReturnIdentityCallback _tmp49_;
 	void* _tmp49__target;
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_if_fail (self != NULL);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp0_ = id_card;
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_object_unref0 (self->id_card);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->id_card = _tmp1_;
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->complete = TRUE;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp4_ = id_card;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	if (_tmp4_ != NULL) {
 #line 341 "moonshot-identity-request.c"
 		const gchar* _tmp5_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp5_ = self->service;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp3_ = _tmp5_ != NULL;
 #line 347 "moonshot-identity-request.c"
 	} else {
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp3_ = FALSE;
 #line 351 "moonshot-identity-request.c"
 	}
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp6_ = _tmp3_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	if (_tmp6_) {
 #line 357 "moonshot-identity-request.c"
 		const gchar* _tmp7_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp7_ = self->service;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp2_ = g_strcmp0 (_tmp7_, "") != 0;
 #line 363 "moonshot-identity-request.c"
 	} else {
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp2_ = FALSE;
 #line 367 "moonshot-identity-request.c"
 	}
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp8_ = _tmp2_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	if (_tmp8_) {
 #line 373 "moonshot-identity-request.c"
 		gboolean duplicate_service;
@@ -377,15 +377,15 @@ void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
 		gchar** _tmp11_;
 		gint _tmp11__length1;
 		gboolean _tmp15_;
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		duplicate_service = FALSE;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp9_ = id_card;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp10_ = id_card_get_services (_tmp9_, &_tmp10__length1);
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp11_ = _tmp10_;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp11__length1 = _tmp10__length1;
 #line 391 "moonshot-identity-request.c"
 		{
@@ -393,42 +393,42 @@ void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
 			gint service_collection_length1 = 0;
 			gint _service_collection_size_ = 0;
 			gint service_it = 0;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			service_collection = _tmp11_;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			service_collection_length1 = _tmp11__length1;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			for (service_it = 0; service_it < _tmp11__length1; service_it = service_it + 1) {
 #line 403 "moonshot-identity-request.c"
 				gchar* _tmp12_;
 				gchar* service = NULL;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 				_tmp12_ = g_strdup (service_collection[service_it]);
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 				service = _tmp12_;
 #line 410 "moonshot-identity-request.c"
 				{
 					const gchar* _tmp13_;
 					const gchar* _tmp14_;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					_tmp13_ = service;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					_tmp14_ = self->service;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					if (g_strcmp0 (_tmp13_, _tmp14_) == 0) {
-#line 63 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 63 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						duplicate_service = TRUE;
 #line 422 "moonshot-identity-request.c"
 					}
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					_g_free0 (service);
 #line 426 "moonshot-identity-request.c"
 				}
 			}
 		}
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		_tmp15_ = duplicate_service;
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 		if (_tmp15_ == FALSE) {
 #line 434 "moonshot-identity-request.c"
 			IdCard* _tmp16_;
@@ -456,33 +456,33 @@ void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
 			IdentityManagerApp* _tmp45_;
 			IdentityManagerModel* _tmp46_;
 			IdCard* _tmp47_;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp16_ = id_card;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp17_ = id_card_get_services (_tmp16_, &_tmp17__length1);
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp18_ = _tmp17_;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp18__length1 = _tmp17__length1;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp19_ = g_new0 (gchar*, (_tmp18__length1 + 1) + 1);
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			services = _tmp19_;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			services_length1 = _tmp18__length1 + 1;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_services_size_ = services_length1;
 #line 476 "moonshot-identity-request.c"
 			{
 				gint i;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 				i = 0;
 #line 481 "moonshot-identity-request.c"
 				{
 					gboolean _tmp20_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					_tmp20_ = TRUE;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 					while (TRUE) {
 #line 488 "moonshot-identity-request.c"
 						gboolean _tmp21_;
@@ -504,146 +504,146 @@ void identity_request_return_identity (IdentityRequest* self, IdCard* id_card) {
 						const gchar* _tmp33_;
 						gchar* _tmp34_;
 						gchar* _tmp35_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp21_ = _tmp20_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						if (!_tmp21_) {
 #line 512 "moonshot-identity-request.c"
 							gint _tmp22_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 							_tmp22_ = i;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 							i = _tmp22_ + 1;
 #line 518 "moonshot-identity-request.c"
 						}
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp20_ = FALSE;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp23_ = i;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp24_ = id_card;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp25_ = id_card_get_services (_tmp24_, &_tmp25__length1);
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp26_ = _tmp25_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp26__length1 = _tmp25__length1;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						if (!(_tmp23_ < _tmp26__length1)) {
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 							break;
 #line 536 "moonshot-identity-request.c"
 						}
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp27_ = services;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp27__length1 = services_length1;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp28_ = i;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp29_ = id_card;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp30_ = id_card_get_services (_tmp29_, &_tmp30__length1);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp31_ = _tmp30_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp31__length1 = _tmp30__length1;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp32_ = i;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp33_ = _tmp31_[_tmp32_];
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp34_ = g_strdup (_tmp33_);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_g_free0 (_tmp27_[_tmp28_]);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp27_[_tmp28_] = _tmp34_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 						_tmp35_ = _tmp27_[_tmp28_];
 #line 564 "moonshot-identity-request.c"
 					}
 				}
 			}
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp36_ = services;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp36__length1 = services_length1;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp37_ = id_card;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp38_ = id_card_get_services (_tmp37_, &_tmp38__length1);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp39_ = _tmp38_;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp39__length1 = _tmp38__length1;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp40_ = self->service;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp41_ = g_strdup (_tmp40_);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_g_free0 (_tmp36_[_tmp39__length1]);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp36_[_tmp39__length1] = _tmp41_;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp42_ = _tmp36_[_tmp39__length1];
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp43_ = id_card;
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp44_ = services;
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp44__length1 = services_length1;
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			id_card_set_services (_tmp43_, _tmp44_, _tmp44__length1);
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp45_ = self->priv->parent_app;
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp46_ = _tmp45_->model;
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			_tmp47_ = id_card;
-#line 75 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 75 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			identity_manager_model_update_card (_tmp46_, _tmp47_);
-#line 65 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 65 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 			services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
 #line 608 "moonshot-identity-request.c"
 		}
 	}
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp48_ = self->priv->callback;
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp48__target = self->priv->callback_target;
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_return_if_fail (_tmp48_ != NULL);
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp49_ = self->priv->callback;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp49__target = self->priv->callback_target;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_tmp49_ (self, _tmp49__target);
 #line 623 "moonshot-identity-request.c"
 }
 
 
 static void identity_request_class_init (IdentityRequestClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	identity_request_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	g_type_class_add_private (klass, sizeof (IdentityRequestPrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	G_OBJECT_CLASS (klass)->finalize = identity_request_finalize;
 #line 634 "moonshot-identity-request.c"
 }
 
 
 static void identity_request_instance_init (IdentityRequest * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv = IDENTITY_REQUEST_GET_PRIVATE (self);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->id_card = NULL;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->complete = FALSE;
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->select_default = FALSE;
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback = NULL;
 #line 649 "moonshot-identity-request.c"
 }
@@ -651,29 +651,29 @@ static void identity_request_instance_init (IdentityRequest * self) {
 
 static void identity_request_finalize (GObject* obj) {
 	IdentityRequest * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self = IDENTITY_REQUEST (obj);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_object_unref0 (self->id_card);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_identity_manager_app_unref0 (self->priv->parent_app);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->nai);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->password);
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	_g_free0 (self->service);
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	__g_slist_free__g_object_unref0_0 (self->candidates);
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	(self->priv->callback_target_destroy_notify == NULL) ? NULL : (self->priv->callback_target_destroy_notify (self->priv->callback_target), NULL);
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback = NULL;
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target = NULL;
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	self->priv->callback_target_destroy_notify = NULL;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identity-request.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-request.vala"
 	G_OBJECT_CLASS (identity_request_parent_class)->finalize (obj);
 #line 679 "moonshot-identity-request.c"
 }

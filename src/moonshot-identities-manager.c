@@ -120,15 +120,15 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 	GeeLinkedList* result = NULL;
 	IIdentityCardStore* _tmp0_;
 	GeeLinkedList* _tmp1_ = NULL;
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = self->priv->store;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp1_ = iidentity_card_store_get_card_list (_tmp0_);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	result = _tmp1_;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	return result;
 #line 134 "moonshot-identities-manager.c"
 }
@@ -137,17 +137,17 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card) {
 	IIdentityCardStore* _tmp0_;
 	IdCard* _tmp1_;
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = self->priv->store;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp1_ = card;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	iidentity_card_store_add_card (_tmp0_, _tmp1_);
-#line 14 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 14 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
 #line 153 "moonshot-identities-manager.c"
 }
@@ -156,17 +156,17 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card) 
 void identity_manager_model_update_card (IdentityManagerModel* self, IdCard* card) {
 	IIdentityCardStore* _tmp0_;
 	IdCard* _tmp1_;
-#line 17 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 17 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
-#line 17 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 17 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = self->priv->store;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp1_ = card;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	iidentity_card_store_update_card (_tmp0_, _tmp1_);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
 #line 172 "moonshot-identities-manager.c"
 }
@@ -175,24 +175,24 @@ void identity_manager_model_update_card (IdentityManagerModel* self, IdCard* car
 void identity_manager_model_remove_card (IdentityManagerModel* self, IdCard* card) {
 	IIdentityCardStore* _tmp0_;
 	IdCard* _tmp1_;
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (self != NULL);
-#line 22 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 22 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_if_fail (card != NULL);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = self->priv->store;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp1_ = card;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	iidentity_card_store_remove_card (_tmp0_, _tmp1_);
-#line 24 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 24 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_signal_emit_by_name (self, "card-list-changed");
 #line 191 "moonshot-identities-manager.c"
 }
 
 
 static gpointer _identity_manager_app_ref0 (gpointer self) {
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	return self ? identity_manager_app_ref (self) : NULL;
 #line 198 "moonshot-identities-manager.c"
 }
@@ -203,52 +203,52 @@ IdentityManagerModel* identity_manager_model_construct (GType object_type, Ident
 	IdentityManagerApp* _tmp0_;
 	IdentityManagerApp* _tmp1_;
 	LocalFlatFileStore* _tmp2_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_return_val_if_fail (parent_app != NULL, NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	self = (IdentityManagerModel*) g_object_new (object_type, NULL);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = parent_app;
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp1_ = _identity_manager_app_ref0 (_tmp0_);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_identity_manager_app_unref0 (self->priv->parent);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	self->priv->parent = _tmp1_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_tmp2_ = local_flat_file_store_new ();
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_g_object_unref0 (self->priv->store);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	self->priv->store = (IIdentityCardStore*) _tmp2_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	return self;
 #line 227 "moonshot-identities-manager.c"
 }
 
 
 IdentityManagerModel* identity_manager_model_new (IdentityManagerApp* parent_app) {
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	return identity_manager_model_construct (TYPE_IDENTITY_MANAGER_MODEL, parent_app);
 #line 234 "moonshot-identities-manager.c"
 }
 
 
 static void identity_manager_model_class_init (IdentityManagerModelClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	identity_manager_model_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_type_class_add_private (klass, sizeof (IdentityManagerModelPrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	G_OBJECT_CLASS (klass)->finalize = identity_manager_model_finalize;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	g_signal_new ("card_list_changed", TYPE_IDENTITY_MANAGER_MODEL, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 #line 247 "moonshot-identities-manager.c"
 }
 
 
 static void identity_manager_model_instance_init (IdentityManagerModel * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	self->priv = IDENTITY_MANAGER_MODEL_GET_PRIVATE (self);
 #line 254 "moonshot-identities-manager.c"
 }
@@ -256,13 +256,13 @@ static void identity_manager_model_instance_init (IdentityManagerModel * self) {
 
 static void identity_manager_model_finalize (GObject* obj) {
 	IdentityManagerModel * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	self = IDENTITY_MANAGER_MODEL (obj);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_g_object_unref0 (self->priv->store);
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	_identity_manager_app_unref0 (self->priv->parent);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-identities-manager.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-identities-manager.vala"
 	G_OBJECT_CLASS (identity_manager_model_parent_class)->finalize (obj);
 #line 268 "moonshot-identities-manager.c"
 }

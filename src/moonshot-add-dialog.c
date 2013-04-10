@@ -65,7 +65,7 @@ static void _vala_add_identity_dialog_get_property (GObject * object, guint prop
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 71 "moonshot-add-dialog.c"
 }
@@ -123,210 +123,210 @@ AddIdentityDialog* add_identity_dialog_construct (GType object_type) {
 	GtkVBox* _tmp40_;
 	GtkVBox* _tmp41_;
 	GtkVBox* vbox;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self = (AddIdentityDialog*) g_object_new (object_type, NULL);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = _ ("Add ID Card");
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_window_set_title ((GtkWindow*) self, _tmp0_);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_window_set_modal ((GtkWindow*) self, TRUE);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = _ ("Add ID Card");
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_dialog_add_buttons ((GtkDialog*) self, _tmp1_, GTK_RESPONSE_OK, GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL, NULL);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp2_ = gtk_dialog_get_content_area ((GtkDialog*) self);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp3_ = _g_object_ref0 (_tmp2_);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	content_area = _tmp3_;
-#line 39 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 39 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp4_ = _ ("Display Name:");
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp5_ = (GtkLabel*) gtk_label_new (_tmp4_);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp6_ = g_object_ref_sink (_tmp5_);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	displayname_label = _tmp6_;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) displayname_label, (gfloat) 1, (gfloat) 0.5);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp7_ = (GtkEntry*) gtk_entry_new ();
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp8_ = g_object_ref_sink (_tmp7_);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->displayname_entry);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self->priv->displayname_entry = _tmp8_;
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp9_ = _ ("Issuer:");
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp10_ = (GtkLabel*) gtk_label_new (_tmp9_);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp11_ = g_object_ref_sink (_tmp10_);
-#line 44 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 44 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	issuer_label = _tmp11_;
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) issuer_label, (gfloat) 1, (gfloat) 0.5);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp12_ = (GtkEntry*) gtk_entry_new ();
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp13_ = g_object_ref_sink (_tmp12_);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->issuer_entry);
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self->priv->issuer_entry = _tmp13_;
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp14_ = _ ("Username:");
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp15_ = (GtkLabel*) gtk_label_new (_tmp14_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp16_ = g_object_ref_sink (_tmp15_);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	username_label = _tmp16_;
-#line 48 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 48 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) username_label, (gfloat) 1, (gfloat) 0.5);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp17_ = (GtkEntry*) gtk_entry_new ();
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp18_ = g_object_ref_sink (_tmp17_);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->username_entry);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self->priv->username_entry = _tmp18_;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp19_ = _ ("Password:");
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp20_ = (GtkLabel*) gtk_label_new (_tmp19_);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp21_ = g_object_ref_sink (_tmp20_);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	password_label = _tmp21_;
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (gfloat) 1, (gfloat) 0.5);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp22_ = (GtkEntry*) gtk_entry_new ();
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp23_ = g_object_ref_sink (_tmp22_);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->password_entry);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self->priv->password_entry = _tmp23_;
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp24_ = self->priv->password_entry;
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_entry_set_invisible_char (_tmp24_, (gunichar) '*');
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp25_ = self->priv->password_entry;
-#line 54 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 54 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_entry_set_visibility (_tmp25_, FALSE);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp26_ = _ ("Remember password");
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp27_ = (GtkCheckButton*) gtk_check_button_new_with_label (_tmp26_);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp28_ = g_object_ref_sink (_tmp27_);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	remember_checkbutton = _tmp28_;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp29_ = self->priv->displayname_entry;
-#line 57 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 57 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) displayname_label, (GtkWidget*) _tmp29_, ATK_RELATION_LABEL_FOR);
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp30_ = self->priv->issuer_entry;
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) issuer_label, (GtkWidget*) _tmp30_, ATK_RELATION_LABEL_FOR);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp31_ = self->priv->username_entry;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) username_label, (GtkWidget*) _tmp31_, ATK_RELATION_LABEL_FOR);
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp32_ = self->priv->password_entry;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp33_ = self->priv->password_entry;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	add_identity_dialog_set_atk_relation (self, (GtkWidget*) _tmp32_, (GtkWidget*) _tmp33_, ATK_RELATION_LABEL_FOR);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp34_ = (GtkTable*) gtk_table_new ((guint) 5, (guint) 5, FALSE);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp35_ = g_object_ref_sink (_tmp34_);
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	table = _tmp35_;
-#line 63 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 63 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_set_col_spacings (table, (guint) 10);
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_set_row_spacings (table, (guint) 10);
-#line 66 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 66 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) displayname_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1);
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp36_ = self->priv->displayname_entry;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp36_, (guint) 1, (guint) 2, (guint) 0, (guint) 1);
-#line 68 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 68 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) issuer_label, (guint) 0, (guint) 1, (guint) 1, (guint) 2);
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp37_ = self->priv->issuer_entry;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp37_, (guint) 1, (guint) 2, (guint) 1, (guint) 2);
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) username_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp38_ = self->priv->username_entry;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp38_, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 3, (guint) 4);
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp39_ = self->priv->password_entry;
-#line 73 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 73 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp39_, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) remember_checkbutton, (guint) 1, (guint) 2, (guint) 4, (guint) 5);
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp40_ = (GtkVBox*) gtk_vbox_new (FALSE, 0);
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp41_ = g_object_ref_sink (_tmp40_);
-#line 76 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 76 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	vbox = _tmp41_;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) vbox, (guint) 6);
-#line 78 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 78 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) table, FALSE, FALSE, (guint) 0);
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_container_add (GTK_CONTAINER (content_area), (GtkWidget*) vbox);
-#line 82 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 82 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) self, (guint) 6);
-#line 83 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 83 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_window_set_resizable ((GtkWindow*) self, FALSE);
-#line 84 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 84 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (vbox);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (table);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (remember_checkbutton);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (password_label);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (username_label);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (issuer_label);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (displayname_label);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (content_area);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return self;
 #line 325 "moonshot-add-dialog.c"
 }
 
 
 AddIdentityDialog* add_identity_dialog_new (void) {
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return add_identity_dialog_construct (TYPE_ADD_IDENTITY_DIALOG);
 #line 332 "moonshot-add-dialog.c"
 }
@@ -342,35 +342,35 @@ static void add_identity_dialog_set_atk_relation (AddIdentityDialog* self, GtkWi
 	AtkObject* _tmp5_;
 	AtkObject* atk_target_widget;
 	AtkRelationType _tmp6_;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_if_fail (self != NULL);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_if_fail (widget != NULL);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_if_fail (target_widget != NULL);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = widget;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = gtk_widget_get_accessible (_tmp0_);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp2_ = _g_object_ref0 (_tmp1_);
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	atk_widget = _tmp2_;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp3_ = target_widget;
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp4_ = gtk_widget_get_accessible (_tmp3_);
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp5_ = _g_object_ref0 (_tmp4_);
-#line 90 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 90 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	atk_target_widget = _tmp5_;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp6_ = relationship;
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	atk_object_add_relationship (atk_widget, _tmp6_, atk_target_widget);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (atk_target_widget);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (atk_widget);
 #line 376 "moonshot-add-dialog.c"
 }
@@ -380,15 +380,15 @@ const gchar* add_identity_dialog_get_display_name (AddIdentityDialog* self) {
 	const gchar* result;
 	GtkEntry* _tmp0_;
 	const gchar* _tmp1_ = NULL;
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = self->priv->displayname_entry;
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = gtk_entry_get_text (_tmp0_);
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	result = _tmp1_;
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return result;
 #line 394 "moonshot-add-dialog.c"
 }
@@ -398,15 +398,15 @@ const gchar* add_identity_dialog_get_issuer (AddIdentityDialog* self) {
 	const gchar* result;
 	GtkEntry* _tmp0_;
 	const gchar* _tmp1_ = NULL;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = self->priv->issuer_entry;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = gtk_entry_get_text (_tmp0_);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	result = _tmp1_;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return result;
 #line 412 "moonshot-add-dialog.c"
 }
@@ -416,15 +416,15 @@ const gchar* add_identity_dialog_get_username (AddIdentityDialog* self) {
 	const gchar* result;
 	GtkEntry* _tmp0_;
 	const gchar* _tmp1_ = NULL;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = self->priv->username_entry;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = gtk_entry_get_text (_tmp0_);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	result = _tmp1_;
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return result;
 #line 430 "moonshot-add-dialog.c"
 }
@@ -434,43 +434,43 @@ const gchar* add_identity_dialog_get_password (AddIdentityDialog* self) {
 	const gchar* result;
 	GtkEntry* _tmp0_;
 	const gchar* _tmp1_ = NULL;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp0_ = self->priv->password_entry;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_tmp1_ = gtk_entry_get_text (_tmp0_);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	result = _tmp1_;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	return result;
 #line 448 "moonshot-add-dialog.c"
 }
 
 
 static void add_identity_dialog_class_init (AddIdentityDialogClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	add_identity_dialog_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_type_class_add_private (klass, sizeof (AddIdentityDialogPrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	G_OBJECT_CLASS (klass)->get_property = _vala_add_identity_dialog_get_property;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	G_OBJECT_CLASS (klass)->finalize = add_identity_dialog_finalize;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_DISPLAY_NAME, g_param_spec_string ("display-name", "display-name", "display-name", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_ISSUER, g_param_spec_string ("issuer", "issuer", "issuer", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_USERNAME, g_param_spec_string ("username", "username", "username", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_IDENTITY_DIALOG_PASSWORD, g_param_spec_string ("password", "password", "password", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 #line 469 "moonshot-add-dialog.c"
 }
 
 
 static void add_identity_dialog_instance_init (AddIdentityDialog * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self->priv = ADD_IDENTITY_DIALOG_GET_PRIVATE (self);
 #line 476 "moonshot-add-dialog.c"
 }
@@ -478,17 +478,17 @@ static void add_identity_dialog_instance_init (AddIdentityDialog * self) {
 
 static void add_identity_dialog_finalize (GObject* obj) {
 	AddIdentityDialog * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	self = ADD_IDENTITY_DIALOG (obj);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->displayname_entry);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->issuer_entry);
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->username_entry);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	_g_object_unref0 (self->priv->password_entry);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	G_OBJECT_CLASS (add_identity_dialog_parent_class)->finalize (obj);
 #line 494 "moonshot-add-dialog.c"
 }
@@ -509,37 +509,37 @@ GType add_identity_dialog_get_type (void) {
 static void _vala_add_identity_dialog_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
 	AddIdentityDialog * self;
 	self = ADD_IDENTITY_DIALOG (object);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 	switch (property_id) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		case ADD_IDENTITY_DIALOG_DISPLAY_NAME:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		g_value_set_string (value, add_identity_dialog_get_display_name (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		break;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		case ADD_IDENTITY_DIALOG_ISSUER:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		g_value_set_string (value, add_identity_dialog_get_issuer (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		break;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		case ADD_IDENTITY_DIALOG_USERNAME:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		g_value_set_string (value, add_identity_dialog_get_username (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		break;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		case ADD_IDENTITY_DIALOG_PASSWORD:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		g_value_set_string (value, add_identity_dialog_get_password (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		break;
 #line 539 "moonshot-add-dialog.c"
 		default:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-add-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-add-dialog.vala"
 		break;
 #line 545 "moonshot-add-dialog.c"
 	}

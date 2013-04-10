@@ -44,47 +44,47 @@ GeeLinkedList* iidentity_card_store_get_card_list (IIdentityCardStore* self);
 
 
 void iidentity_card_store_add_card (IIdentityCardStore* self, IdCard* card) {
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	g_return_if_fail (self != NULL);
-#line 4 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 4 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->add_card (self, card);
 #line 52 "moonshot-idcard-store.c"
 }
 
 
 void iidentity_card_store_remove_card (IIdentityCardStore* self, IdCard* card) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	g_return_if_fail (self != NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->remove_card (self, card);
 #line 61 "moonshot-idcard-store.c"
 }
 
 
 void iidentity_card_store_update_card (IIdentityCardStore* self, IdCard* card) {
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	g_return_if_fail (self != NULL);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	IIDENTITY_CARD_STORE_GET_INTERFACE (self)->update_card (self, card);
 #line 70 "moonshot-idcard-store.c"
 }
 
 
 GeeLinkedList* iidentity_card_store_get_card_list (IIdentityCardStore* self) {
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	return IIDENTITY_CARD_STORE_GET_INTERFACE (self)->get_card_list (self);
 #line 79 "moonshot-idcard-store.c"
 }
 
 
 static void iidentity_card_store_base_init (IIdentityCardStoreIface * iface) {
-#line 2 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 2 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	static gboolean initialized = FALSE;
-#line 2 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 2 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 	if (!initialized) {
-#line 2 "/build/slave/packages-full/build/ui/src/moonshot-idcard-store.vala"
+#line 2 "/build/slave/submodule_amd64/build/ui/src/moonshot-idcard-store.vala"
 		initialized = TRUE;
 #line 90 "moonshot-idcard-store.c"
 	}

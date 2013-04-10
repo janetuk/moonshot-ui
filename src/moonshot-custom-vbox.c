@@ -132,7 +132,7 @@ static void _vala_custom_vbox_set_property (GObject * object, guint property_id,
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 138 "moonshot-custom-vbox.c"
 }
@@ -144,34 +144,34 @@ CustomVBox* custom_vbox_construct (GType object_type, IdentityManagerView* windo
 	IdentityManagerView* _tmp1_;
 	gboolean _tmp2_;
 	gint _tmp3_;
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_val_if_fail (window != NULL, NULL);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self = (CustomVBox*) g_object_new (object_type, NULL);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = window;
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_g_object_unref0 (self->priv->main_window);
-#line 10 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 10 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self->priv->main_window = _tmp1_;
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp2_ = homogeneous;
-#line 11 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 11 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	gtk_box_set_homogeneous ((GtkBox*) self, _tmp2_);
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp3_ = spacing;
-#line 12 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 12 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	gtk_box_set_spacing ((GtkBox*) self, _tmp3_);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	return self;
 #line 170 "moonshot-custom-vbox.c"
 }
 
 
 CustomVBox* custom_vbox_new (IdentityManagerView* window, gboolean homogeneous, gint spacing) {
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	return custom_vbox_construct (TYPE_CUSTOM_VBOX, window, homogeneous, spacing);
 #line 177 "moonshot-custom-vbox.c"
 }
@@ -185,100 +185,100 @@ void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card
 	gboolean _tmp7_ = FALSE;
 	IdCardWidget* _tmp8_;
 	gboolean _tmp12_;
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
-#line 17 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 17 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = gtk_container_get_children ((GtkContainer*) self);
-#line 17 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 17 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	list = _tmp0_;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp1_ = list;
 #line 199 "moonshot-custom-vbox.c"
 	{
 		GList* id_card_collection = NULL;
 		GList* id_card_it = NULL;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		id_card_collection = _tmp1_;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		for (id_card_it = id_card_collection; id_card_it != NULL; id_card_it = id_card_it->next) {
 #line 207 "moonshot-custom-vbox.c"
 			GtkWidget* _tmp2_;
 			GtkWidget* id_card = NULL;
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 			_tmp2_ = _g_object_ref0 ((GtkWidget*) id_card_it->data);
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 			id_card = _tmp2_;
 #line 214 "moonshot-custom-vbox.c"
 			{
 				GtkWidget* _tmp3_;
 				IdCardWidget* _tmp4_;
-#line 20 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 20 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 				_tmp3_ = id_card;
-#line 20 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 20 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 				_tmp4_ = id_card_widget;
-#line 20 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 20 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 				if (_tmp3_ != GTK_WIDGET (_tmp4_)) {
 #line 224 "moonshot-custom-vbox.c"
 					GtkWidget* _tmp5_;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 					_tmp5_ = id_card;
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 					id_card_widget_collapse (ID_CARD_WIDGET (_tmp5_));
 #line 230 "moonshot-custom-vbox.c"
 				}
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 				_g_object_unref0 (id_card);
 #line 234 "moonshot-custom-vbox.c"
 			}
 		}
 	}
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp6_ = id_card_widget;
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	custom_vbox_set_current_idcard (self, _tmp6_);
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp8_ = self->priv->_current_idcard;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	if (_tmp8_ != NULL) {
 #line 246 "moonshot-custom-vbox.c"
 		IdentityManagerView* _tmp9_;
 		GQueue* _tmp10_;
 		guint _tmp11_;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp9_ = self->priv->main_window;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp10_ = _tmp9_->request_queue;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp11_ = _tmp10_->length;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp7_ = _tmp11_ > ((guint) 0);
 #line 258 "moonshot-custom-vbox.c"
 	} else {
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp7_ = FALSE;
 #line 262 "moonshot-custom-vbox.c"
 	}
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp12_ = _tmp7_;
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	if (_tmp12_) {
 #line 268 "moonshot-custom-vbox.c"
 		IdCardWidget* _tmp13_;
 		GtkButton* _tmp14_;
 		GtkButton* _tmp15_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp13_ = self->priv->_current_idcard;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp14_ = id_card_widget_get_send_button (_tmp13_);
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		_tmp15_ = _tmp14_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		gtk_widget_set_sensitive ((GtkWidget*) _tmp15_, TRUE);
 #line 280 "moonshot-custom-vbox.c"
 	}
-#line 15 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 15 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_g_list_free0 (list);
 #line 284 "moonshot-custom-vbox.c"
 }
@@ -286,13 +286,13 @@ void custom_vbox_receive_expanded_event (CustomVBox* self, IdCardWidget* id_card
 
 void custom_vbox_add_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget) {
 	IdCardWidget* _tmp0_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = id_card_widget;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	gtk_box_pack_start ((GtkBox*) self, (GtkWidget*) _tmp0_, FALSE, FALSE, (guint) 0);
 #line 298 "moonshot-custom-vbox.c"
 }
@@ -300,13 +300,13 @@ void custom_vbox_add_id_card_widget (CustomVBox* self, IdCardWidget* id_card_wid
 
 void custom_vbox_remove_id_card_widget (CustomVBox* self, IdCardWidget* id_card_widget) {
 	IdCardWidget* _tmp0_;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (id_card_widget != NULL);
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = id_card_widget;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	gtk_container_remove ((GtkContainer*) self, (GtkWidget*) _tmp0_);
 #line 312 "moonshot-custom-vbox.c"
 }
@@ -315,13 +315,13 @@ void custom_vbox_remove_id_card_widget (CustomVBox* self, IdCardWidget* id_card_
 IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self) {
 	IdCardWidget* result;
 	IdCardWidget* _tmp0_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = self->priv->_current_idcard;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	result = _tmp0_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	return result;
 #line 327 "moonshot-custom-vbox.c"
 }
@@ -330,43 +330,43 @@ IdCardWidget* custom_vbox_get_current_idcard (CustomVBox* self) {
 void custom_vbox_set_current_idcard (CustomVBox* self, IdCardWidget* value) {
 	IdCardWidget* _tmp0_;
 	IdCardWidget* _tmp1_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_return_if_fail (self != NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp0_ = value;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_g_object_unref0 (self->priv->_current_idcard);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self->priv->_current_idcard = _tmp1_;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_object_notify ((GObject *) self, "current-idcard");
 #line 346 "moonshot-custom-vbox.c"
 }
 
 
 static void custom_vbox_class_init (CustomVBoxClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	custom_vbox_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_type_class_add_private (klass, sizeof (CustomVBoxPrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	G_OBJECT_CLASS (klass)->get_property = _vala_custom_vbox_get_property;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	G_OBJECT_CLASS (klass)->set_property = _vala_custom_vbox_set_property;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	G_OBJECT_CLASS (klass)->finalize = custom_vbox_finalize;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), CUSTOM_VBOX_CURRENT_IDCARD, g_param_spec_object ("current-idcard", "current-idcard", "current-idcard", TYPE_ID_CARD_WIDGET, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE | G_PARAM_WRITABLE));
 #line 363 "moonshot-custom-vbox.c"
 }
 
 
 static void custom_vbox_instance_init (CustomVBox * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self->priv = CUSTOM_VBOX_GET_PRIVATE (self);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self->priv->_current_idcard = NULL;
 #line 372 "moonshot-custom-vbox.c"
 }
@@ -374,13 +374,13 @@ static void custom_vbox_instance_init (CustomVBox * self) {
 
 static void custom_vbox_finalize (GObject* obj) {
 	CustomVBox * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	self = CUSTOM_VBOX (obj);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_g_object_unref0 (self->priv->_current_idcard);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	_g_object_unref0 (self->priv->main_window);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	G_OBJECT_CLASS (custom_vbox_parent_class)->finalize (obj);
 #line 386 "moonshot-custom-vbox.c"
 }
@@ -401,19 +401,19 @@ GType custom_vbox_get_type (void) {
 static void _vala_custom_vbox_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
 	CustomVBox * self;
 	self = CUSTOM_VBOX (object);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	switch (property_id) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		case CUSTOM_VBOX_CURRENT_IDCARD:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		g_value_set_object (value, custom_vbox_get_current_idcard (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		break;
 #line 413 "moonshot-custom-vbox.c"
 		default:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		break;
 #line 419 "moonshot-custom-vbox.c"
 	}
@@ -423,19 +423,19 @@ static void _vala_custom_vbox_get_property (GObject * object, guint property_id,
 static void _vala_custom_vbox_set_property (GObject * object, guint property_id, const GValue * value, GParamSpec * pspec) {
 	CustomVBox * self;
 	self = CUSTOM_VBOX (object);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 	switch (property_id) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		case CUSTOM_VBOX_CURRENT_IDCARD:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		custom_vbox_set_current_idcard (self, g_value_get_object (value));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		break;
 #line 435 "moonshot-custom-vbox.c"
 		default:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-custom-vbox.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-custom-vbox.vala"
 		break;
 #line 441 "moonshot-custom-vbox.c"
 	}

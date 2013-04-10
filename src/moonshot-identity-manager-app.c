@@ -207,17 +207,17 @@ static void _vala_array_free (gpointer array, gint array_length, GDestroyNotify 
 
 void identity_manager_app_show (IdentityManagerApp* self) {
 	IdentityManagerView* _tmp0_;
-#line 27 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 27 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = self->priv->view;
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp0_ != NULL) {
 #line 217 "moonshot-identity-manager-app.c"
 		IdentityManagerView* _tmp1_;
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp1_ = self->priv->view;
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		gtk_widget_show ((GtkWidget*) _tmp1_);
 #line 223 "moonshot-identity-manager-app.c"
 	}
@@ -235,82 +235,82 @@ IdentityManagerApp* identity_manager_app_construct (GType object_type, gboolean 
 	gint _tmp7_;
 	gint _tmp8_;
 	IdentityManagerView* _tmp11_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self = (IdentityManagerApp*) g_type_create_instance (object_type);
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = identity_manager_model_new (self);
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->model);
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self->model = _tmp0_;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp1_ = headless;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (!_tmp1_) {
 #line 251 "moonshot-identity-manager-app.c"
 		IdentityManagerView* _tmp2_;
 		IdentityManagerView* _tmp3_;
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp2_ = identity_manager_view_new (self);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp3_ = g_object_ref_sink (_tmp2_);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (self->priv->view);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		self->priv->view = _tmp3_;
 #line 262 "moonshot-identity-manager-app.c"
 	}
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp4_ = self->model;
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp5_ = identity_manager_model_get_card_list (_tmp4_);
-#line 35 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 35 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	card_list = _tmp5_;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp6_ = card_list;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp7_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp6_);
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp8_ = _tmp7_;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp8_ > 0) {
 #line 278 "moonshot-identity-manager-app.c"
 		GeeLinkedList* _tmp9_;
 		gpointer _tmp10_ = NULL;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp9_ = card_list;
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp10_ = gee_abstract_list_first ((GeeAbstractList*) _tmp9_);
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (self->default_id_card);
-#line 37 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 37 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		self->default_id_card = (IdCard*) _tmp10_;
 #line 289 "moonshot-identity-manager-app.c"
 	}
-#line 39 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 39 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	identity_manager_app_init_ipc_server (self);
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp11_ = self->priv->view;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp11_ != NULL) {
 #line 297 "moonshot-identity-manager-app.c"
 		IdentityManagerView* _tmp12_;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp12_ = self->priv->view;
-#line 50 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 50 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		gtk_widget_show ((GtkWidget*) _tmp12_);
 #line 303 "moonshot-identity-manager-app.c"
 	}
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (card_list);
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return self;
 #line 309 "moonshot-identity-manager-app.c"
 }
 
 
 IdentityManagerApp* identity_manager_app_new (gboolean headless) {
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return identity_manager_app_construct (TYPE_IDENTITY_MANAGER_APP, headless);
 #line 316 "moonshot-identity-manager-app.c"
 }
@@ -319,49 +319,49 @@ IdentityManagerApp* identity_manager_app_new (gboolean headless) {
 gboolean identity_manager_app_add_identity (IdentityManagerApp* self, IdCard* id) {
 	gboolean result = FALSE;
 	IdentityManagerView* _tmp0_;
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (id != NULL, FALSE);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = self->priv->view;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp0_ != NULL) {
 #line 331 "moonshot-identity-manager-app.c"
 		IdentityManagerView* _tmp1_;
 		IdCard* _tmp2_;
 		gboolean _tmp3_ = FALSE;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp1_ = self->priv->view;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp2_ = id;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp3_ = identity_manager_view_add_identity (_tmp1_, _tmp2_);
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		result = _tmp3_;
-#line 55 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 55 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		return result;
 #line 345 "moonshot-identity-manager-app.c"
 	}
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	result = FALSE;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return result;
 #line 351 "moonshot-identity-manager-app.c"
 }
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 358 "moonshot-identity-manager-app.c"
 }
 
 
 static Block1Data* block1_data_ref (Block1Data* _data1_) {
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_atomic_int_inc (&_data1_->_ref_count_);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return _data1_;
 #line 367 "moonshot-identity-manager-app.c"
 }
@@ -370,19 +370,19 @@ static Block1Data* block1_data_ref (Block1Data* _data1_) {
 static void block1_data_unref (void * _userdata_) {
 	Block1Data* _data1_;
 	_data1_ = (Block1Data*) _userdata_;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (g_atomic_int_dec_and_test (&_data1_->_ref_count_)) {
 #line 376 "moonshot-identity-manager-app.c"
 		IdentityManagerApp * self;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		self = _data1_->self;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (_data1_->identity);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (_data1_->request);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_identity_manager_app_unref0 (self);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_slice_free (Block1Data, _data1_);
 #line 388 "moonshot-identity-manager-app.c"
 	}
@@ -390,16 +390,16 @@ static void block1_data_unref (void * _userdata_) {
 
 
 static void _g_free0_ (gpointer var) {
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	var = (g_free (var), NULL);
 #line 396 "moonshot-identity-manager-app.c"
 }
 
 
 static void _g_slist_free__g_free0_ (GSList* self) {
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_slist_foreach (self, (GFunc) _g_free0_, NULL);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_slist_free (self);
 #line 405 "moonshot-identity-manager-app.c"
 }
@@ -410,17 +410,17 @@ static gboolean __lambda4_ (Block1Data* _data1_) {
 	gboolean result = FALSE;
 	IdentityRequest* _tmp0_;
 	IdCard* _tmp1_;
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self = _data1_->self;
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = _data1_->request;
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp1_ = _data1_->identity;
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	identity_request_return_identity (_tmp0_, _tmp1_);
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	result = FALSE;
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return result;
 #line 426 "moonshot-identity-manager-app.c"
 }
@@ -429,7 +429,7 @@ static gboolean __lambda4_ (Block1Data* _data1_) {
 static gboolean ___lambda4__gsource_func (gpointer self) {
 	gboolean result;
 	result = __lambda4_ (self);
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return result;
 #line 435 "moonshot-identity-manager-app.c"
 }
@@ -442,46 +442,46 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 	IdentityRequest* _tmp2_;
 	gboolean _tmp3_;
 	IdCard* _tmp6_;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (request != NULL);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_ = g_slice_new0 (Block1Data);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_->_ref_count_ = 1;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_->self = identity_manager_app_ref (self);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = request;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp1_ = _g_object_ref0 (_tmp0_);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_->request = _tmp1_;
-#line 60 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 60 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_->identity = NULL;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp2_ = _data1_->request;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp3_ = _tmp2_->select_default;
-#line 62 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 62 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp3_) {
 #line 470 "moonshot-identity-manager-app.c"
 		IdCard* _tmp4_;
 		IdCard* _tmp5_;
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp4_ = self->default_id_card;
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp5_ = _g_object_ref0 (_tmp4_);
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (_data1_->identity);
-#line 64 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 64 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_data1_->identity = _tmp5_;
 #line 481 "moonshot-identity-manager-app.c"
 	}
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp6_ = _data1_->identity;
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp6_ == NULL) {
 #line 487 "moonshot-identity-manager-app.c"
 		gboolean _tmp7_ = FALSE;
@@ -510,59 +510,59 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 		gboolean _tmp134_ = FALSE;
 		gboolean _tmp135_;
 		gboolean _tmp137_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp8_ = _data1_->request;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp9_ = _tmp8_->nai;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp9_ != NULL) {
 #line 520 "moonshot-identity-manager-app.c"
 			IdentityRequest* _tmp10_;
 			const gchar* _tmp11_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp10_ = _data1_->request;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp11_ = _tmp10_->nai;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp7_ = g_strcmp0 (_tmp11_, "") != 0;
 #line 529 "moonshot-identity-manager-app.c"
 		} else {
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp7_ = FALSE;
 #line 533 "moonshot-identity-manager-app.c"
 		}
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp12_ = _tmp7_;
-#line 69 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 69 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		has_nai = _tmp12_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp14_ = _data1_->request;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp15_ = _tmp14_->service;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp15_ != NULL) {
 #line 545 "moonshot-identity-manager-app.c"
 			IdentityRequest* _tmp16_;
 			const gchar* _tmp17_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp16_ = _data1_->request;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp17_ = _tmp16_->service;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp13_ = g_strcmp0 (_tmp17_, "") != 0;
 #line 554 "moonshot-identity-manager-app.c"
 		} else {
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp13_ = FALSE;
 #line 558 "moonshot-identity-manager-app.c"
 		}
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp18_ = _tmp13_;
-#line 70 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 70 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		has_srv = _tmp18_;
-#line 71 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 71 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		confirm = FALSE;
-#line 72 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 72 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		nai_provided = NULL;
 #line 568 "moonshot-identity-manager-app.c"
 		{
@@ -574,23 +574,23 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 			gint _tmp23_;
 			gint _id_size;
 			gint _id_index;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp19_ = self->model;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp20_ = identity_manager_model_get_card_list (_tmp19_);
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_id_list = _tmp20_;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp21_ = _id_list;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp22_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp21_);
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp23_ = _tmp22_;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_id_size = _tmp23_;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_id_index = -1;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			while (TRUE) {
 #line 596 "moonshot-identity-manager-app.c"
 				gint _tmp24_;
@@ -604,31 +604,31 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 				gboolean _tmp31_;
 				gboolean _tmp37_;
 				gboolean _tmp43_;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp24_ = _id_index;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_id_index = _tmp24_ + 1;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp25_ = _id_index;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp26_ = _id_size;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				if (!(_tmp25_ < _tmp26_)) {
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					break;
 #line 620 "moonshot-identity-manager-app.c"
 				}
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp27_ = _id_list;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp28_ = _id_index;
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp29_ = gee_abstract_list_get ((GeeAbstractList*) _tmp27_, _tmp28_);
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				id = (IdCard*) _tmp29_;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp31_ = has_nai;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				if (_tmp31_) {
 #line 634 "moonshot-identity-manager-app.c"
 					IdentityRequest* _tmp32_;
@@ -636,27 +636,27 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 					IdCard* _tmp34_;
 					const gchar* _tmp35_;
 					const gchar* _tmp36_;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp32_ = _data1_->request;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp33_ = _tmp32_->nai;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp34_ = id;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp35_ = id_card_get_nai (_tmp34_);
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp36_ = _tmp35_;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp30_ = g_strcmp0 (_tmp33_, _tmp36_) == 0;
 #line 652 "moonshot-identity-manager-app.c"
 				} else {
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp30_ = FALSE;
 #line 656 "moonshot-identity-manager-app.c"
 				}
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp37_ = _tmp30_;
-#line 77 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 77 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				if (_tmp37_) {
 #line 662 "moonshot-identity-manager-app.c"
 					IdCard* _tmp38_;
@@ -664,31 +664,31 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 					IdentityRequest* _tmp40_;
 					IdCard* _tmp41_;
 					IdCard* _tmp42_;
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp38_ = id;
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp39_ = _g_object_ref0 (_tmp38_);
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_g_object_unref0 (nai_provided);
-#line 79 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 79 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					nai_provided = _tmp39_;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp40_ = _data1_->request;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp41_ = id;
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp42_ = _g_object_ref0 (_tmp41_);
-#line 80 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 80 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp40_->candidates = g_slist_append (_tmp40_->candidates, _tmp42_);
-#line 81 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 81 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_g_object_unref0 (id);
-#line 81 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 81 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					continue;
 #line 688 "moonshot-identity-manager-app.c"
 				}
-#line 85 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 85 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp43_ = has_srv;
-#line 85 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 85 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				if (_tmp43_) {
 #line 694 "moonshot-identity-manager-app.c"
 					IdCard* _tmp44_;
@@ -696,13 +696,13 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 					gint _tmp45__length1;
 					gchar** _tmp46_;
 					gint _tmp46__length1;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp44_ = id;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp45_ = id_card_get_services (_tmp44_, &_tmp45__length1);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp46_ = _tmp45_;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp46__length1 = _tmp45__length1;
 #line 708 "moonshot-identity-manager-app.c"
 					{
@@ -710,112 +710,112 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 						gint srv_collection_length1 = 0;
 						gint _srv_collection_size_ = 0;
 						gint srv_it = 0;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						srv_collection = _tmp46_;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						srv_collection_length1 = _tmp46__length1;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						for (srv_it = 0; srv_it < _tmp46__length1; srv_it = srv_it + 1) {
 #line 720 "moonshot-identity-manager-app.c"
 							gchar* _tmp47_;
 							gchar* srv = NULL;
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp47_ = g_strdup (srv_collection[srv_it]);
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							srv = _tmp47_;
 #line 727 "moonshot-identity-manager-app.c"
 							{
 								IdentityRequest* _tmp48_;
 								const gchar* _tmp49_;
 								const gchar* _tmp50_;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp48_ = _data1_->request;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp49_ = _tmp48_->service;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp50_ = srv;
-#line 89 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 89 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								if (g_strcmp0 (_tmp49_, _tmp50_) == 0) {
 #line 740 "moonshot-identity-manager-app.c"
 									IdentityRequest* _tmp51_;
 									IdCard* _tmp52_;
 									IdCard* _tmp53_;
-#line 91 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 91 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp51_ = _data1_->request;
-#line 91 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 91 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp52_ = id;
-#line 91 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 91 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp53_ = _g_object_ref0 (_tmp52_);
-#line 91 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 91 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp51_->candidates = g_slist_append (_tmp51_->candidates, _tmp53_);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_g_free0 (srv);
-#line 92 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 92 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									continue;
 #line 756 "moonshot-identity-manager-app.c"
 								}
-#line 87 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 87 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_g_free0 (srv);
 #line 760 "moonshot-identity-manager-app.c"
 							}
 						}
 					}
 				}
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_g_object_unref0 (id);
 #line 767 "moonshot-identity-manager-app.c"
 			}
-#line 74 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 74 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_g_object_unref0 (_id_list);
 #line 771 "moonshot-identity-manager-app.c"
 		}
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp55_ = has_srv;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp55_) {
 #line 777 "moonshot-identity-manager-app.c"
 			IdentityRequest* _tmp56_;
 			GSList* _tmp57_;
 			guint _tmp58_ = 0U;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp56_ = _data1_->request;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp57_ = _tmp56_->candidates;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp58_ = g_slist_length (_tmp57_);
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp54_ = _tmp58_ > ((guint) 1);
 #line 789 "moonshot-identity-manager-app.c"
 		} else {
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp54_ = FALSE;
 #line 793 "moonshot-identity-manager-app.c"
 		}
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp59_ = _tmp54_;
-#line 99 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 99 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp59_) {
 #line 799 "moonshot-identity-manager-app.c"
 			IdentityRequest* _tmp60_;
 			GSList* _tmp61_;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp60_ = _data1_->request;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp61_ = _tmp60_->candidates;
 #line 806 "moonshot-identity-manager-app.c"
 			{
 				GSList* id_collection = NULL;
 				GSList* id_it = NULL;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				id_collection = _tmp61_;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				for (id_it = id_collection; id_it != NULL; id_it = id_it->next) {
 #line 814 "moonshot-identity-manager-app.c"
 					IdCard* _tmp62_;
 					IdCard* id = NULL;
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp62_ = _g_object_ref0 ((IdCard*) id_it->data);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					id = _tmp62_;
 #line 821 "moonshot-identity-manager-app.c"
 					{
@@ -840,19 +840,19 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 						IdCard* _tmp89_;
 						gchar** _tmp90_;
 						gint _tmp90__length1;
-#line 103 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 103 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						i = 0;
-#line 104 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 104 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						services_list = NULL;
-#line 105 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 105 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						has_service = FALSE;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp63_ = id;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp64_ = id_card_get_services (_tmp63_, &_tmp64__length1);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp65_ = _tmp64_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp65__length1 = _tmp64__length1;
 #line 858 "moonshot-identity-manager-app.c"
 						{
@@ -860,18 +860,18 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 							gint srv_collection_length1 = 0;
 							gint _srv_collection_size_ = 0;
 							gint srv_it = 0;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							srv_collection = _tmp65_;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							srv_collection_length1 = _tmp65__length1;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							for (srv_it = 0; srv_it < _tmp65__length1; srv_it = srv_it + 1) {
 #line 870 "moonshot-identity-manager-app.c"
 								gchar* _tmp66_;
 								gchar* srv = NULL;
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp66_ = g_strdup (srv_collection[srv_it]);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								srv = _tmp66_;
 #line 877 "moonshot-identity-manager-app.c"
 								{
@@ -880,105 +880,105 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 									const gchar* _tmp69_;
 									const gchar* _tmp70_;
 									gchar* _tmp71_;
-#line 109 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 109 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp67_ = srv;
-#line 109 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 109 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp68_ = _data1_->request;
-#line 109 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 109 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp69_ = _tmp68_->service;
-#line 109 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 109 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									if (g_strcmp0 (_tmp67_, _tmp69_) == 0) {
-#line 111 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 111 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 										has_service = TRUE;
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 										_g_free0 (srv);
-#line 112 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 112 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 										continue;
 #line 898 "moonshot-identity-manager-app.c"
 									}
-#line 114 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 114 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp70_ = srv;
-#line 114 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 114 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp71_ = g_strdup (_tmp70_);
-#line 114 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 114 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									services_list = g_slist_append (services_list, _tmp71_);
-#line 107 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 107 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_g_free0 (srv);
 #line 908 "moonshot-identity-manager-app.c"
 								}
 							}
 						}
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp72_ = has_service;
-#line 117 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 117 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						if (!_tmp72_) {
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							__g_slist_free__g_free0_0 (services_list);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_g_object_unref0 (id);
-#line 118 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 118 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							continue;
 #line 922 "moonshot-identity-manager-app.c"
 						}
-#line 120 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 120 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp73_ = services_list;
-#line 120 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 120 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp74_ = g_slist_length (_tmp73_);
-#line 120 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 120 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						if (_tmp74_ == ((guint) 0)) {
 #line 930 "moonshot-identity-manager-app.c"
 							IdCard* _tmp75_;
 							gchar** _tmp76_ = NULL;
 							gchar** _tmp77_;
 							gint _tmp77__length1;
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp75_ = id;
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp76_ = g_new0 (gchar*, 0 + 1);
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp77_ = _tmp76_;
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp77__length1 = 0;
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							id_card_set_services (_tmp75_, _tmp77_, 0);
-#line 122 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 122 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_tmp77_ = (_vala_array_free (_tmp77_, _tmp77__length1, (GDestroyNotify) g_free), NULL);
-#line 123 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 123 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							__g_slist_free__g_free0_0 (services_list);
-#line 123 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 123 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							_g_object_unref0 (id);
-#line 123 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 123 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							continue;
 #line 953 "moonshot-identity-manager-app.c"
 						}
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp78_ = services_list;
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp79_ = g_slist_length (_tmp78_);
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp80_ = g_new0 (gchar*, _tmp79_ + 1);
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						services = _tmp80_;
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						services_length1 = _tmp79_;
-#line 126 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 126 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_services_size_ = services_length1;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp81_ = services_list;
 #line 969 "moonshot-identity-manager-app.c"
 						{
 							GSList* srv_collection = NULL;
 							GSList* srv_it = NULL;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							srv_collection = _tmp81_;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							for (srv_it = srv_collection; srv_it != NULL; srv_it = srv_it->next) {
 #line 977 "moonshot-identity-manager-app.c"
 								gchar* _tmp82_;
 								gchar* srv = NULL;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp82_ = g_strdup ((const gchar*) srv_it->data);
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								srv = _tmp82_;
 #line 984 "moonshot-identity-manager-app.c"
 								{
@@ -989,58 +989,58 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 									gchar* _tmp86_;
 									gchar* _tmp87_;
 									gint _tmp88_;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp83_ = services;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp83__length1 = services_length1;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp84_ = i;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp85_ = srv;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp86_ = g_strdup (_tmp85_);
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_g_free0 (_tmp83_[_tmp84_]);
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp83_[_tmp84_] = _tmp86_;
-#line 129 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 129 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp87_ = _tmp83_[_tmp84_];
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_tmp88_ = i;
-#line 130 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 130 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									i = _tmp88_ + 1;
-#line 127 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 127 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									_g_free0 (srv);
 #line 1015 "moonshot-identity-manager-app.c"
 								}
 							}
 						}
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp89_ = id;
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp90_ = services;
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_tmp90__length1 = services_length1;
-#line 133 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 133 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						id_card_set_services (_tmp89_, _tmp90_, _tmp90__length1);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						services = (_vala_array_free (services, services_length1, (GDestroyNotify) g_free), NULL);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						__g_slist_free__g_free0_0 (services_list);
-#line 101 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 101 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						_g_object_unref0 (id);
 #line 1033 "moonshot-identity-manager-app.c"
 					}
 				}
 			}
 		}
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp91_ = _data1_->request;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp92_ = _tmp91_->candidates;
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp93_ = g_slist_length (_tmp92_);
-#line 140 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 140 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp93_ == ((guint) 0)) {
 #line 1046 "moonshot-identity-manager-app.c"
 			{
@@ -1052,23 +1052,23 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 				gint _tmp98_;
 				gint _id_size;
 				gint _id_index;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp94_ = self->model;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp95_ = identity_manager_model_get_card_list (_tmp94_);
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_id_list = _tmp95_;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp96_ = _id_list;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp97_ = gee_abstract_collection_get_size ((GeeCollection*) _tmp96_);
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp98_ = _tmp97_;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_id_size = _tmp98_;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_id_index = -1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				while (TRUE) {
 #line 1074 "moonshot-identity-manager-app.c"
 					gint _tmp99_;
@@ -1083,35 +1083,35 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 					gint _tmp106__length1;
 					Rule* _tmp107_;
 					gint _tmp107__length1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp99_ = _id_index;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_id_index = _tmp99_ + 1;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp100_ = _id_index;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp101_ = _id_size;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					if (!(_tmp100_ < _tmp101_)) {
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						break;
 #line 1099 "moonshot-identity-manager-app.c"
 					}
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp102_ = _id_list;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp103_ = _id_index;
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp104_ = gee_abstract_list_get ((GeeAbstractList*) _tmp102_, _tmp103_);
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					id = (IdCard*) _tmp104_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp105_ = id;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp106_ = id_card_get_rules (_tmp105_, &_tmp106__length1);
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp107_ = _tmp106_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_tmp107__length1 = _tmp106__length1;
 #line 1117 "moonshot-identity-manager-app.c"
 					{
@@ -1119,18 +1119,18 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 						gint rule_collection_length1 = 0;
 						gint _rule_collection_size_ = 0;
 						gint rule_it = 0;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						rule_collection = _tmp107_;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						rule_collection_length1 = _tmp107__length1;
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 						for (rule_it = 0; rule_it < _tmp107__length1; rule_it = rule_it + 1) {
 #line 1129 "moonshot-identity-manager-app.c"
 							Rule _tmp108_ = {0};
 							Rule rule = {0};
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							rule_copy (&rule_collection[rule_it], &_tmp108_);
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 							rule = _tmp108_;
 #line 1136 "moonshot-identity-manager-app.c"
 							{
@@ -1144,190 +1144,190 @@ void identity_manager_app_select_identity (IdentityManagerApp* self, IdentityReq
 								IdCard* _tmp116_;
 								Rule _tmp117_;
 								const gchar* _tmp118_;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp109_ = _data1_->request;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp110_ = _tmp109_->service;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp111_ = rule;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp112_ = _tmp111_.pattern;
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp113_ = identity_manager_app_match_service_pattern (self, _tmp110_, _tmp112_);
-#line 146 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 146 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								if (!_tmp113_) {
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									rule_destroy (&rule);
-#line 147 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 147 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									continue;
 #line 1164 "moonshot-identity-manager-app.c"
 								}
-#line 149 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 149 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp114_ = _data1_->request;
-#line 149 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 149 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp115_ = id;
-#line 149 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 149 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp116_ = _g_object_ref0 (_tmp115_);
-#line 149 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 149 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp114_->candidates = g_slist_append (_tmp114_->candidates, _tmp116_);
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp117_ = rule;
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								_tmp118_ = _tmp117_.always_confirm;
-#line 151 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 151 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								if (g_strcmp0 (_tmp118_, "true") == 0) {
-#line 152 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 152 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 									confirm = TRUE;
 #line 1182 "moonshot-identity-manager-app.c"
 								}
-#line 144 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 144 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 								rule_destroy (&rule);
 #line 1186 "moonshot-identity-manager-app.c"
 							}
 						}
 					}
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 					_g_object_unref0 (id);
 #line 1192 "moonshot-identity-manager-app.c"
 				}
-#line 142 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 142 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_g_object_unref0 (_id_list);
 #line 1196 "moonshot-identity-manager-app.c"
 			}
 		}
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp119_ = _data1_->request;
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp120_ = _tmp119_->candidates;
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp121_ = g_slist_length (_tmp120_);
-#line 157 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 157 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp121_ > ((guint) 1)) {
 #line 1207 "moonshot-identity-manager-app.c"
 			gboolean _tmp122_ = FALSE;
 			gboolean _tmp123_;
 			gboolean _tmp125_;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp123_ = has_nai;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			if (_tmp123_) {
 #line 1215 "moonshot-identity-manager-app.c"
 				IdCard* _tmp124_;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp124_ = nai_provided;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp122_ = _tmp124_ != NULL;
 #line 1221 "moonshot-identity-manager-app.c"
 			} else {
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp122_ = FALSE;
 #line 1225 "moonshot-identity-manager-app.c"
 			}
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp125_ = _tmp122_;
-#line 159 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 159 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			if (_tmp125_) {
 #line 1231 "moonshot-identity-manager-app.c"
 				IdCard* _tmp126_;
 				IdCard* _tmp127_;
-#line 161 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 161 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp126_ = nai_provided;
-#line 161 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 161 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_tmp127_ = _g_object_ref0 (_tmp126_);
-#line 161 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 161 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_g_object_unref0 (_data1_->identity);
-#line 161 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 161 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				_data1_->identity = _tmp127_;
-#line 162 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 162 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				confirm = FALSE;
 #line 1244 "moonshot-identity-manager-app.c"
 			} else {
-#line 165 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 165 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 				confirm = TRUE;
 #line 1248 "moonshot-identity-manager-app.c"
 			}
 		}
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp128_ = _data1_->identity;
-#line 167 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 167 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp128_ == NULL) {
 #line 1255 "moonshot-identity-manager-app.c"
 			IdentityRequest* _tmp129_;
 			GSList* _tmp130_;
 			gconstpointer _tmp131_ = NULL;
 			IdCard* _tmp132_;
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp129_ = _data1_->request;
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp130_ = _tmp129_->candidates;
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp131_ = g_slist_nth_data (_tmp130_, (guint) 0);
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp132_ = _g_object_ref0 ((IdCard*) _tmp131_);
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_g_object_unref0 (_data1_->identity);
-#line 168 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 168 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_data1_->identity = _tmp132_;
 #line 1272 "moonshot-identity-manager-app.c"
 		}
-#line 169 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 169 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp133_ = _data1_->identity;
-#line 169 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 169 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp133_ == NULL) {
-#line 170 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 170 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			confirm = TRUE;
 #line 1280 "moonshot-identity-manager-app.c"
 		}
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp135_ = confirm;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp135_) {
 #line 1286 "moonshot-identity-manager-app.c"
 			IdentityManagerView* _tmp136_;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp136_ = self->priv->view;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp134_ = _tmp136_ != NULL;
 #line 1292 "moonshot-identity-manager-app.c"
 		} else {
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp134_ = FALSE;
 #line 1296 "moonshot-identity-manager-app.c"
 		}
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp137_ = _tmp134_;
-#line 174 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 174 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_tmp137_) {
 #line 1302 "moonshot-identity-manager-app.c"
 			IdentityManagerView* _tmp138_;
 			IdentityRequest* _tmp139_;
-#line 176 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 176 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp138_ = self->priv->view;
-#line 176 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 176 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_tmp139_ = _data1_->request;
-#line 176 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 176 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			identity_manager_view_queue_identity_request (_tmp138_, _tmp139_);
-#line 177 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 177 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_g_object_unref0 (nai_provided);
-#line 177 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 177 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			block1_data_unref (_data1_);
-#line 177 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 177 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			_data1_ = NULL;
-#line 177 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 177 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			return;
 #line 1319 "moonshot-identity-manager-app.c"
 		}
-#line 67 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 67 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (nai_provided);
 #line 1323 "moonshot-identity-manager-app.c"
 	}
-#line 182 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 182 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_idle_add_full (G_PRIORITY_DEFAULT_IDLE, ___lambda4__gsource_func, block1_data_ref (_data1_), block1_data_unref);
-#line 183 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 183 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	block1_data_unref (_data1_);
-#line 183 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 183 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_data1_ = NULL;
-#line 183 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 183 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return;
 #line 1333 "moonshot-identity-manager-app.c"
 }
@@ -1340,27 +1340,27 @@ static gboolean identity_manager_app_match_service_pattern (IdentityManagerApp* 
 	GPatternSpec* pspec;
 	const gchar* _tmp2_;
 	gboolean _tmp3_ = FALSE;
-#line 186 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 186 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 186 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 186 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (service != NULL, FALSE);
-#line 186 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 186 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (pattern != NULL, FALSE);
-#line 188 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 188 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = pattern;
-#line 188 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 188 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp1_ = g_pattern_spec_new (_tmp0_);
-#line 188 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 188 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	pspec = _tmp1_;
-#line 189 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 189 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp2_ = service;
-#line 189 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 189 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp3_ = g_pattern_match_string (pspec, _tmp2_);
-#line 189 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 189 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	result = _tmp3_;
-#line 189 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 189 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_pattern_spec_free0 (pspec);
-#line 189 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 189 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return result;
 #line 1366 "moonshot-identity-manager-app.c"
 }
@@ -1368,21 +1368,21 @@ static gboolean identity_manager_app_match_service_pattern (IdentityManagerApp* 
 
 static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBusConnection* conn) {
 	GError * _inner_error_ = NULL;
-#line 224 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 224 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
-#line 224 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 224 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
 #line 1376 "moonshot-identity-manager-app.c"
 	{
 		GDBusConnection* _tmp0_;
 		MoonshotServer* _tmp1_;
-#line 227 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 227 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp0_ = conn;
-#line 227 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 227 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp1_ = self->priv->ipc_server;
-#line 227 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 227 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		moonshot_server_register_object (_tmp1_, _tmp0_, "/org/janet/moonshot", &_inner_error_);
-#line 227 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 227 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (_inner_error_ != NULL) {
 #line 1388 "moonshot-identity-manager-app.c"
 			goto __catch0_g_error;
@@ -1395,30 +1395,30 @@ static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBu
 		FILE* _tmp2_;
 		GError* _tmp3_;
 		const gchar* _tmp4_;
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		e = _inner_error_;
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_inner_error_ = NULL;
-#line 231 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 231 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp2_ = stderr;
-#line 231 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 231 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp3_ = e;
-#line 231 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 231 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp4_ = _tmp3_->message;
-#line 231 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 231 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		fprintf (_tmp2_, "%s\n", _tmp4_);
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_error_free0 (e);
 #line 1413 "moonshot-identity-manager-app.c"
 	}
 	__finally0:
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_inner_error_ != NULL) {
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_clear_error (&_inner_error_);
-#line 226 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 226 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		return;
 #line 1424 "moonshot-identity-manager-app.c"
 	}
@@ -1426,23 +1426,23 @@ static void identity_manager_app_bus_acquired_cb (IdentityManagerApp* self, GDBu
 
 
 static void _identity_manager_app_bus_acquired_cb_gbus_acquired_callback (GDBusConnection* connection, const gchar* name, gpointer self) {
-#line 238 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 238 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	identity_manager_app_bus_acquired_cb (self, connection);
 #line 1432 "moonshot-identity-manager-app.c"
 }
 
 
 static void __lambda7_ (IdentityManagerApp* self, GDBusConnection* conn, const gchar* name) {
-#line 242 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 242 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
-#line 242 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 242 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (name != NULL);
 #line 1441 "moonshot-identity-manager-app.c"
 }
 
 
 static void ___lambda7__gbus_name_acquired_callback (GDBusConnection* connection, const gchar* name, gpointer self) {
-#line 238 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 238 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	__lambda7_ (self, connection, name);
 #line 1448 "moonshot-identity-manager-app.c"
 }
@@ -1450,20 +1450,20 @@ static void ___lambda7__gbus_name_acquired_callback (GDBusConnection* connection
 
 static void __lambda8_ (IdentityManagerApp* self, GDBusConnection* conn, const gchar* name) {
 	const gchar* _tmp0_;
-#line 243 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 243 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (conn != NULL);
-#line 243 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 243 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (name != NULL);
-#line 244 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 244 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = name;
-#line 244 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 244 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_error ("moonshot-identity-manager-app.vala:244: Couldn't own name %s on DBus.", _tmp0_);
 #line 1462 "moonshot-identity-manager-app.c"
 }
 
 
 static void ___lambda8__gbus_name_lost_callback (GDBusConnection* connection, const gchar* name, gpointer self) {
-#line 238 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 238 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	__lambda8_ (self, connection, name);
 #line 1469 "moonshot-identity-manager-app.c"
 }
@@ -1471,31 +1471,31 @@ static void ___lambda8__gbus_name_lost_callback (GDBusConnection* connection, co
 
 static void identity_manager_app_init_ipc_server (IdentityManagerApp* self) {
 	MoonshotServer* _tmp0_;
-#line 235 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 235 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (self != NULL);
-#line 237 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 237 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = moonshot_server_new (self);
-#line 237 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 237 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->priv->ipc_server);
-#line 237 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 237 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self->priv->ipc_server = _tmp0_;
-#line 238 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 238 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_bus_own_name_with_closures (G_BUS_TYPE_SESSION, "org.janet.Moonshot", G_BUS_NAME_OWNER_FLAGS_NONE, (GClosure*) ((_identity_manager_app_bus_acquired_cb_gbus_acquired_callback == NULL) ? NULL : g_cclosure_new ((GCallback) _identity_manager_app_bus_acquired_cb_gbus_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref)), (GClosure*) ((___lambda7__gbus_name_acquired_callback == NULL) ? NULL : g_cclosure_new ((GCallback) ___lambda7__gbus_name_acquired_callback, identity_manager_app_ref (self), identity_manager_app_unref)), (GClosure*) ((___lambda8__gbus_name_lost_callback == NULL) ? NULL : g_cclosure_new ((GCallback) ___lambda8__gbus_name_lost_callback, identity_manager_app_ref (self), identity_manager_app_unref)));
 #line 1485 "moonshot-identity-manager-app.c"
 }
 
 
 static void value_identity_manager_app_init (GValue* value) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	value->data[0].v_pointer = NULL;
 #line 1492 "moonshot-identity-manager-app.c"
 }
 
 
 static void value_identity_manager_app_free_value (GValue* value) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (value->data[0].v_pointer) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		identity_manager_app_unref (value->data[0].v_pointer);
 #line 1501 "moonshot-identity-manager-app.c"
 	}
@@ -1503,13 +1503,13 @@ static void value_identity_manager_app_free_value (GValue* value) {
 
 
 static void value_identity_manager_app_copy_value (const GValue* src_value, GValue* dest_value) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (src_value->data[0].v_pointer) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		dest_value->data[0].v_pointer = identity_manager_app_ref (src_value->data[0].v_pointer);
 #line 1511 "moonshot-identity-manager-app.c"
 	} else {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		dest_value->data[0].v_pointer = NULL;
 #line 1515 "moonshot-identity-manager-app.c"
 	}
@@ -1517,37 +1517,37 @@ static void value_identity_manager_app_copy_value (const GValue* src_value, GVal
 
 
 static gpointer value_identity_manager_app_peek_pointer (const GValue* value) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return value->data[0].v_pointer;
 #line 1523 "moonshot-identity-manager-app.c"
 }
 
 
 static gchar* value_identity_manager_app_collect_value (GValue* value, guint n_collect_values, GTypeCValue* collect_values, guint collect_flags) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (collect_values[0].v_pointer) {
 #line 1530 "moonshot-identity-manager-app.c"
 		IdentityManagerApp* object;
 		object = collect_values[0].v_pointer;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		if (object->parent_instance.g_class == NULL) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			return g_strconcat ("invalid unclassed object pointer for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
 #line 1537 "moonshot-identity-manager-app.c"
 		} else if (!g_value_type_compatible (G_TYPE_FROM_INSTANCE (object), G_VALUE_TYPE (value))) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 			return g_strconcat ("invalid object type `", g_type_name (G_TYPE_FROM_INSTANCE (object)), "' for value type `", G_VALUE_TYPE_NAME (value), "'", NULL);
 #line 1541 "moonshot-identity-manager-app.c"
 		}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = identity_manager_app_ref (object);
 #line 1545 "moonshot-identity-manager-app.c"
 	} else {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = NULL;
 #line 1549 "moonshot-identity-manager-app.c"
 	}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return NULL;
 #line 1553 "moonshot-identity-manager-app.c"
 }
@@ -1556,27 +1556,27 @@ static gchar* value_identity_manager_app_collect_value (GValue* value, guint n_c
 static gchar* value_identity_manager_app_lcopy_value (const GValue* value, guint n_collect_values, GTypeCValue* collect_values, guint collect_flags) {
 	IdentityManagerApp** object_p;
 	object_p = collect_values[0].v_pointer;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (!object_p) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		return g_strdup_printf ("value location for `%s' passed as NULL", G_VALUE_TYPE_NAME (value));
 #line 1564 "moonshot-identity-manager-app.c"
 	}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (!value->data[0].v_pointer) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		*object_p = NULL;
 #line 1570 "moonshot-identity-manager-app.c"
 	} else if (collect_flags & G_VALUE_NOCOPY_CONTENTS) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		*object_p = value->data[0].v_pointer;
 #line 1574 "moonshot-identity-manager-app.c"
 	} else {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		*object_p = identity_manager_app_ref (value->data[0].v_pointer);
 #line 1578 "moonshot-identity-manager-app.c"
 	}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return NULL;
 #line 1582 "moonshot-identity-manager-app.c"
 }
@@ -1584,22 +1584,22 @@ static gchar* value_identity_manager_app_lcopy_value (const GValue* value, guint
 
 GParamSpec* param_spec_identity_manager_app (const gchar* name, const gchar* nick, const gchar* blurb, GType object_type, GParamFlags flags) {
 	ParamSpecIdentityManagerApp* spec;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (g_type_is_a (object_type, TYPE_IDENTITY_MANAGER_APP), NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	spec = g_param_spec_internal (G_TYPE_PARAM_OBJECT, name, nick, blurb, flags);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	G_PARAM_SPEC (spec)->value_type = object_type;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return G_PARAM_SPEC (spec);
 #line 1596 "moonshot-identity-manager-app.c"
 }
 
 
 gpointer value_get_identity_manager_app (const GValue* value) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_val_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP), NULL);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return value->data[0].v_pointer;
 #line 1605 "moonshot-identity-manager-app.c"
 }
@@ -1607,29 +1607,29 @@ gpointer value_get_identity_manager_app (const GValue* value) {
 
 void value_set_identity_manager_app (GValue* value, gpointer v_object) {
 	IdentityManagerApp* old;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	old = value->data[0].v_pointer;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (v_object) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (v_object, TYPE_IDENTITY_MANAGER_APP));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_return_if_fail (g_value_type_compatible (G_TYPE_FROM_INSTANCE (v_object), G_VALUE_TYPE (value)));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = v_object;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		identity_manager_app_ref (value->data[0].v_pointer);
 #line 1625 "moonshot-identity-manager-app.c"
 	} else {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = NULL;
 #line 1629 "moonshot-identity-manager-app.c"
 	}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (old) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		identity_manager_app_unref (old);
 #line 1635 "moonshot-identity-manager-app.c"
 	}
@@ -1638,27 +1638,27 @@ void value_set_identity_manager_app (GValue* value, gpointer v_object) {
 
 void value_take_identity_manager_app (GValue* value, gpointer v_object) {
 	IdentityManagerApp* old;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_return_if_fail (G_TYPE_CHECK_VALUE_TYPE (value, TYPE_IDENTITY_MANAGER_APP));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	old = value->data[0].v_pointer;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (v_object) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_return_if_fail (G_TYPE_CHECK_INSTANCE_TYPE (v_object, TYPE_IDENTITY_MANAGER_APP));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_return_if_fail (g_value_type_compatible (G_TYPE_FROM_INSTANCE (v_object), G_VALUE_TYPE (value)));
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = v_object;
 #line 1654 "moonshot-identity-manager-app.c"
 	} else {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		value->data[0].v_pointer = NULL;
 #line 1658 "moonshot-identity-manager-app.c"
 	}
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (old) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		identity_manager_app_unref (old);
 #line 1664 "moonshot-identity-manager-app.c"
 	}
@@ -1666,20 +1666,20 @@ void value_take_identity_manager_app (GValue* value, gpointer v_object) {
 
 
 static void identity_manager_app_class_init (IdentityManagerAppClass * klass) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	identity_manager_app_parent_class = g_type_class_peek_parent (klass);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	IDENTITY_MANAGER_APP_CLASS (klass)->finalize = identity_manager_app_finalize;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_type_class_add_private (klass, sizeof (IdentityManagerAppPrivate));
 #line 1676 "moonshot-identity-manager-app.c"
 }
 
 
 static void identity_manager_app_instance_init (IdentityManagerApp * self) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self->priv = IDENTITY_MANAGER_APP_GET_PRIVATE (self);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self->ref_count = 1;
 #line 1685 "moonshot-identity-manager-app.c"
 }
@@ -1687,15 +1687,15 @@ static void identity_manager_app_instance_init (IdentityManagerApp * self) {
 
 static void identity_manager_app_finalize (IdentityManagerApp* obj) {
 	IdentityManagerApp * self;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	self = IDENTITY_MANAGER_APP (obj);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->model);
-#line 7 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 7 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->default_id_card);
-#line 8 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 8 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->priv->view);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_g_object_unref0 (self->priv->ipc_server);
 #line 1701 "moonshot-identity-manager-app.c"
 }
@@ -1718,9 +1718,9 @@ GType identity_manager_app_get_type (void) {
 gpointer identity_manager_app_ref (gpointer instance) {
 	IdentityManagerApp* self;
 	self = instance;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_atomic_int_inc (&self->ref_count);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return instance;
 #line 1726 "moonshot-identity-manager-app.c"
 }
@@ -1729,11 +1729,11 @@ gpointer identity_manager_app_ref (gpointer instance) {
 void identity_manager_app_unref (gpointer instance) {
 	IdentityManagerApp* self;
 	self = instance;
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (g_atomic_int_dec_and_test (&self->ref_count)) {
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		IDENTITY_MANAGER_APP_GET_CLASS (self)->finalize (self);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_type_free_instance ((GTypeInstance *) self);
 #line 1739 "moonshot-identity-manager-app.c"
 	}
@@ -1750,72 +1750,72 @@ gint _vala_main (gchar** args, int args_length1) {
 	IdentityManagerApp* app;
 	IdentityManagerApp* _tmp4_;
 	gboolean _tmp5_;
-#line 255 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 255 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp0_ = g_getenv ("DISPLAY");
-#line 255 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 255 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	headless = _tmp0_ == NULL;
-#line 257 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 257 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp1_ = headless;
-#line 257 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 257 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (!_tmp1_) {
-#line 258 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 258 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		gtk_init (&args_length1, &args);
 #line 1764 "moonshot-identity-manager-app.c"
 	}
-#line 267 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 267 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
-#line 268 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 268 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-#line 269 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 269 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	textdomain (GETTEXT_PACKAGE);
-#line 272 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 272 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp2_ = headless;
-#line 272 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 272 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp3_ = identity_manager_app_new (_tmp2_);
-#line 272 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 272 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	app = _tmp3_;
-#line 274 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 274 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp4_ = app;
-#line 274 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 274 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	identity_manager_app_show (_tmp4_);
-#line 276 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 276 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_tmp5_ = headless;
-#line 276 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 276 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	if (_tmp5_) {
 #line 1786 "moonshot-identity-manager-app.c"
 		GMainLoop* _tmp6_;
 		GMainLoop* loop;
 		GMainLoop* _tmp7_;
-#line 278 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 278 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp6_ = g_main_loop_new (NULL, FALSE);
-#line 278 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 278 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		loop = _tmp6_;
-#line 279 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 279 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_tmp7_ = loop;
-#line 279 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 279 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		g_main_loop_run (_tmp7_);
-#line 276 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 276 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		_g_main_loop_unref0 (loop);
 #line 1800 "moonshot-identity-manager-app.c"
 	} else {
-#line 282 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 282 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 		gtk_main ();
 #line 1804 "moonshot-identity-manager-app.c"
 	}
-#line 285 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 285 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	result = 0;
-#line 285 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 285 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	_identity_manager_app_unref0 (app);
-#line 285 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 285 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return result;
 #line 1812 "moonshot-identity-manager-app.c"
 }
 
 
 int main (int argc, char ** argv) {
-#line 251 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 251 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	g_type_init ();
-#line 251 "/build/slave/packages-full/build/ui/src/moonshot-identity-manager-app.vala"
+#line 251 "/build/slave/submodule_amd64/build/ui/src/moonshot-identity-manager-app.vala"
 	return _vala_main (argv, argc);
 #line 1821 "moonshot-identity-manager-app.c"
 }

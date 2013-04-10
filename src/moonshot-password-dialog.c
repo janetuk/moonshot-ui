@@ -59,7 +59,7 @@ static void _vala_add_password_dialog_get_property (GObject * object, guint prop
 
 
 static gpointer _g_object_ref0 (gpointer self) {
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	return self ? g_object_ref (self) : NULL;
 #line 65 "moonshot-password-dialog.c"
 }
@@ -95,130 +95,130 @@ AddPasswordDialog* add_password_dialog_construct (GType object_type) {
 	GtkVBox* _tmp22_;
 	GtkVBox* _tmp23_;
 	GtkVBox* vbox;
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	self = (AddPasswordDialog*) g_object_new (object_type, NULL);
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp0_ = _ ("Please enter your password");
-#line 18 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 18 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_window_set_title ((GtkWindow*) self, _tmp0_);
-#line 19 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 19 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_window_set_modal ((GtkWindow*) self, TRUE);
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp1_ = _ ("Send");
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp2_ = _ ("Return to application");
-#line 21 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 21 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_dialog_add_buttons ((GtkDialog*) self, _tmp1_, GTK_RESPONSE_OK, _tmp2_, GTK_RESPONSE_CANCEL, NULL);
-#line 23 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 23 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_dialog_set_default_response ((GtkDialog*) self, (gint) GTK_RESPONSE_OK);
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp3_ = gtk_dialog_get_content_area ((GtkDialog*) self);
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp4_ = _g_object_ref0 (_tmp3_);
-#line 25 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 25 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	content_area = _tmp4_;
-#line 26 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 26 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_box_set_spacing (GTK_BOX (content_area), 12);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp5_ = _ ("Password:");
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp6_ = (GtkLabel*) gtk_label_new (_tmp5_);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp7_ = g_object_ref_sink (_tmp6_);
-#line 28 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 28 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	password_label = _tmp7_;
-#line 29 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 29 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) password_label, (gfloat) 1, (gfloat) 0.5);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp8_ = (GtkEntry*) gtk_entry_new ();
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp9_ = g_object_ref_sink (_tmp8_);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (self->priv->password_entry);
-#line 30 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 30 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	self->priv->password_entry = _tmp9_;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp10_ = self->priv->password_entry;
-#line 31 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 31 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_entry_set_invisible_char (_tmp10_, (gunichar) '*');
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp11_ = self->priv->password_entry;
-#line 32 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 32 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_entry_set_visibility (_tmp11_, FALSE);
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp12_ = self->priv->password_entry;
-#line 33 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 33 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_entry_set_activates_default (_tmp12_, TRUE);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp13_ = _ ("Remember password");
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp14_ = (GtkCheckButton*) gtk_check_button_new_with_label (_tmp13_);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp15_ = g_object_ref_sink (_tmp14_);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (self->priv->remember_checkbutton);
-#line 34 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 34 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	self->priv->remember_checkbutton = _tmp15_;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp16_ = self->priv->password_entry;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp17_ = self->priv->password_entry;
-#line 36 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 36 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	add_password_dialog_set_atk_relation (self, (GtkWidget*) _tmp16_, (GtkWidget*) _tmp17_, ATK_RELATION_LABEL_FOR);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp18_ = (GtkTable*) gtk_table_new ((guint) 2, (guint) 2, FALSE);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp19_ = g_object_ref_sink (_tmp18_);
-#line 38 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 38 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	table = _tmp19_;
-#line 39 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 39 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_table_set_col_spacings (table, (guint) 10);
-#line 40 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 40 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_table_set_row_spacings (table, (guint) 10);
-#line 41 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 41 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) password_label, (guint) 0, (guint) 1, (guint) 2, (guint) 3);
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp20_ = self->priv->password_entry;
-#line 42 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 42 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp20_, (guint) 1, (guint) 2, (guint) 2, (guint) 3);
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp21_ = self->priv->remember_checkbutton;
-#line 43 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 43 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_table_attach_defaults (table, (GtkWidget*) _tmp21_, (guint) 1, (guint) 2, (guint) 3, (guint) 4);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp22_ = (GtkVBox*) gtk_vbox_new (FALSE, 0);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp23_ = g_object_ref_sink (_tmp22_);
-#line 45 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 45 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	vbox = _tmp23_;
-#line 46 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 46 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) vbox, (guint) 6);
-#line 47 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 47 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_box_pack_start ((GtkBox*) vbox, (GtkWidget*) table, FALSE, FALSE, (guint) 0);
-#line 49 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 49 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_container_add (GTK_CONTAINER (content_area), (GtkWidget*) vbox);
-#line 51 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 51 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_container_set_border_width ((GtkContainer*) self, (guint) 6);
-#line 52 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 52 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_window_set_resizable ((GtkWindow*) self, FALSE);
-#line 53 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 53 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	gtk_widget_show_all ((GtkWidget*) self);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (vbox);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (table);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (password_label);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (content_area);
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	return self;
 #line 217 "moonshot-password-dialog.c"
 }
 
 
 AddPasswordDialog* add_password_dialog_new (void) {
-#line 16 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 16 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	return add_password_dialog_construct (TYPE_ADD_PASSWORD_DIALOG);
 #line 224 "moonshot-password-dialog.c"
 }
@@ -234,35 +234,35 @@ static void add_password_dialog_set_atk_relation (AddPasswordDialog* self, GtkWi
 	AtkObject* _tmp5_;
 	AtkObject* atk_target_widget;
 	AtkRelationType _tmp6_;
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_return_if_fail (self != NULL);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_return_if_fail (widget != NULL);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_return_if_fail (target_widget != NULL);
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp0_ = widget;
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp1_ = gtk_widget_get_accessible (_tmp0_);
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp2_ = _g_object_ref0 (_tmp1_);
-#line 58 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 58 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	atk_widget = _tmp2_;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp3_ = target_widget;
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp4_ = gtk_widget_get_accessible (_tmp3_);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp5_ = _g_object_ref0 (_tmp4_);
-#line 59 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 59 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	atk_target_widget = _tmp5_;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp6_ = relationship;
-#line 61 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 61 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	atk_object_add_relationship (atk_widget, _tmp6_, atk_target_widget);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (atk_target_widget);
-#line 56 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 56 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (atk_widget);
 #line 268 "moonshot-password-dialog.c"
 }
@@ -272,15 +272,15 @@ const gchar* add_password_dialog_get_password (AddPasswordDialog* self) {
 	const gchar* result;
 	GtkEntry* _tmp0_;
 	const gchar* _tmp1_ = NULL;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp0_ = self->priv->password_entry;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp1_ = gtk_entry_get_text (_tmp0_);
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	result = _tmp1_;
-#line 9 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 9 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	return result;
 #line 286 "moonshot-password-dialog.c"
 }
@@ -290,39 +290,39 @@ gboolean add_password_dialog_get_remember (AddPasswordDialog* self) {
 	gboolean result;
 	GtkCheckButton* _tmp0_;
 	gboolean _tmp1_ = FALSE;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp0_ = self->priv->remember_checkbutton;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_tmp1_ = gtk_toggle_button_get_active ((GtkToggleButton*) _tmp0_);
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	result = _tmp1_;
-#line 13 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 13 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	return result;
 #line 304 "moonshot-password-dialog.c"
 }
 
 
 static void add_password_dialog_class_init (AddPasswordDialogClass * klass) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	add_password_dialog_parent_class = g_type_class_peek_parent (klass);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_type_class_add_private (klass, sizeof (AddPasswordDialogPrivate));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	G_OBJECT_CLASS (klass)->get_property = _vala_add_password_dialog_get_property;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	G_OBJECT_CLASS (klass)->finalize = add_password_dialog_finalize;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_PASSWORD_DIALOG_PASSWORD, g_param_spec_string ("password", "password", "password", NULL, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	g_object_class_install_property (G_OBJECT_CLASS (klass), ADD_PASSWORD_DIALOG_REMEMBER, g_param_spec_boolean ("remember", "remember", "remember", FALSE, G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB | G_PARAM_READABLE));
 #line 321 "moonshot-password-dialog.c"
 }
 
 
 static void add_password_dialog_instance_init (AddPasswordDialog * self) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	self->priv = ADD_PASSWORD_DIALOG_GET_PRIVATE (self);
 #line 328 "moonshot-password-dialog.c"
 }
@@ -330,13 +330,13 @@ static void add_password_dialog_instance_init (AddPasswordDialog * self) {
 
 static void add_password_dialog_finalize (GObject* obj) {
 	AddPasswordDialog * self;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	self = ADD_PASSWORD_DIALOG (obj);
-#line 5 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 5 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (self->priv->password_entry);
-#line 6 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 6 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	_g_object_unref0 (self->priv->remember_checkbutton);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	G_OBJECT_CLASS (add_password_dialog_parent_class)->finalize (obj);
 #line 342 "moonshot-password-dialog.c"
 }
@@ -357,25 +357,25 @@ GType add_password_dialog_get_type (void) {
 static void _vala_add_password_dialog_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec) {
 	AddPasswordDialog * self;
 	self = ADD_PASSWORD_DIALOG (object);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 	switch (property_id) {
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		case ADD_PASSWORD_DIALOG_PASSWORD:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		g_value_set_string (value, add_password_dialog_get_password (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		break;
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		case ADD_PASSWORD_DIALOG_REMEMBER:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		g_value_set_boolean (value, add_password_dialog_get_remember (self));
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		break;
 #line 375 "moonshot-password-dialog.c"
 		default:
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-#line 3 "/build/slave/packages-full/build/ui/src/moonshot-password-dialog.vala"
+#line 3 "/build/slave/submodule_amd64/build/ui/src/moonshot-password-dialog.vala"
 		break;
 #line 381 "moonshot-password-dialog.c"
 	}
