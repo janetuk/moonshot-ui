@@ -58,7 +58,7 @@ public class IdentityManagerView : Window {
 	   identities_manager = parent_app.model;
        request_queue = new GLib.Queue<IdentityRequest>();
        service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
-       this.title = "Moonshoot";
+       this.title = "Moonshot Identity Selector";
        this.set_position (WindowPosition.CENTER);
        set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
        build_ui();
@@ -188,7 +188,7 @@ public class IdentityManagerView : Window {
         foreach (var id_card_widget in children) {
         remove_id_card_widget((IdCardWidget)id_card_widget);
         }   
-
+        this.listmodel->clear();
         LinkedList<IdCard> card_list = identities_manager.get_card_list() ;
         if (card_list == null) {
             return;
@@ -208,7 +208,7 @@ public class IdentityManagerView : Window {
 
        var children = this.services_internal_vbox.get_children ();
        foreach (var hbox in children)
-           hbox.destroy();
+           services_internal_vbox.remove(hbox);
        fill_services_vbox (id_card_widget.id_card);
 //       identities_manager.store_id_cards();
     }
@@ -395,7 +395,7 @@ public class IdentityManagerView : Window {
 
         var children = this.custom_vbox.get_children ();
         foreach (var id_card_widget in children)
-            id_card_widget.destroy();
+            remove_id_card_widget((IdCardWidget )id_card_widget); //id_card_widget.destroy();
 
         if (filter.get_iter_first (out iter))
         {
@@ -561,10 +561,11 @@ public class IdentityManagerView : Window {
                 
                 var children = services_internal_vbox.get_children ();
                 foreach (var hbox in children)
-                  hbox.destroy();
+                  services_internal_vbox.remove(hbox);
                 
                 fill_services_vbox (idcard);
                 custom_vbox.current_idcard.update_id_card_label ();
+                identities_manager.update_card(idcard);
               }
               
             });
