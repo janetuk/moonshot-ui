@@ -5,6 +5,7 @@ using Gtk;
 public class IdentityManagerApp {
     public IdentityManagerModel model;
     public IdCard default_id_card;
+    public bool explicitly_launched;
     private IdentityManagerView view;
     private MoonshotServer ipc_server;
 
@@ -47,7 +48,6 @@ public class IdentityManagerApp {
         Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
 
 #endif
-        if (view != null) view.show();
     }
 
     public bool add_identity (IdCard id) {
@@ -173,13 +173,22 @@ public class IdentityManagerApp {
             
             if (confirm && (view != null))
             {
+                if (!explicitly_launched)
+                    show();
 		view.queue_identity_request(request);
                 return;
             }
         }
         // Send back the identity (we can't directly run the
         // callback because we may be being called from a 'yield')
-        Idle.add (() => { request.return_identity (identity); return false; });
+        Idle.add(
+            () => {
+                request.return_identity (identity); 
+                if (!explicitly_launched)
+                    Idle.add( () => { Gtk.main_quit(); return false; } );
+                return false;
+            }
+        );
         return;
     }
 
@@ -247,6 +256,13 @@ public class IdentityManagerApp {
 #endif
 }
 
+static bool explicitly_launched = true;
+const GLib.OptionEntry[] options = {
+    {"DBusLaunch",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
+     ref explicitly_launched,"launch for dbus rpc use",null},
+    {null}
+};
+
 
 public static int main(string[] args){
 #if IPC_MSRPC
@@ -254,8 +270,17 @@ public static int main(string[] args){
 #else
         bool headless = GLib.Environment.get_variable("DISPLAY") == null;
 #endif
-        if (!headless)
-            Gtk.init(ref args);
+
+        if (headless) {
+            explicitly_launched = false;
+        } else {
+            try {
+                Gtk.init_with_args(ref args, _(""), options, null);
+            } catch (GLib.Error e) {
+                stdout.printf(_("error: %s\n"),e.message);
+                stdout.printf(_("Run '%s --help' to see a full list of available options"), args[0]);
+            }
+        }
 
 #if OS_WIN32
         // Force specific theme settings on Windows without requiring a gtkrc file
@@ -270,8 +295,11 @@ public static int main(string[] args){
        
 	   
         var app = new IdentityManagerApp(headless);
+        app.explicitly_launched = explicitly_launched;
         
-        app.show();
+	if (app.explicitly_launched) {
+            app.show();
+        }
 
         if (headless) {
 #if !IPC_MSRPC

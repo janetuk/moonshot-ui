@@ -471,12 +471,13 @@ public class IdentityManagerView : Window {
         if (this.request_queue.is_empty())
         {
             candidates = null;
-            Gtk.main_quit ();
+            if (!parent_app.explicitly_launched)
+                Gtk.main_quit ();
         } else {
             candidates = this.request_queue.peek_head().candidates;
-            filter.refilter();
-            redraw_id_card_widgets ();
         }
+        filter.refilter();
+        redraw_id_card_widgets ();
 
         if (identity != null)
             parent_app.default_id_card = identity;
