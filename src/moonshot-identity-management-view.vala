@@ -471,8 +471,13 @@ public class IdentityManagerView : Window {
         if (this.request_queue.is_empty())
         {
             candidates = null;
-            if (!parent_app.explicitly_launched)
-                Gtk.main_quit ();
+            if (!parent_app.explicitly_launched) {
+// The following occasionally causes the app to exit without sending the dbus
+// reply, so for now we just don't exit
+//                Gtk.main_quit ();
+// just hide instead
+                this.hide();
+            }
         } else {
             candidates = this.request_queue.peek_head().candidates;
         }
