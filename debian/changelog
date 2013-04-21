@@ -1,10 +1,12 @@
-moonshot-ui (0.5+20130409-1) UNRELEASED; urgency=low
+moonshot-ui (0.5+20130421-2) unstable; urgency=low
 
   * New upstream version
   * Fix service removal
   * Fix bogus identities
+  * Upstream version
+  * Upstream version
 
- -- Sam Hartman <hartmans@debian.org>  Tue, 09 Apr 2013 21:39:35 -0400
+ -- Sam Hartman <hartmans@debian.org>  Sun, 21 Apr 2013 13:49:09 -0400
 
 moonshot-ui (0.5+20130326-1) UNRELEASED; urgency=low
 

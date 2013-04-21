@@ -4,7 +4,8 @@ Priority: optional
 Maintainer: Sam Hartman <hartmans@debian.org>
 Build-Depends: debhelper (>= 7.0.50~), 
     libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
-        gettext, autotools-dev, libdbus-glib-1-dev, desktop-file-utils, libgee-dev
+        gettext, autotools-dev, libdbus-glib-1-dev, desktop-file-utils, libgee-dev, autopoint, autoconf, autotools-dev, automake, libtool,
+ dh-autoreconf, valac
 Standards-Version: 3.9.1
 Homepage: http://www.project-moonshot.org/
 Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
