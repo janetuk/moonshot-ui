@@ -16,6 +16,7 @@ public class IdentityManagerView : Window {
 
     private Entry username_entry;
     private Entry password_entry;
+    private Label prompting_service;
 
     private ListStore* listmodel;
     private TreeModelFilter filter;
@@ -430,6 +431,11 @@ public class IdentityManagerView : Window {
         dialog.destroy ();
     }
 
+    public void set_prompting_service(string service)
+    {
+        prompting_service.set_label( _("Identity requested for service: %s").printf(service) );
+    }
+
     public void queue_identity_request(IdentityRequest request)
     {
         if (this.request_queue.is_empty())
@@ -437,6 +443,7 @@ public class IdentityManagerView : Window {
             candidates = request.candidates;
             filter.refilter();
             redraw_id_card_widgets ();
+            set_prompting_service(request.service);
             show ();
         }
         this.request_queue.push_tail (request);
@@ -471,6 +478,7 @@ public class IdentityManagerView : Window {
         if (this.request_queue.is_empty())
         {
             candidates = null;
+            prompting_service.set_label(_(""));
             if (!parent_app.explicitly_launched) {
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit
@@ -479,7 +487,9 @@ public class IdentityManagerView : Window {
                 this.hide();
             }
         } else {
-            candidates = this.request_queue.peek_head().candidates;
+            IdentityRequest next = this.request_queue.peek_head();
+            candidates = next.candidates;
+            set_prompting_service(next.service);
         }
         filter.refilter();
         redraw_id_card_widgets ();
@@ -743,10 +753,14 @@ SUCH DAMAGE.
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_shadow_type (ShadowType.IN);
         scroll.add_with_viewport (viewport);
+        this.prompting_service = new Label (_(""));
+        // left-align
+        prompting_service.set_alignment(0, (float )0.5);
 
         var vbox_left = new VBox (false, 0);
         vbox_left.pack_start (search_entry, false, false, 6);
         vbox_left.pack_start (scroll, true, true, 0);
+        vbox_left.pack_start (prompting_service, false, false, 6);
         vbox_left.set_size_request (WINDOW_WIDTH, 0);
 
         var login_vbox_title = new Label (_("Login: "));
