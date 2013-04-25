@@ -14,6 +14,8 @@ public struct Rule
 
 public class IdCard : Object
 {
+  public const string NO_IDENTITY = "No Identity";
+
   private string _nai;
   
   public string display_name { get; set; default = ""; }
@@ -31,4 +33,16 @@ public class IdCard : Object
   public Gdk.Pixbuf pixbuf { get; set; default = null; }    
 
   public unowned string nai { get {  _nai = username + "@" + issuer; return _nai;}}
+
+  public bool IsNoIdentity() 
+  {
+    return (display_name == NO_IDENTITY);
+  }
+
+  public static IdCard NewNoIdentity() 
+  { 
+    IdCard card = new IdCard();
+    card.display_name = NO_IDENTITY;
+    return card;
+  }
 }
