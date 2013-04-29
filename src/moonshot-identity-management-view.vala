@@ -470,7 +470,7 @@ public class IdentityManagerView : Window {
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
 
-        if (identity.password == null)
+        if ((identity.password == null) && !identity.IsNoIdentity())
         {
             var dialog = new AddPasswordDialog ();
             var result = dialog.run ();
