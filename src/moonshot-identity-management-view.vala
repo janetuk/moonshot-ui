@@ -4,6 +4,7 @@ using Gtk;
 public class IdentityManagerView : Window {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
+    private const int RIGHT_PANE_WIDTH = 275;
     protected IdentityManagerApp parent_app;
 #if OS_MACOS
 	public OSXApplication osxApp;
@@ -11,11 +12,15 @@ public class IdentityManagerView : Window {
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private VBox vbox_right;
+    private VBox login_vbox;
+    private VBox services_vbox;
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
 
     private Entry username_entry;
     private Entry password_entry;
+    private Label prompting_service;
+    private Label no_identity_title;
 
     private ListStore* listmodel;
     private TreeModelFilter filter;
@@ -203,8 +208,17 @@ public class IdentityManagerView : Window {
     private void fill_details (IdCardWidget id_card_widget)
     {
        var id_card = id_card_widget.id_card;
-       this.username_entry.set_text (id_card.username);
-       this.password_entry.set_text (id_card.password ?? "");
+       var vr_children = this.vbox_right.get_children();
+       foreach (var vr_child in vr_children)
+           this.vbox_right.remove(vr_child);
+       if (id_card.display_name == IdCard.NO_IDENTITY) {
+           this.vbox_right.pack_start(no_identity_title, false, true, 0);
+       } else {
+           this.username_entry.set_text (id_card.username);
+           this.password_entry.set_text (id_card.password ?? "");
+           this.vbox_right.pack_start(login_vbox, false, true, 0);
+       }
+       this.vbox_right.pack_start (services_vbox, false, true, 0);
 
        var children = this.services_internal_vbox.get_children ();
        foreach (var hbox in children)
@@ -430,6 +444,11 @@ public class IdentityManagerView : Window {
         dialog.destroy ();
     }
 
+    public void set_prompting_service(string service)
+    {
+        prompting_service.set_label( _("Identity requested for service: %s").printf(service) );
+    }
+
     public void queue_identity_request(IdentityRequest request)
     {
         if (this.request_queue.is_empty())
@@ -437,6 +456,7 @@ public class IdentityManagerView : Window {
             candidates = request.candidates;
             filter.refilter();
             redraw_id_card_widgets ();
+            set_prompting_service(request.service);
             show ();
         }
         this.request_queue.push_tail (request);
@@ -450,7 +470,7 @@ public class IdentityManagerView : Window {
         var request = this.request_queue.pop_head ();
         bool reset_password = false;
 
-        if (identity.password == null)
+        if ((identity.password == null) && !identity.IsNoIdentity())
         {
             var dialog = new AddPasswordDialog ();
             var result = dialog.run ();
@@ -471,6 +491,7 @@ public class IdentityManagerView : Window {
         if (this.request_queue.is_empty())
         {
             candidates = null;
+            prompting_service.set_label(_(""));
             if (!parent_app.explicitly_launched) {
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit
@@ -479,7 +500,9 @@ public class IdentityManagerView : Window {
                 this.hide();
             }
         } else {
-            candidates = this.request_queue.peek_head().candidates;
+            IdentityRequest next = this.request_queue.peek_head();
+            candidates = next.candidates;
+            set_prompting_service(next.service);
         }
         filter.refilter();
         redraw_id_card_widgets ();
@@ -743,11 +766,21 @@ SUCH DAMAGE.
         scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
         scroll.set_shadow_type (ShadowType.IN);
         scroll.add_with_viewport (viewport);
+        this.prompting_service = new Label (_(""));
+        // left-align
+        prompting_service.set_alignment(0, (float )0.5);
 
         var vbox_left = new VBox (false, 0);
         vbox_left.pack_start (search_entry, false, false, 6);
         vbox_left.pack_start (scroll, true, true, 0);
+        vbox_left.pack_start (prompting_service, false, false, 6);
         vbox_left.set_size_request (WINDOW_WIDTH, 0);
+
+        this.no_identity_title = new Label (_("No Identity: Send this identity to services which should not use Moonshot"));
+        no_identity_title.set_alignment(0, (float ) 0.5);
+        no_identity_title.set_size_request(RIGHT_PANE_WIDTH, -1);
+        no_identity_title.set_line_wrap(true);
+        no_identity_title.show();
 
         var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
@@ -772,7 +805,7 @@ SUCH DAMAGE.
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);
-        var login_vbox = new VBox (false, 6);
+        this.login_vbox = new VBox (false, 6);
         login_vbox.pack_start (login_vbox_title, false, true, 0);
         login_vbox.pack_start (login_vbox_alignment, false, true, 0);
 
@@ -783,13 +816,14 @@ SUCH DAMAGE.
         services_vbox_alignment.set_padding (0, 0, 12, 0);
         this.services_internal_vbox = new VBox (true, 6);
         services_vbox_alignment.add (services_internal_vbox);
-        var services_vbox = new VBox (false, 6);
+        this.services_vbox = new VBox (false, 6);
         services_vbox.pack_start (services_vbox_title, false, true, 0);
         services_vbox.pack_start (services_vbox_alignment, false, true, 0);
 
         this.vbox_right = new VBox (false, 18);
         vbox_right.pack_start (login_vbox, false, true, 0);
         vbox_right.pack_start (services_vbox, false, true, 0);
+        vbox_right.set_size_request( RIGHT_PANE_WIDTH, -1 );
 
         var hbox = new HBox (false, 12);
         hbox.pack_start (vbox_left, true, true, 0);
