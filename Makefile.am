@@ -171,6 +171,7 @@ endif
 endif
 
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+	moonshot-dbus-launch \
 	moonshot-ui.spec
 
 noinst_PROGRAMS = \

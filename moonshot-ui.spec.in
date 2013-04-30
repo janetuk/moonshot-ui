@@ -46,6 +46,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %package devel
 Summary: Moonshot UI Development
+Requires: moonshot-ui  = %{version}-%{release}
 
 %description devel
 
@@ -61,12 +62,13 @@ Summary: Moonshot UI Development
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
+%{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 
 %files devel
 %{_includedir}/*.h
 %{_libdir}/libmoonshot.a
-%{_libdir}/libmoonshot.so*
+%{_libdir}/libmoonshot.so
 %exclude %{_libdir}/*.la
 
 
