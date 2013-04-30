@@ -16,7 +16,7 @@ public class IdentityManagerModel : Object {
              }
              return strcmp(id_a.display_name, id_b.display_name);
          });
-         if (!identities[0].IsNoIdentity())
+         if (identities.is_empty || !identities[0].IsNoIdentity())
              identities.insert(0, IdCard.NewNoIdentity());
          return identities;
     }
