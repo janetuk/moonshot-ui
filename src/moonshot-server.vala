@@ -10,6 +10,16 @@ public class MoonshotServer : Object {
         this.parent_app = app;
     }
 
+    public bool show_ui()
+    {
+        if (parent_app.view == null) {
+            return false;
+        }
+        parent_app.show();
+        parent_app.explicitly_launched = true;
+        return true;
+    }
+
     public async bool get_identity (string nai,
                                     string password,
                                     string service,

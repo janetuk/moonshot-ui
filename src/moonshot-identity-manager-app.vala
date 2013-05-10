@@ -1,12 +1,16 @@
 using Gee;
 using Gtk;
 
+[DBus (name = "org.janet.Moonshot")]
+interface IIdentityManager : GLib.Object {
+    public abstract bool show_ui() throws IOError;
+}
 
 public class IdentityManagerApp {
     public IdentityManagerModel model;
     public IdCard default_id_card;
     public bool explicitly_launched;
-    private IdentityManagerView view;
+    public IdentityManagerView view;
     private MoonshotServer ipc_server;
 
 #if OS_MACOS
@@ -252,7 +256,18 @@ public class IdentityManagerApp {
                            bus_acquired_cb,
                            (conn, name) => {},
                            (conn, name) => {
-                               error ("Couldn't own name %s on DBus.", name);
+                               bool shown=false;
+                               try {
+                                   IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
+                                   shown = manager.show_ui();
+                               } catch (IOError e) {
+                               }
+                               if (!shown) {
+                                   GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                               } else {
+                                   stdout.printf("Showed previously launched identity manager.\n");
+                                   GLib.Process.exit(0);
+                               }
                            });
     }
 #endif
