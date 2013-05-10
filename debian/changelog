@@ -1,3 +1,9 @@
+moonshot-ui (0.5+20130510-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 10 May 2013 14:46:01 -0400
+
 moonshot-ui (0.5+20130429-3) unstable; urgency=low
 
   * Fix assertion on no identities
