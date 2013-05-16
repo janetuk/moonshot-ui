@@ -55,9 +55,9 @@ public class IdentityManagerApp {
     }
 
     public bool add_identity (IdCard id) {
-        /* TODO: add to store here irrespective of view's existence */
         if (view != null) return view.add_identity(id);
-        return false;
+        model.add_card(id);
+        return true;
     }
 
     public void select_identity (IdentityRequest request) {
