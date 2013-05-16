@@ -110,7 +110,7 @@ if IPC_MSRPC
 AM_CPPFLAGS += -Isrc
 
 AM_VALAFLAGS += \
-	--pkg moonshot-msrpc.vapi --pkg msrpc-1.0 \
+	--pkg moonshot-msrpc --pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
 BUILT_SOURCES = libmoonshot/moonshot-msrpc.h \
