@@ -1,3 +1,11 @@
+moonshot-ui (0.5+20130510-1.1) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Fix headless add identity cards
+  * 
+
+ -- Kevin Wasserman <kevin@debian>  Thu, 16 May 2013 13:40:12 -0400
+
 moonshot-ui (0.5+20130510-1) unstable; urgency=low
 
   * New upstream version
