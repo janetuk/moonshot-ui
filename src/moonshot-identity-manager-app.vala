@@ -211,7 +211,7 @@ public class IdentityManagerApp {
         // obtrusive message box, on Windows
         //
         this.ipc_server = MoonshotServer.get_instance ();
-        MoonshotServer.start (this.view);
+        MoonshotServer.start (this);
     }
 #elif IPC_DBUS_GLIB
     private void init_ipc_server ()
