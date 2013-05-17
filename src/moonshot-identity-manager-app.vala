@@ -1,10 +1,16 @@
 using Gee;
 using Gtk;
 
+#if IPC_DBUS
 [DBus (name = "org.janet.Moonshot")]
 interface IIdentityManager : GLib.Object {
+#if IPC_DBUS_GLIB
+    public abstract bool show_ui() throws DBus.Error;
+#else
     public abstract bool show_ui() throws IOError;
+#endif
 }
+#endif
 
 public class IdentityManagerApp {
     public IdentityManagerModel model;
@@ -216,7 +222,6 @@ public class IdentityManagerApp {
 #elif IPC_DBUS_GLIB
     private void init_ipc_server ()
     {
- 
         try {
             var conn = DBus.Bus.get (DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
@@ -225,10 +230,24 @@ public class IdentityManagerApp {
 
             // try to register service in session bus
             uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
-            assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
-
-            this.ipc_server = new MoonshotServer (this);
-            conn.register_object ("/org/janet/moonshot", ipc_server);
+            if (reply == DBus.RequestNameReply.PRIMARY_OWNER)
+            {
+                this.ipc_server = new MoonshotServer (this);
+                conn.register_object ("/org/janet/moonshot", ipc_server);
+            } else {
+                bool shown=false;
+                try {
+                    IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
+                    shown = manager.show_ui();
+                } catch (DBus.Error e) {
+                }
+                if (!shown) {
+                    GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                } else {
+                    stdout.printf("Showed previously launched identity manager.\n");
+                    GLib.Process.exit(0);
+                }
+            }
         }
         catch (DBus.Error e)
         {
