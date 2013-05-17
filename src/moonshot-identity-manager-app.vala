@@ -237,12 +237,12 @@ public class IdentityManagerApp {
             } else {
                 bool shown=false;
                 try {
-                    IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
+                    IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, "org.janet.Moonshot", "/org/janet/moonshot");
                     shown = manager.show_ui();
-                } catch (DBus.Error e) {
+                } catch (IOError e) {
                 }
                 if (!shown) {
-                    GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                    GLib.error ("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
                 } else {
                     stdout.printf("Showed previously launched identity manager.\n");
                     GLib.Process.exit(0);
