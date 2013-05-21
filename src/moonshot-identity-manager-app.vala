@@ -236,11 +236,13 @@ public class IdentityManagerApp {
                 conn.register_object ("/org/janet/moonshot", ipc_server);
             } else {
                 bool shown=false;
-                try {
-                    IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, "org.janet.Moonshot", "/org/janet/moonshot");
-                    shown = manager.show_ui();
-                } catch (IOError e) {
-                }
+                GLib.Error e;
+                DBus.Object manager_proxy = conn.get_object ("org.janet.Moonshot",
+                                                             "/org/janet/moonshot",
+                                                             "org.janet.Moonshot");
+                if (manager_proxy != null)
+                    manager_proxy.call("show_ui", out e, GLib.Type.INVALID, typeof(shown), out shown, GLib.Type.INVALID);
+
                 if (!shown) {
                     GLib.error ("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
                 } else {
