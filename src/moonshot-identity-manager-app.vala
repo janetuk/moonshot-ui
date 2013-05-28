@@ -241,7 +241,7 @@ public class IdentityManagerApp {
                                                              "/org/janet/moonshot",
                                                              "org.janet.Moonshot");
                 if (manager_proxy != null)
-                    manager_proxy.call("show_ui", out e, GLib.Type.INVALID, typeof(bool), out shown, GLib.Type.INVALID);
+                    manager_proxy.call("ShowUi", out e, GLib.Type.INVALID, typeof(bool), out shown, GLib.Type.INVALID);
 
                 if (!shown) {
                     GLib.error ("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
