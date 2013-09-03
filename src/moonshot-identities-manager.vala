@@ -73,8 +73,15 @@ public class IdentityManagerModel : Object {
 
     private IdentityManagerApp parent;
 
-    public IdentityManagerModel(IdentityManagerApp parent_app) {
+    public IdentityManagerModel(IdentityManagerApp parent_app, bool use_flat_file_store) {
         parent = parent_app;
+#if IPC_MSRPC
         store = new LocalFlatFileStore();
+#else
+        if (use_flat_file_store)
+            store = new LocalFlatFileStore();
+        else
+            store = new KeyringStore();
+#endif
     }
 }

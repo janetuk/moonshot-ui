@@ -39,8 +39,8 @@ public class IdentityManagerApp {
         if (view != null) view.show();    
     }
 	
-    public IdentityManagerApp (bool headless) {
-        model = new IdentityManagerModel(this);
+    public IdentityManagerApp (bool headless, bool use_flat_file_store) {
+        model = new IdentityManagerModel(this, headless || use_flat_file_store);
         if (!headless)
             view = new IdentityManagerView(this);
         LinkedList<IdCard> card_list = model.get_card_list() ;
@@ -295,9 +295,12 @@ public class IdentityManagerApp {
 }
 
 static bool explicitly_launched = true;
+static bool use_flat_file_store = false;
 const GLib.OptionEntry[] options = {
     {"DBusLaunch",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
      ref explicitly_launched,"launch for dbus rpc use",null},
+    {"FlatFileStore",0,0,GLib.OptionArg.NONE,
+     ref use_flat_file_store,"force use of flat file identity store (used by default only for headless operation)",null},
     {null}
 };
 
@@ -332,7 +335,7 @@ public static int main(string[] args){
         Intl.textdomain (Config.GETTEXT_PACKAGE);
        
 	   
-        var app = new IdentityManagerApp(headless);
+        var app = new IdentityManagerApp(headless, use_flat_file_store);
         app.explicitly_launched = explicitly_launched;
         
 	if (app.explicitly_launched) {
