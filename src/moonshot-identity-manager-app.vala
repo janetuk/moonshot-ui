@@ -40,7 +40,23 @@ public class IdentityManagerApp {
     }
 	
     public IdentityManagerApp (bool headless, bool use_flat_file_store) {
-        model = new IdentityManagerModel(this, headless || use_flat_file_store);
+#if GNOME_KEYRING
+        bool keyring_available = GnomeKeyring.is_available();
+#else
+        bool keyring_available = false;
+#endif
+        IIdentityCardStore.StoreType store_type;
+        if (headless || use_flat_file_store || !keyring_available)
+            store_type = IIdentityCardStore.StoreType.FLAT_FILE;
+        else
+            store_type = IIdentityCardStore.StoreType.KEYRING;
+
+        model = new IdentityManagerModel(this, store_type);
+        /* if headless, but we have nothing in the flat file store
+         * and keyring is available, switch to keyring */
+        if (headless && keyring_available && !use_flat_file_store && !model.HasNonTrivialIdentities())
+            model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
+
         if (!headless)
             view = new IdentityManagerView(this);
         LinkedList<IdCard> card_list = model.get_card_list() ;

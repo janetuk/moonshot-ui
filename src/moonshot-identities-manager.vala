@@ -71,17 +71,36 @@ public class IdentityManagerModel : Object {
         card_list_changed();
      }
 
+     public void set_store_type(IIdentityCardStore.StoreType type) {
+         if ((store != null) && (store.get_store_type() == type))
+             return;
+         switch (type) {
+#if GNOME_KEYRING
+             case IIdentityCardStore.StoreType.KEYRING:
+                 store = new KeyringStore();
+                 break;
+#endif
+             case IIdentityCardStore.StoreType.FLAT_FILE:
+             default:
+                 store = new LocalFlatFileStore();
+                 break;
+         }
+     }
+
+     public IIdentityCardStore.StoreType get_store_type() {
+         return store.get_store_type();
+     }
+
+     public bool HasNonTrivialIdentities() {
+         var identities = store.get_card_list();
+         return !identities.is_empty;
+     }
+
+
     private IdentityManagerApp parent;
 
-    public IdentityManagerModel(IdentityManagerApp parent_app, bool use_flat_file_store) {
+    public IdentityManagerModel(IdentityManagerApp parent_app, IIdentityCardStore.StoreType store_type) {
         parent = parent_app;
-#if IPC_MSRPC
-        store = new LocalFlatFileStore();
-#else
-        if (use_flat_file_store)
-            store = new LocalFlatFileStore();
-        else
-            store = new KeyringStore();
-#endif
+        set_store_type(store_type);
     }
 }

@@ -23,6 +23,10 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
      public LinkedList<IdCard> get_card_list() {
           return id_card_list; 
      }
+
+     public IIdentityCardStore.StoreType get_store_type() {
+          return IIdentityCardStore.StoreType.FLAT_FILE;
+     }
      
      private void load_id_cards() {
         id_card_list.clear();

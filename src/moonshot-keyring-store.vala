@@ -23,6 +23,10 @@ public class KeyringStore : Object, IIdentityCardStore {
         store_id_cards ();
     }
 
+    public IIdentityCardStore.StoreType get_store_type() {
+        return IIdentityCardStore.StoreType.KEYRING;
+    }
+
     public LinkedList<IdCard> get_card_list() {
         return id_card_list;
     }
