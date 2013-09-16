@@ -306,7 +306,7 @@ public class IdentityManagerView : Window {
         id_card_widget.expanded.connect (fill_details);
     }
 
-    public bool add_identity (IdCard id_card)
+    public bool add_identity (IdCard id_card, bool force_flat_file_store)
     {
 #if OS_MACOS
         /* 
@@ -329,7 +329,7 @@ public class IdentityManagerView : Window {
 
         if (ret == Gtk.ResponseType.YES) {
             id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
-            this.identities_manager.add_card (id_card);
+            this.identities_manager.add_card (id_card, force_flat_file_store);
             return true;
         }
 
@@ -343,7 +343,7 @@ public class IdentityManagerView : Window {
 
         switch (result) {
         case ResponseType.OK:
-            this.identities_manager.add_card (get_id_card_data (dialog));
+            this.identities_manager.add_card (get_id_card_data (dialog), false);
             break;
         default:
             break;

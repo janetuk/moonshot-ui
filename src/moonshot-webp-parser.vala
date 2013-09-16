@@ -6,17 +6,39 @@ namespace WebProvisioning
 
   public static int main (string[] args)
   {
-    if (args.length < 2)
+    int arg_index = -1;
+    int force_flat_file_store = 0;
+    bool bad_switch = false;
+    for (arg_index = 1; arg_index < args.length; arg_index++) {
+      int index = 0;
+      unichar c = 0;
+      string arg = args[arg_index];
+      if (arg.get_next_char(ref index, out c)) {
+        if ((c=='-') && arg.get_next_char(ref index, out c)) {
+          switch (c) {
+            case 'f':
+              force_flat_file_store = 1;
+              break;
+            default:
+              bad_switch = true;
+              break;
+          }
+        } else
+          break; // arg is not a switch; presume it's the file
+      }
+    }
+    if (bad_switch || (arg_index != args.length - 1))
     {
-      error ("Usage %s [-a] WEB_PROVISIONING_FILE", args[0]);
+      error ("Usage %s [-f] WEB_PROVISIONING_FILE\n -f: add identities to flat file store", args[0]);
+    }
+    string webp_file = args[arg_index];
+    
+    if (!FileUtils.test (webp_file, FileTest.EXISTS | FileTest.IS_REGULAR))
+    {
+      error ("%s does not exist", webp_file);
     }
     
-    if (!FileUtils.test (args[1], FileTest.EXISTS | FileTest.IS_REGULAR))
-    {
-      error ("%s does not exist", args[1]);
-    }
-    
-    var webp = new Parser (args[1]);
+    var webp = new Parser (webp_file);
     webp.parse();
     
     foreach (IdCard card in cards)
@@ -49,6 +71,7 @@ namespace WebProvisioning
                                 card.trust_anchor.subject,
                                 card.trust_anchor.subject_alt,
                                 card.trust_anchor.server_cert,
+                                force_flat_file_store,
                                 out error);
 
       if (error != null)

@@ -184,6 +184,7 @@ int moonshot_install_id_card (const char     *display_name,
                               const char     *subject,
                               const char     *subject_alt,
                               const char     *server_cert,
+                              int             force_flat_file_store,
                               MoonshotError **error);
 
 #endif

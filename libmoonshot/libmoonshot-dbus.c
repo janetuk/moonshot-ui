@@ -351,6 +351,7 @@ int moonshot_install_id_card (const char     *display_name,
                               const char     *subject,
                               const char     *subject_alt,
                               const char     *server_cert,
+                              int            force_flat_file_store,
                               MoonshotError **error)
 {
     GError      *g_error = NULL;
@@ -400,6 +401,7 @@ int moonshot_install_id_card (const char     *display_name,
                        G_TYPE_STRING, subject,
                        G_TYPE_STRING, subject_alt,
                        G_TYPE_STRING, server_cert,
+                       G_TYPE_INT, force_flat_file_store,
                        G_TYPE_INVALID,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);

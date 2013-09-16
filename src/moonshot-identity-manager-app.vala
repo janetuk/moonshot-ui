@@ -76,9 +76,9 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity (IdCard id) {
-        if (view != null) return view.add_identity(id);
-        model.add_card(id);
+    public bool add_identity (IdCard id, bool force_flat_file_store) {
+        if (view != null) return view.add_identity(id, force_flat_file_store);
+        model.add_card(id, force_flat_file_store);
         return true;
     }
 

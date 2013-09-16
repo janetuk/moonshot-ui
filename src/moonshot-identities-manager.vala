@@ -49,8 +49,12 @@ public class IdentityManagerModel : Object {
         return true;
     }
 
-    public void add_card(IdCard card) {
+    public void add_card(IdCard card, bool force_flat_file_store) {
         string candidate;
+        IIdentityCardStore.StoreType saved_store_type = get_store_type();
+
+        if (force_flat_file_store)
+            set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
 
         if (!display_name_is_valid (card.display_name, out candidate))
         {
@@ -58,6 +62,7 @@ public class IdentityManagerModel : Object {
         }
 
         store.add_card(card);
+        set_store_type(saved_store_type);
         card_list_changed();
      }
 
