@@ -97,8 +97,16 @@ public class IdentityManagerModel : Object {
      }
 
      public bool HasNonTrivialIdentities() {
-         var identities = store.get_card_list();
-         return !identities.is_empty;
+         foreach (IdCard card in this.store.get_card_list()) {
+             // The 'NoIdentity' card is non-trivial if it has services or rules.
+             // All other cards are automatically non-trivial.
+             if ((!card.IsNoIdentity()) || 
+                 (card.services.length > 0) ||
+                 (card.rules.length > 0)) {
+                 return true;
+             }
+         }
+         return false;
      }
 
 
