@@ -66,6 +66,7 @@ src_moonshot_LDFLAGS = -g -O0
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+src_moonshot_webp_LDFLAGS =
 
 if OS_WIN32
 
@@ -99,6 +100,7 @@ if OS_LINUX
 AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
 AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
 src_moonshot_LDFLAGS += -lgnome-keyring
+src_moonshot_webp_LDFLAGS += -lgnome-keyring
 
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages
