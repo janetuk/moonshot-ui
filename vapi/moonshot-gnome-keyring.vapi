@@ -286,19 +286,19 @@ namespace GnomeKeyring {
 	public static GnomeKeyring.Result lock_all_sync ();
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static GnomeKeyring.Result lock_sync (string? keyring);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static void* memory_alloc (ulong sz);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static void memory_free (void* p);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static bool memory_is_secure (void* p);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static void* memory_realloc (void* p, ulong sz);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static unowned string memory_strdup (string str);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static void* memory_try_alloc (ulong sz);
-	[CCode (cheader_filename = "gnome-keyring.h")]
+	[CCode (cheader_filename = "gnome-keyring-memory.h")]
 	public static void* memory_try_realloc (void* p, ulong sz);
 	[CCode (cheader_filename = "gnome-keyring.h")]
 	public static void network_password_free (GnomeKeyring.NetworkPasswordData data);
