@@ -1,8 +1,62 @@
 using Gee;
 
+public class Password {
+#if GNOME_KEYRING
+    private unowned string _password;
+    public string password {
+        get {
+            return _password;
+        }
+        set {
+            if (_password != null) {
+                GnomeKeyring.memory_free((void *)_password);
+                _password = null;
+            }
+            if (value != null)
+                _password = GnomeKeyring.memory_strdup(value); 
+        }
+    }
+#else
+    public string password { get; set; default = null; }
+#endif
+
+    public Password(string in_password) {
+        password = in_password;
+    }
+
+    ~Password() {
+        password = null;
+    }
+}
+
+public class PasswordHashTable : Object {
+    private HashTable<string, Password> password_table;
+
+    private static string ComputeHashKey(IdCard card, IIdentityCardStore store) {
+        return "%s_store_%d".printf( card.display_name, store.get_store_type() );
+    }
+
+    public void CachePassword(IdCard card, IIdentityCardStore store) {
+        password_table.replace(ComputeHashKey(card, store), new Password(card.password));
+    }
+
+    public void RemovePassword(IdCard card, IIdentityCardStore store) {
+        password_table.remove(ComputeHashKey(card, store));
+    }
+    public void RetrievePassword(IdCard card, IIdentityCardStore store) {
+        weak Password password = password_table.lookup(ComputeHashKey(card, store));
+        if (password != null) {
+            card.password = password.password;
+        }
+    }
+    public PasswordHashTable() {
+        password_table = new HashTable<string, Password>(GLib.str_hash, GLib.str_equal);
+    }
+}
+
 public class IdentityManagerModel : Object {
     private const string FILE_NAME = "identities.txt";
-
+    private PasswordHashTable password_table;
     private IIdentityCardStore store;
     public LinkedList<IdCard>  get_card_list() {
          var identities = store.get_card_list();
@@ -18,6 +72,11 @@ public class IdentityManagerModel : Object {
          });
          if (identities.is_empty || !identities[0].IsNoIdentity())
              identities.insert(0, IdCard.NewNoIdentity());
+         foreach (IdCard id_card in identities) {
+             if (!id_card.store_password) {
+                 password_table.RetrievePassword(id_card, store);
+             }
+         }
          return identities;
     }
     public signal void card_list_changed();
@@ -61,17 +120,24 @@ public class IdentityManagerModel : Object {
           card.display_name = candidate;
         }
 
+        if (!card.store_password)
+            password_table.CachePassword(card, store);
         store.add_card(card);
         set_store_type(saved_store_type);
         card_list_changed();
      }
 
      public void update_card(IdCard card) {
+        if (!card.store_password)
+            password_table.CachePassword(card, store);
+        else
+            password_table.RemovePassword(card, store);
         store.update_card(card);
         card_list_changed();
      }
 
      public void remove_card(IdCard card) {
+        password_table.RemovePassword(card, store);
         store.remove_card(card);
         card_list_changed();
      }
@@ -114,6 +180,7 @@ public class IdentityManagerModel : Object {
 
     public IdentityManagerModel(IdentityManagerApp parent_app, IIdentityCardStore.StoreType store_type) {
         parent = parent_app;
+        password_table = new PasswordHashTable();
         set_store_type(store_type);
     }
 }

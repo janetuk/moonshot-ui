@@ -209,6 +209,9 @@ public class IdentityManagerApp {
         // callback because we may be being called from a 'yield')
         Idle.add(
             () => {
+                if (view != null) {
+                    view.check_add_password(identity, request, model);
+                }
                 request.return_identity (identity);
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit

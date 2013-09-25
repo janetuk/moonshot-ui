@@ -57,6 +57,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             int i;
             int rules_patterns_index = -1;
             int rules_always_confirm_index = -1;
+            string store_password = null;
             for (i=0; i<entry.attributes.len; i++) {
                 var attribute = entry.attributes.data[i];
 		string value = attribute.string_value;
@@ -80,6 +81,8 @@ public class KeyringStore : Object, IIdentityCardStore {
                     id_card.trust_anchor.subject = value;
                 } else if (attribute.name == "Subject-Alt") {
                     id_card.trust_anchor.subject_alt = value;
+                } else if (attribute.name == "StorePassword") {
+                    store_password = value;
                 }
             }
             if ((rules_always_confirm_index != -1) && (rules_patterns_index != -1)) {
@@ -96,7 +99,16 @@ public class KeyringStore : Object, IIdentityCardStore {
                    id_card.rules = rules;
                 }
             }
-            id_card.password = entry.secret;
+
+            if (store_password != null)
+                id_card.store_password = (store_password == "yes");
+            else
+                id_card.store_password = ((entry.secret != null) && (entry.secret != ""));
+
+            if (id_card.store_password)
+                id_card.password = entry.secret;
+            else
+                id_card.password = null;
             id_card_list.add(id_card);
         });
     }
@@ -127,10 +139,12 @@ public class KeyringStore : Object, IIdentityCardStore {
             attributes.append_string("Server-Cert", id_card.trust_anchor.server_cert);
             attributes.append_string("Subject", id_card.trust_anchor.subject);
             attributes.append_string("Subject-Alt", id_card.trust_anchor.subject_alt);
+            attributes.append_string("StorePassword", id_card.store_password ? "yes" : "no");
 
             GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,
-                item_type, id_card.display_name,
-                attributes, id_card.password, true, out item_id);
+                item_type, id_card.display_name, attributes,
+                id_card.store_password ? id_card.password : "",
+                true, out item_id);
             if (result != GnomeKeyring.Result.OK) {
                 stdout.printf("GnomeKeyring.item_create_sync() failed. result: %d", result);
             }

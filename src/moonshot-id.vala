@@ -25,7 +25,7 @@ public class IdCard : Object
   private unowned string _password;
   public string password {
     get {
-      return _password;
+      return (_password!=null) ? _password : "";
     }
     set {
       if (_password != null) {
@@ -50,6 +50,8 @@ public class IdCard : Object
   public Gdk.Pixbuf pixbuf { get; set; default = null; }    
 
   public unowned string nai { get {  _nai = username + "@" + issuer; return _nai;}}
+
+  public bool store_password { get; set; default = false; }
 
   public bool IsNoIdentity() 
   {
