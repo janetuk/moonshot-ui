@@ -21,6 +21,7 @@ public class IdentityManagerView : Window {
     private Entry password_entry;
     private Label prompting_service;
     private Label no_identity_title;
+    private CheckButton remember_checkbutton;
 
     private ListStore* listmodel;
     private TreeModelFilter filter;
@@ -217,6 +218,7 @@ public class IdentityManagerView : Window {
            this.username_entry.set_text (id_card.username);
            this.password_entry.set_text (id_card.password ?? "");
            this.vbox_right.pack_start(login_vbox, false, true, 0);
+           this.remember_checkbutton.active = id_card.store_password;
        }
        this.vbox_right.pack_start (services_vbox, false, true, 0);
 
@@ -253,6 +255,7 @@ public class IdentityManagerView : Window {
             id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
+        id_card.store_password = dialog.store_password;
         id_card.services = {};
         id_card.set_data("pixbuf", find_icon ("avatar-default", 48));
 
@@ -306,7 +309,7 @@ public class IdentityManagerView : Window {
         id_card_widget.expanded.connect (fill_details);
     }
 
-    public bool add_identity (IdCard id_card)
+    public bool add_identity (IdCard id_card, bool force_flat_file_store)
     {
 #if OS_MACOS
         /* 
@@ -329,7 +332,7 @@ public class IdentityManagerView : Window {
 
         if (ret == Gtk.ResponseType.YES) {
             id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
-            this.identities_manager.add_card (id_card);
+            this.identities_manager.add_card (id_card, force_flat_file_store);
             return true;
         }
 
@@ -343,7 +346,7 @@ public class IdentityManagerView : Window {
 
         switch (result) {
         case ResponseType.OK:
-            this.identities_manager.add_card (get_id_card_data (dialog));
+            this.identities_manager.add_card (get_id_card_data (dialog), false);
             break;
         default:
             break;
@@ -423,23 +426,18 @@ public class IdentityManagerView : Window {
         this.request_queue.push_tail (request);
     }
 
-    public void send_identity_cb (IdCard identity)
+    public void check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
     {
-        return_if_fail (request_queue.length > 0);
-
-	candidates = null;
-        var request = this.request_queue.pop_head ();
-        bool reset_password = false;
-
-        if ((identity.password == null) && !identity.IsNoIdentity())
+        if ((identity.password == "") && !identity.IsNoIdentity())
         {
-            var dialog = new AddPasswordDialog ();
+            var dialog = new AddPasswordDialog (identity, request);
             var result = dialog.run ();
 
             switch (result) {
             case ResponseType.OK:
                 identity.password = dialog.password;
-                reset_password = ! dialog.remember;
+                identity.store_password = dialog.remember;
+                model.update_card(identity);
                 break;
             default:
                 identity = null;
@@ -448,7 +446,15 @@ public class IdentityManagerView : Window {
 
             dialog.destroy ();
         }
+    }
 
+    public void send_identity_cb (IdCard identity)
+    {
+        return_if_fail (request_queue.length > 0);
+
+	candidates = null;
+        var request = this.request_queue.pop_head ();
+        check_add_password(identity, request, identities_manager);
         if (this.request_queue.is_empty())
         {
             candidates = null;
@@ -472,10 +478,6 @@ public class IdentityManagerView : Window {
             parent_app.default_id_card = identity;
 
         request.return_identity (identity);
-
-        if (reset_password)
-            identity.password = null;
-
     }
 
     private void label_make_bold (Label label)
@@ -754,7 +756,7 @@ SUCH DAMAGE.
         this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
-        var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
+        this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         var login_table = new Table (3, 3, false);
         login_table.set_col_spacings (10);
         login_table.set_row_spacings (10);

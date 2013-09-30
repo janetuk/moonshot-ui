@@ -133,7 +133,8 @@ public class MoonshotServer : Object {
                                  string   ?ca_cert,
                                  string   ?subject,
                                  string   ?subject_alt,
-                                 string   ?server_cert)
+                                 string   ?server_cert,
+                                 int      force_flat_file_store)
     {
       IdCard idcard = new IdCard ();
 
@@ -158,7 +159,7 @@ public class MoonshotServer : Object {
         }
       }
 
-      return parent_app.add_identity (idcard);
+      return parent_app.add_identity (idcard, force_flat_file_store!=0);
     }
 
 
@@ -197,7 +198,8 @@ public class MoonshotServer : Object {
                                 card.trust_anchor.ca_cert,
                                 card.trust_anchor.subject,
                                 card.trust_anchor.subject_alt,
-                                card.trust_anchor.server_cert);
+                                card.trust_anchor.server_cert,
+                                0);
       if (result) {
         installed_cards++;
       }
@@ -221,13 +223,13 @@ using MoonshotRpcInterface;
  * process ends
  */
 public class MoonshotServer : Object {
-    private static IdentityManagerView main_window;
+    private static IdentityManagerApp parent_app;
 
     private static MoonshotServer instance = null;
 
-    public static void start (Gtk.Window window)
+    public static void start (IdentityManagerApp app)
     {
-        main_window = (IdentityManagerView) window;
+        parent_app = app;
         Rpc.server_start (MoonshotRpcInterface.spec, "/org/janet/Moonshot", Rpc.Flags.PER_USER);
     }
 
@@ -252,7 +254,7 @@ public class MoonshotServer : Object {
     {
         bool result = false;
 
-        var request = new IdentityRequest (main_window,
+        var request = new IdentityRequest (parent_app,
                                            nai,
                                            password,
                                            service);
@@ -314,7 +316,7 @@ public class MoonshotServer : Object {
     {
         bool result;
 
-        var request = new IdentityRequest.default (main_window);
+        var request = new IdentityRequest.default (parent_app);
         request.mutex = new Mutex ();
         request.cond = new Cond ();
         request.set_callback (return_identity_cb);
@@ -382,7 +384,8 @@ public class MoonshotServer : Object {
                                         string     ca_cert,
                                         string     subject,
                                         string     subject_alt,
-                                        string     server_cert)
+                                        string     server_cert,
+                                        bool       force_flat_file_store)
     {
         IdCard idcard = new IdCard ();
         bool success = false;
@@ -415,7 +418,7 @@ public class MoonshotServer : Object {
         // Defer addition to the main loop thread.
         Idle.add (() => {
             mutex.lock ();
-            success = main_window.add_identity (idcard);
+            success = parent_app.add_identity (idcard, force_flat_file_store);
             cond.signal ();
             mutex.unlock ();
             return false;

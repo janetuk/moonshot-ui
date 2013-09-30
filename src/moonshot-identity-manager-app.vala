@@ -1,10 +1,16 @@
 using Gee;
 using Gtk;
 
+#if IPC_DBUS
 [DBus (name = "org.janet.Moonshot")]
 interface IIdentityManager : GLib.Object {
+#if IPC_DBUS_GLIB
+    public abstract bool show_ui() throws DBus.Error;
+#else
     public abstract bool show_ui() throws IOError;
+#endif
 }
+#endif
 
 public class IdentityManagerApp {
     public IdentityManagerModel model;
@@ -33,8 +39,24 @@ public class IdentityManagerApp {
         if (view != null) view.show();    
     }
 	
-    public IdentityManagerApp (bool headless) {
-        model = new IdentityManagerModel(this);
+    public IdentityManagerApp (bool headless, bool use_flat_file_store) {
+#if GNOME_KEYRING
+        bool keyring_available = GnomeKeyring.is_available();
+#else
+        bool keyring_available = false;
+#endif
+        IIdentityCardStore.StoreType store_type;
+        if (headless || use_flat_file_store || !keyring_available)
+            store_type = IIdentityCardStore.StoreType.FLAT_FILE;
+        else
+            store_type = IIdentityCardStore.StoreType.KEYRING;
+
+        model = new IdentityManagerModel(this, store_type);
+        /* if headless, but we have nothing in the flat file store
+         * and keyring is available, switch to keyring */
+        if (headless && keyring_available && !use_flat_file_store && !model.HasNonTrivialIdentities())
+            model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
+
         if (!headless)
             view = new IdentityManagerView(this);
         LinkedList<IdCard> card_list = model.get_card_list() ;
@@ -54,9 +76,9 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity (IdCard id) {
-        if (view != null) return view.add_identity(id);
-        model.add_card(id);
+    public bool add_identity (IdCard id, bool force_flat_file_store) {
+        if (view != null) return view.add_identity(id, force_flat_file_store);
+        model.add_card(id, force_flat_file_store);
         return true;
     }
 
@@ -187,6 +209,9 @@ public class IdentityManagerApp {
         // callback because we may be being called from a 'yield')
         Idle.add(
             () => {
+                if (view != null) {
+                    view.check_add_password(identity, request, model);
+                }
                 request.return_identity (identity);
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit
@@ -211,12 +236,11 @@ public class IdentityManagerApp {
         // obtrusive message box, on Windows
         //
         this.ipc_server = MoonshotServer.get_instance ();
-        MoonshotServer.start (this.view);
+        MoonshotServer.start (this);
     }
 #elif IPC_DBUS_GLIB
     private void init_ipc_server ()
     {
- 
         try {
             var conn = DBus.Bus.get (DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
@@ -225,10 +249,26 @@ public class IdentityManagerApp {
 
             // try to register service in session bus
             uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
-            assert (reply == DBus.RequestNameReply.PRIMARY_OWNER);
+            if (reply == DBus.RequestNameReply.PRIMARY_OWNER)
+            {
+                this.ipc_server = new MoonshotServer (this);
+                conn.register_object ("/org/janet/moonshot", ipc_server);
+            } else {
+                bool shown=false;
+                GLib.Error e;
+                DBus.Object manager_proxy = conn.get_object ("org.janet.Moonshot",
+                                                             "/org/janet/moonshot",
+                                                             "org.janet.Moonshot");
+                if (manager_proxy != null)
+                    manager_proxy.call("ShowUi", out e, GLib.Type.INVALID, typeof(bool), out shown, GLib.Type.INVALID);
 
-            this.ipc_server = new MoonshotServer (this);
-            conn.register_object ("/org/janet/moonshot", ipc_server);
+                if (!shown) {
+                    GLib.error ("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
+                } else {
+                    stdout.printf("Showed previously launched identity manager.\n");
+                    GLib.Process.exit(0);
+                }
+            }
         }
         catch (DBus.Error e)
         {
@@ -274,9 +314,12 @@ public class IdentityManagerApp {
 }
 
 static bool explicitly_launched = true;
+static bool use_flat_file_store = false;
 const GLib.OptionEntry[] options = {
     {"DBusLaunch",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
      ref explicitly_launched,"launch for dbus rpc use",null},
+    {"FlatFileStore",0,0,GLib.OptionArg.NONE,
+     ref use_flat_file_store,"force use of flat file identity store (used by default only for headless operation)",null},
     {null}
 };
 
@@ -311,7 +354,7 @@ public static int main(string[] args){
         Intl.textdomain (Config.GETTEXT_PACKAGE);
        
 	   
-        var app = new IdentityManagerApp(headless);
+        var app = new IdentityManagerApp(headless, use_flat_file_store);
         app.explicitly_launched = explicitly_launched;
         
 	if (app.explicitly_launched) {

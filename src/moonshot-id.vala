@@ -21,7 +21,24 @@ public class IdCard : Object
   public string display_name { get; set; default = ""; }
   
   public string username { get; set; default = ""; }
+#if GNOME_KEYRING
+  private unowned string _password;
+  public string password {
+    get {
+      return (_password!=null) ? _password : "";
+    }
+    set {
+      if (_password != null) {
+        GnomeKeyring.memory_free((void *)_password);
+        _password = null;
+      }
+      if (value != null)
+        _password = GnomeKeyring.memory_strdup(value); 
+    }
+  }
+#else
   public string password { get; set; default = null; }
+#endif
 
   public string issuer { get; set; default = ""; }
   
@@ -34,6 +51,8 @@ public class IdCard : Object
 
   public unowned string nai { get {  _nai = username + "@" + issuer; return _nai;}}
 
+  public bool store_password { get; set; default = false; }
+
   public bool IsNoIdentity() 
   {
     return (display_name == NO_IDENTITY);
@@ -44,5 +63,9 @@ public class IdCard : Object
     IdCard card = new IdCard();
     card.display_name = NO_IDENTITY;
     return card;
+  }
+
+  ~IdCard() {
+    password = null;
   }
 }

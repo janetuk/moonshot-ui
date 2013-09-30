@@ -49,5 +49,6 @@ namespace Moonshot {
                                  string? subject,
                                  string? subject_alt,
                                  string? server_cert,
+                                 int force_flat_file_store,
                                  out Moonshot.Error error);
 }

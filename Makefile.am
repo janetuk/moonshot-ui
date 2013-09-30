@@ -40,6 +40,7 @@ src_moonshot_SOURCES = \
         src/moonshot-identity-manager-app.vala \
         src/moonshot-identity-management-view.vala \
         src/moonshot-local-flat-file-store.vala \
+        src/moonshot-keyring-store.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-add-dialog.vala \
@@ -65,6 +66,7 @@ src_moonshot_LDFLAGS = -g -O0
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+src_moonshot_webp_LDFLAGS =
 
 if OS_WIN32
 
@@ -95,6 +97,11 @@ endif
 
 if OS_LINUX
 
+AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
+AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
+src_moonshot_LDFLAGS += -lgnome-keyring
+src_moonshot_webp_LDFLAGS += -lgnome-keyring
+
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages
 mime_DATA = webprovisioning/moonshot.xml
@@ -110,7 +117,7 @@ if IPC_MSRPC
 AM_CPPFLAGS += -Isrc
 
 AM_VALAFLAGS += \
-	--pkg moonshot-msrpc.vapi --pkg msrpc-1.0 \
+	--pkg moonshot-msrpc --pkg msrpc-1.0 \
 	--define=IPC_MSRPC
 
 BUILT_SOURCES = libmoonshot/moonshot-msrpc.h \

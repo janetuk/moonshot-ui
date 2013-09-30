@@ -23,6 +23,10 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
      public LinkedList<IdCard> get_card_list() {
           return id_card_list; 
      }
+
+     public IIdentityCardStore.StoreType get_store_type() {
+          return IIdentityCardStore.StoreType.FLAT_FILE;
+     }
      
      private void load_id_cards() {
         id_card_list.clear();
@@ -49,7 +53,11 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 id_card.services = key_file.get_string_list (identity, "Services");
                 id_card.display_name = key_file.get_string (identity, "DisplayName");
                 id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
-                
+                if (key_file.has_key (identity, "StorePassword")) {
+                    id_card.store_password = (key_file.get_string (identity, "StorePassword") == "yes");
+                } else {
+                    id_card.store_password = (id_card.password != null) && (id_card.password != "");
+                }
                 
                 if (key_file.has_key (identity, "Rules-Patterns") &&
                     key_file.has_key (identity, "Rules-AlwaysConfirm")) {
@@ -104,13 +112,17 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             key_file.set_string (id_card.display_name, "Issuer", id_card.issuer ?? "");
             key_file.set_string (id_card.display_name, "DisplayName", id_card.display_name ?? "");
             key_file.set_string (id_card.display_name, "Username", id_card.username ?? "");
-            key_file.set_string (id_card.display_name, "Password", id_card.password ?? "");
+            if (id_card.store_password && (id_card.password != null))
+              key_file.set_string (id_card.display_name, "Password", id_card.password);
+            else
+              key_file.set_string (id_card.display_name, "Password", "");
             key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
 
             if (id_card.rules.length > 0) {
               key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
               key_file.set_string_list (id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
             }
+            key_file.set_string (id_card.display_name, "StorePassword", id_card.store_password ? "yes" : "no");
             
             // Trust anchor 
             key_file.set_string (id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert ?? "");

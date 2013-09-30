@@ -6,6 +6,7 @@ class AddIdentityDialog : Dialog
     private Entry issuer_entry;
     private Entry username_entry;
     private Entry password_entry;
+    private CheckButton remember_checkbutton;
     
     public string display_name {
         get { return displayname_entry.get_text(); }
@@ -21,6 +22,10 @@ class AddIdentityDialog : Dialog
 
     public string password {
         get { return password_entry.get_text (); }
+    }
+
+    public bool store_password {
+        get { return remember_checkbutton.active; }
     }
 
     public AddIdentityDialog ()
@@ -52,7 +57,7 @@ class AddIdentityDialog : Dialog
         this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
-        var remember_checkbutton = new CheckButton.with_label (_("Remember password"));
+        this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
 
         set_atk_relation (displayname_label, displayname_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);

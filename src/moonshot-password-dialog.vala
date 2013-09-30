@@ -13,9 +13,9 @@ class AddPasswordDialog : Dialog
         get { return remember_checkbutton.get_active (); }
     }
 
-    public AddPasswordDialog ()
+    public AddPasswordDialog (IdCard id_card, IdentityRequest request)
     {
-        this.set_title (_("Please enter your password"));
+        this.set_title (_("Please enter password for ") + id_card.display_name);
         this.set_modal (true);
 
         this.add_buttons (_("Send"), ResponseType.OK,
@@ -24,6 +24,16 @@ class AddPasswordDialog : Dialog
 
         var content_area = this.get_content_area ();
         ((Box) content_area).set_spacing (12);
+
+        var service_label = new Label (_("for use with:"));
+        service_label.set_alignment (1, (float) 0.5);
+        var service_value = new Label (request.service);
+        service_value.set_alignment (0, (float) 0.5);
+
+        var nai_label = new Label (_("Network Access Identifier:"));
+        nai_label.set_alignment (1, (float) 0.5);
+        var nai_value = new Label (id_card.nai);
+        nai_value.set_alignment (0, (float) 0.5);
 
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
@@ -35,9 +45,13 @@ class AddPasswordDialog : Dialog
 
         set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
-        var table = new Table (2, 2, false);
+        var table = new Table (4, 2, false);
         table.set_col_spacings (10);
         table.set_row_spacings (10);
+        table.attach_defaults (service_label, 0, 1, 0, 1);
+        table.attach_defaults (service_value, 1, 2, 0, 1);
+        table.attach_defaults (nai_label, 0, 1, 1, 2);
+        table.attach_defaults (nai_value, 1, 2, 1, 2);
         table.attach_defaults (password_label, 0, 1, 2, 3);
         table.attach_defaults (password_entry, 1, 2, 2, 3);
         table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
@@ -49,7 +63,7 @@ class AddPasswordDialog : Dialog
         ((Container) content_area).add (vbox);
 
         this.set_border_width (6);
-        this.set_resizable (false);
+        //this.set_resizable (false);
         this.show_all ();
     }
 
