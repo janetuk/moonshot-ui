@@ -21,12 +21,12 @@ Description: Moonshot Identity Selector
 Package: moonshot-ui-dev
 Architecture: any
 Section: libdevel
-Depends: libmoonshot0 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libmoonshot1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
 Description: Moonshot Identity Development Files
  Project moonshot provides federated authentication using EAP, RADIUS
  and SAML to applications beyond the web platform. 
 
-Package: libmoonshot0
+Package: libmoonshot1
 Architecture: any
 Section: libdevel
 Depends: ${shlibs:Depends}, ${misc:Depends}

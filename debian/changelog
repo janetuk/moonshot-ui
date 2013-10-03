@@ -1,8 +1,9 @@
-moonshot-ui (0.6-1) UNRELEASED; urgency=low
+moonshot-ui (0.6-2) UNRELEASED; urgency=low
 
   * New upstream version
+  * Increment shlibs version for libmoonshot
 
- -- Sam Hartman <hartmans@debian.org>  Mon, 30 Sep 2013 13:38:43 -0400
+ -- Sam Hartman <hartmans@debian.org>  Thu, 03 Oct 2013 15:51:10 -0400
 
 moonshot-ui (0.5+20130510-1.1) UNRELEASED; urgency=low
 
