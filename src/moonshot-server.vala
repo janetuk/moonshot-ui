@@ -141,6 +141,8 @@ public class MoonshotServer : Object {
       idcard.display_name = display_name;
       idcard.username = user_name;
       idcard.password = password;
+      if ((password != null) && (password != ""))
+        idcard.store_password = true;
       idcard.issuer = realm;
       idcard.services = services;
       idcard.trust_anchor.ca_cert = ca_cert;
