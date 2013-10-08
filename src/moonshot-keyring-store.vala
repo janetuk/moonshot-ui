@@ -37,12 +37,12 @@ public class KeyringStore : Object, IIdentityCardStore {
 	match.append_string(keyring_store_attribute, keyring_store_version);
 	GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
-        items.foreach((entry) => {
+        foreach(unowned GnomeKeyring.Found entry in items) {
             GnomeKeyring.Result result = GnomeKeyring.item_delete_sync(null, entry.item_id);
             if (result != GnomeKeyring.Result.OK) {
                 stdout.printf("GnomeKeyring.item_delete_sync() failed. result: %d", result);
             }
-        });
+        }
     }
      
     private void load_id_cards() {
