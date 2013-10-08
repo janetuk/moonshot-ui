@@ -1,3 +1,9 @@
+moonshot-ui (0.6-3) unstable; urgency=low
+
+  * Include gnome keyring and moonshot-webp fixes
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 08 Oct 2013 09:09:38 -0400
+
 moonshot-ui (0.6-2) UNRELEASED; urgency=low
 
   * New upstream version
