@@ -10,11 +10,11 @@ namespace WebProvisioning
     int force_flat_file_store = 0;
     bool bad_switch = false;
     for (arg_index = 1; arg_index < args.length; arg_index++) {
-      int index = 0;
-      unichar c = 0;
       string arg = args[arg_index];
-      if (arg.get_next_char(ref index, out c)) {
-        if ((c=='-') && arg.get_next_char(ref index, out c)) {
+      unichar c = arg.get_char();
+      if (c=='-') {
+          arg = arg.next_char();
+          c = arg.get_char();
           switch (c) {
             case 'f':
               force_flat_file_store = 1;
@@ -23,8 +23,8 @@ namespace WebProvisioning
               bad_switch = true;
               break;
           }
-        } else
-          break; // arg is not a switch; presume it's the file
+      } else {
+        break; // arg is not a switch; presume it's the file
       }
     }
     if (bad_switch || (arg_index != args.length - 1))
