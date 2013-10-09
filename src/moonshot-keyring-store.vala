@@ -59,7 +59,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             int rules_always_confirm_index = -1;
             string store_password = null;
             for (i=0; i<entry.attributes.len; i++) {
-                var attribute =  ((GnomeKeyring.Attribute *) entry.attributes.data[i]);
+                var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
 		string value = attribute.string_value;
             	if (attribute.name == "Issuer") {
                     id_card.issuer = value;
@@ -86,8 +86,8 @@ public class KeyringStore : Object, IIdentityCardStore {
                 }
             }
             if ((rules_always_confirm_index != -1) && (rules_patterns_index != -1)) {
-                string rules_patterns_all = ((GnomeKeyring.Attribute *) entry.attributes.data[rules_patterns_index]) .string_value;
-                string rules_always_confirm_all = ((GnomeKeyring.Attribute *) entry.attributes.data[rules_always_confirm_index]) .string_value;
+                string rules_patterns_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_patterns_index].string_value;
+                string rules_always_confirm_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_always_confirm_index].string_value;
                 string [] rules_always_confirm = rules_always_confirm_all.split(";");
                 string [] rules_patterns = rules_patterns_all.split(";");
                 if (rules_patterns.length == rules_always_confirm.length) {
