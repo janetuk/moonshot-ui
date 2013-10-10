@@ -18,6 +18,15 @@ Description: Moonshot Identity Selector
  Project moonshot provides federated authentication using EAP, RADIUS
  and SAML to applications beyond the web platform. 
 
+Package: moonshot-ui-dbg
+Section: debug
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Moonshot Identity Selector Debug Symbols
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform. 
+
 Package: moonshot-ui-dev
 Architecture: any
 Section: libdevel
@@ -28,7 +37,7 @@ Description: Moonshot Identity Development Files
 
 Package: libmoonshot1
 Architecture: any
-Section: libdevel
+Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Moonshot Identity Shared Library
  Project moonshot provides federated authentication using EAP, RADIUS
