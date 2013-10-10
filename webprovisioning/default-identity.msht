@@ -1,0 +1,14 @@
+<identities>
+  <identity>
+    <display-name>steve</display-name>
+    <user>steve</user>
+    <password>testing</password>
+    <realm>local</realm>
+    <selection-rules>
+      <rule>
+        <pattern>*</pattern>
+        <always-confirm>false</always-confirm>
+      </rule>
+    </selection-rules>
+  </identity>
+</identities>

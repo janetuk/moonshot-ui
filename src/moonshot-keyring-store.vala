@@ -37,12 +37,12 @@ public class KeyringStore : Object, IIdentityCardStore {
 	match.append_string(keyring_store_attribute, keyring_store_version);
 	GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
-        items.foreach((entry) => {
+        foreach(unowned GnomeKeyring.Found entry in items) {
             GnomeKeyring.Result result = GnomeKeyring.item_delete_sync(null, entry.item_id);
             if (result != GnomeKeyring.Result.OK) {
                 stdout.printf("GnomeKeyring.item_delete_sync() failed. result: %d", result);
             }
-        });
+        }
     }
      
     private void load_id_cards() {
@@ -52,14 +52,14 @@ public class KeyringStore : Object, IIdentityCardStore {
 	match.append_string(keyring_store_attribute, keyring_store_version);
 	GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
-        items.foreach((entry) => {
+        foreach(unowned GnomeKeyring.Found entry in items) {
             IdCard id_card = new IdCard ();
             int i;
             int rules_patterns_index = -1;
             int rules_always_confirm_index = -1;
             string store_password = null;
             for (i=0; i<entry.attributes.len; i++) {
-                var attribute = entry.attributes.data[i];
+                var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
 		string value = attribute.string_value;
             	if (attribute.name == "Issuer") {
                     id_card.issuer = value;
@@ -86,8 +86,8 @@ public class KeyringStore : Object, IIdentityCardStore {
                 }
             }
             if ((rules_always_confirm_index != -1) && (rules_patterns_index != -1)) {
-                string rules_patterns_all = entry.attributes.data[rules_patterns_index].string_value;
-                string rules_always_confirm_all = entry.attributes.data[rules_always_confirm_index].string_value;
+                string rules_patterns_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_patterns_index].string_value;
+                string rules_always_confirm_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_always_confirm_index].string_value;
                 string [] rules_always_confirm = rules_always_confirm_all.split(";");
                 string [] rules_patterns = rules_patterns_all.split(";");
                 if (rules_patterns.length == rules_always_confirm.length) {
@@ -110,7 +110,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             else
                 id_card.password = null;
             id_card_list.add(id_card);
-        });
+        }
     }
 
     public void store_id_cards () {
