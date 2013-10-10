@@ -10,6 +10,8 @@ bin_PROGRAMS = \
          src/moonshot-webp
 pkglibexec_SCRIPTS = moonshot-dbus-launch
 
+DIST_pkgdata_DATA = webprovisioning/default-identity.msht
+
 AM_CFLAGS = -g -O0 -Wall
 
 AM_CPPFLAGS =  \
