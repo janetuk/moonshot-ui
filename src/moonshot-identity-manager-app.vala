@@ -316,9 +316,9 @@ public class IdentityManagerApp {
 static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
 const GLib.OptionEntry[] options = {
-    {"DBusLaunch",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
+    {"dbus-launched",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
      ref explicitly_launched,"launch for dbus rpc use",null},
-    {"FlatFileStore",0,0,GLib.OptionArg.NONE,
+    {"flat-file-store",0,0,GLib.OptionArg.NONE,
      ref use_flat_file_store,"force use of flat file identity store (used by default only for headless operation)",null},
     {null}
 };
