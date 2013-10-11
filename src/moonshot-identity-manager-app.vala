@@ -335,10 +335,14 @@ public static int main(string[] args){
             explicitly_launched = false;
         } else {
             try {
-                Gtk.init_with_args(ref args, _(""), options, null);
+                if (!Gtk.init_with_args(ref args, _(""), options, null)) {
+                    stdout.printf(_("unable to initialize window\n"));
+                    return -1;
+                }
             } catch (GLib.Error e) {
                 stdout.printf(_("error: %s\n"),e.message);
-                stdout.printf(_("Run '%s --help' to see a full list of available options"), args[0]);
+                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+                return -1;
             }
         }
 
