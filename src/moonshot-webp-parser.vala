@@ -29,13 +29,15 @@ namespace WebProvisioning
     }
     if (bad_switch || (arg_index != args.length - 1))
     {
-      error ("Usage %s [-f] WEB_PROVISIONING_FILE\n -f: add identities to flat file store", args[0]);
+      stdout.printf (_("Usage %s [-f] WEB_PROVISIONING_FILE\n -f: add identities to flat file store.\n"), args[0]);
+      return -1;
     }
     string webp_file = args[arg_index];
     
     if (!FileUtils.test (webp_file, FileTest.EXISTS | FileTest.IS_REGULAR))
     {
-      error ("%s does not exist", webp_file);
+      stdout.printf (_("%s does not exist\n"), webp_file);
+      return -1;
     }
     
     var webp = new Parser (webp_file);
