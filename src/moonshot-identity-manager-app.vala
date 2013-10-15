@@ -332,6 +332,16 @@ public static int main(string[] args){
 #endif
 
         if (headless) {
+            try {
+                var opt_context = new OptionContext(null);
+                opt_context.set_help_enabled (true);
+                opt_context.add_main_entries (options, null);
+                opt_context.parse(ref args);
+            } catch (OptionError e) {
+                stdout.printf(_("error: %s\n"),e.message);
+                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+                return -1;
+            }
             explicitly_launched = false;
         } else {
             try {
