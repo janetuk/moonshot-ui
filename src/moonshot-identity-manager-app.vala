@@ -354,6 +354,7 @@ public static int main(string[] args){
                 stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
                 return -1;
             }
+            gtk_available = true;
         }
 
 #if OS_WIN32

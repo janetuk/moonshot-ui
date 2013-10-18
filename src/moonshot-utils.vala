@@ -14,8 +14,12 @@ public Gdk.Pixbuf? find_icon_sized (string name, Gtk.IconSize icon_size)
  * load them manually.
  */
 
+public bool gtk_available = false;
+
 public Gdk.Pixbuf? find_icon (string name, int size)
 {
+    if (!gtk_available)
+        return null;
     try
     {
 #if OS_WIN32
