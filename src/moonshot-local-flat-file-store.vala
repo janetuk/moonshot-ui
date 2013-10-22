@@ -52,7 +52,6 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 id_card.password = key_file.get_string (identity, "Password");
                 id_card.services = key_file.get_string_list (identity, "Services");
                 id_card.display_name = key_file.get_string (identity, "DisplayName");
-                id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
                 if (key_file.has_key (identity, "StorePassword")) {
                     id_card.store_password = (key_file.get_string (identity, "StorePassword") == "yes");
                 } else {

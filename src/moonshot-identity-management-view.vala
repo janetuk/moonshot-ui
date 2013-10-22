@@ -257,7 +257,6 @@ public class IdentityManagerView : Window {
         id_card.password = dialog.password;
         id_card.store_password = dialog.store_password;
         id_card.services = {};
-        id_card.set_data("pixbuf", find_icon ("avatar-default", 48));
 
         return id_card;
     }
@@ -267,7 +266,7 @@ public class IdentityManagerView : Window {
         TreeIter   iter;
         Gdk.Pixbuf pixbuf;
         this.listmodel->append (out iter);
-        pixbuf = id_card.get_data("pixbuf");
+        pixbuf = get_pixbuf(id_card);
         listmodel->set (iter,
                        Columns.IDCARD_COL, id_card,
                        Columns.LOGO_COL, pixbuf,
@@ -331,7 +330,6 @@ public class IdentityManagerView : Window {
 #endif
 
         if (ret == Gtk.ResponseType.YES) {
-            id_card.set_data ("pixbuf", find_icon ("avatar-default", 48));
             this.identities_manager.add_card (id_card, force_flat_file_store);
             return true;
         }

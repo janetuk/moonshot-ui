@@ -95,7 +95,7 @@ class IdCardWidget : Box
     {
         this.id_card = id_card;
 
-        var image = new Image.from_pixbuf (id_card.get_data ("pixbuf"));
+        var image = new Image.from_pixbuf (get_pixbuf(id_card));
 
         label = new Label (null);
         label.set_alignment ((float) 0, (float) 0.5);
