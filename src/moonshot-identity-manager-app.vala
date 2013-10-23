@@ -192,8 +192,23 @@ public class IdentityManagerApp {
             }
             if (identity == null)
                 identity = request.candidates.nth_data (0);
-            if (identity == null)
-                confirm = true;
+            if ((identity != null) && 
+                ((identity.password == null) || (identity.password == "")))
+                identity.password = request.password;
+            if (identity == null) {
+                if (has_nai) {
+                    // create a temp identity
+                    string[] components = request.nai.split("@", 2);
+                    identity = new IdCard();
+                    identity.display_name = request.nai;
+                    identity.username = components[0];
+                    if (components.length > 1)
+                        identity.issuer = components[1];
+                    identity.password = request.password;
+                } else {
+                    confirm = true;
+                }
+            }
 
             /* TODO: If candidate list empty return fail */
             
