@@ -436,8 +436,9 @@ public class IdentityManagerView : Window {
         this.request_queue.push_tail (request);
     }
 
-    public void check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
+    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
     {
+        IdCard retval = identity;
         if ((identity.password == "") && !identity.IsNoIdentity())
         {
             var dialog = new AddPasswordDialog (identity, request);
@@ -447,7 +448,7 @@ public class IdentityManagerView : Window {
             case ResponseType.OK:
                 identity.password = dialog.password;
                 identity.store_password = dialog.remember;
-                model.update_card(identity);
+                retval = model.update_card(identity);
                 break;
             default:
                 identity = null;
@@ -456,6 +457,7 @@ public class IdentityManagerView : Window {
 
             dialog.destroy ();
         }
+        return retval;
     }
 
     public void send_identity_cb (IdCard identity)

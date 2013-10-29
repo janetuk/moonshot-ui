@@ -225,7 +225,7 @@ public class IdentityManagerApp {
         Idle.add(
             () => {
                 if (view != null) {
-                    view.check_add_password(identity, request, model);
+                    identity = view.check_add_password(identity, request, model);
                 }
                 request.return_identity (identity);
 // The following occasionally causes the app to exit without sending the dbus

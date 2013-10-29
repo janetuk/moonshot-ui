@@ -72,7 +72,7 @@ public class IdentityRequest : Object {
                 services[id_card.services.length] = this.service;
                 id_card.services = services;
 
-                this.parent_app.model.update_card (id_card);
+                this.id_card = this.parent_app.model.update_card (id_card);
             }
         }
 

@@ -9,10 +9,14 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         store_id_cards ();
     }
 
-    public void update_card(IdCard card) {
+    public IdCard? update_card(IdCard card) {
         id_card_list.remove(card);
         id_card_list.add(card);
         store_id_cards ();
+        foreach(IdCard idcard in id_card_list)
+            if (idcard.display_name == card.display_name)
+                return idcard;
+        return null;
      }
 
      public void remove_card(IdCard card) {
