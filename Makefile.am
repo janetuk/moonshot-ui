@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
  
 SUBDIRS = po
 
+moonshotsysconfdir=${sysconfdir}/moonshot
 
 lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 
@@ -11,6 +12,7 @@ bin_PROGRAMS = \
 pkglibexec_SCRIPTS = moonshot-dbus-launch
 
 dist_pkgdata_DATA = webprovisioning/default-identity.msht
+dist_moonshotsysconf_DATA=flatstore-users
 
 AM_CFLAGS = -g -O0 -Wall
 
@@ -18,6 +20,7 @@ AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
 	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
+        -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
@@ -54,7 +57,8 @@ src_moonshot_SOURCES = \
         src/moonshot-server.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-provisioning-common.vala \
-        src/moonshot-utils.vala
+        src/moonshot-utils.vala \
+        src/moonshot-futils.c
 
 src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \

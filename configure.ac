@@ -19,7 +19,7 @@ AM_MAINTAINER_MODE([enable])
 
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
-AC_CHECK_FUNCS_ONCE(geteuid)
+AC_CHECK_FUNCS_ONCE(geteuid getpwuid)
 
 # Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])

@@ -49,3 +49,23 @@ public Gdk.Pixbuf? find_icon (string name, int size)
         return null;
     }
 }
+
+public extern unowned string GetUserName();
+public extern unowned string GetFlatStoreUsersFilePath();
+
+public bool UserForcesFlatFileStore()
+{
+    string username = GetUserName();
+    string flatstore_users_filename = GetFlatStoreUsersFilePath();
+    FileStream flatstore_users = FileStream.open(flatstore_users_filename, "r");
+    if (flatstore_users == null) {
+        return false;
+    }
+    string? flatstore_username = null;
+    while ((flatstore_username = flatstore_users.read_line()) != null) {
+        if (username == flatstore_username) {
+            return true;
+        }
+    }
+    return false;
+}
