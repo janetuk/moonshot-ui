@@ -4,7 +4,6 @@ using Gtk;
 public class IdentityManagerView : Window {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
-    private const int RIGHT_PANE_WIDTH = 275;
     protected IdentityManagerApp parent_app;
 #if OS_MACOS
 	public OSXApplication osxApp;
@@ -749,7 +748,6 @@ SUCH DAMAGE.
 
         this.no_identity_title = new Label (_("No Identity: Send this identity to services which should not use Moonshot"));
         no_identity_title.set_alignment(0, (float ) 0.5);
-        no_identity_title.set_size_request(RIGHT_PANE_WIDTH, -1);
         no_identity_title.set_line_wrap(true);
         no_identity_title.show();
 
@@ -794,11 +792,10 @@ SUCH DAMAGE.
         this.vbox_right = new VBox (false, 18);
         vbox_right.pack_start (login_vbox, false, true, 0);
         vbox_right.pack_start (services_vbox, false, true, 0);
-        vbox_right.set_size_request( RIGHT_PANE_WIDTH, -1 );
 
         var hbox = new HBox (false, 12);
-        hbox.pack_start (vbox_left, true, true, 0);
-        hbox.pack_start (vbox_right, false, false, 0);
+        hbox.pack_start (vbox_left, false, false, 0);
+        hbox.pack_start (vbox_right, true, true, 0);
 
         var main_vbox = new VBox (false, 0);
         main_vbox.set_border_width (12);
