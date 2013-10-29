@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
@@ -66,6 +66,7 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_datadir}/moonshot-ui
 %{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
+%conf %{_sysconfdir}/moonshot/*
 %doc webprovisioning/default-identity.msht
 
 %files devel
