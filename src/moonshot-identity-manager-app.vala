@@ -40,8 +40,9 @@ public class IdentityManagerApp {
     }
 	
     public IdentityManagerApp (bool headless, bool use_flat_file_store) {
+        use_flat_file_store |= UserForcesFlatFileStore();
 #if GNOME_KEYRING
-        bool keyring_available = GnomeKeyring.is_available();
+        bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
 #else
         bool keyring_available = false;
 #endif
