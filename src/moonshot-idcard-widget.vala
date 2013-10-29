@@ -26,14 +26,20 @@ class IdCardWidget : Box
         set_idcard_color ();
     }
 
-    private bool button_press_cb ()
+    public void expand ()
     {
-        this.hbutton_box.set_visible (!hbutton_box.get_visible ());
+        this.hbutton_box.set_visible (true);
 
         set_idcard_color ();
+        this.expanded ();
+    }
 
-        if (hbutton_box.get_visible () == true)
-          this.expanded ();
+    private bool button_press_cb ()
+    {
+        if (hbutton_box.get_visible ())
+            collapse ();
+        else
+            expand ();
 
         return false;
     }
@@ -95,7 +101,7 @@ class IdCardWidget : Box
     {
         this.id_card = id_card;
 
-        var image = new Image.from_pixbuf (id_card.get_data ("pixbuf"));
+        var image = new Image.from_pixbuf (get_pixbuf(id_card));
 
         label = new Label (null);
         label.set_alignment ((float) 0, (float) 0.5);

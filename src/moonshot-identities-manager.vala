@@ -127,13 +127,15 @@ public class IdentityManagerModel : Object {
         card_list_changed();
      }
 
-     public void update_card(IdCard card) {
+     public IdCard update_card(IdCard card) {
+        IdCard retval;
         if (!card.store_password)
             password_table.CachePassword(card, store);
         else
             password_table.RemovePassword(card, store);
-        store.update_card(card);
+        retval = store.update_card(card);
         card_list_changed();
+        return retval;
      }
 
      public void remove_card(IdCard card) {

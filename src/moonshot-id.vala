@@ -47,8 +47,6 @@ public class IdCard : Object
 
   public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
   
-  public Gdk.Pixbuf pixbuf { get; set; default = null; }    
-
   public unowned string nai { get {  _nai = username + "@" + issuer; return _nai;}}
 
   public bool store_password { get; set; default = false; }

@@ -192,8 +192,23 @@ public class IdentityManagerApp {
             }
             if (identity == null)
                 identity = request.candidates.nth_data (0);
-            if (identity == null)
-                confirm = true;
+            if ((identity != null) && 
+                ((identity.password == null) || (identity.password == "")))
+                identity.password = request.password;
+            if (identity == null) {
+                if (has_nai) {
+                    // create a temp identity
+                    string[] components = request.nai.split("@", 2);
+                    identity = new IdCard();
+                    identity.display_name = request.nai;
+                    identity.username = components[0];
+                    if (components.length > 1)
+                        identity.issuer = components[1];
+                    identity.password = request.password;
+                } else {
+                    confirm = true;
+                }
+            }
 
             /* TODO: If candidate list empty return fail */
             
@@ -210,7 +225,7 @@ public class IdentityManagerApp {
         Idle.add(
             () => {
                 if (view != null) {
-                    view.check_add_password(identity, request, model);
+                    identity = view.check_add_password(identity, request, model);
                 }
                 request.return_identity (identity);
 // The following occasionally causes the app to exit without sending the dbus
@@ -316,9 +331,9 @@ public class IdentityManagerApp {
 static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
 const GLib.OptionEntry[] options = {
-    {"DBusLaunch",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
+    {"dbus-launched",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
      ref explicitly_launched,"launch for dbus rpc use",null},
-    {"FlatFileStore",0,0,GLib.OptionArg.NONE,
+    {"flat-file-store",0,0,GLib.OptionArg.NONE,
      ref use_flat_file_store,"force use of flat file identity store (used by default only for headless operation)",null},
     {null}
 };
@@ -332,14 +347,29 @@ public static int main(string[] args){
 #endif
 
         if (headless) {
+            try {
+                var opt_context = new OptionContext(null);
+                opt_context.set_help_enabled (true);
+                opt_context.add_main_entries (options, null);
+                opt_context.parse(ref args);
+            } catch (OptionError e) {
+                stdout.printf(_("error: %s\n"),e.message);
+                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+                return -1;
+            }
             explicitly_launched = false;
         } else {
             try {
-                Gtk.init_with_args(ref args, _(""), options, null);
+                if (!Gtk.init_with_args(ref args, _(""), options, null)) {
+                    stdout.printf(_("unable to initialize window\n"));
+                    return -1;
+                }
             } catch (GLib.Error e) {
                 stdout.printf(_("error: %s\n"),e.message);
-                stdout.printf(_("Run '%s --help' to see a full list of available options"), args[0]);
+                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+                return -1;
             }
+            gtk_available = true;
         }
 
 #if OS_WIN32

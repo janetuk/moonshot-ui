@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
@@ -16,6 +16,7 @@ BuildRequires:  	dbus-devel
 BuildRequires: 		dbus-glib-devel
 BuildRequires: 		desktop-file-utils
 BuildRequires: 		shared-mime-info
+BuildRequires: gnome-keyring-devel
 
 #Requires:       
 
@@ -62,6 +63,7 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
+%{_datadir}/moonshot-ui
 %{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 %doc webprovisioning/default-identity.msht

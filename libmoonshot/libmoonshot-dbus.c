@@ -111,6 +111,16 @@ static DBusGConnection *dbus_launch_moonshot()
 	return connection;
 }
 
+static int is_setid()
+{
+#ifdef HAVE_GETEUID
+  if ((getuid() != geteuid()) || 
+      (getgid() != getegid())) {
+    return 1;
+  }
+#endif
+  return 0;
+}
 
 static DBusGProxy *dbus_connect (MoonshotError **error)
 {
@@ -129,6 +139,12 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
      * libdbus here because dbus-glib doesn't handle autostarting the service.
      * If/when we move to GDBus this code can become a one-liner.
      */
+
+    if (is_setid()) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+	                             "Cannot use IPC while setid");
+        return NULL;
+    }
 
     connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
