@@ -16,6 +16,7 @@ BuildRequires:  	dbus-devel
 BuildRequires: 		dbus-glib-devel
 BuildRequires: 		desktop-file-utils
 BuildRequires: 		shared-mime-info
+BuildRequires: gnome-keyring-devel
 
 #Requires:       
 
