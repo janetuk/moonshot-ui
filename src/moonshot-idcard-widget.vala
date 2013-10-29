@@ -26,14 +26,20 @@ class IdCardWidget : Box
         set_idcard_color ();
     }
 
-    private bool button_press_cb ()
+    public void expand ()
     {
-        this.hbutton_box.set_visible (!hbutton_box.get_visible ());
+        this.hbutton_box.set_visible (true);
 
         set_idcard_color ();
+        this.expanded ();
+    }
 
-        if (hbutton_box.get_visible () == true)
-          this.expanded ();
+    private bool button_press_cb ()
+    {
+        if (hbutton_box.get_visible ())
+            collapse ();
+        else
+            expand ();
 
         return false;
     }

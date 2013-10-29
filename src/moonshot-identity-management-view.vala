@@ -190,6 +190,11 @@ public class IdentityManagerView : Window {
     }
 
     private void load_id_cards () {
+        string current_idcard_nai = null;
+        if (this.custom_vbox.current_idcard != null) {
+            current_idcard_nai = custom_vbox.current_idcard.id_card.nai;
+            custom_vbox.current_idcard = null;
+        }
         var children = this.custom_vbox.get_children ();
         foreach (var id_card_widget in children) {
         remove_id_card_widget((IdCardWidget)id_card_widget);
@@ -202,31 +207,38 @@ public class IdentityManagerView : Window {
 
         foreach (IdCard id_card in card_list) {
             add_id_card_data (id_card);
-            add_id_card_widget (id_card);
+            IdCardWidget id_card_widget = add_id_card_widget (id_card);
+            if (id_card_widget.id_card.nai == current_idcard_nai) {
+                fill_details(id_card_widget);
+                id_card_widget.expand();
+            }
         }
+        if (custom_vbox.current_idcard == null)
+            fill_details(null);
     }
     
-    private void fill_details (IdCardWidget id_card_widget)
+    private void fill_details (IdCardWidget? id_card_widget)
     {
-       var id_card = id_card_widget.id_card;
-       var vr_children = this.vbox_right.get_children();
-       foreach (var vr_child in vr_children)
-           this.vbox_right.remove(vr_child);
-       if (id_card.display_name == IdCard.NO_IDENTITY) {
-           this.vbox_right.pack_start(no_identity_title, false, true, 0);
-       } else {
-           this.username_entry.set_text (id_card.username);
-           this.password_entry.set_text (id_card.password ?? "");
-           this.vbox_right.pack_start(login_vbox, false, true, 0);
-           this.remember_checkbutton.active = id_card.store_password;
-       }
-       this.vbox_right.pack_start (services_vbox, false, true, 0);
+        var vr_children = this.vbox_right.get_children();
+        foreach (var vr_child in vr_children)
+            this.vbox_right.remove(vr_child);
+        if (id_card_widget != null) {
+            var id_card = id_card_widget.id_card;
+            if (id_card.display_name == IdCard.NO_IDENTITY) {
+	        this.vbox_right.pack_start(no_identity_title, false, true, 0);
+            } else {
+	        this.username_entry.set_text (id_card.username);
+	        this.password_entry.set_text (id_card.password ?? "");
+	        this.vbox_right.pack_start(login_vbox, false, true, 0);
+	        this.remember_checkbutton.active = id_card.store_password;
+            }
+            this.vbox_right.pack_start (services_vbox, false, true, 0);
 
-       var children = this.services_internal_vbox.get_children ();
-       foreach (var hbox in children)
-           services_internal_vbox.remove(hbox);
-       fill_services_vbox (id_card_widget.id_card);
-//       identities_manager.store_id_cards();
+            var children = this.services_internal_vbox.get_children ();
+            foreach (var hbox in children)
+	        services_internal_vbox.remove(hbox);
+            fill_services_vbox (id_card_widget.id_card);
+        }
     }
 
     private void show_details (IdCard id_card)
@@ -297,7 +309,7 @@ public class IdentityManagerView : Window {
         }
     }
 
-    private void add_id_card_widget (IdCard id_card)
+    private IdCardWidget add_id_card_widget (IdCard id_card)
     {
         var id_card_widget = new IdCardWidget (id_card);
         this.custom_vbox.add_id_card_widget (id_card_widget);
@@ -306,6 +318,7 @@ public class IdentityManagerView : Window {
         id_card_widget.send_id.connect ((w) => send_identity_cb (w.id_card));
         id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
         id_card_widget.expanded.connect (fill_details);
+        return id_card_widget;
     }
 
     public bool add_identity (IdCard id_card, bool force_flat_file_store)
@@ -519,43 +532,40 @@ public class IdentityManagerView : Window {
             
             remove_button.clicked.connect ((remove_button) =>
             {
+              var candidate = service_button_map.lookup (remove_button);
+              if (candidate == null)
+                return;
               var dialog = new Gtk.MessageDialog (this,
                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                       Gtk.MessageType.QUESTION,
                                       Gtk.ButtonsType.YES_NO,
                                       _("Are you sure you want to stop '%s' ID Card from being used with %s?"),
                                       custom_vbox.current_idcard.id_card.display_name,
-                                      _("this service"));
+                                      candidate);
               var ret = dialog.run();
               dialog.hide();
               
               if (ret == Gtk.ResponseType.YES)
               {
                 IdCard idcard = custom_vbox.current_idcard.id_card;
-                var candidate = service_button_map.lookup (remove_button);
-
-                SList<string> services = new SList<string>();
+                if (idcard != null) {
+                  SList<string> services = new SList<string>();
                 
-                foreach (string srv in idcard.services)
-                {
-                  if (srv == candidate)
-                    continue;
-                  services.append (srv);
+                  foreach (string srv in idcard.services)
+                  {
+                    if (srv == candidate)
+                      continue;
+                    services.append (srv);
+                  }
+                
+                  idcard.services = new string[services.length()];
+                  for (int j=0; j<idcard.services.length; j++)
+                  {
+                    idcard.services[j] = services.nth_data(j);
+                  }
+                
+                  identities_manager.update_card(idcard);
                 }
-                
-                idcard.services = new string[services.length()];
-                for (int j=0; j<idcard.services.length; j++)
-                {
-                  idcard.services[j] = services.nth_data(j);
-                }
-                
-                var children = services_internal_vbox.get_children ();
-                foreach (var hbox in children)
-                  services_internal_vbox.remove(hbox);
-                
-                fill_services_vbox (idcard);
-                custom_vbox.current_idcard.update_id_card_label ();
-                identities_manager.update_card(idcard);
               }
               
             });
