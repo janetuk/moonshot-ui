@@ -467,13 +467,14 @@ public class IdentityManagerView : Window {
         return retval;
     }
 
-    public void send_identity_cb (IdCard identity)
+    public void send_identity_cb (IdCard id)
     {
+        IdCard identity = id;
         return_if_fail (request_queue.length > 0);
 
 	candidates = null;
         var request = this.request_queue.pop_head ();
-        check_add_password(identity, request, identities_manager);
+        identity = check_add_password(identity, request, identities_manager);
         if (this.request_queue.is_empty())
         {
             candidates = null;
