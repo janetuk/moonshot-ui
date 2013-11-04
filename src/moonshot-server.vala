@@ -49,7 +49,10 @@ public class MoonshotServer : Object {
 
         if ((id_card != null) && (id_card.display_name != IdCard.NO_IDENTITY)) {
             nai_out = id_card.nai;
-            password_out = id_card.password;
+            if ((request.password!=null) && (request.password != ""))
+                password_out = request.password;
+            else
+                password_out = id_card.password;
 
             server_certificate_hash = id_card.trust_anchor.server_cert;
             ca_certificate = id_card.trust_anchor.ca_cert;

@@ -439,23 +439,30 @@ public class IdentityManagerView : Window {
     public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
     {
         IdCard retval = identity;
-        if ((identity.password == "") && !identity.IsNoIdentity())
-        {
-            var dialog = new AddPasswordDialog (identity, request);
-            var result = dialog.run ();
-
-            switch (result) {
-            case ResponseType.OK:
-                identity.password = dialog.password;
-                identity.store_password = dialog.remember;
+        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
+        bool request_has_pw = (request.password != null) && (request.password != "");
+        if ((!idcard_has_pw) && (!identity.IsNoIdentity())) {
+            if (request_has_pw) {
+                identity.password = request.password;
                 retval = model.update_card(identity);
-                break;
-            default:
-                identity = null;
-                break;
-            }
+            } else {
+                var dialog = new AddPasswordDialog (identity, request);
+                var result = dialog.run ();
 
-            dialog.destroy ();
+                switch (result) {
+                case ResponseType.OK:
+                    identity.password = dialog.password;
+                    identity.store_password = dialog.remember;
+                    if (dialog.remember)
+                        identity.temporary = false;
+                    retval = model.update_card(identity);
+                    break;
+                default:
+                    identity = null;
+                    break;
+                }
+                dialog.destroy ();
+            }
         }
         return retval;
     }

@@ -96,16 +96,14 @@ public class IdentityManagerApp {
             bool has_nai = request.nai != null && request.nai != "";
             bool has_srv = request.service != null && request.service != "";
             bool confirm = false;
-            IdCard nai_provided = null;
 
             foreach (IdCard id in model.get_card_list())
             {
-                /* If NAI matches we add id card to the candidate list */
+                /* If NAI matches, use this id card */
                 if (has_nai && request.nai == id.nai)
                 {
-                    nai_provided = id;
-                    request.candidates.append (id);
-                    continue;
+                    identity = id;
+                    break;
                 }
 
                 /* If any service matches we add id card to the candidate list */
@@ -123,7 +121,7 @@ public class IdentityManagerApp {
             }
 
             /* If more than one candidate we dissasociate service from all ids */
-            if (has_srv && request.candidates.length() > 1)
+            if ((identity == null) && has_srv && request.candidates.length() > 1)
             {
                 foreach (IdCard id in request.candidates)
                 {
@@ -161,10 +159,8 @@ public class IdentityManagerApp {
                 }
             }
 
-//            model.store_id_cards ();
-
             /* If there are no candidates we use the service matching rules */
-            if (request.candidates.length () == 0)
+            if ((identity==null) && (request.candidates.length () == 0))
             {
                 foreach (IdCard id in model.get_card_list())
                 {
@@ -181,38 +177,25 @@ public class IdentityManagerApp {
                 }
             }
             
-            if (request.candidates.length () > 1)
-            {
-                if (has_nai && nai_provided != null)
-                {
-                    identity = nai_provided;
-                    confirm = false;
-                }
-                else
-                    confirm = true;
-            }
-            if (identity == null)
-                identity = request.candidates.nth_data (0);
-            if ((identity != null) && 
-                ((identity.password == null) || (identity.password == "")))
+            if ((identity == null) && has_nai) {
+                // create a temp identity
+                string[] components = request.nai.split("@", 2);
+                identity = new IdCard();
+                identity.display_name = request.nai;
+                identity.username = components[0];
+                if (components.length > 1)
+                    identity.issuer = components[1];
                 identity.password = request.password;
+                identity.temporary = true;
+            }
             if (identity == null) {
-                if (has_nai) {
-                    // create a temp identity
-                    string[] components = request.nai.split("@", 2);
-                    identity = new IdCard();
-                    identity.display_name = request.nai;
-                    identity.username = components[0];
-                    if (components.length > 1)
-                        identity.issuer = components[1];
-                    identity.password = request.password;
-                } else {
+                if (request.candidates.length () != 1) {
                     confirm = true;
+                } else {
+                    identity = request.candidates.nth_data (0);                    
                 }
             }
 
-            /* TODO: If candidate list empty return fail */
-            
             if (confirm && (view != null))
             {
                 if (!explicitly_launched)

@@ -109,6 +109,9 @@ public class IdentityManagerModel : Object {
     }
 
     public void add_card(IdCard card, bool force_flat_file_store) {
+        if (card.temporary)
+            return;
+
         string candidate;
         IIdentityCardStore.StoreType saved_store_type = get_store_type();
 
@@ -129,6 +132,11 @@ public class IdentityManagerModel : Object {
 
      public IdCard update_card(IdCard card) {
         IdCard retval;
+        if (card.temporary) {
+            retval = card;
+            return retval;
+        }
+            
         if (!card.store_password)
             password_table.CachePassword(card, store);
         else
