@@ -168,12 +168,17 @@ namespace WebProvisioning
     /* Rules */
     else if (stack.nth_data(0) == "pattern" && pattern_handler (stack))
     {
-      card.rules[card.rules.length - 1].pattern = text;
+      /* use temp index to workaround valac bug */ 
+      int index = card.rules.length - 1;
+      card.rules[index].pattern = text;
     }
     else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler (stack))
     {
-      if (text == "true" || text == "false")
-        card.rules[card.rules.length - 1].always_confirm = text;
+      if (text == "true" || text == "false") {
+        /* use temp index to workaround valac bug */ 
+        int index = card.rules.length - 1;
+        card.rules[index].always_confirm = text;
+      }
     }
     /*Trust anchor*/
     else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler (stack))
