@@ -44,6 +44,7 @@ public class IdCard : Object
   
   public Rule[] rules {get; set; default = {};}
   public string[] services { get; set; default = {}; }
+  public bool temporary {get; set; default = false; }
 
   public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
   

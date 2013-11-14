@@ -17,22 +17,22 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             if (idcard.display_name == card.display_name)
                 return idcard;
         return null;
-     }
+    }
 
-     public void remove_card(IdCard card) {
+    public void remove_card(IdCard card) {
         id_card_list.remove(card);
         store_id_cards ();
     }
 
-     public LinkedList<IdCard> get_card_list() {
-          return id_card_list; 
-     }
+    public LinkedList<IdCard> get_card_list() {
+        return id_card_list; 
+    }
 
-     public IIdentityCardStore.StoreType get_store_type() {
-          return IIdentityCardStore.StoreType.FLAT_FILE;
-     }
+    public IIdentityCardStore.StoreType get_store_type() {
+        return IIdentityCardStore.StoreType.FLAT_FILE;
+    }
      
-     private void load_id_cards() {
+    private void load_id_cards() {
         id_card_list.clear();
         var key_file = new KeyFile ();
         var path = get_data_dir ();
@@ -88,7 +88,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 stdout.printf ("Error:  %s\n", e.message);
             }
         }
-     }
+    }
 
     private string get_data_dir() {
         string path;
