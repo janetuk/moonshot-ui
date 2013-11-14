@@ -1,3 +1,4 @@
+
 namespace WebProvisioning
 { 
   IdCard card;
@@ -168,16 +169,16 @@ namespace WebProvisioning
     /* Rules */
     else if (stack.nth_data(0) == "pattern" && pattern_handler (stack))
     {
-      /* use temp index to workaround valac bug */ 
-      int index = card.rules.length - 1;
-      card.rules[index].pattern = text;
+      /* use temp array to workaround valac 0.10 bug accessing array property length */ 
+      var temp = card.rules;
+      card.rules[temp.length - 1].pattern = text;
     }
     else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler (stack))
     {
       if (text == "true" || text == "false") {
-        /* use temp index to workaround valac bug */ 
-        int index = card.rules.length - 1;
-        card.rules[index].always_confirm = text;
+        /* use temp array to workaround valac 0.10 bug accessing array property length*/
+        var temp = card.rules;
+        card.rules[temp.length - 1].always_confirm = text;
       }
     }
     /*Trust anchor*/
