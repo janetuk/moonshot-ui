@@ -175,6 +175,7 @@ AM_VALAFLAGS += \
 	--pkg dbus-glib-1 \
 	--define=IPC_DBUS_GLIB \
 	--define=IPC_DBUS
+AM_CPPFLAGS += -DIPC_DBUS_GLIB
 else
 AM_VALAFLAGS += \
 	--pkg gio-2.0 \
