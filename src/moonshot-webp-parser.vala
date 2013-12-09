@@ -49,12 +49,15 @@ namespace WebProvisioning
       string[] rules_patterns = {};
       string[] rules_always_confirm = {};
         
-      if (card.rules.length > 0)
+      /* use temp arrays to workaround centos array property bug */
+      var rules = card.rules;
+      var services = card.services;
+      if (rules.length > 0)
       {
         int i = 0;
-        rules_patterns = new string[card.rules.length];
-        rules_always_confirm = new string[card.rules.length];
-        foreach (Rule r in card.rules)
+        rules_patterns = new string[rules.length];
+        rules_always_confirm = new string[rules.length];
+        foreach (Rule r in rules)
         {
           rules_patterns[i] = r.pattern;
           rules_always_confirm[i] = r.always_confirm;
@@ -68,7 +71,7 @@ namespace WebProvisioning
                                 card.issuer,
                                 rules_patterns,
                                 rules_always_confirm,
-                                card.services,
+                                services,
                                 card.trust_anchor.ca_cert,
                                 card.trust_anchor.subject,
                                 card.trust_anchor.subject_alt,

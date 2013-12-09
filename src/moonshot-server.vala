@@ -155,13 +155,15 @@ public class MoonshotServer : Object {
 
       if (rules_patterns.length == rules_always_confirm.length)
       {
-        idcard.rules = new Rule[rules_patterns.length];
+        /* workaround Centos vala array property bug: use temp array */
+        Rule[] rules = new Rule[rules_patterns.length];
          
-        for (int i=0; i<idcard.rules.length; i++)
+        for (int i=0; i<rules.length; i++)
         { 
-          idcard.rules[i].pattern = rules_patterns[i];
-          idcard.rules[i].always_confirm = rules_always_confirm[i];
+          rules[i].pattern = rules_patterns[i];
+          rules[i].always_confirm = rules_always_confirm[i];
         }
+        idcard.rules = rules;
       }
 
       return parent_app.add_identity (idcard, force_flat_file_store!=0);
