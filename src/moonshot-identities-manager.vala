@@ -85,7 +85,8 @@ public class IdentityManagerModel : Object {
     public bool display_name_is_valid (string name,
                                        out string? candidate)
     {
-        candidate = null;
+        if (&candidate != null)
+          candidate = null;
         foreach (IdCard id_card in this.get_card_list())
         {
           if (id_card.display_name == name)
