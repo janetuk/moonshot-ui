@@ -398,6 +398,7 @@ int moonshot_install_id_card (const char     *display_name,
                               const char     *subject,
                               const char     *subject_alt,
                               const char     *server_cert,
+                              int             force_flat_file_store,
                               MoonshotError **error)
 {
     int success = FALSE;
@@ -426,7 +427,8 @@ int moonshot_install_id_card (const char     *display_name,
                                                 ca_cert,
                                                 subject,
                                                 subject_alt,
-                                                server_cert);
+                                                server_cert,
+                                                force_flat_file_store);
     }
     RPC_EXCEPT {
         *error = moonshot_error_new_from_status (MOONSHOT_ERROR_IPC_ERROR,
