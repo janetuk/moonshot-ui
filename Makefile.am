@@ -79,7 +79,7 @@ if OS_WIN32
 
 
 src_moonshot_CFLAGS = -mwindows
-src_moonshot_webp_CFLAGS = -mwindows
+src_moonshot_webp_CFLAGS = -mconsole
     
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
