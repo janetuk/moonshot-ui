@@ -55,6 +55,7 @@ MoonshotError *moonshot_error_new (MoonshotErrorCode  code,
     buffer_size = _vscprintf (format, args);
     error->message = malloc (buffer_size + 1);
     _vsnprintf (error->message, buffer_size, format, args);
+    error->message[buffer_size] = 0;
     #else
     vasprintf (&error->message, format, args);
     #endif
