@@ -142,7 +142,7 @@ static void launch_server (MoonshotError **error) {
     }
 
     length = 1023;
-    status = RegQueryValueEx (key, NULL, NULL, &value_type, exe_path, &length);
+    status = RegQueryValueEx (key, NULL, NULL, &value_type, (LPBYTE )exe_path, &length);
 
     if (value_type != REG_SZ) {
         *error = moonshot_error_new_with_status
@@ -165,7 +165,6 @@ static void launch_server (MoonshotError **error) {
     }
 
     startup_info.cb = sizeof (startup_info);
-
     success = CreateProcess (exe_path,
                              NULL,
                              NULL,
@@ -231,7 +230,6 @@ static void bind_rpc (MoonshotError **error)
 static void init_rpc (MoonshotError **error)
 {
     static volatile LONG binding_init_flag = 2;
-    int status;
 
     /* Hack to avoid requiring a moonshot_init() function. Windows does not
      * provide any synchronisation primitives that can be statically init'ed,
@@ -274,7 +272,7 @@ int moonshot_get_identity (const char     *nai,
                            char          **subject_alt_name_constraint_out,
                            MoonshotError **error)
 {
-    int success;
+    int success = FALSE;
     RpcAsyncCall call;
 
     init_rpc (error);
@@ -337,7 +335,7 @@ int moonshot_get_default_identity (char          **nai_out,
                                    char          **subject_alt_name_constraint_out,
                                    MoonshotError **error)
 {
-    int success;
+    int success = FALSE;
     RpcAsyncCall call;
 
     init_rpc (error);
@@ -404,6 +402,8 @@ int moonshot_install_id_card (const char     *display_name,
     int success = FALSE;
 
     init_rpc (error);
+    if (*error != NULL)
+        return FALSE;
 
     if (user_name == NULL) user_name = "";
     if (password == NULL) password = "";
@@ -435,7 +435,6 @@ int moonshot_install_id_card (const char     *display_name,
                                                  RPC_GET_EXCEPTION_CODE ());
     }
     RPC_END_EXCEPT
-
     return success;
 }
 
