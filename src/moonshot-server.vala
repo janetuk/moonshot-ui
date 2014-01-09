@@ -290,7 +290,10 @@ public class MoonshotServer : Object {
             // The strings are freed by the RPC runtime
             nai_out = id_card.nai;
             password_out = id_card.password;
-            server_certificate_hash = "certificate";
+            server_certificate_hash = id_card.trust_anchor.server_cert;
+            ca_certificate = id_card.trust_anchor.ca_cert;
+            subject_name_constraint = id_card.trust_anchor.subject;
+            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);
