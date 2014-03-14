@@ -145,8 +145,10 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         try {
             var path = get_data_dir ();
             var filename = Path.build_filename (path, FILE_NAME);
-            FileUtils.set_contents (filename, text, -1);
-        } 
+            var file  = File.new_for_path(filename);
+            var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+            stream.write(text.data);
+        }
         catch (Error e) {
             stdout.printf ("Error:  %s\n", e.message);
         }
