@@ -109,6 +109,44 @@ public class IdentityManagerModel : Object {
         return true;
     }
 
+    private bool remove_duplicates(IdCard card)
+    {
+        bool duplicate_found = false;
+        bool found = false;
+        do {
+           var cards = get_card_list();
+           found = false;
+           foreach (IdCard id_card in cards) {
+               if ((card != id_card) && (id_card.nai == card.nai)) {
+                  stdout.printf("removing duplicate id for '%s'\n", card.nai);
+                  remove_card_internal(id_card);
+                  found = duplicate_found = true;
+                  break;
+               }
+           }
+        } while (found);
+        return duplicate_found;
+    }
+
+    public IdCard? find_id_card(string nai, bool force_flat_file_store) {
+        IdCard? retval = null;
+        IIdentityCardStore.StoreType saved_store_type = get_store_type();
+        if (force_flat_file_store)
+            set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
+
+        foreach (IdCard id in get_card_list()) {
+            if (id.nai == nai) {
+                retval = id;
+                break;
+            }
+        }
+        set_store_type(saved_store_type);
+        if (force_flat_file_store && 
+            (saved_store_type != IIdentityCardStore.StoreType.FLAT_FILE))
+            card_list_changed();
+        return retval;
+    }
+
     public void add_card(IdCard card, bool force_flat_file_store) {
         if (card.temporary)
             return;
@@ -118,6 +156,8 @@ public class IdentityManagerModel : Object {
 
         if (force_flat_file_store)
             set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
+
+        remove_duplicates(card);
 
         if (!display_name_is_valid (card.display_name, out candidate))
         {
@@ -147,10 +187,19 @@ public class IdentityManagerModel : Object {
         return retval;
      }
 
-     public void remove_card(IdCard card) {
-        password_table.RemovePassword(card, store);
-        store.remove_card(card);
-        card_list_changed();
+     private bool remove_card_internal(IdCard card) {
+         if (card.temporary)
+             return false;
+         password_table.RemovePassword(card, store);
+         return store.remove_card(card);
+     }
+
+     public bool remove_card(IdCard card) {
+         if (remove_card_internal(card)) {
+            card_list_changed();
+            return true;
+         }
+         return false;
      }
 
      public void set_store_type(IIdentityCardStore.StoreType type) {

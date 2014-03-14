@@ -329,14 +329,38 @@ public class IdentityManagerView : Window {
          */
         var ret = Gtk.ResponseType.YES;
 #else
-
-        var dialog = new Gtk.MessageDialog (this,
+        Gtk.MessageDialog dialog;
+        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
+        if (prev_id!=null) {
+            int flags = prev_id.Compare(id_card);
+            if (flags == 0) {
+                return false; // no changes, no need to update
+            } else if ((flags & (1<<IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
+                dialog = new Gtk.MessageDialog (this,
+                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
+                                            prev_id.display_name,
+                                            prev_id.nai,
+                                            id_card.display_name);
+            } else {
+                dialog = new Gtk.MessageDialog (this,
+                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            _("Would you like to update ID Card '%s' using nai '%s'?"),
+                                            id_card.display_name,
+                                            id_card.nai);
+            }
+        } else {
+            dialog = new Gtk.MessageDialog (this,
                                             Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                             Gtk.MessageType.QUESTION,
                                             Gtk.ButtonsType.YES_NO,
                                             _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
                                             id_card.display_name);
-
+        }
         var ret = dialog.run ();
         dialog.destroy ();
 #endif

@@ -19,9 +19,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return null;
     }
 
-    public void remove_card(IdCard card) {
-        id_card_list.remove(card);
-        store_id_cards ();
+    public bool remove_card(IdCard card) {
+        if (id_card_list.remove(card)) {
+            store_id_cards ();
+            return true;
+        }
+        return false;
     }
 
     public LinkedList<IdCard> get_card_list() {
