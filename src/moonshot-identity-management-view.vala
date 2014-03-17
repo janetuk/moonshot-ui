@@ -376,7 +376,9 @@ public class IdentityManagerView : Window {
     private void add_identity_manual_cb ()
     {
         var dialog = new AddIdentityDialog ();
-        var result = dialog.run ();
+        int result = ResponseType.CANCEL;
+        while (!dialog.complete)
+            result = dialog.run ();
 
         switch (result) {
         case ResponseType.OK:
