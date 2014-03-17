@@ -262,8 +262,6 @@ public class IdentityManagerView : Window {
 
         id_card.display_name = dialog.display_name;
         id_card.issuer = dialog.issuer;
-        if (id_card.issuer == "")
-            id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
         id_card.store_password = dialog.store_password;
