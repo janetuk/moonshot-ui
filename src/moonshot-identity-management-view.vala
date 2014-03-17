@@ -16,6 +16,7 @@ public class IdentityManagerView : Window {
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
 
+    private Entry issuer_entry;
     private Entry username_entry;
     private Entry password_entry;
     private Label prompting_service;
@@ -226,6 +227,7 @@ public class IdentityManagerView : Window {
             if (id_card.display_name == IdCard.NO_IDENTITY) {
 	        this.vbox_right.pack_start(no_identity_title, false, true, 0);
             } else {
+                this.issuer_entry.set_text (id_card.issuer);
 	        this.username_entry.set_text (id_card.username);
 	        this.password_entry.set_text (id_card.password ?? "");
 	        this.vbox_right.pack_start(login_vbox, false, true, 0);
@@ -788,23 +790,36 @@ SUCH DAMAGE.
         var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
         login_vbox_title.set_alignment (0, (float) 0.5);
+        var issuer_label = new Label (_("Issuer:"));
+        issuer_label.set_alignment (1, (float) 0.5);
+        this.issuer_entry = new Entry ();
+        issuer_entry.set_can_focus (false);
         var username_label = new Label (_("Username:"));
         username_label.set_alignment (1, (float) 0.5);
         this.username_entry = new Entry ();
+        username_entry.set_can_focus (false);
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
         this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
+        password_entry.set_sensitive (false);
         this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
-        var login_table = new Table (3, 3, false);
+        remember_checkbutton.set_sensitive(false);
+        set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
+
+        var login_table = new Table (4, 2, false);
         login_table.set_col_spacings (10);
         login_table.set_row_spacings (10);
-        login_table.attach_defaults (username_label, 0, 1, 0, 1);
-        login_table.attach_defaults (username_entry, 1, 2, 0, 1);
-        login_table.attach_defaults (password_label, 0, 1, 1, 2);
-        login_table.attach_defaults (password_entry, 1, 2, 1, 2);
-        login_table.attach_defaults (remember_checkbutton,  1, 2, 2, 3);
+        login_table.attach_defaults (issuer_label, 0, 1, 0, 1);
+        login_table.attach_defaults (issuer_entry, 1, 2, 0, 1);
+        login_table.attach_defaults (username_label, 0, 1, 1, 2);
+        login_table.attach_defaults (username_entry, 1, 2, 1, 2);
+        login_table.attach_defaults (password_label, 0, 1, 2, 3);
+        login_table.attach_defaults (password_entry, 1, 2, 2, 3);
+        login_table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);
@@ -866,6 +881,14 @@ SUCH DAMAGE.
     {
         this.destroy.connect (Gtk.main_quit);
         this.identities_manager.card_list_changed.connect(this.on_card_list_changed);
+    }
+
+    private static void set_atk_relation (Widget widget, Widget target_widget, Atk.RelationType relationship)
+    {
+        var atk_widget = widget.get_accessible ();
+        var atk_target_widget = target_widget.get_accessible ();
+
+        atk_widget.add_relationship (relationship, atk_target_widget);
     }
 }
 
