@@ -520,7 +520,7 @@ public class IdentityManagerView : Window {
         filter.refilter();
         redraw_id_card_widgets ();
 
-        if (identity != null)
+        if ((identity != null) && (!identity.IsNoIdentity()))
             parent_app.default_id_card = identity;
 
         request.return_identity (identity);
