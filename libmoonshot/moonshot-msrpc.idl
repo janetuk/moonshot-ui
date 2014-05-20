@@ -34,5 +34,6 @@ interface moonshot
                                       [in, string] const char *ca_cert,
                                       [in, string] const char *subject,
                                       [in, string] const char *subject_alt,
-                                      [in, string] const char *server_cert);
+                                      [in, string] const char *server_cert,
+                                      int force_flat_file_store);
 }

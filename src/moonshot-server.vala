@@ -155,13 +155,15 @@ public class MoonshotServer : Object {
 
       if (rules_patterns.length == rules_always_confirm.length)
       {
-        idcard.rules = new Rule[rules_patterns.length];
+        /* workaround Centos vala array property bug: use temp array */
+        Rule[] rules = new Rule[rules_patterns.length];
          
-        for (int i=0; i<idcard.rules.length; i++)
+        for (int i=0; i<rules.length; i++)
         { 
-          idcard.rules[i].pattern = rules_patterns[i];
-          idcard.rules[i].always_confirm = rules_always_confirm[i];
+          rules[i].pattern = rules_patterns[i];
+          rules[i].always_confirm = rules_always_confirm[i];
         }
+        idcard.rules = rules;
       }
 
       return parent_app.add_identity (idcard, force_flat_file_store!=0);
@@ -288,7 +290,10 @@ public class MoonshotServer : Object {
             // The strings are freed by the RPC runtime
             nai_out = id_card.nai;
             password_out = id_card.password;
-            server_certificate_hash = "certificate";
+            server_certificate_hash = id_card.trust_anchor.server_cert;
+            ca_certificate = id_card.trust_anchor.ca_cert;
+            subject_name_constraint = id_card.trust_anchor.subject;
+            subject_alt_name_constraint = id_card.trust_anchor.subject_alt;
 
             return_if_fail (nai_out != null);
             return_if_fail (password_out != null);

@@ -16,11 +16,13 @@ public class IdentityManagerView : Window {
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
 
+    private Entry issuer_entry;
     private Entry username_entry;
     private Entry password_entry;
     private Label prompting_service;
     private Label no_identity_title;
     private CheckButton remember_checkbutton;
+    private Button update_password_button;
 
     private ListStore* listmodel;
     private TreeModelFilter filter;
@@ -188,6 +190,28 @@ public class IdentityManagerView : Window {
         return false;
     }
 
+    private void update_password_cb()
+    {
+        if (this.custom_vbox.current_idcard != null) {
+            var identity = this.custom_vbox.current_idcard.id_card;
+            var dialog = new AddPasswordDialog(identity, null);
+            var result = dialog.run ();
+
+            switch (result) {
+            case ResponseType.OK:
+                identity.password = dialog.password;
+                identity.store_password = dialog.remember;
+                if (dialog.remember)
+                    identity.temporary = false;
+                identity = identities_manager.update_card(identity);
+                break;
+            default:
+                break;
+            }
+            dialog.destroy ();
+        }
+    }
+
     private void load_id_cards () {
         string current_idcard_nai = null;
         if (this.custom_vbox.current_idcard != null) {
@@ -226,6 +250,7 @@ public class IdentityManagerView : Window {
             if (id_card.display_name == IdCard.NO_IDENTITY) {
 	        this.vbox_right.pack_start(no_identity_title, false, true, 0);
             } else {
+                this.issuer_entry.set_text (id_card.issuer);
 	        this.username_entry.set_text (id_card.username);
 	        this.password_entry.set_text (id_card.password ?? "");
 	        this.vbox_right.pack_start(login_vbox, false, true, 0);
@@ -262,8 +287,6 @@ public class IdentityManagerView : Window {
 
         id_card.display_name = dialog.display_name;
         id_card.issuer = dialog.issuer;
-        if (id_card.issuer == "")
-            id_card.issuer = "Issuer";
         id_card.username = dialog.username;
         id_card.password = dialog.password;
         id_card.store_password = dialog.store_password;
@@ -329,14 +352,38 @@ public class IdentityManagerView : Window {
          */
         var ret = Gtk.ResponseType.YES;
 #else
-
-        var dialog = new Gtk.MessageDialog (this,
+        Gtk.MessageDialog dialog;
+        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
+        if (prev_id!=null) {
+            int flags = prev_id.Compare(id_card);
+            if (flags == 0) {
+                return false; // no changes, no need to update
+            } else if ((flags & (1<<IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
+                dialog = new Gtk.MessageDialog (this,
+                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
+                                            prev_id.display_name,
+                                            prev_id.nai,
+                                            id_card.display_name);
+            } else {
+                dialog = new Gtk.MessageDialog (this,
+                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                            Gtk.MessageType.QUESTION,
+                                            Gtk.ButtonsType.YES_NO,
+                                            _("Would you like to update ID Card '%s' using nai '%s'?"),
+                                            id_card.display_name,
+                                            id_card.nai);
+            }
+        } else {
+            dialog = new Gtk.MessageDialog (this,
                                             Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                             Gtk.MessageType.QUESTION,
                                             Gtk.ButtonsType.YES_NO,
                                             _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
                                             id_card.display_name);
-
+        }
         var ret = dialog.run ();
         dialog.destroy ();
 #endif
@@ -352,7 +399,9 @@ public class IdentityManagerView : Window {
     private void add_identity_manual_cb ()
     {
         var dialog = new AddIdentityDialog ();
-        var result = dialog.run ();
+        int result = ResponseType.CANCEL;
+        while (!dialog.complete)
+            result = dialog.run ();
 
         switch (result) {
         case ResponseType.OK:
@@ -494,7 +543,7 @@ public class IdentityManagerView : Window {
         filter.refilter();
         redraw_id_card_widgets ();
 
-        if (identity != null)
+        if ((identity != null) && (!identity.IsNoIdentity()))
             parent_app.default_id_card = identity;
 
         request.return_identity (identity);
@@ -764,23 +813,40 @@ SUCH DAMAGE.
         var login_vbox_title = new Label (_("Login: "));
         label_make_bold (login_vbox_title);
         login_vbox_title.set_alignment (0, (float) 0.5);
+        var issuer_label = new Label (_("Issuer:"));
+        issuer_label.set_alignment (1, (float) 0.5);
+        this.issuer_entry = new Entry ();
+        issuer_entry.set_can_focus (false);
         var username_label = new Label (_("Username:"));
         username_label.set_alignment (1, (float) 0.5);
         this.username_entry = new Entry ();
+        username_entry.set_can_focus (false);
         var password_label = new Label (_("Password:"));
         password_label.set_alignment (1, (float) 0.5);
         this.password_entry = new Entry ();
         password_entry.set_invisible_char ('*');
         password_entry.set_visibility (false);
+        password_entry.set_sensitive (false);
         this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
-        var login_table = new Table (3, 3, false);
+        remember_checkbutton.set_sensitive(false);
+        this.update_password_button = new Button.with_label (_("Update Pasword"));
+        this.update_password_button.clicked.connect(update_password_cb);
+
+        set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
+
+        var login_table = new Table (5, 2, false);
         login_table.set_col_spacings (10);
         login_table.set_row_spacings (10);
-        login_table.attach_defaults (username_label, 0, 1, 0, 1);
-        login_table.attach_defaults (username_entry, 1, 2, 0, 1);
-        login_table.attach_defaults (password_label, 0, 1, 1, 2);
-        login_table.attach_defaults (password_entry, 1, 2, 1, 2);
-        login_table.attach_defaults (remember_checkbutton,  1, 2, 2, 3);
+        login_table.attach_defaults (issuer_label, 0, 1, 0, 1);
+        login_table.attach_defaults (issuer_entry, 1, 2, 0, 1);
+        login_table.attach_defaults (username_label, 0, 1, 1, 2);
+        login_table.attach_defaults (username_entry, 1, 2, 1, 2);
+        login_table.attach_defaults (password_label, 0, 1, 2, 3);
+        login_table.attach_defaults (password_entry, 1, 2, 2, 3);
+        login_table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
+        login_table.attach_defaults (update_password_button, 0, 1, 4, 5);
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);
@@ -842,6 +908,14 @@ SUCH DAMAGE.
     {
         this.destroy.connect (Gtk.main_quit);
         this.identities_manager.card_list_changed.connect(this.on_card_list_changed);
+    }
+
+    private static void set_atk_relation (Widget widget, Widget target_widget, Atk.RelationType relationship)
+    {
+        var atk_widget = widget.get_accessible ();
+        var atk_target_widget = target_widget.get_accessible ();
+
+        atk_widget.add_relationship (relationship, atk_target_widget);
     }
 }
 

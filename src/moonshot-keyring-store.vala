@@ -22,9 +22,11 @@ public class KeyringStore : Object, IIdentityCardStore {
         return null;
     }
 
-    public void remove_card(IdCard card) {
-        id_card_list.remove(card);
-        store_id_cards ();
+    public bool remove_card(IdCard card) {
+        bool retval = id_card_list.remove(card);
+        if (retval)
+            store_id_cards ();
+        return retval;
     }
 
     public IIdentityCardStore.StoreType get_store_type() {

@@ -62,7 +62,7 @@ public class IdentityManagerApp {
             view = new IdentityManagerView(this);
         LinkedList<IdCard> card_list = model.get_card_list() ;
         if (card_list.size > 0)
-            this.default_id_card = card_list.first();
+            this.default_id_card = card_list.last();
 
         init_ipc_server ();
 

@@ -19,9 +19,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return null;
     }
 
-    public void remove_card(IdCard card) {
-        id_card_list.remove(card);
-        store_id_cards ();
+    public bool remove_card(IdCard card) {
+        if (id_card_list.remove(card)) {
+            store_id_cards ();
+            return true;
+        }
+        return false;
     }
 
     public LinkedList<IdCard> get_card_list() {
@@ -104,12 +107,15 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
     public void store_id_cards () {
         var key_file = new KeyFile ();
         foreach (IdCard id_card in this.id_card_list) {
-            string[] rules_patterns = new string[id_card.rules.length];
-            string[] rules_always_conf = new string[id_card.rules.length];
+            /* workaround for Centos vala array property bug: use temp arrays */
+            var rules = id_card.rules;
+            var services = id_card.services;
+            string[] rules_patterns = new string[rules.length];
+            string[] rules_always_conf = new string[rules.length];
             
-            for (int i=0; i<id_card.rules.length; i++) {
-              rules_patterns[i] = id_card.rules[i].pattern;
-              rules_always_conf[i] = id_card.rules[i].always_confirm;
+            for (int i=0; i<rules.length; i++) {
+              rules_patterns[i] = rules[i].pattern;
+              rules_always_conf[i] = rules[i].always_confirm;
             }
 
             key_file.set_string (id_card.display_name, "Issuer", id_card.issuer ?? "");
@@ -119,9 +125,9 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
               key_file.set_string (id_card.display_name, "Password", id_card.password);
             else
               key_file.set_string (id_card.display_name, "Password", "");
-            key_file.set_string_list (id_card.display_name, "Services", id_card.services ?? {});
+            key_file.set_string_list (id_card.display_name, "Services", services ?? {});
 
-            if (id_card.rules.length > 0) {
+            if (rules.length > 0) {
               key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);
               key_file.set_string_list (id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
             }
@@ -139,8 +145,15 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         try {
             var path = get_data_dir ();
             var filename = Path.build_filename (path, FILE_NAME);
-            FileUtils.set_contents (filename, text, -1);
-        } 
+            var file  = File.new_for_path(filename);
+            var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+#if IPC_DBUS_GLIB
+            var bits = text.data;
+            stream.write(&bits[0], bits.length);
+#else
+            stream.write(text.data);
+#endif
+        }
         catch (Error e) {
             stdout.printf ("Error:  %s\n", e.message);
         }

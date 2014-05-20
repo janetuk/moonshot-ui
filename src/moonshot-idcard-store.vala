@@ -7,7 +7,7 @@ public interface IIdentityCardStore : Object {
     }
 
     public abstract void add_card(IdCard card);
-    public abstract void remove_card(IdCard card);
+    public abstract bool remove_card(IdCard card);
     public abstract IdCard? update_card(IdCard card);
     public abstract StoreType get_store_type();
     public abstract LinkedList<IdCard> get_card_list(); 

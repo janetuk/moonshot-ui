@@ -33,6 +33,7 @@
  */
 
 #include <assert.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <dbus/dbus-glib.h>
@@ -145,25 +146,36 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 	                             "Cannot use IPC while setid");
         return NULL;
     }
+#ifdef IPC_DBUS_GLIB
+    if (getenv("DISPLAY")==NULL) {
+        connection = dbus_launch_moonshot();
+        if (connection == NULL) {
+            *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                         "Headless dbus launch failed");
+            return NULL;
+        }
+    } else
+#endif
+    {
+        connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
-    connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
-
-    if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
-      /*Generally this means autolaunch failed because probably DISPLAY is unset*/
-      connection = dbus_launch_moonshot();
-      if (connection != NULL) {
-	g_error_free(g_error);
-	g_error = NULL;
-      }
+        if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
+            /*Generally this means autolaunch failed because probably DISPLAY is unset*/
+            connection = dbus_launch_moonshot();
+            if (connection != NULL) {
+                g_error_free(g_error);
+                g_error = NULL;
+            }
+        }
+        if (g_error != NULL) {
+            *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                         "DBus error: %s",
+                                         g_error->message);
+            g_error_free (g_error);
+            return NULL;
+        }
     }
 
-    if (g_error != NULL) {
-      *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-				   "DBus error: %s",
-				   g_error->message);
-      g_error_free (g_error);
-        return NULL;
-    }
 
     dbconnection = dbus_g_connection_get_connection(connection);
     name_has_owner  = dbus_bus_name_has_owner (dbconnection,
