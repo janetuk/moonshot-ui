@@ -22,6 +22,7 @@ public class IdentityManagerView : Window {
     private Label prompting_service;
     private Label no_identity_title;
     private CheckButton remember_checkbutton;
+    private Button update_password_button;
 
     private ListStore* listmodel;
     private TreeModelFilter filter;
@@ -187,6 +188,28 @@ public class IdentityManagerView : Window {
         // Continue processing this event, since the
         // text entry functionality needs to see it too.
         return false;
+    }
+
+    private void update_password_cb()
+    {
+        if (this.custom_vbox.current_idcard != null) {
+            var identity = this.custom_vbox.current_idcard.id_card;
+            var dialog = new AddPasswordDialog(identity, null);
+            var result = dialog.run ();
+
+            switch (result) {
+            case ResponseType.OK:
+                identity.password = dialog.password;
+                identity.store_password = dialog.remember;
+                if (dialog.remember)
+                    identity.temporary = false;
+                identity = identities_manager.update_card(identity);
+                break;
+            default:
+                break;
+            }
+            dialog.destroy ();
+        }
     }
 
     private void load_id_cards () {
@@ -806,11 +829,14 @@ SUCH DAMAGE.
         password_entry.set_sensitive (false);
         this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         remember_checkbutton.set_sensitive(false);
+        this.update_password_button = new Button.with_label (_("Update Pasword"));
+        this.update_password_button.clicked.connect(update_password_cb);
+
         set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
-        var login_table = new Table (4, 2, false);
+        var login_table = new Table (5, 2, false);
         login_table.set_col_spacings (10);
         login_table.set_row_spacings (10);
         login_table.attach_defaults (issuer_label, 0, 1, 0, 1);
@@ -820,6 +846,7 @@ SUCH DAMAGE.
         login_table.attach_defaults (password_label, 0, 1, 2, 3);
         login_table.attach_defaults (password_entry, 1, 2, 2, 3);
         login_table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
+        login_table.attach_defaults (update_password_button, 0, 1, 4, 5);
         var login_vbox_alignment = new Alignment (0, 0, 0, 0);
         login_vbox_alignment.set_padding (0, 0, 12, 0);
         login_vbox_alignment.add (login_table);

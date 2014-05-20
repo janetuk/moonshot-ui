@@ -13,22 +13,30 @@ class AddPasswordDialog : Dialog
         get { return remember_checkbutton.get_active (); }
     }
 
-    public AddPasswordDialog (IdCard id_card, IdentityRequest request)
+    public AddPasswordDialog (IdCard id_card, IdentityRequest? request)
     {
         this.set_title (_("Please enter password for ") + id_card.display_name);
         this.set_modal (true);
 
-        this.add_buttons (_("Send"), ResponseType.OK,
-                          _("Return to application"), ResponseType.CANCEL);
+	if (request != null) {
+            this.add_buttons (_("Send"), ResponseType.OK,
+                              _("Return to application"), ResponseType.CANCEL);
+        } else {
+            this.add_buttons (_("Done"), ResponseType.OK,
+                              _("Cancel"), ResponseType.CANCEL);
+        }
         this.set_default_response (ResponseType.OK);
 
         var content_area = this.get_content_area ();
         ((Box) content_area).set_spacing (12);
-
-        var service_label = new Label (_("for use with:"));
-        service_label.set_alignment (1, (float) 0.5);
-        var service_value = new Label (request.service);
-        service_value.set_alignment (0, (float) 0.5);
+        Label service_label = null;
+        Label service_value = null;
+	if (request != null) {
+            service_label = new Label (_("for use with:"));
+            service_label.set_alignment (1, (float) 0.5);
+            service_value = new Label (request.service);
+            service_value.set_alignment (0, (float) 0.5);
+        }
 
         var nai_label = new Label (_("Network Access Identifier:"));
         nai_label.set_alignment (1, (float) 0.5);
@@ -46,15 +54,21 @@ class AddPasswordDialog : Dialog
         set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
         var table = new Table (4, 2, false);
+        int row = 0;
         table.set_col_spacings (10);
         table.set_row_spacings (10);
-        table.attach_defaults (service_label, 0, 1, 0, 1);
-        table.attach_defaults (service_value, 1, 2, 0, 1);
-        table.attach_defaults (nai_label, 0, 1, 1, 2);
-        table.attach_defaults (nai_value, 1, 2, 1, 2);
-        table.attach_defaults (password_label, 0, 1, 2, 3);
-        table.attach_defaults (password_entry, 1, 2, 2, 3);
-        table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
+        if (request != null) {
+            table.attach_defaults (service_label, 0, 1, row, row + 1);
+            table.attach_defaults (service_value, 1, 2, row, row + 1);
+            row++;
+        }
+        table.attach_defaults (nai_label, 0, 1, row, row+1);
+        table.attach_defaults (nai_value, 1, 2, row, row+1);
+        row++;
+        table.attach_defaults (password_label, 0, 1, row, row+1);
+        table.attach_defaults (password_entry, 1, 2, row, row+1);
+        row++;
+        table.attach_defaults (remember_checkbutton,  1, 2, row, row+1);
 
         var vbox = new VBox (false, 0);
         vbox.set_border_width (6);
