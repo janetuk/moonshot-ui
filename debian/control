@@ -13,7 +13,7 @@ Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
 
 Package: moonshot-ui
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, dbus-x11
 Description: Moonshot Identity Selector
  Project moonshot provides federated authentication using EAP, RADIUS
  and SAML to applications beyond the web platform. 

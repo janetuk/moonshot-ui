@@ -1,3 +1,9 @@
+moonshot-ui (0.7-2) unstable; urgency=medium
+
+  * Depend on dbus-x11 for dbus-launch
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 23 May 2014 10:20:03 -0400
+
 moonshot-ui (0.7-1) unstable; urgency=medium
 
   * New upstream version
