@@ -1,6 +1,5 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-<<<<<<< HEAD
 Release:        1%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
