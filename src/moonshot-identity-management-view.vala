@@ -829,7 +829,7 @@ SUCH DAMAGE.
         password_entry.set_sensitive (false);
         this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
         remember_checkbutton.set_sensitive(false);
-        this.update_password_button = new Button.with_label (_("Update Pasword"));
+        this.update_password_button = new Button.with_label (_("Update Password"));
         this.update_password_button.clicked.connect(update_password_cb);
 
         set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
