@@ -110,6 +110,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             /* workaround for Centos vala array property bug: use temp arrays */
             var rules = id_card.rules;
             var services = id_card.services;
+            string[] empty = {};
             string[] rules_patterns = new string[rules.length];
             string[] rules_always_conf = new string[rules.length];
             
@@ -125,7 +126,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
               key_file.set_string (id_card.display_name, "Password", id_card.password);
             else
               key_file.set_string (id_card.display_name, "Password", "");
-            key_file.set_string_list (id_card.display_name, "Services", services ?? {});
+            key_file.set_string_list (id_card.display_name, "Services", services ?? empty);
 
             if (rules.length > 0) {
               key_file.set_string_list (id_card.display_name, "Rules-Patterns", rules_patterns);

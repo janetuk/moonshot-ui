@@ -206,7 +206,7 @@ public class IdentityManagerApp {
         }
         // Send back the identity (we can't directly run the
         // callback because we may be being called from a 'yield')
-        Idle.add(
+        GLib.Idle.add(
             () => {
                 if (view != null) {
                     identity = view.check_add_password(identity, request, model);
