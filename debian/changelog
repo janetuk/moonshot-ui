@@ -1,8 +1,12 @@
 moonshot-ui (0.7.1-1) unstable; urgency=medium
 
   * New upstream version
+  * Move dbus launch script to libmoonshot1
+  * Because the dbus interface between moonshot-ui and libmoonshot1 may
+    not be entirely stable, create versioned dependency.
+  * Initial upload to Debian, Closes: #760411
 
- -- Sam Hartman <hartmans@debian.org>  Wed, 03 Sep 2014 15:00:33 -0400
+ -- Sam Hartman <hartmans@debian.org>  Wed, 03 Sep 2014 15:34:52 -0400
 
 moonshot-ui (0.7-2) unstable; urgency=medium
 
@@ -166,6 +170,6 @@ moonshot-ui (0.0.2+20110621-1) unstable; urgency=low
 
 moonshot-ui (0.0.1+20110504-1) unstable; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Initial release
 
  -- Sam Hartman <hartmans@debian.org>  Wed, 04 May 2011 13:28:57 -0400

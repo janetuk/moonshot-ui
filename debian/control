@@ -15,7 +15,7 @@ Package: moonshot-ui
 Architecture: any
 Multi-Arch: foreign
 Pre-Depends: ${misc:Pre-Depends}
-Depends: ${shlibs:Depends}, ${misc:Depends}, dbus-x11
+Depends: ${shlibs:Depends}, ${misc:Depends}, dbus-x11, libmoonshot1 (= ${binary:Version})
 Description: Moonshot Identity Selector
  Project moonshot provides federated authentication using EAP, RADIUS
  and SAML to applications beyond the web platform. 
@@ -45,6 +45,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: same
+Breaks: moonshot-ui (<< 0.7.1-1)
 Pre-Depends: ${misc:Pre-Depends}
 Description: Moonshot Identity Shared Library
  Project moonshot provides federated authentication using EAP, RADIUS
