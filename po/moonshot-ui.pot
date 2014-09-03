@@ -3,12 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#: src/moonshot-identity-management-view.vala:561
+#: src/moonshot-identity-management-view.vala:829
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: moonshot-ui 0.1\n"
+"Project-Id-Version: moonshot-ui 0.7.1\n"
 "Report-Msgid-Bugs-To: moonshot-community@jiscmail.ac.uk\n"
-"POT-Creation-Date: 2012-05-19 00:47+0000\n"
+"POT-Creation-Date: 2014-09-03 18:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,101 +19,127 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/moonshot-identity-management-view.vala:359
+#: src/moonshot-identity-management-view.vala:397
+#, c-format
+msgid ""
+"Would you like to replace ID Card '%s' using nai '%s' with the new ID Card "
+"'%s'?"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:406
+#, c-format
+msgid "Would you like to update ID Card '%s' using nai '%s'?"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:415
 #, c-format
 msgid "Would you like to add '%s' ID Card to the ID Card Organizer?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:432
+#: src/moonshot-identity-management-view.vala:489
 #, c-format
 msgid "Are you sure you want to delete %s ID Card?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:691
+#: src/moonshot-identity-management-view.vala:503
+#, c-format
+msgid "Identity requested for service: %s"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:631
 #, c-format
 msgid "Are you sure you want to stop '%s' ID Card from being used with %s?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:693
-msgid "this service"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:778
+#: src/moonshot-identity-management-view.vala:713
 msgid "Moonshot project UI"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:783
+#: src/moonshot-identity-management-view.vala:718
 msgid "Visit the Moonshot project web site"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:785
+#: src/moonshot-identity-management-view.vala:720
 msgid "translator-credits"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:795
+#: src/moonshot-identity-management-view.vala:730
 msgid "_File"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:804
+#: src/moonshot-identity-management-view.vala:739
 msgid "Add ID Card"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:806
+#: src/moonshot-identity-management-view.vala:741
 msgid "Add a new ID Card"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:815
+#: src/moonshot-identity-management-view.vala:750
 msgid "Quit"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:817
+#: src/moonshot-identity-management-view.vala:752
 msgid "Quit the application"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:823
+#: src/moonshot-identity-management-view.vala:758
 msgid "_Help"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:832
+#: src/moonshot-identity-management-view.vala:767
 msgid "About"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:834
+#: src/moonshot-identity-management-view.vala:769
 msgid "About this application"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:864
+#: src/moonshot-identity-management-view.vala:799
 msgid "Search entry"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:864
+#: src/moonshot-identity-management-view.vala:799
 msgid "Search for a specific ID Card"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:869
+#: src/moonshot-identity-management-view.vala:804
 msgid "Search identity or service"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:876
+#: src/moonshot-identity-management-view.vala:811
 msgid "Clear the current search"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:900
+#: src/moonshot-identity-management-view.vala:839
+msgid ""
+"No Identity: Send this identity to services which should not use Moonshot"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:844
 msgid "Login: "
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:903
+#: src/moonshot-identity-management-view.vala:847
+msgid "Issuer:"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:851
 msgid "Username:"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:906
+#: src/moonshot-identity-management-view.vala:855
 msgid "Password:"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:911
+#: src/moonshot-identity-management-view.vala:861
 msgid "Remember password"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:927
+#: src/moonshot-identity-management-view.vala:863
+msgid "Update Password"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:888
 msgid "Services:"
 msgstr ""

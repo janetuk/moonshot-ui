@@ -185,8 +185,11 @@ endif
 endif
 
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+	webprovisioning/complex-test.msht webprovisioning/sample.msht \
+	README.webprovisioning README.windows \
 	moonshot-dbus-launch \
-	moonshot-ui.spec
+	moonshot-ui.spec \
+	vapi/moonshot-gnome-keyring.vapi
 
 noinst_PROGRAMS = \
         examples/client \
