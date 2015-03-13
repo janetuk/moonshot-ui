@@ -153,12 +153,14 @@ public class KeyringStore : Object, IIdentityCardStore {
     public void store_id_cards () {
         clear_keyring();
         foreach (IdCard id_card in this.id_card_list) {
-            string[] rules_patterns = new string[id_card.rules.length];
-            string[] rules_always_conf = new string[id_card.rules.length];
+            /* workaround for Centos vala array property bug: use temp array */
+            var rules = id_card.rules;
+            string[] rules_patterns = new string[rules.length];
+            string[] rules_always_conf = new string[rules.length];
             
-            for (int i=0; i<id_card.rules.length; i++) {
-                rules_patterns[i] = id_card.rules[i].pattern;
-                rules_always_conf[i] = id_card.rules[i].always_confirm;
+            for (int i=0; i<rules.length; i++) {
+                rules_patterns[i] = rules[i].pattern;
+                rules_always_conf[i] = rules[i].always_confirm;
             }
             string patterns = string.joinv(";", rules_patterns);
             string always_conf = string.joinv(";", rules_always_conf);
