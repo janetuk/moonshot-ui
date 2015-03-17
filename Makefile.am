@@ -183,6 +183,9 @@ AM_VALAFLAGS += \
 	--define=IPC_DBUS
 endif
 endif
+if GIO_VAPI_USES_ARRAYS
+AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
+endif
 
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \

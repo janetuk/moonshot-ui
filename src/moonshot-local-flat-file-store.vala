@@ -179,11 +179,11 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             var filename = Path.build_filename (path, FILE_NAME);
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-#if IPC_DBUS_GLIB
+#if GIO_VAPI_USES_ARRAYS
+            stream.write(text.data);
+#else
             var bits = text.data;
             stream.write(&bits[0], bits.length);
-#else
-            stream.write(text.data);
 #endif
         }
         catch (Error e) {

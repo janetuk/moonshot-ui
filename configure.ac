@@ -103,9 +103,14 @@ AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
+vala_version=`$VALAC --version | sed 's/Vala  *//'`
+AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
+  [gio_vapi_uses_arrays="no"],
+  [gio_vapi_uses_arrays="yes"],
+  [gio_vapi_uses_arrays="yes"])
+AM_CONDITIONAL([GIO_VAPI_USES_ARRAYS], [test "$gio_vapi_uses_arrays" = "yes"])
 if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
   AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
-  vala_version=`$VALAC --version | sed 's/Vala  *//'`
   AS_VERSION_COMPARE([0.12.2], ["$vala_version"],
     [vala_supports_dbus_glib="no"],
     [vala_supports_dbus_glib="no"],
