@@ -111,7 +111,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 }
                 
                 // Trust anchor 
-                id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert");
+                id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert").strip();
                 id_card.trust_anchor.subject = key_file.get_string (identity, "Subject");
                 id_card.trust_anchor.subject_alt = key_file.get_string (identity, "SubjectAlt");
                 id_card.trust_anchor.server_cert = key_file.get_string (identity, "ServerCert");

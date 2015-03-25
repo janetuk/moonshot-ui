@@ -111,7 +111,7 @@ public class KeyringStore : Object, IIdentityCardStore {
                 } else if (attribute.name == "Rules-AlwaysConfirm") {
                     rules_always_confirm_index = i;
                 } else if (attribute.name == "CA-Cert") {
-                    id_card.trust_anchor.ca_cert = value;
+                    id_card.trust_anchor.ca_cert = value.strip();
                 } else if (attribute.name == "Server-Cert") {
                     id_card.trust_anchor.server_cert = value;
                 } else if (attribute.name == "Subject") {
