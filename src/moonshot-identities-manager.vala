@@ -118,7 +118,7 @@ public class IdentityManagerModel : Object {
     {
         if (&candidate != null)
           candidate = null;
-        foreach (IdCard id_card in this.get_card_list())
+        foreach (IdCard id_card in this.store.get_card_list())
         {
           if (id_card.display_name == name)
           {
@@ -145,7 +145,7 @@ public class IdentityManagerModel : Object {
         bool duplicate_found = false;
         bool found = false;
         do {
-           var cards = get_card_list();
+           var cards = this.store.get_card_list();
            found = false;
            foreach (IdCard id_card in cards) {
                if ((card != id_card) && (id_card.nai == card.nai)) {

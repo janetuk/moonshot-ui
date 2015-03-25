@@ -111,7 +111,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 }
                 
                 // Trust anchor 
-                id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert");
+                id_card.trust_anchor.ca_cert = key_file.get_string (identity, "CA-Cert").strip();
                 id_card.trust_anchor.subject = key_file.get_string (identity, "Subject");
                 id_card.trust_anchor.subject_alt = key_file.get_string (identity, "SubjectAlt");
                 id_card.trust_anchor.server_cert = key_file.get_string (identity, "ServerCert");
@@ -179,11 +179,11 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             var filename = Path.build_filename (path, FILE_NAME);
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-#if IPC_DBUS_GLIB
+#if GIO_VAPI_USES_ARRAYS
+            stream.write(text.data);
+#else
             var bits = text.data;
             stream.write(&bits[0], bits.length);
-#else
-            stream.write(text.data);
 #endif
         }
         catch (Error e) {
