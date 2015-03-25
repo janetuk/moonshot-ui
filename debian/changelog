@@ -1,3 +1,10 @@
+moonshot-ui (0.7.1-2) unstable; urgency=medium
+
+  * Merge in upstream change to properly decode base64 certificates with
+    whitespace.
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 25 Mar 2015 01:00:11 -0400
+
 moonshot-ui (0.7.1-1) unstable; urgency=medium
 
   * New upstream version
