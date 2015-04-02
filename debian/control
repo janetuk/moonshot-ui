@@ -45,7 +45,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Multi-Arch: same
-Breaks: moonshot-ui (<< 0.7.1-1)
+Breaks: moonshot-ui (<< 0.7.1-1~)
 Pre-Depends: ${misc:Pre-Depends}
 Description: Moonshot Identity Shared Library
  Project moonshot provides federated authentication using EAP, RADIUS
