@@ -1,3 +1,11 @@
+moonshot-ui (0.7.1-1~bpo70+1) wheezy-backports; urgency=medium
+
+  * Rebuild for wheezy-backports.
+    * Relax the breaks between libmoonshot1 and moonshot-ui introduced in
+    0.7.1-1 to deal with ~bpo70
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 07 Apr 2015 15:25:11 -0400
+
 moonshot-ui (0.7.1-1) unstable; urgency=medium
 
   * New upstream version
