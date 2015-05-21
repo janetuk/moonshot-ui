@@ -65,7 +65,7 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-0.8 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
 src_moonshot_LDADD = $(moonshot_LIBS) 
 src_moonshot_LDFLAGS = -g -O0

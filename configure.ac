@@ -220,7 +220,7 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-1.0 >= 0.5
+        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 ])
