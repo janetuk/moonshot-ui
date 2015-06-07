@@ -55,7 +55,7 @@ public class IdentityManagerView : Window {
     private CheckButton remember_checkbutton;
     private Button update_password_button;
 
-    private ListStore* listmodel;
+    private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
     public IdentityManagerModel identities_manager;
@@ -177,7 +177,7 @@ public class IdentityManagerView : Window {
 
     private void setup_list_model ()
     {
-      this.listmodel = new ListStore (Columns.N_COLUMNS, typeof (IdCard),
+      this.listmodel = new Gtk.ListStore (Columns.N_COLUMNS, typeof (IdCard),
                                                           typeof (Gdk.Pixbuf),
                                                           typeof (string),
                                                           typeof (string),
