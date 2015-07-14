@@ -2358,7 +2358,7 @@ KeyringStore* keyring_store_construct (GType object_type) {
 #line 195 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-keyring-store.vala"
 	self = (KeyringStore*) g_object_new (object_type, NULL);
 #line 196 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-keyring-store.vala"
-	_tmp0_ = gee_linked_list_new (TYPE_ID_CARD, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL);
+	_tmp0_ = gee_linked_list_new (TYPE_ID_CARD, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL, NULL, NULL);
 #line 196 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-keyring-store.vala"
 	_g_object_unref0 (self->priv->id_card_list);
 #line 196 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-keyring-store.vala"

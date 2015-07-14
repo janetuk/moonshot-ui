@@ -683,7 +683,7 @@ IdentityManagerApp* identity_manager_app_construct (GType object_type, gboolean 
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identity-manager-app.vala"
 		_tmp28_ = card_list;
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identity-manager-app.vala"
-		_tmp29_ = gee_abstract_list_last ((GeeAbstractList*) _tmp28_);
+		_tmp29_ = gee_linked_list_last (_tmp28_);
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identity-manager-app.vala"
 		_g_object_unref0 (self->default_id_card);
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identity-manager-app.vala"

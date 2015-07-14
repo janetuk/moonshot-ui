@@ -196,9 +196,9 @@ void id_card_set_display_name (IdCard* self, const gchar* value);
 void id_card_set_username (IdCard* self, const gchar* value);
 void id_card_set_issuer (IdCard* self, const gchar* value);
 void id_card_set_rules (IdCard* self, Rule* value, int value_length1);
-static Rule* _vala_array_dup5 (Rule* self, int length);
+static Rule* _vala_array_dup8 (Rule* self, int length);
 void id_card_set_services (IdCard* self, gchar** value, int value_length1);
-static gchar** _vala_array_dup6 (gchar** self, int length);
+static gchar** _vala_array_dup9 (gchar** self, int length);
 gboolean id_card_get_temporary (IdCard* self);
 void id_card_set_temporary (IdCard* self, gboolean value);
 void id_card_set_trust_anchor (IdCard* self, TrustAnchor* value);
@@ -1202,7 +1202,7 @@ Rule* id_card_get_rules (IdCard* self, int* result_length1) {
 }
 
 
-static Rule* _vala_array_dup5 (Rule* self, int length) {
+static Rule* _vala_array_dup8 (Rule* self, int length) {
 	Rule* result;
 	int i;
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
@@ -1235,7 +1235,7 @@ void id_card_set_rules (IdCard* self, Rule* value, int value_length1) {
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
 	_tmp0__length1 = value_length1;
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
-	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup5 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
+	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup8 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
@@ -1280,7 +1280,7 @@ gchar** id_card_get_services (IdCard* self, int* result_length1) {
 }
 
 
-static gchar** _vala_array_dup6 (gchar** self, int length) {
+static gchar** _vala_array_dup9 (gchar** self, int length) {
 	gchar** result;
 	int i;
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
@@ -1313,7 +1313,7 @@ void id_card_set_services (IdCard* self, gchar** value, int value_length1) {
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
 	_tmp0__length1 = value_length1;
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
-	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup6 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
+	_tmp1_ = (_tmp0_ != NULL) ? _vala_array_dup9 (_tmp0_, _tmp0__length1) : ((gpointer) _tmp0_);
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"
 	_tmp1__length1 = _tmp0__length1;
 #line 96 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-id.vala"

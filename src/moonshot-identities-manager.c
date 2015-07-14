@@ -257,9 +257,9 @@ enum  {
 #define IDENTITY_MANAGER_MODEL_FILE_NAME "identities.txt"
 GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self);
 GeeLinkedList* iidentity_card_store_get_card_list (IIdentityCardStore* self);
-static gint __lambda4_ (gconstpointer a, gconstpointer b);
+static gint __lambda4_ (IdentityManagerModel* self, IdCard* a, IdCard* b);
 gboolean id_card_IsNoIdentity (IdCard* self);
-static gint ___lambda4__gcompare_func (gconstpointer a, gconstpointer b);
+static gint ___lambda4__gcompare_data_func (gconstpointer a, gconstpointer b, gpointer self);
 IdCard* id_card_NewNoIdentity (void);
 gboolean id_card_get_store_password (IdCard* self);
 gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* self, const gchar* name, gchar** candidate);
@@ -873,13 +873,13 @@ static gpointer _g_object_ref0 (gpointer self) {
 }
 
 
-static gint __lambda4_ (gconstpointer a, gconstpointer b) {
+static gint __lambda4_ (IdentityManagerModel* self, IdCard* a, IdCard* b) {
 	gint result = 0;
 	IdCard* id_a = NULL;
-	gconstpointer _tmp0_ = NULL;
+	IdCard* _tmp0_ = NULL;
 	IdCard* _tmp1_ = NULL;
 	IdCard* id_b = NULL;
-	gconstpointer _tmp2_ = NULL;
+	IdCard* _tmp2_ = NULL;
 	IdCard* _tmp3_ = NULL;
 	gboolean _tmp4_ = FALSE;
 	IdCard* _tmp5_ = NULL;
@@ -892,6 +892,10 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 	const gchar* _tmp19_ = NULL;
 	const gchar* _tmp20_ = NULL;
 	gint _tmp21_ = 0;
+#line 94 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
+	g_return_val_if_fail (a != NULL, 0);
+#line 94 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
+	g_return_val_if_fail (b != NULL, 0);
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp0_ = a;
 #line 95 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -910,7 +914,7 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 	_tmp6_ = id_card_IsNoIdentity (_tmp5_);
 #line 97 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp6_) {
-#line 914 "moonshot-identities-manager.c"
+#line 918 "moonshot-identities-manager.c"
 		IdCard* _tmp7_ = NULL;
 		gboolean _tmp8_ = FALSE;
 #line 97 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -919,11 +923,11 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 		_tmp8_ = id_card_IsNoIdentity (_tmp7_);
 #line 97 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp4_ = !_tmp8_;
-#line 923 "moonshot-identities-manager.c"
+#line 927 "moonshot-identities-manager.c"
 	} else {
 #line 97 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp4_ = FALSE;
-#line 927 "moonshot-identities-manager.c"
+#line 931 "moonshot-identities-manager.c"
 	}
 #line 97 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp4_) {
@@ -935,7 +939,7 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 		_g_object_unref0 (id_a);
 #line 98 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return result;
-#line 939 "moonshot-identities-manager.c"
+#line 943 "moonshot-identities-manager.c"
 	} else {
 		gboolean _tmp9_ = FALSE;
 		IdCard* _tmp10_ = NULL;
@@ -946,7 +950,7 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 		_tmp11_ = id_card_IsNoIdentity (_tmp10_);
 #line 99 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		if (_tmp11_) {
-#line 950 "moonshot-identities-manager.c"
+#line 954 "moonshot-identities-manager.c"
 			IdCard* _tmp12_ = NULL;
 			gboolean _tmp13_ = FALSE;
 #line 99 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -955,11 +959,11 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 			_tmp13_ = id_card_IsNoIdentity (_tmp12_);
 #line 99 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp9_ = !_tmp13_;
-#line 959 "moonshot-identities-manager.c"
+#line 963 "moonshot-identities-manager.c"
 		} else {
 #line 99 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp9_ = FALSE;
-#line 963 "moonshot-identities-manager.c"
+#line 967 "moonshot-identities-manager.c"
 		}
 #line 99 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		if (_tmp9_) {
@@ -971,7 +975,7 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 			_g_object_unref0 (id_a);
 #line 100 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			return result;
-#line 975 "moonshot-identities-manager.c"
+#line 979 "moonshot-identities-manager.c"
 		}
 	}
 #line 102 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -998,16 +1002,16 @@ static gint __lambda4_ (gconstpointer a, gconstpointer b) {
 	_g_object_unref0 (id_a);
 #line 102 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1002 "moonshot-identities-manager.c"
+#line 1006 "moonshot-identities-manager.c"
 }
 
 
-static gint ___lambda4__gcompare_func (gconstpointer a, gconstpointer b) {
+static gint ___lambda4__gcompare_data_func (gconstpointer a, gconstpointer b, gpointer self) {
 	gint result;
-	result = __lambda4_ (a, b);
+	result = __lambda4_ ((IdentityManagerModel*) self, (IdCard*) a, (IdCard*) b);
 #line 94 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1011 "moonshot-identities-manager.c"
+#line 1015 "moonshot-identities-manager.c"
 }
 
 
@@ -1032,18 +1036,18 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 #line 94 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp2_ = identities;
 #line 94 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
-	gee_list_sort ((GeeList*) _tmp2_, ___lambda4__gcompare_func);
+	gee_list_sort ((GeeList*) _tmp2_, ___lambda4__gcompare_data_func, g_object_ref (self), g_object_unref);
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp4_ = identities;
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
-	_tmp5_ = gee_abstract_collection_get_is_empty ((GeeAbstractCollection*) _tmp4_);
+	_tmp5_ = gee_collection_get_is_empty ((GeeCollection*) _tmp4_);
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp6_ = _tmp5_;
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp6_) {
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp3_ = TRUE;
-#line 1047 "moonshot-identities-manager.c"
+#line 1051 "moonshot-identities-manager.c"
 	} else {
 		GeeLinkedList* _tmp7_ = NULL;
 		gpointer _tmp8_ = NULL;
@@ -1061,11 +1065,11 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 		_tmp3_ = !_tmp10_;
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_tmp9_);
-#line 1065 "moonshot-identities-manager.c"
+#line 1069 "moonshot-identities-manager.c"
 	}
 #line 104 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp3_) {
-#line 1069 "moonshot-identities-manager.c"
+#line 1073 "moonshot-identities-manager.c"
 		GeeLinkedList* _tmp11_ = NULL;
 		IdCard* _tmp12_ = NULL;
 		IdCard* _tmp13_ = NULL;
@@ -1079,7 +1083,7 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 		gee_abstract_list_insert ((GeeAbstractList*) _tmp11_, 0, _tmp13_);
 #line 105 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_tmp13_);
-#line 1083 "moonshot-identities-manager.c"
+#line 1087 "moonshot-identities-manager.c"
 	}
 	{
 		GeeLinkedList* _id_card_list = NULL;
@@ -1108,7 +1112,7 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 		_id_card_index = -1;
 #line 106 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		while (TRUE) {
-#line 1112 "moonshot-identities-manager.c"
+#line 1116 "moonshot-identities-manager.c"
 			gint _tmp19_ = 0;
 			gint _tmp20_ = 0;
 			gint _tmp21_ = 0;
@@ -1131,7 +1135,7 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 			if (!(_tmp20_ < _tmp21_)) {
 #line 106 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				break;
-#line 1135 "moonshot-identities-manager.c"
+#line 1139 "moonshot-identities-manager.c"
 			}
 #line 106 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp22_ = _id_card_list;
@@ -1149,7 +1153,7 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 			_tmp27_ = _tmp26_;
 #line 107 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			if (!_tmp27_) {
-#line 1153 "moonshot-identities-manager.c"
+#line 1157 "moonshot-identities-manager.c"
 				PasswordHashTable* _tmp28_ = NULL;
 				IdCard* _tmp29_ = NULL;
 				IIdentityCardStore* _tmp30_ = NULL;
@@ -1161,21 +1165,21 @@ GeeLinkedList* identity_manager_model_get_card_list (IdentityManagerModel* self)
 				_tmp30_ = self->priv->store;
 #line 108 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				password_hash_table_RetrievePassword (_tmp28_, _tmp29_, _tmp30_);
-#line 1165 "moonshot-identities-manager.c"
+#line 1169 "moonshot-identities-manager.c"
 			}
 #line 106 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_g_object_unref0 (id_card);
-#line 1169 "moonshot-identities-manager.c"
+#line 1173 "moonshot-identities-manager.c"
 		}
 #line 106 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_id_card_list);
-#line 1173 "moonshot-identities-manager.c"
+#line 1177 "moonshot-identities-manager.c"
 	}
 #line 111 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = identities;
 #line 111 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1179 "moonshot-identities-manager.c"
+#line 1183 "moonshot-identities-manager.c"
 }
 
 
@@ -1192,7 +1196,7 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 		_g_free0 (_vala_candidate);
 #line 120 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_vala_candidate = NULL;
-#line 1196 "moonshot-identities-manager.c"
+#line 1200 "moonshot-identities-manager.c"
 	}
 	{
 		GeeLinkedList* _id_card_list = NULL;
@@ -1221,7 +1225,7 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 		_id_card_index = -1;
 #line 121 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		while (TRUE) {
-#line 1225 "moonshot-identities-manager.c"
+#line 1229 "moonshot-identities-manager.c"
 			gint _tmp5_ = 0;
 			gint _tmp6_ = 0;
 			gint _tmp7_ = 0;
@@ -1245,7 +1249,7 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 			if (!(_tmp6_ < _tmp7_)) {
 #line 121 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				break;
-#line 1249 "moonshot-identities-manager.c"
+#line 1253 "moonshot-identities-manager.c"
 			}
 #line 121 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp8_ = _id_card_list;
@@ -1267,19 +1271,19 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 			if (g_strcmp0 (_tmp13_, _tmp14_) == 0) {
 #line 125 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				if ((&_vala_candidate) != NULL) {
-#line 1271 "moonshot-identities-manager.c"
+#line 1275 "moonshot-identities-manager.c"
 					{
 						gint i = 0;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 						i = 0;
-#line 1276 "moonshot-identities-manager.c"
+#line 1280 "moonshot-identities-manager.c"
 						{
 							gboolean _tmp15_ = FALSE;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 							_tmp15_ = TRUE;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 							while (TRUE) {
-#line 1283 "moonshot-identities-manager.c"
+#line 1287 "moonshot-identities-manager.c"
 								gint _tmp17_ = 0;
 								gchar* tmp = NULL;
 								const gchar* _tmp18_ = NULL;
@@ -1289,13 +1293,13 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 								gboolean _tmp22_ = FALSE;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 								if (!_tmp15_) {
-#line 1293 "moonshot-identities-manager.c"
+#line 1297 "moonshot-identities-manager.c"
 									gint _tmp16_ = 0;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 									_tmp16_ = i;
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 									i = _tmp16_ + 1;
-#line 1299 "moonshot-identities-manager.c"
+#line 1303 "moonshot-identities-manager.c"
 								}
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 								_tmp15_ = FALSE;
@@ -1305,7 +1309,7 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 								if (!(_tmp17_ < 1000)) {
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 									break;
-#line 1309 "moonshot-identities-manager.c"
+#line 1313 "moonshot-identities-manager.c"
 								}
 #line 129 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 								_tmp18_ = name;
@@ -1321,7 +1325,7 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 								_tmp22_ = identity_manager_model_display_name_is_valid (self, _tmp21_, NULL);
 #line 130 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 								if (_tmp22_) {
-#line 1325 "moonshot-identities-manager.c"
+#line 1329 "moonshot-identities-manager.c"
 									const gchar* _tmp23_ = NULL;
 									gchar* _tmp24_ = NULL;
 #line 132 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -1336,11 +1340,11 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 									_g_free0 (tmp);
 #line 133 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 									break;
-#line 1340 "moonshot-identities-manager.c"
+#line 1344 "moonshot-identities-manager.c"
 								}
 #line 127 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 								_g_free0 (tmp);
-#line 1344 "moonshot-identities-manager.c"
+#line 1348 "moonshot-identities-manager.c"
 							}
 						}
 					}
@@ -1355,23 +1359,23 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 				if (candidate) {
 #line 137 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					*candidate = _vala_candidate;
-#line 1359 "moonshot-identities-manager.c"
+#line 1363 "moonshot-identities-manager.c"
 				} else {
 #line 137 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					_g_free0 (_vala_candidate);
-#line 1363 "moonshot-identities-manager.c"
+#line 1367 "moonshot-identities-manager.c"
 				}
 #line 137 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				return result;
-#line 1367 "moonshot-identities-manager.c"
+#line 1371 "moonshot-identities-manager.c"
 			}
 #line 121 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_g_object_unref0 (id_card);
-#line 1371 "moonshot-identities-manager.c"
+#line 1375 "moonshot-identities-manager.c"
 		}
 #line 121 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_id_card_list);
-#line 1375 "moonshot-identities-manager.c"
+#line 1379 "moonshot-identities-manager.c"
 	}
 #line 140 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = TRUE;
@@ -1379,15 +1383,15 @@ gboolean identity_manager_model_display_name_is_valid (IdentityManagerModel* sel
 	if (candidate) {
 #line 140 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		*candidate = _vala_candidate;
-#line 1383 "moonshot-identities-manager.c"
+#line 1387 "moonshot-identities-manager.c"
 	} else {
 #line 140 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_free0 (_vala_candidate);
-#line 1387 "moonshot-identities-manager.c"
+#line 1391 "moonshot-identities-manager.c"
 	}
 #line 140 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1391 "moonshot-identities-manager.c"
+#line 1395 "moonshot-identities-manager.c"
 }
 
 
@@ -1403,20 +1407,20 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 	duplicate_found = FALSE;
 #line 146 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	found = FALSE;
-#line 1407 "moonshot-identities-manager.c"
+#line 1411 "moonshot-identities-manager.c"
 	{
 		gboolean _tmp0_ = FALSE;
 #line 147 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp0_ = TRUE;
 #line 147 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		while (TRUE) {
-#line 1414 "moonshot-identities-manager.c"
+#line 1418 "moonshot-identities-manager.c"
 			GeeLinkedList* cards = NULL;
 			IIdentityCardStore* _tmp2_ = NULL;
 			GeeLinkedList* _tmp3_ = NULL;
 #line 147 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			if (!_tmp0_) {
-#line 1420 "moonshot-identities-manager.c"
+#line 1424 "moonshot-identities-manager.c"
 				gboolean _tmp1_ = FALSE;
 #line 158 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_tmp1_ = found;
@@ -1424,7 +1428,7 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 				if (!_tmp1_) {
 #line 158 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					break;
-#line 1428 "moonshot-identities-manager.c"
+#line 1432 "moonshot-identities-manager.c"
 				}
 			}
 #line 147 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -1437,7 +1441,7 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 			cards = _tmp3_;
 #line 149 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			found = FALSE;
-#line 1441 "moonshot-identities-manager.c"
+#line 1445 "moonshot-identities-manager.c"
 			{
 				GeeLinkedList* _id_card_list = NULL;
 				GeeLinkedList* _tmp4_ = NULL;
@@ -1465,7 +1469,7 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 				_id_card_index = -1;
 #line 150 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				while (TRUE) {
-#line 1469 "moonshot-identities-manager.c"
+#line 1473 "moonshot-identities-manager.c"
 					gint _tmp9_ = 0;
 					gint _tmp10_ = 0;
 					gint _tmp11_ = 0;
@@ -1488,7 +1492,7 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 					if (!(_tmp10_ < _tmp11_)) {
 #line 150 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 						break;
-#line 1492 "moonshot-identities-manager.c"
+#line 1496 "moonshot-identities-manager.c"
 					}
 #line 150 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					_tmp12_ = _id_card_list;
@@ -1504,7 +1508,7 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 					_tmp17_ = id_card;
 #line 151 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					if (_tmp16_ != _tmp17_) {
-#line 1508 "moonshot-identities-manager.c"
+#line 1512 "moonshot-identities-manager.c"
 						IdCard* _tmp18_ = NULL;
 						const gchar* _tmp19_ = NULL;
 						const gchar* _tmp20_ = NULL;
@@ -1525,15 +1529,15 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 						_tmp23_ = _tmp22_;
 #line 151 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 						_tmp15_ = g_strcmp0 (_tmp20_, _tmp23_) == 0;
-#line 1529 "moonshot-identities-manager.c"
+#line 1533 "moonshot-identities-manager.c"
 					} else {
 #line 151 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 						_tmp15_ = FALSE;
-#line 1533 "moonshot-identities-manager.c"
+#line 1537 "moonshot-identities-manager.c"
 					}
 #line 151 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					if (_tmp15_) {
-#line 1537 "moonshot-identities-manager.c"
+#line 1541 "moonshot-identities-manager.c"
 						FILE* _tmp24_ = NULL;
 						IdCard* _tmp25_ = NULL;
 						const gchar* _tmp26_ = NULL;
@@ -1564,26 +1568,26 @@ static gboolean identity_manager_model_remove_duplicates (IdentityManagerModel* 
 						_g_object_unref0 (id_card);
 #line 155 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 						break;
-#line 1568 "moonshot-identities-manager.c"
+#line 1572 "moonshot-identities-manager.c"
 					}
 #line 150 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 					_g_object_unref0 (id_card);
-#line 1572 "moonshot-identities-manager.c"
+#line 1576 "moonshot-identities-manager.c"
 				}
 #line 150 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_g_object_unref0 (_id_card_list);
-#line 1576 "moonshot-identities-manager.c"
+#line 1580 "moonshot-identities-manager.c"
 			}
 #line 147 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_g_object_unref0 (cards);
-#line 1580 "moonshot-identities-manager.c"
+#line 1584 "moonshot-identities-manager.c"
 		}
 	}
 #line 159 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = duplicate_found;
 #line 159 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1587 "moonshot-identities-manager.c"
+#line 1591 "moonshot-identities-manager.c"
 }
 
 
@@ -1612,7 +1616,7 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 	if (_tmp1_) {
 #line 166 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		identity_manager_model_set_store_type (self, IIDENTITY_CARD_STORE_STORE_TYPE_FLAT_FILE);
-#line 1616 "moonshot-identities-manager.c"
+#line 1620 "moonshot-identities-manager.c"
 	}
 	{
 		GeeLinkedList* _id_list = NULL;
@@ -1638,7 +1642,7 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 		_id_index = -1;
 #line 168 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		while (TRUE) {
-#line 1642 "moonshot-identities-manager.c"
+#line 1646 "moonshot-identities-manager.c"
 			gint _tmp6_ = 0;
 			gint _tmp7_ = 0;
 			gint _tmp8_ = 0;
@@ -1662,7 +1666,7 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 			if (!(_tmp7_ < _tmp8_)) {
 #line 168 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				break;
-#line 1666 "moonshot-identities-manager.c"
+#line 1670 "moonshot-identities-manager.c"
 			}
 #line 168 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp9_ = _id_list;
@@ -1682,7 +1686,7 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 			_tmp15_ = nai;
 #line 169 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			if (g_strcmp0 (_tmp14_, _tmp15_) == 0) {
-#line 1686 "moonshot-identities-manager.c"
+#line 1690 "moonshot-identities-manager.c"
 				IdCard* _tmp16_ = NULL;
 				IdCard* _tmp17_ = NULL;
 #line 170 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -1697,15 +1701,15 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 				_g_object_unref0 (id);
 #line 171 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				break;
-#line 1701 "moonshot-identities-manager.c"
+#line 1705 "moonshot-identities-manager.c"
 			}
 #line 168 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_g_object_unref0 (id);
-#line 1705 "moonshot-identities-manager.c"
+#line 1709 "moonshot-identities-manager.c"
 		}
 #line 168 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_id_list);
-#line 1709 "moonshot-identities-manager.c"
+#line 1713 "moonshot-identities-manager.c"
 	}
 #line 174 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp18_ = saved_store_type;
@@ -1715,29 +1719,29 @@ IdCard* identity_manager_model_find_id_card (IdentityManagerModel* self, const g
 	_tmp20_ = force_flat_file_store;
 #line 175 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp20_) {
-#line 1719 "moonshot-identities-manager.c"
+#line 1723 "moonshot-identities-manager.c"
 		IIdentityCardStoreStoreType _tmp21_ = 0;
 #line 176 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp21_ = saved_store_type;
 #line 176 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp19_ = _tmp21_ != IIDENTITY_CARD_STORE_STORE_TYPE_FLAT_FILE;
-#line 1725 "moonshot-identities-manager.c"
+#line 1729 "moonshot-identities-manager.c"
 	} else {
 #line 175 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp19_ = FALSE;
-#line 1729 "moonshot-identities-manager.c"
+#line 1733 "moonshot-identities-manager.c"
 	}
 #line 175 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp19_) {
 #line 177 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		g_signal_emit_by_name (self, "card-list-changed");
-#line 1735 "moonshot-identities-manager.c"
+#line 1739 "moonshot-identities-manager.c"
 	}
 #line 178 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = retval;
 #line 178 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1741 "moonshot-identities-manager.c"
+#line 1745 "moonshot-identities-manager.c"
 }
 
 
@@ -1775,7 +1779,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 	if (_tmp2_) {
 #line 183 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return;
-#line 1779 "moonshot-identities-manager.c"
+#line 1783 "moonshot-identities-manager.c"
 	}
 #line 186 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp3_ = identity_manager_model_get_store_type (self);
@@ -1787,7 +1791,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 	if (_tmp4_) {
 #line 189 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		identity_manager_model_set_store_type (self, IIDENTITY_CARD_STORE_STORE_TYPE_FLAT_FILE);
-#line 1791 "moonshot-identities-manager.c"
+#line 1795 "moonshot-identities-manager.c"
 	}
 #line 191 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp5_ = card;
@@ -1807,7 +1811,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 	candidate = _tmp9_;
 #line 193 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (!_tmp10_) {
-#line 1811 "moonshot-identities-manager.c"
+#line 1815 "moonshot-identities-manager.c"
 		IdCard* _tmp11_ = NULL;
 		const gchar* _tmp12_ = NULL;
 #line 195 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -1816,7 +1820,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 		_tmp12_ = candidate;
 #line 195 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		id_card_set_display_name (_tmp11_, _tmp12_);
-#line 1820 "moonshot-identities-manager.c"
+#line 1824 "moonshot-identities-manager.c"
 	}
 #line 198 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp13_ = card;
@@ -1826,7 +1830,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 	_tmp15_ = _tmp14_;
 #line 198 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (!_tmp15_) {
-#line 1830 "moonshot-identities-manager.c"
+#line 1834 "moonshot-identities-manager.c"
 		PasswordHashTable* _tmp16_ = NULL;
 		IdCard* _tmp17_ = NULL;
 		IIdentityCardStore* _tmp18_ = NULL;
@@ -1838,7 +1842,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 		_tmp18_ = self->priv->store;
 #line 199 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		password_hash_table_CachePassword (_tmp16_, _tmp17_, _tmp18_);
-#line 1842 "moonshot-identities-manager.c"
+#line 1846 "moonshot-identities-manager.c"
 	}
 #line 200 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp19_ = self->priv->store;
@@ -1854,7 +1858,7 @@ void identity_manager_model_add_card (IdentityManagerModel* self, IdCard* card, 
 	g_signal_emit_by_name (self, "card-list-changed");
 #line 181 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_g_free0 (candidate);
-#line 1858 "moonshot-identities-manager.c"
+#line 1862 "moonshot-identities-manager.c"
 }
 
 
@@ -1882,7 +1886,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 	_tmp2_ = _tmp1_;
 #line 207 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp2_) {
-#line 1886 "moonshot-identities-manager.c"
+#line 1890 "moonshot-identities-manager.c"
 		IdCard* _tmp3_ = NULL;
 		IdCard* _tmp4_ = NULL;
 #line 208 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -1897,7 +1901,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 		result = retval;
 #line 209 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return result;
-#line 1901 "moonshot-identities-manager.c"
+#line 1905 "moonshot-identities-manager.c"
 	}
 #line 212 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp5_ = card;
@@ -1907,7 +1911,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 	_tmp7_ = _tmp6_;
 #line 212 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (!_tmp7_) {
-#line 1911 "moonshot-identities-manager.c"
+#line 1915 "moonshot-identities-manager.c"
 		PasswordHashTable* _tmp8_ = NULL;
 		IdCard* _tmp9_ = NULL;
 		IIdentityCardStore* _tmp10_ = NULL;
@@ -1919,7 +1923,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 		_tmp10_ = self->priv->store;
 #line 213 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		password_hash_table_CachePassword (_tmp8_, _tmp9_, _tmp10_);
-#line 1923 "moonshot-identities-manager.c"
+#line 1927 "moonshot-identities-manager.c"
 	} else {
 		PasswordHashTable* _tmp11_ = NULL;
 		IdCard* _tmp12_ = NULL;
@@ -1932,7 +1936,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 		_tmp13_ = self->priv->store;
 #line 215 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		password_hash_table_RemovePassword (_tmp11_, _tmp12_, _tmp13_);
-#line 1936 "moonshot-identities-manager.c"
+#line 1940 "moonshot-identities-manager.c"
 	}
 #line 216 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp14_ = self->priv->store;
@@ -1950,7 +1954,7 @@ IdCard* identity_manager_model_update_card (IdentityManagerModel* self, IdCard* 
 	result = retval;
 #line 218 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 1954 "moonshot-identities-manager.c"
+#line 1958 "moonshot-identities-manager.c"
 }
 
 
@@ -1981,7 +1985,7 @@ static gboolean identity_manager_model_remove_card_internal (IdentityManagerMode
 		result = FALSE;
 #line 223 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return result;
-#line 1985 "moonshot-identities-manager.c"
+#line 1989 "moonshot-identities-manager.c"
 	}
 #line 224 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp3_ = self->priv->password_table;
@@ -2001,7 +2005,7 @@ static gboolean identity_manager_model_remove_card_internal (IdentityManagerMode
 	result = _tmp8_;
 #line 225 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 2005 "moonshot-identities-manager.c"
+#line 2009 "moonshot-identities-manager.c"
 }
 
 
@@ -2025,13 +2029,13 @@ gboolean identity_manager_model_remove_card (IdentityManagerModel* self, IdCard*
 		result = TRUE;
 #line 231 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return result;
-#line 2029 "moonshot-identities-manager.c"
+#line 2033 "moonshot-identities-manager.c"
 	}
 #line 233 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = FALSE;
 #line 233 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 2035 "moonshot-identities-manager.c"
+#line 2039 "moonshot-identities-manager.c"
 }
 
 
@@ -2045,7 +2049,7 @@ void identity_manager_model_set_store_type (IdentityManagerModel* self, IIdentit
 	_tmp1_ = self->priv->store;
 #line 237 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp1_ != NULL) {
-#line 2049 "moonshot-identities-manager.c"
+#line 2053 "moonshot-identities-manager.c"
 		IIdentityCardStore* _tmp2_ = NULL;
 		IIdentityCardStoreStoreType _tmp3_ = 0;
 		IIdentityCardStoreStoreType _tmp4_ = 0;
@@ -2057,17 +2061,17 @@ void identity_manager_model_set_store_type (IdentityManagerModel* self, IIdentit
 		_tmp4_ = type;
 #line 237 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp0_ = _tmp3_ == _tmp4_;
-#line 2061 "moonshot-identities-manager.c"
+#line 2065 "moonshot-identities-manager.c"
 	} else {
 #line 237 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_tmp0_ = FALSE;
-#line 2065 "moonshot-identities-manager.c"
+#line 2069 "moonshot-identities-manager.c"
 	}
 #line 237 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	if (_tmp0_) {
 #line 238 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		return;
-#line 2071 "moonshot-identities-manager.c"
+#line 2075 "moonshot-identities-manager.c"
 	}
 #line 239 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	_tmp5_ = type;
@@ -2075,7 +2079,7 @@ void identity_manager_model_set_store_type (IdentityManagerModel* self, IIdentit
 	switch (_tmp5_) {
 #line 239 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		case IIDENTITY_CARD_STORE_STORE_TYPE_KEYRING:
-#line 2079 "moonshot-identities-manager.c"
+#line 2083 "moonshot-identities-manager.c"
 		{
 			KeyringStore* _tmp6_ = NULL;
 #line 242 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -2086,12 +2090,12 @@ void identity_manager_model_set_store_type (IdentityManagerModel* self, IIdentit
 			self->priv->store = (IIdentityCardStore*) _tmp6_;
 #line 243 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			break;
-#line 2090 "moonshot-identities-manager.c"
+#line 2094 "moonshot-identities-manager.c"
 		}
 		default:
 #line 239 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		case IIDENTITY_CARD_STORE_STORE_TYPE_FLAT_FILE:
-#line 2095 "moonshot-identities-manager.c"
+#line 2099 "moonshot-identities-manager.c"
 		{
 			LocalFlatFileStore* _tmp7_ = NULL;
 #line 247 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
@@ -2102,7 +2106,7 @@ void identity_manager_model_set_store_type (IdentityManagerModel* self, IIdentit
 			self->priv->store = (IIdentityCardStore*) _tmp7_;
 #line 248 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			break;
-#line 2106 "moonshot-identities-manager.c"
+#line 2110 "moonshot-identities-manager.c"
 		}
 	}
 }
@@ -2122,7 +2126,7 @@ IIdentityCardStoreStoreType identity_manager_model_get_store_type (IdentityManag
 	result = _tmp1_;
 #line 253 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 2126 "moonshot-identities-manager.c"
+#line 2130 "moonshot-identities-manager.c"
 }
 
 
@@ -2130,7 +2134,7 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 	gboolean result = FALSE;
 #line 256 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	g_return_val_if_fail (self != NULL, FALSE);
-#line 2134 "moonshot-identities-manager.c"
+#line 2138 "moonshot-identities-manager.c"
 	{
 		GeeLinkedList* _card_list = NULL;
 		IIdentityCardStore* _tmp0_ = NULL;
@@ -2158,7 +2162,7 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 		_card_index = -1;
 #line 257 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		while (TRUE) {
-#line 2162 "moonshot-identities-manager.c"
+#line 2166 "moonshot-identities-manager.c"
 			gint _tmp5_ = 0;
 			gint _tmp6_ = 0;
 			gint _tmp7_ = 0;
@@ -2182,7 +2186,7 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 			if (!(_tmp6_ < _tmp7_)) {
 #line 257 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				break;
-#line 2186 "moonshot-identities-manager.c"
+#line 2190 "moonshot-identities-manager.c"
 			}
 #line 257 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_tmp8_ = _card_list;
@@ -2200,7 +2204,7 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 			if (!_tmp14_) {
 #line 260 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_tmp12_ = TRUE;
-#line 2204 "moonshot-identities-manager.c"
+#line 2208 "moonshot-identities-manager.c"
 			} else {
 				IdCard* _tmp15_ = NULL;
 				gchar** _tmp16_ = NULL;
@@ -2217,13 +2221,13 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 				_tmp17__length1 = _tmp16__length1;
 #line 261 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_tmp12_ = _tmp17__length1 > 0;
-#line 2221 "moonshot-identities-manager.c"
+#line 2225 "moonshot-identities-manager.c"
 			}
 #line 260 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			if (_tmp12_) {
 #line 260 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_tmp11_ = TRUE;
-#line 2227 "moonshot-identities-manager.c"
+#line 2231 "moonshot-identities-manager.c"
 			} else {
 				IdCard* _tmp18_ = NULL;
 				Rule* _tmp19_ = NULL;
@@ -2240,7 +2244,7 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 				_tmp20__length1 = _tmp19__length1;
 #line 262 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				_tmp11_ = _tmp20__length1 > 0;
-#line 2244 "moonshot-identities-manager.c"
+#line 2248 "moonshot-identities-manager.c"
 			}
 #line 260 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			if (_tmp11_) {
@@ -2252,28 +2256,28 @@ gboolean identity_manager_model_HasNonTrivialIdentities (IdentityManagerModel* s
 				_g_object_unref0 (_card_list);
 #line 263 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 				return result;
-#line 2256 "moonshot-identities-manager.c"
+#line 2260 "moonshot-identities-manager.c"
 			}
 #line 257 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 			_g_object_unref0 (card);
-#line 2260 "moonshot-identities-manager.c"
+#line 2264 "moonshot-identities-manager.c"
 		}
 #line 257 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 		_g_object_unref0 (_card_list);
-#line 2264 "moonshot-identities-manager.c"
+#line 2268 "moonshot-identities-manager.c"
 	}
 #line 266 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	result = FALSE;
 #line 266 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return result;
-#line 2270 "moonshot-identities-manager.c"
+#line 2274 "moonshot-identities-manager.c"
 }
 
 
 static gpointer _identity_manager_app_ref0 (gpointer self) {
 #line 273 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return self ? identity_manager_app_ref (self) : NULL;
-#line 2277 "moonshot-identities-manager.c"
+#line 2281 "moonshot-identities-manager.c"
 }
 
 
@@ -2307,14 +2311,14 @@ IdentityManagerModel* identity_manager_model_construct (GType object_type, Ident
 	identity_manager_model_set_store_type (self, _tmp3_);
 #line 272 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return self;
-#line 2311 "moonshot-identities-manager.c"
+#line 2315 "moonshot-identities-manager.c"
 }
 
 
 IdentityManagerModel* identity_manager_model_new (IdentityManagerApp* parent_app, IIdentityCardStoreStoreType store_type) {
 #line 272 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	return identity_manager_model_construct (TYPE_IDENTITY_MANAGER_MODEL, parent_app, store_type);
-#line 2318 "moonshot-identities-manager.c"
+#line 2322 "moonshot-identities-manager.c"
 }
 
 
@@ -2327,14 +2331,14 @@ static void identity_manager_model_class_init (IdentityManagerModelClass * klass
 	G_OBJECT_CLASS (klass)->finalize = identity_manager_model_finalize;
 #line 88 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	g_signal_new ("card_list_changed", TYPE_IDENTITY_MANAGER_MODEL, G_SIGNAL_RUN_LAST, 0, NULL, NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
-#line 2331 "moonshot-identities-manager.c"
+#line 2335 "moonshot-identities-manager.c"
 }
 
 
 static void identity_manager_model_instance_init (IdentityManagerModel * self) {
 #line 88 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	self->priv = IDENTITY_MANAGER_MODEL_GET_PRIVATE (self);
-#line 2338 "moonshot-identities-manager.c"
+#line 2342 "moonshot-identities-manager.c"
 }
 
 
@@ -2350,7 +2354,7 @@ static void identity_manager_model_finalize (GObject* obj) {
 	_identity_manager_app_unref0 (self->priv->parent);
 #line 88 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-identities-manager.vala"
 	G_OBJECT_CLASS (identity_manager_model_parent_class)->finalize (obj);
-#line 2354 "moonshot-identities-manager.c"
+#line 2358 "moonshot-identities-manager.c"
 }
 
 

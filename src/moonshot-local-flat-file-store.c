@@ -2473,7 +2473,7 @@ LocalFlatFileStore* local_flat_file_store_construct (GType object_type) {
 #line 196 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-local-flat-file-store.vala"
 	self = (LocalFlatFileStore*) g_object_new (object_type, NULL);
 #line 197 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-local-flat-file-store.vala"
-	_tmp0_ = gee_linked_list_new (TYPE_ID_CARD, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL);
+	_tmp0_ = gee_linked_list_new (TYPE_ID_CARD, (GBoxedCopyFunc) g_object_ref, g_object_unref, NULL, NULL, NULL);
 #line 197 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-local-flat-file-store.vala"
 	_g_object_unref0 (self->priv->id_card_list);
 #line 197 "/home/hartmans/moonshot/moonshot/ui/src/moonshot-local-flat-file-store.vala"
