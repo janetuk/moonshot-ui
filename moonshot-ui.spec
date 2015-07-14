@@ -1,6 +1,6 @@
 Name:           moonshot-ui
-Version:        0.7.1
-Release:        1%{?dist}
+Version:        0.7.2
+Release:        2%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
