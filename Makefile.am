@@ -192,7 +192,7 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
 	README.webprovisioning README.windows \
 	moonshot-dbus-launch \
 	moonshot-ui.spec \
-	vapi/moonshot-gnome-keyring.vapi
+	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
 
 noinst_PROGRAMS = \
         examples/client \
