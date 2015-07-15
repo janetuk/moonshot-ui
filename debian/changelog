@@ -1,9 +1,13 @@
-moonshot-ui (0.7.2-1) unstable; urgency=medium
+moonshot-ui (0.7.2-1) unstable; urgency=high
 
   * New upstream Version, Closes: #787880
+  * Force vala run and support libgee-dev and libgee-0.8-dev so we can
+    build wheezy and jessie versions from the same sources.
+  * High urgency to avoid moonshot-ui being removed from jessie.  The
+    actual code change is very simple and will either cause a build
+    failure or just work.
 
-
- -- Sam Hartman <hartmans@debian.org>  Tue, 14 Jul 2015 12:11:29 -0400
+ -- Sam Hartman <hartmans@debian.org>  Wed, 15 Jul 2015 11:30:32 -0400
 
 moonshot-ui (0.7.1-3) unstable; urgency=medium
 
