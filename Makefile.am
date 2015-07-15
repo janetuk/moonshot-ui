@@ -32,11 +32,11 @@ AM_VALAFLAGS = -g \
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS) 
+        $(AM_CPPFLAGS)  $(GEE_CFLAGS)
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
-libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS) $(GEE_LIBS)
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
 
 include_HEADERS = libmoonshot/libmoonshot.h
@@ -65,14 +65,14 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-0.8 $(AM_VALAFLAGS)
-src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
-src_moonshot_LDADD = $(moonshot_LIBS) 
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)   $(GEE_CFLAGS)
+src_moonshot_LDADD = $(moonshot_LIBS)  $(GEE_LIBS)
 src_moonshot_LDFLAGS = -g -O0
 
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
-src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la $(GEE_LIBS)
 src_moonshot_webp_LDFLAGS =
 
 if OS_WIN32
@@ -187,6 +187,12 @@ if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
 
+if GEE_0_8
+AM_VALAFLAGS += --pkg gee-0.8
+else
+AM_VALAFLAGS += --pkg gee-1.0
+endif
+
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \
 	README.webprovisioning README.windows \
@@ -200,11 +206,11 @@ noinst_PROGRAMS = \
         tests/basic
 
 examples_service_selection_SOURCES = examples/service-selection.c
-examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS) $(GEE_LIBS)
 
 examples_client_SOURCES = examples/client.c
-examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
 examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c

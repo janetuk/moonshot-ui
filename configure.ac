@@ -27,6 +27,7 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
+gee_0_8=no
 # Platform checks
 AC_CANONICAL_HOST
 
@@ -90,10 +91,12 @@ case "$host" in
             [gtk+-2.0 >= 2.18],
             [GTK_VERSION="gtk+-2.0"]
     )
+    PKG_CHECK_MODULES(GEE, [gee-0.8 >= 0.5],gee_0_8=yes,
+	[PKG_CHECK_MODULES(GEE,[gee-1.0])])
 
     ;;
 esac
-
+AM_CONDITIONAL(GEE_0_8,[test "$gee_0_8" = "yes"])
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
 AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
@@ -220,7 +223,6 @@ PKG_CHECK_MODULES(moonshot,[
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 ])
