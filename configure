@@ -748,6 +748,10 @@ OS_WIN32_FALSE
 OS_WIN32_TRUE
 OS_LINUX_FALSE
 OS_LINUX_TRUE
+GEE_0_8_FALSE
+GEE_0_8_TRUE
+GEE_LIBS
+GEE_CFLAGS
 GDBUS_LIBS
 GDBUS_CFLAGS
 MAC_LIBS
@@ -910,6 +914,8 @@ MAC_CFLAGS
 MAC_LIBS
 GDBUS_CFLAGS
 GDBUS_LIBS
+GEE_CFLAGS
+GEE_LIBS
 moonshot_CFLAGS
 moonshot_LIBS
 libmoonshot_CFLAGS
@@ -1584,6 +1590,8 @@ Some influential environment variables:
   GDBUS_CFLAGS
               C compiler flags for GDBUS, overriding pkg-config
   GDBUS_LIBS  linker flags for GDBUS, overriding pkg-config
+  GEE_CFLAGS  C compiler flags for GEE, overriding pkg-config
+  GEE_LIBS    linker flags for GEE, overriding pkg-config
   moonshot_CFLAGS
               C compiler flags for moonshot, overriding pkg-config
   moonshot_LIBS
@@ -12927,6 +12935,7 @@ $as_echo "$as_me: WARNING: you will not be able to compile vala source files" >&
       :
     fi
 
+gee_0_8=no
 # Platform checks
 
 
@@ -13420,8 +13429,266 @@ $as_echo "yes" >&6; }
 
 fi
 
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GEE" >&5
+$as_echo_n "checking for GEE... " >&6; }
+
+if test -n "$GEE_CFLAGS"; then
+    pkg_cv_GEE_CFLAGS="$GEE_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-0.8 >= 0.5\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-0.8 >= 0.5") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_CFLAGS=`$PKG_CONFIG --cflags "gee-0.8 >= 0.5" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GEE_LIBS"; then
+    pkg_cv_GEE_LIBS="$GEE_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-0.8 >= 0.5\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-0.8 >= 0.5") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_LIBS=`$PKG_CONFIG --libs "gee-0.8 >= 0.5" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gee-0.8 >= 0.5" 2>&1`
+        else
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gee-0.8 >= 0.5" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GEE_PKG_ERRORS" >&5
+
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GEE" >&5
+$as_echo_n "checking for GEE... " >&6; }
+
+if test -n "$GEE_CFLAGS"; then
+    pkg_cv_GEE_CFLAGS="$GEE_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_CFLAGS=`$PKG_CONFIG --cflags "gee-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GEE_LIBS"; then
+    pkg_cv_GEE_LIBS="$GEE_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_LIBS=`$PKG_CONFIG --libs "gee-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gee-1.0" 2>&1`
+        else
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gee-1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GEE_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (gee-1.0) were not met:
+
+$GEE_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GEE_CFLAGS
+and GEE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GEE_CFLAGS
+and GEE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GEE_CFLAGS=$pkg_cv_GEE_CFLAGS
+	GEE_LIBS=$pkg_cv_GEE_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GEE" >&5
+$as_echo_n "checking for GEE... " >&6; }
+
+if test -n "$GEE_CFLAGS"; then
+    pkg_cv_GEE_CFLAGS="$GEE_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_CFLAGS=`$PKG_CONFIG --cflags "gee-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$GEE_LIBS"; then
+    pkg_cv_GEE_LIBS="$GEE_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gee-1.0\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "gee-1.0") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_GEE_LIBS=`$PKG_CONFIG --libs "gee-1.0" 2>/dev/null`
+		      test "x$?" != "x0" && pkg_failed=yes
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gee-1.0" 2>&1`
+        else
+	        GEE_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gee-1.0" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$GEE_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (gee-1.0) were not met:
+
+$GEE_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables GEE_CFLAGS
+and GEE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables GEE_CFLAGS
+and GEE_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	GEE_CFLAGS=$pkg_cv_GEE_CFLAGS
+	GEE_LIBS=$pkg_cv_GEE_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+else
+	GEE_CFLAGS=$pkg_cv_GEE_CFLAGS
+	GEE_LIBS=$pkg_cv_GEE_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	gee_0_8=yes
+fi
+
     ;;
 esac
+ if test "$gee_0_8" = "yes"; then
+  GEE_0_8_TRUE=
+  GEE_0_8_FALSE='#'
+else
+  GEE_0_8_TRUE='#'
+  GEE_0_8_FALSE=
+fi
 
  if test "$linux" = "yes"; then
   OS_LINUX_TRUE=
@@ -14096,7 +14363,6 @@ if test -n "$moonshot_CFLAGS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         \$GTK_VERSION
-        gee-0.8 >= 0.5
         \$SERVER_IPC_MODULE
 		\$MAC
 \""; } >&5
@@ -14105,7 +14371,6 @@ if test -n "$moonshot_CFLAGS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 ") 2>&5
@@ -14117,7 +14382,6 @@ if test -n "$moonshot_CFLAGS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 " 2>/dev/null`
@@ -14137,7 +14401,6 @@ if test -n "$moonshot_LIBS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         \$GTK_VERSION
-        gee-0.8 >= 0.5
         \$SERVER_IPC_MODULE
 		\$MAC
 \""; } >&5
@@ -14146,7 +14409,6 @@ if test -n "$moonshot_LIBS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 ") 2>&5
@@ -14158,7 +14420,6 @@ if test -n "$moonshot_LIBS"; then
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 " 2>/dev/null`
@@ -14187,7 +14448,6 @@ fi
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 " 2>&1`
@@ -14197,7 +14457,6 @@ fi
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 " 2>&1`
@@ -14210,7 +14469,6 @@ fi
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
         $GTK_VERSION
-        gee-0.8 >= 0.5
         $SERVER_IPC_MODULE
 		$MAC
 ) were not met:
@@ -16533,6 +16791,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${GEE_0_8_TRUE}" && test -z "${GEE_0_8_FALSE}"; then
+  as_fn_error $? "conditional \"GEE_0_8\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${OS_LINUX_TRUE}" && test -z "${OS_LINUX_FALSE}"; then

@@ -114,6 +114,8 @@ bin_PROGRAMS = src/moonshot$(EXEEXT) src/moonshot-webp$(EXEEXT)
 @IPC_DBUS_GLIB_FALSE@@IPC_DBUS_TRUE@	--define=IPC_DBUS
 
 @GIO_VAPI_USES_ARRAYS_TRUE@am__append_18 = --define=GIO_VAPI_USES_ARRAYS
+@GEE_0_8_TRUE@am__append_19 = --pkg gee-0.8
+@GEE_0_8_FALSE@am__append_20 = --pkg gee-1.0
 noinst_PROGRAMS = examples/client$(EXEEXT) \
 	examples/service-selection$(EXEEXT) tests/basic$(EXEEXT)
 subdir = .
@@ -199,7 +201,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(bindir)" \
 	"$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-libmoonshot_libmoonshot_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+libmoonshot_libmoonshot_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am__libmoonshot_libmoonshot_la_SOURCES_DIST =  \
 	libmoonshot/libmoonshot-common.c \
 	libmoonshot/libmoonshot-msrpc.c libmoonshot/libmoonshot-dbus.c
@@ -234,7 +237,7 @@ examples_service_selection_OBJECTS =  \
 am__DEPENDENCIES_3 = $(am__DEPENDENCIES_2)
 examples_service_selection_DEPENDENCIES =  \
 	${top_builddir}/libmoonshot/libmoonshot.la \
-	$(am__DEPENDENCIES_3)
+	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_1)
 am_src_moonshot_OBJECTS =  \
 	src/src_moonshot-moonshot-identity-manager-app.$(OBJEXT) \
 	src/src_moonshot-moonshot-identity-management-view.$(OBJEXT) \
@@ -256,7 +259,7 @@ am_src_moonshot_OBJECTS =  \
 src_moonshot_OBJECTS = $(am_src_moonshot_OBJECTS) \
 	$(nodist_src_moonshot_OBJECTS)
 src_moonshot_DEPENDENCIES = $(am__DEPENDENCIES_3) \
-	$(am__DEPENDENCIES_2)
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
 src_moonshot_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(src_moonshot_CFLAGS) \
 	$(CFLAGS) $(src_moonshot_LDFLAGS) $(LDFLAGS) -o $@
@@ -266,7 +269,8 @@ am_src_moonshot_webp_OBJECTS =  \
 	src/src_moonshot_webp-moonshot-id.$(OBJEXT)
 src_moonshot_webp_OBJECTS = $(am_src_moonshot_webp_OBJECTS)
 src_moonshot_webp_DEPENDENCIES = $(am__DEPENDENCIES_3) \
-	${top_builddir}/libmoonshot/libmoonshot.la
+	${top_builddir}/libmoonshot/libmoonshot.la \
+	$(am__DEPENDENCIES_1)
 src_moonshot_webp_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
 	$(src_moonshot_webp_CFLAGS) $(CFLAGS) \
@@ -445,6 +449,8 @@ EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 GDBUS_CFLAGS = @GDBUS_CFLAGS@
 GDBUS_LIBS = @GDBUS_LIBS@
+GEE_CFLAGS = @GEE_CFLAGS@
+GEE_LIBS = @GEE_LIBS@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GETTEXT_PACKAGE = @GETTEXT_PACKAGE@
 GMSGFMT = @GMSGFMT@
@@ -594,14 +600,14 @@ AM_CPPFLAGS = -include config.h -DLOCALEDIR=\""$(localedir)"\" \
 AM_VALAFLAGS = -g config.vapi --vapidir=$(top_srcdir)/vapi --pkg \
 	gio-2.0 $(am__append_2) $(am__append_4) $(am__append_8) \
 	$(am__append_12) $(am__append_15) $(am__append_17) \
-	$(am__append_18)
+	$(am__append_18) $(am__append_19) $(am__append_20)
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS) 
+        $(AM_CPPFLAGS)  $(GEE_CFLAGS)
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c \
 	$(am__append_13) $(am__append_14)
-libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS) $(GEE_LIBS)
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
 include_HEADERS = libmoonshot/libmoonshot.h
 noinst_HEADERS = libmoonshot/libmoonshot-common.h
@@ -628,13 +634,13 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-0.8 $(AM_VALAFLAGS)
-src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
-src_moonshot_LDADD = $(moonshot_LIBS) $(am__append_6)
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)   $(GEE_CFLAGS)
+src_moonshot_LDADD = $(moonshot_LIBS) $(GEE_LIBS) $(am__append_6)
 src_moonshot_LDFLAGS = -g -O0 $(am__append_9)
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
-src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la $(GEE_LIBS)
 src_moonshot_webp_LDFLAGS = $(am__append_10)
 @OS_WIN32_TRUE@src_moonshot_CFLAGS = -mwindows
 @OS_WIN32_TRUE@src_moonshot_webp_CFLAGS = -mconsole
@@ -670,10 +676,10 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
 	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
 
 examples_service_selection_SOURCES = examples/service-selection.c
-examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS) $(GEE_LIBS)
 examples_client_SOURCES = examples/client.c
-examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
 examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
