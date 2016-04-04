@@ -67,7 +67,7 @@ public class IdentityManagerApp {
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
-        if (view != null) view.show();    
+        if (view != null) view.make_visible();
     }
 	
     public IdentityManagerApp (bool headless, bool use_flat_file_store) {
