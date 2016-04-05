@@ -533,21 +533,6 @@ public class IdentityManagerView : Window {
         present();
     }
 
-
-    /** Makes the window visible, or at least, notifies the user that the window
-      * wants to be visible.
-      *
-      * This differs from show() in that show() does not guarantee that the 
-      * window will be moved to the foreground. Actually, neither does this
-      * method, because the user's settings and window manager may affect the
-      * behavior significantly.
-      */
-    public void make_visible()
-    {
-        set_urgency_hint(true);
-        present();
-    }
-
     public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
     {
         IdCard retval = identity;
