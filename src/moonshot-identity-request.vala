@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
 */
-public delegate void ReturnIdentityCallback (IdentityRequest request);
+public delegate void ReturnIdentityCallback(IdentityRequest request);
 
 public class IdentityRequest : Object {
     public IdCard? id_card = null;
@@ -44,10 +44,10 @@ public class IdentityRequest : Object {
 
     ReturnIdentityCallback callback = null;
 
-    public IdentityRequest (IdentityManagerApp           app,
-                            string                       nai,
-                            string                       password,
-                            string                       service)
+    public IdentityRequest(IdentityManagerApp           app,
+                           string                       nai,
+                           string                       password,
+                           string                       service)
     {
         this.parent_app = app;
         this.nai = nai;
@@ -55,23 +55,23 @@ public class IdentityRequest : Object {
         this.service = service;
     }
 
-    public IdentityRequest.default (IdentityManagerApp app)
+    public IdentityRequest.default(IdentityManagerApp app)
     {
         this.parent_app = app;
         this.select_default = true;
     }
 
-    public void set_callback (owned ReturnIdentityCallback cb)
+    public void set_callback(owned ReturnIdentityCallback cb)
     {
-#if VALA_0_12
-        this.callback = ((owned) cb);
-#else
-        this.callback = ((IdCard) => cb (IdCard));
-#endif
+        #if VALA_0_12
+            this.callback = ((owned) cb);
+        #else
+            this.callback = ((IdCard) => cb(IdCard));
+        #endif
     }
 
-    public bool execute () {
-        parent_app.select_identity (this);
+    public bool execute() {
+        parent_app.select_identity(this);
 
         /* This function works as a GSourceFunc, so it can be passed to
          * the main loop from other threads
@@ -79,7 +79,7 @@ public class IdentityRequest : Object {
         return false;
     }
 
-    public void return_identity (IdCard? id_card) {
+    public void return_identity(IdCard? id_card) {
         this.id_card = id_card;
         this.complete = true;
 
@@ -103,12 +103,12 @@ public class IdentityRequest : Object {
                 services[id_card.services.length] = this.service;
                 id_card.services = services;
 
-                this.id_card = this.parent_app.model.update_card (id_card);
+                this.id_card = this.parent_app.model.update_card(id_card);
             }
         }
 
         return_if_fail (callback != null);
-        callback (this);
+        callback(this);
     }
 
 #if OS_WIN32

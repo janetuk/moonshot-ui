@@ -90,52 +90,52 @@ public class IdentityManagerModel : Object {
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
     public LinkedList<IdCard>  get_card_list() {
-         var identities = store.get_card_list();
-         identities.sort( (a, b) => {
-             IdCard id_a = (IdCard )a;
-             IdCard id_b = (IdCard )b;
-             if (id_a.IsNoIdentity() && !id_b.IsNoIdentity()) {
-                return -1;
-             } else if (id_b.IsNoIdentity() && !id_a.IsNoIdentity()) {
-                return 1;
-             }
-             return strcmp(id_a.display_name, id_b.display_name);
-         });
-         if (identities.is_empty || !identities[0].IsNoIdentity())
-             identities.insert(0, IdCard.NewNoIdentity());
-         foreach (IdCard id_card in identities) {
-             if (!id_card.store_password) {
-                 password_table.RetrievePassword(id_card, store);
-             }
-         }
-         return identities;
+        var identities = store.get_card_list();
+        identities.sort((a, b) => {
+                IdCard id_a = (IdCard )a;
+                IdCard id_b = (IdCard )b;
+                if (id_a.IsNoIdentity() && !id_b.IsNoIdentity()) {
+                    return -1;
+                } else if (id_b.IsNoIdentity() && !id_a.IsNoIdentity()) {
+                    return 1;
+                }
+                return strcmp(id_a.display_name, id_b.display_name);
+            });
+        if (identities.is_empty || !identities[0].IsNoIdentity())
+            identities.insert(0, IdCard.NewNoIdentity());
+        foreach (IdCard id_card in identities) {
+            if (!id_card.store_password) {
+                password_table.RetrievePassword(id_card, store);
+            }
+        }
+        return identities;
     }
     public signal void card_list_changed();
 
     /* This method finds a valid display name */
-    public bool display_name_is_valid (string name,
-                                       out string? candidate)
+    public bool display_name_is_valid(string name,
+                                      out string? candidate)
     {
         if (&candidate != null)
-          candidate = null;
+            candidate = null;
         foreach (IdCard id_card in this.store.get_card_list())
         {
-          if (id_card.display_name == name)
-          {
-            if (&candidate != null)
+            if (id_card.display_name == name)
             {
-              for (int i=0; i<1000; i++)
-              {
-                string tmp = "%s %d".printf (name, i);
-                if (display_name_is_valid (tmp, null))
+                if (&candidate != null)
                 {
-                  candidate = tmp;
-                  break;
+                    for (int i = 0; i < 1000; i++)
+                    {
+                        string tmp = "%s %d".printf(name, i);
+                        if (display_name_is_valid(tmp, null))
+                        {
+                            candidate = tmp;
+                            break;
+                        }
+                    }
                 }
-              }
+                return false;
             }
-            return false;
-          }
         }
         return true;
     }
@@ -145,16 +145,16 @@ public class IdentityManagerModel : Object {
         bool duplicate_found = false;
         bool found = false;
         do {
-           var cards = this.store.get_card_list();
-           found = false;
-           foreach (IdCard id_card in cards) {
-               if ((card != id_card) && (id_card.nai == card.nai)) {
-                  stdout.printf("removing duplicate id for '%s'\n", card.nai);
-                  remove_card_internal(id_card);
-                  found = duplicate_found = true;
-                  break;
-               }
-           }
+            var cards = this.store.get_card_list();
+            found = false;
+            foreach (IdCard id_card in cards) {
+                if ((card != id_card) && (id_card.nai == card.nai)) {
+                    stdout.printf("removing duplicate id for '%s'\n", card.nai);
+                    remove_card_internal(id_card);
+                    found = duplicate_found = true;
+                    break;
+                }
+            }
         } while (found);
         return duplicate_found;
     }
@@ -190,9 +190,9 @@ public class IdentityManagerModel : Object {
 
         remove_duplicates(card);
 
-        if (!display_name_is_valid (card.display_name, out candidate))
+        if (!display_name_is_valid(card.display_name, out candidate))
         {
-          card.display_name = candidate;
+            card.display_name = candidate;
         }
 
         if (!card.store_password)
@@ -200,9 +200,9 @@ public class IdentityManagerModel : Object {
         store.add_card(card);
         set_store_type(saved_store_type);
         card_list_changed();
-     }
+    }
 
-     public IdCard update_card(IdCard card) {
+    public IdCard update_card(IdCard card) {
         IdCard retval;
         if (card.temporary) {
             retval = card;
@@ -216,55 +216,55 @@ public class IdentityManagerModel : Object {
         retval = store.update_card(card);
         card_list_changed();
         return retval;
-     }
+    }
 
-     private bool remove_card_internal(IdCard card) {
-         if (card.temporary)
-             return false;
-         password_table.RemovePassword(card, store);
-         return store.remove_card(card);
-     }
+    private bool remove_card_internal(IdCard card) {
+        if (card.temporary)
+            return false;
+        password_table.RemovePassword(card, store);
+        return store.remove_card(card);
+    }
 
-     public bool remove_card(IdCard card) {
-         if (remove_card_internal(card)) {
+    public bool remove_card(IdCard card) {
+        if (remove_card_internal(card)) {
             card_list_changed();
             return true;
-         }
-         return false;
-     }
+        }
+        return false;
+    }
 
-     public void set_store_type(IIdentityCardStore.StoreType type) {
-         if ((store != null) && (store.get_store_type() == type))
-             return;
-         switch (type) {
-#if GNOME_KEYRING
-             case IIdentityCardStore.StoreType.KEYRING:
-                 store = new KeyringStore();
-                 break;
-#endif
-             case IIdentityCardStore.StoreType.FLAT_FILE:
-             default:
-                 store = new LocalFlatFileStore();
-                 break;
-         }
-     }
+    public void set_store_type(IIdentityCardStore.StoreType type) {
+        if ((store != null) && (store.get_store_type() == type))
+            return;
+        switch (type) {
+            #if GNOME_KEYRING
+        case IIdentityCardStore.StoreType.KEYRING:
+            store = new KeyringStore();
+            break;
+            #endif
+        case IIdentityCardStore.StoreType.FLAT_FILE:
+        default:
+            store = new LocalFlatFileStore();
+            break;
+        }
+    }
 
-     public IIdentityCardStore.StoreType get_store_type() {
-         return store.get_store_type();
-     }
+    public IIdentityCardStore.StoreType get_store_type() {
+        return store.get_store_type();
+    }
 
-     public bool HasNonTrivialIdentities() {
-         foreach (IdCard card in this.store.get_card_list()) {
-             // The 'NoIdentity' card is non-trivial if it has services or rules.
-             // All other cards are automatically non-trivial.
-             if ((!card.IsNoIdentity()) || 
-                 (card.services.length > 0) ||
-                 (card.rules.length > 0)) {
-                 return true;
-             }
-         }
-         return false;
-     }
+    public bool HasNonTrivialIdentities() {
+        foreach (IdCard card in this.store.get_card_list()) {
+            // The 'NoIdentity' card is non-trivial if it has services or rules.
+            // All other cards are automatically non-trivial.
+            if ((!card.IsNoIdentity()) || 
+                (card.services.length > 0) ||
+                (card.rules.length > 0)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     private IdentityManagerApp parent;

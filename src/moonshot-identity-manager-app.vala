@@ -50,33 +50,35 @@ public class IdentityManagerApp {
     public IdentityManagerView view;
     private MoonshotServer ipc_server;
 
-#if OS_MACOS
-	public OSXApplication osxApp;
+    #if OS_MACOS
+    public OSXApplication osxApp;
   
     // the signal handler function.
     // the current instance of our app class is passed in the 
     // id_manager_app_instanceparameter 
-	public static bool on_osx_open_files (OSXApplication osx_app_instance, 
-                                        string file_name, 
-                                        IdentityManagerApp id_manager_app_instance ) {
-    int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
-    return true;
-	}
-#endif
+    public static bool on_osx_open_files(OSXApplication osx_app_instance, 
+                                         string file_name, 
+                                         IdentityManagerApp id_manager_app_instance ) {
+        int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
+        return true;
+    }
+    #endif
 
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     public void show() {
         if (view != null) view.make_visible();
     }
-	
-    public IdentityManagerApp (bool headless, bool use_flat_file_store) {
+
+    public IdentityManagerApp(bool headless, bool use_flat_file_store) {
         use_flat_file_store |= UserForcesFlatFileStore();
-#if GNOME_KEYRING
-        bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
-#else
-        bool keyring_available = false;
-#endif
+
+        #if GNOME_KEYRING
+            bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
+        #else
+            bool keyring_available = false;
+        #endif
+
         IIdentityCardStore.StoreType store_type;
         if (headless || use_flat_file_store || !keyring_available)
             store_type = IIdentityCardStore.StoreType.FLAT_FILE;
@@ -91,30 +93,28 @@ public class IdentityManagerApp {
 
         if (!headless)
             view = new IdentityManagerView(this);
-        LinkedList<IdCard> card_list = model.get_card_list() ;
+        LinkedList<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
 
-        init_ipc_server ();
+        init_ipc_server();
 
-#if OS_MACOS
-
+        #if OS_MACOS
         osxApp = OSXApplication.get_instance();
-        // The 'correct' way of connrcting wont work in Mac OS with Vala 0.12	e.g.	
-        // 		osxApp.ns_application_open_file.connect(install_from_file);
+        // The 'correct' way of connecting won't work in Mac OS with Vala 0.12; e.g.
+        //     osxApp.ns_application_open_file.connect(install_from_file);
         // so we have to use this old way
         Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
-
-#endif
+        #endif
     }
 
-    public bool add_identity (IdCard id, bool force_flat_file_store) {
+    public bool add_identity(IdCard id, bool force_flat_file_store) {
         if (view != null) return view.add_identity(id, force_flat_file_store);
         model.add_card(id, force_flat_file_store);
         return true;
     }
 
-    public void select_identity (IdentityRequest request) {
+    public void select_identity(IdentityRequest request) {
         IdCard identity = null;
 
         if (request.select_default)
@@ -144,7 +144,7 @@ public class IdentityManagerApp {
                     {
                         if (request.service == srv)
                         {
-                            request.candidates.append (id);
+                            request.candidates.append(id);
                             continue;
                         }
                     }
@@ -167,19 +167,19 @@ public class IdentityManagerApp {
                             has_service = true;
                             continue;
                         }
-                        services_list.append (srv);
+                        services_list.append(srv);
                     }
                     
                     if (!has_service)
                         continue;
 
-                    if (services_list.length () == 0)
+                    if (services_list.length() == 0)
                     {
                         id.services = {};
                         continue;
                     }
 
-                    string[] services = new string[services_list.length ()];
+                    string[] services = new string[services_list.length()];
                     foreach (string srv in services_list)
                     {
                         services[i] = srv;
@@ -191,16 +191,16 @@ public class IdentityManagerApp {
             }
 
             /* If there are no candidates we use the service matching rules */
-            if ((identity==null) && (request.candidates.length () == 0))
+            if ((identity == null) && (request.candidates.length() == 0))
             {
                 foreach (IdCard id in model.get_card_list())
                 {
                     foreach (Rule rule in id.rules)
                     {
-                        if (!match_service_pattern (request.service, rule.pattern))
+                        if (!match_service_pattern(request.service, rule.pattern))
                             continue;
 
-                        request.candidates.append (id);
+                        request.candidates.append(id);
 
                         if (rule.always_confirm == "true")
                             confirm = true;
@@ -220,10 +220,10 @@ public class IdentityManagerApp {
                 identity.temporary = true;
             }
             if (identity == null) {
-                if (request.candidates.length () != 1) {
+                if (request.candidates.length() != 1) {
                     confirm = true;
                 } else {
-                    identity = request.candidates.nth_data (0);                    
+                    identity = request.candidates.nth_data(0);                    
                 }
             }
 
@@ -231,7 +231,7 @@ public class IdentityManagerApp {
             {
                 if (!explicitly_launched)
                     show();
-		view.queue_identity_request(request);
+                view.queue_identity_request(request);
                 return;
             }
         }
@@ -242,58 +242,56 @@ public class IdentityManagerApp {
                 if (view != null) {
                     identity = view.check_add_password(identity, request, model);
                 }
-                request.return_identity (identity);
+                request.return_identity(identity);
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit
 //                if (!explicitly_launched)
-//                    Idle.add( () => { Gtk.main_quit(); return false; } );
+//                    Idle.add(() => { Gtk.main_quit(); return false; } );
                 return false;
             }
-        );
+            );
         return;
     }
 
-    private bool match_service_pattern (string service, string pattern)
-    {
-        var pspec = new PatternSpec (pattern);
-        return pspec.match_string (service);
-    }   
+    private bool match_service_pattern(string service, string pattern)
+        {
+            var pspec = new PatternSpec(pattern);
+            return pspec.match_string(service);
+        }   
     
-#if IPC_MSRPC
-    private void init_ipc_server ()
-    {
+    #if IPC_MSRPC
+    private void init_ipc_server() {
         // Errors will currently be sent via g_log - ie. to an
         // obtrusive message box, on Windows
         //
-        this.ipc_server = MoonshotServer.get_instance ();
-        MoonshotServer.start (this);
+        this.ipc_server = MoonshotServer.get_instance();
+        MoonshotServer.start(this);
     }
-#elif IPC_DBUS_GLIB
-    private void init_ipc_server ()
-    {
+    #elif IPC_DBUS_GLIB
+    private void init_ipc_server() {
         try {
-            var conn = DBus.Bus.get (DBus.BusType.SESSION);
-            dynamic DBus.Object bus = conn.get_object ("org.freedesktop.DBus",
-                                                       "/org/freedesktop/DBus",
-                                                       "org.freedesktop.DBus");
+            var conn = DBus.Bus.get(DBus.BusType.SESSION);
+            dynamic DBus.Object bus = conn.get_object("org.freedesktop.DBus",
+                                                      "/org/freedesktop/DBus",
+                                                      "org.freedesktop.DBus");
 
             // try to register service in session bus
-            uint reply = bus.request_name ("org.janet.Moonshot", (uint) 0);
+            uint reply = bus.request_name("org.janet.Moonshot", (uint) 0);
             if (reply == DBus.RequestNameReply.PRIMARY_OWNER)
             {
-                this.ipc_server = new MoonshotServer (this);
-                conn.register_object ("/org/janet/moonshot", ipc_server);
+                this.ipc_server = new MoonshotServer(this);
+                conn.register_object("/org/janet/moonshot", ipc_server);
             } else {
-                bool shown=false;
+                bool shown = false;
                 GLib.Error e;
-                DBus.Object manager_proxy = conn.get_object ("org.janet.Moonshot",
-                                                             "/org/janet/moonshot",
-                                                             "org.janet.Moonshot");
+                DBus.Object manager_proxy = conn.get_object("org.janet.Moonshot",
+                                                            "/org/janet/moonshot",
+                                                            "org.janet.Moonshot");
                 if (manager_proxy != null)
                     manager_proxy.call("ShowUi", out e, GLib.Type.INVALID, typeof(bool), out shown, GLib.Type.INVALID);
 
                 if (!shown) {
-                    GLib.error ("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
+                    GLib.error("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
                 } else {
                     stdout.printf("Showed previously launched identity manager.\n");
                     GLib.Process.exit(0);
@@ -302,119 +300,117 @@ public class IdentityManagerApp {
         }
         catch (DBus.Error e)
         {
-            stderr.printf ("%s\n", e.message);
+            stderr.printf("%s\n", e.message);
         }
     }
-#else
-    private void bus_acquired_cb (DBusConnection conn)
-    {
+    #else
+    private void bus_acquired_cb(DBusConnection conn) {
         try {
-            conn.register_object ("/org/janet/moonshot", ipc_server);
+            conn.register_object("/org/janet/moonshot", ipc_server);
         }
         catch (Error e)
         {
-            stderr.printf ("%s\n", e.message);
+            stderr.printf("%s\n", e.message);
         }
     }
 
-    private void init_ipc_server ()
-    {
-        this.ipc_server = new MoonshotServer (this);
-        GLib.Bus.own_name (GLib.BusType.SESSION,
-                           "org.janet.Moonshot",
-                           GLib.BusNameOwnerFlags.NONE,
-                           bus_acquired_cb,
-                           (conn, name) => {},
-                           (conn, name) => {
-                               bool shown=false;
-                               try {
-                                   IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
-                                   shown = manager.show_ui();
-                               } catch (IOError e) {
-                               }
-                               if (!shown) {
-                                   GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
-                               } else {
-                                   stdout.printf("Showed previously launched identity manager.\n");
-                                   GLib.Process.exit(0);
-                               }
-                           });
+    private void init_ipc_server() {
+        this.ipc_server = new MoonshotServer(this);
+        GLib.Bus.own_name(GLib.BusType.SESSION,
+                          "org.janet.Moonshot",
+                          GLib.BusNameOwnerFlags.NONE,
+                          bus_acquired_cb,
+                          (conn, name) => {},
+                          (conn, name) => {
+                              bool shown = false;
+                              try {
+                                  IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+                                  shown = manager.show_ui();
+                              } catch (IOError e) {
+                              }
+                              if (!shown) {
+                                  GLib.error("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                              } else {
+                                  stdout.printf("Showed previously launched identity manager.\n");
+                                  GLib.Process.exit(0);
+                              }
+                          });
     }
-#endif
+    #endif
 }
 
 static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
 const GLib.OptionEntry[] options = {
-    {"dbus-launched",0,GLib.OptionFlags.REVERSE,GLib.OptionArg.NONE,
-     ref explicitly_launched,"launch for dbus rpc use",null},
-    {"flat-file-store",0,0,GLib.OptionArg.NONE,
-     ref use_flat_file_store,"force use of flat file identity store (used by default only for headless operation)",null},
+    {"dbus-launched", 0, GLib.OptionFlags.REVERSE, GLib.OptionArg.NONE,
+     ref explicitly_launched, "launch for dbus rpc use", null},
+    {"flat-file-store", 0, 0, GLib.OptionArg.NONE,
+     ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
     {null}
 };
 
 
-public static int main(string[] args){
-#if IPC_MSRPC
-	bool headless = false;
-#else
-        bool headless = GLib.Environment.get_variable("DISPLAY") == null;
-#endif
+public static int main(string[] args) {
+    #if IPC_MSRPC
+        bool headless = false;
+    #else
+        bool headless = (GLib.Environment.get_variable("DISPLAY") == null);
+    #endif
 
-        if (headless) {
-            try {
-                var opt_context = new OptionContext(null);
-                opt_context.set_help_enabled (true);
-                opt_context.add_main_entries (options, null);
-                opt_context.parse(ref args);
-            } catch (OptionError e) {
-                stdout.printf(_("error: %s\n"),e.message);
-                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+    if (headless) {
+        try {
+            var opt_context = new OptionContext(null);
+            opt_context.set_help_enabled(true);
+            opt_context.add_main_entries(options, null);
+            opt_context.parse(ref args);
+        } catch (OptionError e) {
+            stdout.printf(_("error: %s\n"),e.message);
+            stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+            return -1;
+        }
+        explicitly_launched = false;
+    } else {
+        try {
+            if (!Gtk.init_with_args(ref args, _(""), options, null)) {
+                stdout.printf(_("unable to initialize window\n"));
                 return -1;
             }
-            explicitly_launched = false;
-        } else {
-            try {
-                if (!Gtk.init_with_args(ref args, _(""), options, null)) {
-                    stdout.printf(_("unable to initialize window\n"));
-                    return -1;
-                }
-            } catch (GLib.Error e) {
-                stdout.printf(_("error: %s\n"),e.message);
-                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
-                return -1;
-            }
-            gtk_available = true;
+        } catch (GLib.Error e) {
+            stdout.printf(_("error: %s\n"),e.message);
+            stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+            return -1;
         }
-
-#if OS_WIN32
-        // Force specific theme settings on Windows without requiring a gtkrc file
-        Gtk.Settings settings = Gtk.Settings.get_default ();
-        settings.set_string_property ("gtk-theme-name", "ms-windows", "moonshot");
-        settings.set_long_property ("gtk-menu-images", 0, "moonshot");
-#endif
-
-        Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
-        Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
-        Intl.textdomain (Config.GETTEXT_PACKAGE);
-       
-	   
-        var app = new IdentityManagerApp(headless, use_flat_file_store);
-        app.explicitly_launched = explicitly_launched;
-        
-	if (app.explicitly_launched) {
-            app.show();
-        }
-
-        if (headless) {
-#if !IPC_MSRPC
-            MainLoop loop = new MainLoop();
-            loop.run();
-#endif
-        } else {
-            Gtk.main();
-        }
-
-        return 0;
+        gtk_available = true;
     }
+
+    #if OS_WIN32
+    // Force specific theme settings on Windows without requiring a gtkrc file
+    Gtk.Settings settings = Gtk.Settings.get_default();
+    settings.set_string_property("gtk-theme-name", "ms-windows", "moonshot");
+    settings.set_long_property("gtk-menu-images", 0, "moonshot");
+    #endif
+
+    Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
+    Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
+    Intl.textdomain(Config.GETTEXT_PACKAGE);
+       
+    var app = new IdentityManagerApp(headless, use_flat_file_store);
+    app.explicitly_launched = explicitly_launched;
+        
+    if (app.explicitly_launched) {
+        app.show();
+    }
+
+    if (headless) {
+        #if !IPC_MSRPC
+        MainLoop loop = new MainLoop();
+        loop.run();
+        #endif
+    }
+    else {
+        Gtk.main();
+    }
+
+    return 0;
+}
 
