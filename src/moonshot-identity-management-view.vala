@@ -177,11 +177,11 @@ public class IdentityManagerView : Window {
 
     private void setup_list_model()
     {
-        this.listmodel = new Gtk.ListStore (Columns.N_COLUMNS, typeof(IdCard),
-                                            typeof(Gdk.Pixbuf),
-                                            typeof(string),
-                                            typeof(string),
-                                            typeof(string));
+        this.listmodel = new Gtk.ListStore(Columns.N_COLUMNS, typeof(IdCard),
+                                           typeof(Gdk.Pixbuf),
+                                           typeof(string),
+                                           typeof(string),
+                                           typeof(string));
         this.filter = new TreeModelFilter(listmodel, null);
 
         filter.set_visible_func(visible_func);
@@ -567,7 +567,7 @@ public class IdentityManagerView : Window {
     public void send_identity_cb(IdCard id)
     {
         IdCard identity = id;
-        return_if_fail (request_queue.length > 0);
+        return_if_fail(request_queue.length > 0);
 
         candidates = null;
         var request = this.request_queue.pop_head();

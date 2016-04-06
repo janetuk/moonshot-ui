@@ -49,6 +49,8 @@ public class IdentityManagerApp {
     public bool explicitly_launched;
     public IdentityManagerView view;
     private MoonshotServer ipc_server;
+    private bool name_is_owned;
+    private bool show_requested;
 
     #if OS_MACOS
     public OSXApplication osxApp;
@@ -66,8 +68,18 @@ public class IdentityManagerApp {
 
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
+
+
+	/** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
     public void show() {
-        if (view != null) view.make_visible();
+        if (name_is_owned) {
+            if (view != null) {
+                view.make_visible();
+            }
+        }
+        else {
+            show_requested = true;
+        }
     }
 
     public IdentityManagerApp(bool headless, bool use_flat_file_store) {
@@ -115,6 +127,7 @@ public class IdentityManagerApp {
     }
 
     public void select_identity(IdentityRequest request) {
+
         IdCard identity = null;
 
         if (request.select_default)
@@ -316,16 +329,40 @@ public class IdentityManagerApp {
 
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);
+        bool shown = false;
         GLib.Bus.own_name(GLib.BusType.SESSION,
                           "org.janet.Moonshot",
                           GLib.BusNameOwnerFlags.NONE,
                           bus_acquired_cb,
-                          (conn, name) => {},
+
+                          // Name acquired callback:
                           (conn, name) => {
-                              bool shown = false;
+
+                              name_is_owned = true;
+
+                              // Now that we know that we own the name, it's safe to show the UI.
+                              if (show_requested) {
+                                  show();
+                                  show_requested = false;
+                              }
+                              shown = true;
+                          },
+
+                          // Name lost callback:
+                          (conn, name) => {
+
+                              // This callback usually means that another moonshot is already running.
+                              // But it *might* mean that we lost the name for some other reason
+                              // (though it's unclear to me yet what those reasons are.)
+                              // Clearing these flags seems like a good idea for that case. -- dbreslau
+                              name_is_owned = false;
+                              show_requested = false;
+
                               try {
-                                  IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
-                                  shown = manager.show_ui();
+                                  if (!shown) {
+                                      IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+                                      shown = manager.show_ui();
+                                  }
                               } catch (IOError e) {
                               }
                               if (!shown) {

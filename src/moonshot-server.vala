@@ -80,7 +80,7 @@ public class MoonshotServer : Object {
 
         if ((id_card != null) && (id_card.display_name != IdCard.NO_IDENTITY)) {
             nai_out = id_card.nai;
-            if ((request.password!=null) && (request.password != ""))
+            if ((request.password != null) && (request.password != ""))
                 password_out = request.password;
             else
                 password_out = id_card.password;
@@ -157,18 +157,18 @@ public class MoonshotServer : Object {
         return false;
     }
 
-    public bool install_id_card (string   display_name,
-                                 string   user_name,
-                                 string   ?password,
-                                 string   ?realm,
-                                 string[] ?rules_patterns,
-                                 string[] ?rules_always_confirm,
-                                 string[] ?services,
-                                 string   ?ca_cert,
-                                 string   ?subject,
-                                 string   ?subject_alt,
-                                 string   ?server_cert,
-                                 int      force_flat_file_store)
+    public bool install_id_card(string   display_name,
+                                string   user_name,
+                                string   ?password,
+                                string   ?realm,
+                                string[] ?rules_patterns,
+                                string[] ?rules_always_confirm,
+                                string[] ?services,
+                                string   ?ca_cert,
+                                string   ?subject,
+                                string   ?subject_alt,
+                                string   ?server_cert,
+                                int      force_flat_file_store)
     {
         IdCard idcard = new IdCard();
 

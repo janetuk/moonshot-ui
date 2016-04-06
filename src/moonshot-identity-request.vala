@@ -107,7 +107,7 @@ public class IdentityRequest : Object {
             }
         }
 
-        return_if_fail (callback != null);
+        return_if_fail(callback != null);
         callback(this);
     }
 
