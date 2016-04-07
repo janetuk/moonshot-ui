@@ -488,7 +488,6 @@ public static int main(string[] args) {
        
        
     var app = new IdentityManagerApp(headless, use_flat_file_store);
-    IdentityManagerApp.logger.trace("Hi again from main()!");
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
         

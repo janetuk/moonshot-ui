@@ -48,7 +48,7 @@ public class IdentityManagerView : Window {
     private VBox services_vbox;
     private CustomVBox custom_vbox;
     private VBox services_internal_vbox;
-
+    private ScrolledWindow services_vscroll;
     private Entry issuer_entry;
     private Entry username_entry;
     private Entry password_entry;
@@ -275,27 +275,24 @@ public class IdentityManagerView : Window {
     
     private void fill_details(IdCardWidget? id_card_widget)
     {
-        var vr_children = this.vbox_right.get_children();
-        foreach (var vr_child in vr_children) {
-            this.vbox_right.remove(vr_child);
-        }
+        logger.trace("fill_details: id_card_widget=%s".printf(id_card_widget == null ? "null" : "non-null"));
+
         if (id_card_widget != null) {
             var id_card = id_card_widget.id_card;
             if (id_card.display_name == IdCard.NO_IDENTITY) {
-                this.vbox_right.pack_start(no_identity_title, false, true, 0);
+                logger.trace("fill_details: Displaying title for NO_IDENTITY");
+                login_vbox.hide();
+                no_identity_title.show_all();
             } else {
+                logger.trace("fill_details: Displaying details for selected card");
                 this.issuer_entry.set_text(id_card.issuer);
                 this.username_entry.set_text(id_card.username);
                 this.password_entry.set_text(id_card.password ?? "");
-                this.vbox_right.pack_start(login_vbox, false, true, 0);
                 this.remember_checkbutton.active = id_card.store_password;
+                no_identity_title.hide();
+                login_vbox.show_all();              
             }
-            this.vbox_right.pack_start(services_vbox, false, true, 0);
 
-            var children = this.services_internal_vbox.get_children();
-            foreach (var hbox in children) {
-                services_internal_vbox.remove(hbox);
-            }
             fill_services_vbox(id_card_widget.id_card);
         }
     }
@@ -615,13 +612,20 @@ public class IdentityManagerView : Window {
 
     private void fill_services_vbox(IdCard id_card)
     {
-        int i = 0;
-        var n_columns = id_card.services.length;
+        logger.trace("fill_services_vbox");
 
-        var services_table = new Table(n_columns, 2, false);
+        var children = this.services_internal_vbox.get_children();
+        foreach (var widget in children) {
+            services_internal_vbox.remove(widget);
+        }
+
+        int i = 0;
+        var n_rows = id_card.services.length;
+
+        var services_table = new Table(n_rows, 2, false);
         services_table.set_col_spacings(10);
         services_table.set_row_spacings(10);
-        this.services_internal_vbox.add(services_table);
+        this.services_internal_vbox.pack_start(services_table, true, false, 0);
         
         service_button_map.remove_all();
 
@@ -681,7 +685,8 @@ public class IdentityManagerView : Window {
             services_table.attach_defaults(remove_button, 1, 2, i, i+1);
             i++;
         }
-        this.services_internal_vbox.show_all();
+
+        services_vbox.show_all();
     }
 
     private void on_about_action()
@@ -842,17 +847,17 @@ SUCH DAMAGE.
         viewport.set_border_width(6);
         viewport.set_shadow_type(ShadowType.NONE);
         viewport.add(custom_vbox);
-        var scroll = new ScrolledWindow(null, null);
-        scroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scroll.set_shadow_type(ShadowType.IN);
-        scroll.add_with_viewport(viewport);
+        var id_scrollwin = new ScrolledWindow(null, null);
+        id_scrollwin.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
+        id_scrollwin.set_shadow_type(ShadowType.IN);
+        id_scrollwin.add_with_viewport(viewport);
         this.prompting_service = new Label(_(""));
         // left-align
         prompting_service.set_alignment(0, (float )0.5);
 
         var vbox_left = new VBox(false, 0);
         vbox_left.pack_start(search_entry, false, false, 6);
-        vbox_left.pack_start(scroll, true, true, 0);
+        vbox_left.pack_start(id_scrollwin, true, true, 0);
         vbox_left.pack_start(prompting_service, false, false, 6);
         vbox_left.set_size_request(WINDOW_WIDTH, 0);
 
@@ -887,6 +892,8 @@ SUCH DAMAGE.
         set_atk_relation(username_label, username_entry, Atk.RelationType.LABEL_FOR);
         set_atk_relation(password_entry, password_entry, Atk.RelationType.LABEL_FOR);
 
+        // Create the login_vbox. This starts off hidden, because the first card we
+        // display, by default, is NO_IDENTITY.
         var login_table = new Table(5, 2, false);
         login_table.set_col_spacings(10);
         login_table.set_row_spacings(10);
@@ -904,21 +911,30 @@ SUCH DAMAGE.
         this.login_vbox = new VBox(false, 6);
         login_vbox.pack_start(login_vbox_title, false, true, 0);
         login_vbox.pack_start(login_vbox_alignment, false, true, 0);
+        login_vbox.hide();
 
         var services_vbox_title = new Label(_("Services:"));
         label_make_bold(services_vbox_title);
         services_vbox_title.set_alignment(0, (float) 0.5);
-        var services_vbox_alignment = new Alignment(0, 0, 0, 0);
-        services_vbox_alignment.set_padding(0, 0, 12, 0);
+        
         this.services_internal_vbox = new VBox(true, 6);
-        services_vbox_alignment.add(services_internal_vbox);
-        this.services_vbox = new VBox(false, 6);
-        services_vbox.pack_start(services_vbox_title, false, true, 0);
-        services_vbox.pack_start(services_vbox_alignment, false, true, 0);
 
+        var services_vbox_alignment = new Alignment(0, 0, 0, 1);
+        services_vbox_alignment.set_padding(6, 6, 6, 6);
+        services_vbox_alignment.add(services_internal_vbox);
+        services_vscroll = new ScrolledWindow(null, null);
+        services_vscroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
+        services_vscroll.set_shadow_type(ShadowType.IN);
+        services_vscroll.add_with_viewport(services_vbox_alignment);
+
+        services_vbox = new VBox(false, 6);
         this.vbox_right = new VBox(false, 18);
-        vbox_right.pack_start(login_vbox, false, true, 0);
-        vbox_right.pack_start(services_vbox, false, true, 0);
+        services_vbox.pack_start(services_vbox_title, false, false, 0);
+        services_vbox.pack_start(services_vscroll, true, true, 0);
+
+        vbox_right.pack_start(no_identity_title, true, false, 0);
+        vbox_right.pack_start(login_vbox, false, false, 0);
+        vbox_right.pack_start(services_vbox, true, true, 0);
 
         var hbox = new HBox(false, 12);
         hbox.pack_start(vbox_left, false, false, 0);
@@ -926,7 +942,7 @@ SUCH DAMAGE.
 
         var main_vbox = new VBox(false, 0);
         main_vbox.set_border_width(12);
- 
+
         #if OS_MACOS
         // hide the  File | Quit menu item which is now on the Mac Menu
         Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
