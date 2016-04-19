@@ -33,6 +33,8 @@ using Gee;
 using Gtk;
 
 public class IdentityManagerView : Window {
+    static MoonshotLogger logger = get_logger("IdentityManagerView");
+
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
@@ -627,11 +629,11 @@ public class IdentityManagerView : Window {
         {
             var label = new Label(service);
             label.set_alignment(0, (float) 0.5);
-            #if VALA_0_12
-                var remove_button = new Button.from_stock(Stock.REMOVE);
-            #else
-                var remove_button = new Button.from_stock(STOCK_REMOVE);
-            #endif
+#if VALA_0_12
+            var remove_button = new Button.from_stock(Stock.REMOVE);
+#else
+            var remove_button = new Button.from_stock(STOCK_REMOVE);
+#endif
 
 
             service_button_map.insert(remove_button, service);
@@ -803,6 +805,7 @@ SUCH DAMAGE.
         catch (Error e)
         {
             stderr.printf("%s\n", e.message);
+            logger.error("create_ui_manager: Caught error: " + e.message);
         }
         ui_manager.ensure_update();
     }
@@ -934,10 +937,10 @@ SUCH DAMAGE.
         osxApp.set_use_quartz_accelerators(true);
         osxApp.sync_menu_bar();
         osxApp.ready(); 
-        #else
+#else
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
-        #endif
+#endif
         main_vbox.pack_start(hbox, true, true, 0);
         add(main_vbox);
         main_vbox.show_all();
@@ -966,5 +969,3 @@ SUCH DAMAGE.
         atk_widget.add_relationship(relationship, atk_target_widget);
     }
 }
-
-

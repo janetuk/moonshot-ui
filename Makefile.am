@@ -24,11 +24,21 @@ AM_CPPFLAGS =  \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
+
+if LOG4VALA
+MOONSHOT_LOG_PKG= --pkg log4vala-0.1 -X -llog4vala-0.1 --define=USE_LOG4VALA
+MOONSHOT_LOG_LIBS= -llog4vala-0.1
+else
+MOONSHOT_LOG_PKG=
+MOONSHOT_LOG_LIBS=
+endif
+
+
 AM_VALAFLAGS = -g \
         config.vapi \
-	--vapidir=$(top_srcdir)/vapi \
-        --pkg gio-2.0
-
+        --vapidir=$(top_srcdir)/vapi \
+        --pkg gio-2.0 \
+        $(MOONSHOT_LOG_PKG)
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
@@ -58,17 +68,18 @@ src_moonshot_SOURCES = \
         src/moonshot-password-dialog.vala \
         src/moonshot-provisioning-common.vala \
         src/moonshot-utils.vala \
-        src/moonshot-futils.c
+        src/moonshot-futils.c \
+        src/moonshot-logger.vala
 
 src_moonshot_webp_SOURCES = \
         src/moonshot-webp-parser.vala \
         src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0 $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0   $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
-src_moonshot_LDADD = $(moonshot_LIBS) 
-src_moonshot_LDFLAGS = -g -O0
+src_moonshot_LDADD = $(moonshot_LIBS)
+src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
 src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
@@ -168,7 +179,7 @@ $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
-CLEANFILES = $(dbusservice_DATA)
+CLEANFILES = $(dbusservice_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
 if IPC_DBUS_GLIB
 AM_VALAFLAGS += \

@@ -94,6 +94,17 @@ case "$host" in
     ;;
 esac
 
+#enable the optional use of Log4Vala (Must have the package installed!)
+AC_ARG_ENABLE([log4vala],
+[  --enable-log4vala    Enable use of log4vala for logging],
+[case "${enableval}" in
+  yes) log4vala=true ;;
+  no)  log4vala=false ;;
+  *) AC_MSG_ERROR([bad value ${enableval} for --enable-log4vala]) ;;
+esac],[log4vala=false])
+AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+
+
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
 AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])

@@ -43,7 +43,10 @@ interface IIdentityManager : GLib.Object {
 }
 #endif
 
+
 public class IdentityManagerApp {
+    public static MoonshotLogger logger = get_logger("IdentityManagerApp");
+
     public IdentityManagerModel model;
     public IdCard default_id_card;
     public bool explicitly_launched;
@@ -52,7 +55,7 @@ public class IdentityManagerApp {
     private bool name_is_owned;
     private bool show_requested;
 
-    #if OS_MACOS
+#if OS_MACOS
     public OSXApplication osxApp;
   
     // the signal handler function.
@@ -64,13 +67,13 @@ public class IdentityManagerApp {
         int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
         return true;
     }
-    #endif
+#endif
 
     private const int WINDOW_WIDTH = 400;
     private const int WINDOW_HEIGHT = 500;
 
 
-	/** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
+    /** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
     public void show() {
         if (name_is_owned) {
             if (view != null) {
@@ -81,15 +84,20 @@ public class IdentityManagerApp {
             show_requested = true;
         }
     }
+    
+#if LOG4VALA
+    // Call this from main() to ensure that the logger is initialized
+    internal IdentityManagerApp.dummy() {}
+#endif
 
     public IdentityManagerApp(bool headless, bool use_flat_file_store) {
         use_flat_file_store |= UserForcesFlatFileStore();
 
-        #if GNOME_KEYRING
-            bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
-        #else
-            bool keyring_available = false;
-        #endif
+#if GNOME_KEYRING
+        bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
+#else
+        bool keyring_available = false;
+#endif
 
         IIdentityCardStore.StoreType store_type;
         if (headless || use_flat_file_store || !keyring_available)
@@ -111,13 +119,13 @@ public class IdentityManagerApp {
 
         init_ipc_server();
 
-        #if OS_MACOS
+#if OS_MACOS
         osxApp = OSXApplication.get_instance();
         // The 'correct' way of connecting won't work in Mac OS with Vala 0.12; e.g.
         //     osxApp.ns_application_open_file.connect(install_from_file);
         // so we have to use this old way
         Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
-        #endif
+#endif
     }
 
     public bool add_identity(IdCard id, bool force_flat_file_store) {
@@ -127,6 +135,7 @@ public class IdentityManagerApp {
     }
 
     public void select_identity(IdentityRequest request) {
+        logger.trace("select_identity");
 
         IdCard identity = null;
 
@@ -234,6 +243,7 @@ public class IdentityManagerApp {
             }
             if (identity == null) {
                 if (request.candidates.length() != 1) {
+                    logger.trace("select_identity: Have %u candidates; user must make selection.".printf(request.candidates.length()));
                     confirm = true;
                 } else {
                     identity = request.candidates.nth_data(0);                    
@@ -253,6 +263,7 @@ public class IdentityManagerApp {
         GLib.Idle.add(
             () => {
                 if (view != null) {
+                    logger.trace("select_identity (Idle handler): calling check_add_password");
                     identity = view.check_add_password(identity, request, model);
                 }
                 request.return_identity(identity);
@@ -266,13 +277,12 @@ public class IdentityManagerApp {
         return;
     }
 
-    private bool match_service_pattern(string service, string pattern)
-        {
-            var pspec = new PatternSpec(pattern);
-            return pspec.match_string(service);
-        }   
+    private bool match_service_pattern(string service, string pattern) {
+        var pspec = new PatternSpec(pattern);
+        return pspec.match_string(service);
+    }   
     
-    #if IPC_MSRPC
+#if IPC_MSRPC
     private void init_ipc_server() {
         // Errors will currently be sent via g_log - ie. to an
         // obtrusive message box, on Windows
@@ -280,7 +290,7 @@ public class IdentityManagerApp {
         this.ipc_server = MoonshotServer.get_instance();
         MoonshotServer.start(this);
     }
-    #elif IPC_DBUS_GLIB
+#elif IPC_DBUS_GLIB
     private void init_ipc_server() {
         try {
             var conn = DBus.Bus.get(DBus.BusType.SESSION);
@@ -293,8 +303,10 @@ public class IdentityManagerApp {
             if (reply == DBus.RequestNameReply.PRIMARY_OWNER)
             {
                 this.ipc_server = new MoonshotServer(this);
+                logger.trace("init_ipc_server(IPC_DBUS_GLIB) : Constructed new MoonshotServer");
                 conn.register_object("/org/janet/moonshot", ipc_server);
             } else {
+                logger.trace("init_ipc_server: reply != PRIMARY_OWNER");
                 bool shown = false;
                 GLib.Error e;
                 DBus.Object manager_proxy = conn.get_object("org.janet.Moonshot",
@@ -313,17 +325,50 @@ public class IdentityManagerApp {
         }
         catch (DBus.Error e)
         {
-            stderr.printf("%s\n", e.message);
+            logger.trace("bus_acquired_cb");
+            try {
+                conn.register_object ("/org/janet/moonshot", ipc_server);
+            }
+            catch (Error e)
+            {
+                stderr.printf ("%s\n", e.message);
+                logger.error("bus_acquired_cb: Caught error: " + e.message);
+            }
         }
     }
-    #else
+#else
     private void bus_acquired_cb(DBusConnection conn) {
+        logger.trace("bus_acquired_cb");
         try {
             conn.register_object("/org/janet/moonshot", ipc_server);
         }
         catch (Error e)
         {
-            stderr.printf("%s\n", e.message);
+            this.ipc_server = new MoonshotServer (this);
+            logger.trace("init_ipc_server: Constructed new MoonshotServer");
+            GLib.Bus.own_name (GLib.BusType.SESSION,
+                               "org.janet.Moonshot",
+                               GLib.BusNameOwnerFlags.NONE,
+                               bus_acquired_cb,
+                               (conn, name) => {logger.trace("init_ipc_server: name_acquired_closure");},
+                               (conn, name) => {
+                                   logger.trace("init_ipc_server: name_lost_closure");
+                                   bool shown=false;
+                                   try {
+                                       IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
+                                       shown = manager.show_ui();
+                                   } catch (IOError e) {
+                                       logger.error("init_ipc_server.name_lost_closure: Caught error: ");
+                                   }
+                                   if (!shown) {
+                                       GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                                       logger.error("init_ipc_server.name_lost_closure: Couldn't own name %s on dbus or show previously launched identity manager".printf(name));
+                                   } else {
+                                       logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
+                                       stdout.printf("Showed previously launched identity manager.\n");
+                                       GLib.Process.exit(0);
+                                   }
+                               });
         }
     }
 
@@ -337,6 +382,7 @@ public class IdentityManagerApp {
 
                           // Name acquired callback:
                           (conn, name) => {
+                              logger.trace(@"init_ipc_server: name_acquired_closure; show_requested=$show_requested");
 
                               name_is_owned = true;
 
@@ -350,6 +396,7 @@ public class IdentityManagerApp {
 
                           // Name lost callback:
                           (conn, name) => {
+                              logger.trace("init_ipc_server: name_lost_closure");
 
                               // This callback usually means that another moonshot is already running.
                               // But it *might* mean that we lost the name for some other reason
@@ -364,16 +411,19 @@ public class IdentityManagerApp {
                                       shown = manager.show_ui();
                                   }
                               } catch (IOError e) {
+                                  logger.error("init_ipc_server.name_lost_closure: Caught IOError: " + e.message);
                               }
                               if (!shown) {
+                                  logger.error("init_ipc_server.name_lost_closure: Couldn't own name %s on dbus or show previously launched identity manager".printf(name));
                                   GLib.error("Couldn't own name %s on dbus or show previously launched identity manager.", name);
                               } else {
+                                  logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
                                   stdout.printf("Showed previously launched identity manager.\n");
                                   GLib.Process.exit(0);
                               }
                           });
     }
-    #endif
+#endif
 }
 
 static bool explicitly_launched = true;
@@ -388,11 +438,16 @@ const GLib.OptionEntry[] options = {
 
 
 public static int main(string[] args) {
-    #if IPC_MSRPC
-        bool headless = false;
-    #else
-        bool headless = (GLib.Environment.get_variable("DISPLAY") == null);
-    #endif
+
+#if LOG4VALA
+    new IdentityManagerApp.dummy();
+#endif
+
+#if IPC_MSRPC
+    bool headless = false;
+#else
+    bool headless = GLib.Environment.get_variable("DISPLAY") == null;
+#endif
 
     if (headless) {
         try {
@@ -420,29 +475,32 @@ public static int main(string[] args) {
         gtk_available = true;
     }
 
-    #if OS_WIN32
+#if OS_WIN32
     // Force specific theme settings on Windows without requiring a gtkrc file
     Gtk.Settings settings = Gtk.Settings.get_default();
     settings.set_string_property("gtk-theme-name", "ms-windows", "moonshot");
     settings.set_long_property("gtk-menu-images", 0, "moonshot");
-    #endif
+#endif
 
     Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);
        
+       
     var app = new IdentityManagerApp(headless, use_flat_file_store);
+    IdentityManagerApp.logger.trace("Hi again from main()!");
     app.explicitly_launched = explicitly_launched;
+    IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
         
     if (app.explicitly_launched) {
         app.show();
     }
 
     if (headless) {
-        #if !IPC_MSRPC
+#if !IPC_MSRPC
         MainLoop loop = new MainLoop();
         loop.run();
-        #endif
+#endif
     }
     else {
         Gtk.main();

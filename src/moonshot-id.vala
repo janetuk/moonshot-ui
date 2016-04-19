@@ -71,8 +71,8 @@ public class IdCard : Object
     public string display_name { get; set; default = ""; }
   
     public string username { get; set; default = ""; }
-    #if GNOME_KEYRING
-        private unowned string _password;
+#if GNOME_KEYRING
+    private unowned string _password;
     public string password {
         get {
             return (_password!=null) ? _password : "";
@@ -86,11 +86,11 @@ public class IdCard : Object
                 _password = GnomeKeyring.memory_strdup(value); 
         }
     }
-    #else
-        public string password { get; set; default = null; }
-    #endif
+#else
+    public string password { get; set; default = null; }
+#endif
 
-        public string issuer { get; set; default = ""; }
+    public string issuer { get; set; default = ""; }
   
     public Rule[] rules {get; set; default = {};}
     public string[] services { get; set; default = {}; }
