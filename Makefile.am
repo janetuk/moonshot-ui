@@ -78,12 +78,12 @@ src_moonshot_webp_SOURCES = \
         src/moonshot-logger.vala
 
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 --pkg gee-1.0   $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION)   $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
