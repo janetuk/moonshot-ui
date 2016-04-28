@@ -33,9 +33,17 @@ src/moonshot-add-dialog.c
 src/moonshot-custom-vbox.c
 src/moonshot-id.c
 src/moonshot-idcard-widget.c
+src/moonshot-idcard-store.c
 src/moonshot-identity-request.c
+src/moonshot-identity-management-view.c
+src/moonshot-identity-manager-app.c
 src/moonshot-identities-manager.c
+src/moonshot-keyring-store.c
+src/moonshot-local-flat-file-store.c
+src/moonshot-logger.c
 src/moonshot-password-dialog.c
+src/moonshot-provisioning-common-new.vala
+src/moonshot-provisioning-common.c
 src/moonshot-server.c
 src/moonshot-utils.c
 src/moonshot-webp-parser.c
@@ -44,6 +52,7 @@ src/msrpc-client.c
 src/dbus-client
 src/dbus-client.c
 src/moonshot
+src/moonshot-webp
 m4/codeset.m4
 m4/gettext.m4
 m4/glibc2.m4
@@ -97,3 +106,15 @@ libmoonshot/libmoonshot.lib
 
 *.tar.bz2
 *.stackdump
+
+*.sav
+*.save
+*.patch
+*.tar.xz
+
+examples/client
+examples/service-selection
+
+po/moonshot-ui.pot
+
+tests/basic
