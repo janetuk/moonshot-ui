@@ -361,8 +361,8 @@ public class IdentityManagerApp {
                                        logger.error("init_ipc_server.name_lost_closure: Caught error: ");
                                    }
                                    if (!shown) {
-                                       GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
                                        logger.error("init_ipc_server.name_lost_closure: Couldn't own name %s on dbus or show previously launched identity manager".printf(name));
+                                       GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
                                    } else {
                                        logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
                                        stdout.printf("Showed previously launched identity manager.\n");
