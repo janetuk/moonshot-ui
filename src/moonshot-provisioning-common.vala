@@ -30,11 +30,10 @@
  * SUCH DAMAGE.
 */
 
+
+
 namespace WebProvisioning
 { 
-    IdCard card;
-    IdCard[] cards;
-
     bool check_stack(SList<string> stack, string[] reference) {
 
         if (stack.length() < reference.length)
@@ -120,112 +119,116 @@ namespace WebProvisioning
         return check_stack(stack, display_name_path);
     }
   
-    public void start_element_func(MarkupParseContext context,
-                                   string element_name,
-                                   string[] attribute_names,
-                                   string[] attribute_values) throws MarkupError
+    public class Parser : Object
     {
-        if (element_name == "identity")
-        {
-            IdCard[] tmp_cards = cards;
+        private static MoonshotLogger logger = new MoonshotLogger("WebProvisioning");
 
-            cards = new IdCard[tmp_cards.length + 1];
-            for (int i = 0; i < tmp_cards.length; i++)
+        private void start_element_func(MarkupParseContext context,
+                                        string element_name,
+                                        string[] attribute_names,
+                                        string[] attribute_values) throws MarkupError 
             {
-                cards[i] = tmp_cards[i];
+                if (element_name == "identity")
+                {
+                    logger.trace("start_element_func (%p): Adding an identity".printf(this));
+                    card = new IdCard();
+                    _cards += card;
+                }
+                else if (element_name == "rule")
+                {
+                    card.add_rule(Rule());
+                }
             }
-            card = new IdCard();
-            cards[tmp_cards.length] = card;
-        }
-        else if (element_name == "rule")
-        {
-            Rule[] tmp_rules = card.rules;
-            card.rules = new Rule[tmp_rules.length + 1];
-            for (int i = 0; i < tmp_rules.length; i++)
-            {
-                card.rules[i] = tmp_rules[i];
-            }
-      
-            card.rules[tmp_rules.length] = Rule();
-        }
-    }
 
-    public void
-    text_element_func(MarkupParseContext context,
-                      string             text,
-                      size_t             text_len) throws MarkupError
-    {
-        unowned SList<string> stack = context.get_element_stack();
+            private void
+            text_element_func(MarkupParseContext context,
+                              string             text,
+                              size_t             text_len) throws MarkupError {
+                unowned SList<string> stack = context.get_element_stack();
     
-        if (text_len < 1)
-            return;
+                if (text_len < 1)
+                    return;
     
-        if (stack.nth_data(0) == "display-name" && display_name_handler(stack))
-        {
-            card.display_name = text;
-        }
-        else if (stack.nth_data(0) == "user" && user_handler(stack))
-        {
-            card.username = text;
-        }
-        else if (stack.nth_data(0) == "password" && password_handler(stack))
-        {
-            card.password = text;
-        }
-        else if (stack.nth_data(0) == "realm" && realm_handler(stack))
-        {
-            card.issuer = text;
-        }
-        else if (stack.nth_data(0) == "service")
-        {
-            string[] services = card.services;
-            card.services = new string[services.length + 1];
-            for (int i = 0; i < services.length; i++)
-            {
-                card.services[i] = services[i];
-            }
-            card.services[services.length] = text;
-        }
-        /* Rules */
-        else if (stack.nth_data(0) == "pattern" && pattern_handler(stack))
-        {
-            /* use temp array to workaround valac 0.10 bug accessing array property length */ 
-            var temp = card.rules;
-            card.rules[temp.length - 1].pattern = text;
-        }
-        else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler(stack))
-        {
-            if (text == "true" || text == "false") {
-                /* use temp array to workaround valac 0.10 bug accessing array property length*/
-                var temp = card.rules;
-                card.rules[temp.length - 1].always_confirm = text;
-            }
-        }
-        /*Trust anchor*/
-        else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler(stack))
-        {
-            card.trust_anchor.ca_cert = text;
-        }
-        else if (stack.nth_data(0) == "subject" && subject_handler(stack))
-        {
-            card.trust_anchor.subject = text;
-        }
-        else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler(stack))
-        {
-            card.trust_anchor.subject_alt = text;
-        }
-        else if (stack.nth_data(0) == "server-cert" && server_cert_handler(stack))
-        {
-            card.trust_anchor.server_cert = text;
-        }
-    }
+                logger.trace("text_element_func (%p): text='%s'".printf(this, stack.nth_data(0)));
 
-    class Parser
-    {
-        private MarkupParser parser;
+                if (stack.nth_data(0) == "display-name" && display_name_handler(stack))
+                {
+                    card.display_name = text;
+                }
+                else if (stack.nth_data(0) == "user" && user_handler(stack))
+                {
+                    card.username = text;
+                }
+                else if (stack.nth_data(0) == "password" && password_handler(stack))
+                {
+                    card.password = text;
+                }
+                else if (stack.nth_data(0) == "realm" && realm_handler(stack))
+                {
+                    card.issuer = text;
+                }
+                else if (stack.nth_data(0) == "service")
+                {
+                    card.add_service(text);
+                }
+
+                /* Rules */
+                else if (stack.nth_data(0) == "pattern" && pattern_handler(stack))
+                {
+                    /* use temp array to workaround valac 0.10 bug accessing array property length */ 
+                    var temp = card.rules;
+                    card.rules[temp.length - 1].pattern = text;
+                }
+                else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler(stack))
+                {
+                    if (text == "true" || text == "false") {
+                        /* use temp array to workaround valac 0.10 bug accessing array property length*/
+                        var temp = card.rules;
+                        card.rules[temp.length - 1].always_confirm = text;
+                    }
+                }
+                /*Trust anchor*/
+                else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler(stack))
+                {
+                    card.trust_anchor.ca_cert = text;
+                }
+                else if (stack.nth_data(0) == "subject" && subject_handler(stack))
+                {
+                    card.trust_anchor.subject = text;
+                }
+                else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler(stack))
+                {
+                    card.trust_anchor.subject_alt = text;
+                }
+                else if (stack.nth_data(0) == "server-cert" && server_cert_handler(stack))
+                {
+                    card.trust_anchor.server_cert = text;
+                }
+            }
+
+
+
+        private const MarkupParser parser = {
+            start_element_func, null, text_element_func, null, null
+        };
+
+        private MarkupParseContext ctx;
+
         private string       text;
         private string       path;
+
+        private IdCard card;
+        private IdCard[] _cards = {};
+
+        public IdCard[] cards {
+            get {return _cards;}
+            private set {_cards = value ?? {};}
+        }
+
         public Parser(string path) {
+
+            ctx = new MarkupParseContext(parser, 0, this, null);
+
             text = "";
             this.path = path;
 
@@ -243,12 +246,10 @@ namespace WebProvisioning
                 error("Could not retreive file size");
             }
       
-            parser = {start_element_func, null, text_element_func, null, null};
+            logger.trace(@"Parser(): read text to parse; length=$(text.length)");
         }
-    
+
         public void parse() {
-            var ctx = new MarkupParseContext(parser, 0, null, null);
-      
             try
             {
                 ctx.parse(text, text.length);

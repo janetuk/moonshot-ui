@@ -227,7 +227,7 @@ public class MoonshotServer : Object {
         webp.parse();
         bool result = false;
         int installed_cards = 0;
-        foreach (IdCard card in WebProvisioning.cards)
+        foreach (IdCard card in webp.cards)
         {
             string[] rules_patterns = {};
             string[] rules_always_confirm = {};

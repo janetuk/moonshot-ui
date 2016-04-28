@@ -33,10 +33,12 @@ using Moonshot;
 
 namespace WebProvisioning
 { 
-
+    private MoonshotLogger logger;
 
     public static int main(string[] args)
     {
+        logger = new MoonshotLogger("WebProvisioning");
+
         int arg_index = -1;
         int force_flat_file_store = 0;
         bool bad_switch = false;
@@ -73,9 +75,15 @@ namespace WebProvisioning
     
         var webp = new Parser(webp_file);
         webp.parse();
-    
-        foreach (IdCard card in cards)
+        logger.trace(@"Have $(webp.cards.length) IdCards");
+        foreach (IdCard card in webp.cards)
         {
+
+            if (card == null) {
+                logger.trace(@"Skipping null IdCard");
+                continue;
+            }
+
             Moonshot.Error error;
             string[] rules_patterns = {};
             string[] rules_always_confirm = {};
@@ -96,6 +104,7 @@ namespace WebProvisioning
                 }
             }
 
+            logger.trace(@"Installing IdCard named '$(card.display_name)'");
             Moonshot.install_id_card(card.display_name,
                                      card.username,
                                      card.password,

@@ -92,8 +92,18 @@ public class IdCard : Object
 
     public string issuer { get; set; default = ""; }
   
-    public Rule[] rules {get; set; default = {};}
-    public string[] services { get; set; default = {}; }
+    private Rule[] _rules = {};
+    public Rule[] rules {
+        get {return _rules;}
+        internal set {_rules = value ?? {};}
+    }
+
+    private string[] _services = {};
+    public string[] services {
+        get {return _services;}
+        internal set {_services = value ?? {};}
+    }
+
     public bool temporary {get; set; default = false; }
 
     public TrustAnchor trust_anchor  { get; set; default = new TrustAnchor (); }
@@ -141,7 +151,7 @@ public class IdCard : Object
         if (this.trust_anchor.Compare(other.trust_anchor)!=0)
             diff |= 1 << DiffFlags.TRUST_ANCHOR;
 
-        stdout.printf("Diff Flags: %x\n", diff);
+        // stdout.printf("Diff Flags: %x\n", diff);
         return diff;
     }
 
@@ -154,6 +164,14 @@ public class IdCard : Object
 
     ~IdCard() {
         password = null;
+    }
+
+    internal void add_rule(Rule rule) {
+        _rules += rule;
+    }
+
+    internal void add_service(string service) {
+        _services += service;
     }
 }
 
