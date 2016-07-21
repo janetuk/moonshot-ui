@@ -222,7 +222,7 @@ namespace WebProvisioning
 
         public IdCard[] cards {
             get {return _cards;}
-            private set {_cards = value ?? {};}
+            private set {_cards = value ?? new IdCard[0] ;}
         }
 
         public Parser(string path) {

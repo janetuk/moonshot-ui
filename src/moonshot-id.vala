@@ -92,16 +92,16 @@ public class IdCard : Object
 
     public string issuer { get; set; default = ""; }
   
-    private Rule[] _rules = {};
+    private Rule[] _rules = new Rule[0];
     public Rule[] rules {
         get {return _rules;}
-        internal set {_rules = value ?? {};}
+        internal set {_rules = value ?? new Rule[0] ;}
     }
 
-    private string[] _services = {};
+    private string[] _services = new string[0];
     public string[] services {
         get {return _services;}
-        internal set {_services = value ?? {};}
+        internal set {_services = value ?? new string[0] ;}
     }
 
     public bool temporary {get; set; default = false; }
