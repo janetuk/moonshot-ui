@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,8 @@
 using Gee; 
 
 public class LocalFlatFileStore : Object, IIdentityCardStore {
+    static MoonshotLogger logger = get_logger("LocalFlatFileStore");
+
     private LinkedList<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
 
@@ -44,9 +46,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         id_card_list.remove(card);
         id_card_list.add(card);
         store_id_cards();
-        foreach(IdCard idcard in id_card_list)
-        if (idcard.display_name == card.display_name)
-            return idcard;
+        foreach(IdCard idcard in id_card_list) {
+            if (idcard.display_name == card.display_name) {
+                return idcard;
+            }
+        }
+        logger.error(@"update_card: card '$(card.display_name)' was not found after re-loading!");
         return null;
     }
 
@@ -71,6 +76,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         var key_file = new KeyFile();
         var path = get_data_dir();
         var filename = Path.build_filename(path, FILE_NAME);
+        logger.trace("load_id_cards: attempting to load from " + filename);
         
         try {
             key_file.load_from_file(filename, KeyFileFlags.NONE);
@@ -88,7 +94,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 id_card.issuer = key_file.get_string(identity, "Issuer");
                 id_card.username = key_file.get_string(identity, "Username");
                 id_card.password = key_file.get_string(identity, "Password");
-                id_card.services = key_file.get_string_list(identity, "Services");
+                id_card.update_services(key_file.get_string_list(identity, "Services"));
                 id_card.display_name = key_file.get_string(identity, "DisplayName");
                 if (key_file.has_key(identity, "StorePassword")) {
                     id_card.store_password = (key_file.get_string(identity, "StorePassword") == "yes");
@@ -111,14 +117,21 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 }
                 
                 // Trust anchor 
-                id_card.trust_anchor.ca_cert = key_file.get_string(identity, "CA-Cert").strip();
-                id_card.trust_anchor.subject = key_file.get_string(identity, "Subject");
-                id_card.trust_anchor.subject_alt = key_file.get_string(identity, "SubjectAlt");
-                id_card.trust_anchor.server_cert = key_file.get_string(identity, "ServerCert");
-
+                string ca_cert = key_file.get_string(identity, "CA-Cert").strip();
+                string server_cert = key_file.get_string(identity, "ServerCert");
+                string subject = key_file.get_string(identity, "Subject");
+                string subject_alt = key_file.get_string(identity, "SubjectAlt");
+                bool  user_verified = get_bool_setting(identity, "TA_User_Verified", false, key_file);
+                var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt, user_verified);
+                string ta_datetime_added = get_string_setting(identity, "TA_DateTime_Added", "", key_file);
+                if (ta_datetime_added != "") {
+                    ta.set_datetime_added(ta_datetime_added);
+                }
+                id_card.set_trust_anchor_from_store(ta);
                 id_card_list.add(id_card);
             }
             catch (Error e) {
+                logger.error("load_id_cards: Error while loading keyfile: %s\n".printf(e.message));
                 stdout.printf("Error:  %s\n", e.message);
             }
         }
@@ -135,13 +148,13 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return path;
     }
     
-    public void store_id_cards() {
+    internal void store_id_cards() {
         var key_file = new KeyFile();
         foreach (IdCard id_card in this.id_card_list) {
+            logger.trace(@"store_id_cards: Storing '$(id_card.display_name)'");
+
             /* workaround for Centos vala array property bug: use temp arrays */
             var rules = id_card.rules;
-            var services = id_card.services;
-            string[] empty = {};
             string[] rules_patterns = new string[rules.length];
             string[] rules_always_conf = new string[rules.length];
             
@@ -157,7 +170,15 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 key_file.set_string(id_card.display_name, "Password", id_card.password);
             else
                 key_file.set_string(id_card.display_name, "Password", "");
-            key_file.set_string_list(id_card.display_name, "Services", services ?? empty);
+
+            // Using id_card.services.to_array() seems to cause a crash, possibly due to
+            // an unowned reference to the array.
+            string[] svcs = new string[id_card.services.size];
+            for (int i = 0; i < id_card.services.size; i++) {
+                svcs[i] = id_card.services[i];
+            }
+
+            key_file.set_string_list(id_card.display_name, "Services", svcs);
 
             if (rules.length > 0) {
                 key_file.set_string_list(id_card.display_name, "Rules-Patterns", rules_patterns);
@@ -166,10 +187,15 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             key_file.set_string(id_card.display_name, "StorePassword", id_card.store_password ? "yes" : "no");
             
             // Trust anchor 
-            key_file.set_string(id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert ?? "");
-            key_file.set_string(id_card.display_name, "Subject", id_card.trust_anchor.subject ?? "");
-            key_file.set_string(id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt ?? "");
-            key_file.set_string(id_card.display_name, "ServerCert", id_card.trust_anchor.server_cert ?? "");
+            key_file.set_string(id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert);
+            key_file.set_string(id_card.display_name, "Subject", id_card.trust_anchor.subject);
+            key_file.set_string(id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt);
+            key_file.set_string(id_card.display_name, "ServerCert", id_card.trust_anchor.server_cert);
+            if (id_card.trust_anchor.datetime_added != "") {
+                key_file.set_string(id_card.display_name, "TA_DateTime_Added", id_card.trust_anchor.datetime_added);
+            }
+            key_file.set_boolean(id_card.display_name, "TA_User_Verified", id_card.trust_anchor.user_verified);
+            logger.trace(@"store_id_cards: Stored '$(id_card.display_name)'");
         }
 
         var text = key_file.to_data(null);
@@ -177,6 +203,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         try {
             var path = get_data_dir();
             var filename = Path.build_filename(path, FILE_NAME);
+            logger.trace("store_id_cards: attempting to store to " + filename);
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
             #if GIO_VAPI_USES_ARRAYS
@@ -187,6 +214,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             #endif
                 }
         catch (Error e) {
+            logger.error("store_id_cards: Error while saving keyfile: %s\n".printf(e.message));
             stdout.printf("Error:  %s\n", e.message);
         }
 

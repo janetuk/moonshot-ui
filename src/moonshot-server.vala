@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,9 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
 */
+
+using Gee;
+
 #if IPC_DBUS
 
 [DBus (name = "org.janet.Moonshot")]
@@ -92,7 +95,7 @@ public class MoonshotServer : Object {
 
         var id_card = request.id_card;
 
-        if ((id_card != null) && (id_card.display_name != IdCard.NO_IDENTITY)) {
+        if ((id_card != null) && (!id_card.is_no_identity())) {
             nai_out = id_card.nai;
             if ((request.password != null) && (request.password != ""))
                 password_out = request.password;
@@ -117,7 +120,7 @@ public class MoonshotServer : Object {
             if (subject_alt_name_constraint == null)
                 subject_alt_name_constraint = "";
 
-            logger.trace("MoonshotServer.get_identity: returning true");
+            logger.trace(@"MoonshotServer.get_identity: returning with nai_out=$nai_out");
 
             return true;
         }
@@ -197,11 +200,22 @@ public class MoonshotServer : Object {
         if ((password != null) && (password != ""))
             idcard.store_password = true;
         idcard.issuer = realm;
-        idcard.services = services;
-        idcard.trust_anchor.ca_cert = ca_cert;
-        idcard.trust_anchor.subject = subject;
-        idcard.trust_anchor.subject_alt = subject_alt;
-        idcard.trust_anchor.server_cert = server_cert;
+        idcard.update_services(services);
+        var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt, false);
+
+        if (!ta.is_empty()) {
+            // We have to set the datetime_added here, because it isn't delivered via IPC.
+            string ta_datetime_added = TrustAnchor.format_datetime_now();
+            ta.set_datetime_added(ta_datetime_added);
+            logger.trace("install_id_card : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'".printf(idcard.display_name, ta.datetime_added, ta.ca_cert, ta.server_cert));
+        }
+        idcard.set_trust_anchor_from_store(ta);
+
+        logger.trace("install_id_card: Card '%s' has services: '%s'"
+                     .printf(idcard.display_name, idcard.get_services_string("; ")));
+
+        logger.trace(@"Installing IdCard named '$(idcard.display_name)'; ca_cert='$(idcard.trust_anchor.ca_cert)'; server_cert='$(idcard.trust_anchor.server_cert)'");
+
 
         if (rules_patterns.length == rules_always_confirm.length)
         {
@@ -216,7 +230,17 @@ public class MoonshotServer : Object {
             idcard.rules = rules;
         }
 
-        return parent_app.add_identity(idcard, force_flat_file_store!=0);
+        ArrayList<IdCard>? old_duplicates = null;
+        var ret = parent_app.add_identity(idcard, (force_flat_file_store != 0), out old_duplicates);
+
+        if (old_duplicates != null) {
+            // Printing to stdout here is ugly behavior; but it's old behavior that
+            // may be expected. (TODO: Do we need to keep this?)
+            foreach (IdCard id_card in old_duplicates) {
+                stdout.printf("removed duplicate id for '%s'\n", id_card.nai);
+            }
+        }
+        return ret;
     }
 
 
@@ -245,13 +269,25 @@ public class MoonshotServer : Object {
                 }
             } 
 
+
+            // prevent a crash by holding the reference to otherwise
+            // unowned array(?)
+
+            // string[] svcs = card.services.to_array();
+            // string[] svcs = card.services.to_array()[:];
+            string[] svcs = new string[card.services.size];
+            for (int i = 0; i < card.services.size; i++) {
+                svcs[i] = card.services[i];
+            }
+
+            logger.trace(@"install_from_file: Adding card with display name '$(card.display_name)'");
             result = install_id_card(card.display_name,
                                      card.username,
                                      card.password,
                                      card.issuer,
                                      rules_patterns,
                                      rules_always_confirm,
-                                     card.services,
+                                     svcs,
                                      card.trust_anchor.ca_cert,
                                      card.trust_anchor.subject,
                                      card.trust_anchor.subject_alt,
@@ -481,10 +517,14 @@ public class MoonshotServer : Object {
 
         mutex.lock();
 
+        ArrayList<IdCard>? old_duplicates = null;
         // Defer addition to the main loop thread.
         Idle.add(() => {
                 mutex.lock();
-                success = parent_app.add_identity(idcard, force_flat_file_store);
+                success = parent_app.add_identity(idcard, force_flat_file_store, out old_duplicates);
+                foreach (IdCard id_card in old_duplicates) {
+                    stdout.printf("removing duplicate id for '%s'\n", new_card.nai);
+                }
                 cond.signal();
                 mutex.unlock();
                 return false;

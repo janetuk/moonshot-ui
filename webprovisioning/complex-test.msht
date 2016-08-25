@@ -1,12 +1,21 @@
 <identities>
+    <identity>
+    <display-name>A Simple Card</display-name>
+    <user>user5</user>
+    <password></password>
+    <realm>painless-security.com</realm>
+    <services>
+    </services>
+  </identity>
+
   <identity>
     <display-name>Unique Name</display-name>
     <user>user1</user>
     <password></password>
-    <realm>foo.baz</realm>
+    <realm>painless-security.com</realm>
     <services>
-      <service>irc@jabber.project-moonshot.org</service>
-      <service>xmpp@jabber.project-moonshot.org</service>
+      <service>irc/painless-security.com</service>
+      <service>xmpp/painless-security.com</service>
     </services>
     <selection-rules>
       <rule>
@@ -14,56 +23,113 @@
         <always-confirm>true</always-confirm>
       </rule>
       <rule>
-        <pattern>imap@*moonshot.org</pattern>
+        <pattern>imap/*moonshot.org</pattern>
         <always-confirm>false</always-confirm>
       </rule>
     </selection-rules>
     <trust-anchor>
-      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
-      <subject>Foo</subject>
-      <subject-alt>Bar</subject-alt>
+     <!-- PEM encoded, minus header and footer -->
+      <ca-cert>MIIE9jCCA96gAwIBAgIJAJ6SVDCP6o2nMA0GCSqGSIb3DQEBBQUAMIGaMQswCQYD
+VQQGEwJVUzELMAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMR
+UGFpbmxlc3MgU2VjdXJpdHkxLzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFp
+bmxlc3Mtc2VjdXJpdHkuY29tMSAwHgYDVQQDExdQYWlubGVzcyBTZWN1cml0eSwg
+SW5jLjAeFw0xNjA4MDExNjIxMDVaFw0xOTExMTQxNjIxMDVaMIGaMQswCQYDVQQG
+EwJVUzELMAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMRUGFp
+bmxlc3MgU2VjdXJpdHkxLzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFpbmxl
+c3Mtc2VjdXJpdHkuY29tMSAwHgYDVQQDExdQYWlubGVzcyBTZWN1cml0eSwgSW5j
+LjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKPiSkw1y6zMJFjnoPjd
+5Bh9EA1NhQcoNxJAtgYEJtpH9a2tfjnXXncXpbIMIfMgv2VKRAxvKb+knCfSCRtU
+PM9i998+ZhJY9o6SSFomlMvdaClauPvBhQvQMmJmp1WINgMUHPpzsGlj04kkl7jw
+iK/oDxp1becikKc10Gr9W03aEJtOaiSqC45zeIgnz9GoQ2tJvz2DDBcddaaT1mSV
+n/lk4ahPC4XaJ08Jn1L6XkVVyDGD38Rwg7r1SFI7ByBFvvQh93Fa48Z7ik0I8s48
+U1euHak2gSJ4zfzLndvGy05qMjhRTlxQu+Rt1g7CS3CLcJqqYzWNrEJWpD8Wn7iA
+MIUCAwEAAaOCATswggE3MB0GA1UdDgQWBBR1qlvY7r2DqhHu5s+sCUPeqBcQuzCB
+zwYDVR0jBIHHMIHEgBR1qlvY7r2DqhHu5s+sCUPeqBcQu6GBoKSBnTCBmjELMAkG
+A1UEBhMCVVMxCzAJBgNVBAgTAk1BMQ8wDQYDVQQHEwZNYWxkZW4xGjAYBgNVBAoT
+EVBhaW5sZXNzIFNlY3VyaXR5MS8wLQYJKoZIhvcNAQkBFiBwb3N0bWFzdGVyQHBh
+aW5sZXNzLXNlY3VyaXR5LmNvbTEgMB4GA1UEAxMXUGFpbmxlc3MgU2VjdXJpdHks
+IEluYy6CCQCeklQwj+qNpzAMBgNVHRMEBTADAQH/MDYGA1UdHwQvMC0wK6ApoCeG
+JWh0dHA6Ly93d3cuZXhhbXBsZS5jb20vZXhhbXBsZV9jYS5jcmwwDQYJKoZIhvcN
+AQEFBQADggEBAB6J5Zxvq96SdIsfEajqU+pANBiA2VTZCpxfIMAKz8KfyzWzFvCM
+8epvYDliyOjw1zR9cYxhQqOcbPHrjLXheVvCePd3jCUOv+tt1Nw2gS2DiMuq37DO
+BZOTlPJ3m2NnvJVO3NjB2I+Pk9v3YlG6mkiVc9dNWgO20SqT2Y+KvHqA5Of8Cb/s
+uIBftctvGpIyEnqSmU7KB0nhIWe65Bsu60hjHHfX1qhJE7qGKbqNaHujssQ/SBXJ
+g7HUhtywv8z3TFoYW0MoBpKGM2Ojc9kQ8f0rYvUKTiD1UfjQoll/Io5xwKy7FXtn
+musuCxXeWkqDtw0clWg6vkf5Tb9v/JQ2PW0=</ca-cert>
+      <subject>Painless Security Server Certificate</subject>
       <!-- Or alternatively -->
-      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+      <server-cert></server-cert>
     </trust-anchor>
   </identity>
   <identity>
     <display-name>Another Unique Name</display-name>
     <user>user2</user>
     <password></password>
-    <realm>foo.bar</realm>
+    <realm>painless-security.com</realm>
     <services>
-      <service>irc@jabber.project-moonshot.org</service>
-      <service>email@project-moonshot.org</service>
+      <service>irc/painless-security.com</service>
+      <service>email/painless-security.com</service>
     </services>
     <selection-rules>
       <rule>
-        <pattern>*@project-moonshot.org</pattern>
+        <pattern>*/painless-security.com</pattern>
         <always-confirm>true</always-confirm>
       </rule>
     </selection-rules>
     <trust-anchor>
-      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
-      <subject>Foo</subject>
-      <subject-alt>Bar</subject-alt>
-      <!-- Or alternatively -->
-      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+      <ca-cert>
+      <!-- DER format, base64-encoded -->MIIE9jCCA96gAwIBAgIJAJ6SVDCP6o2nMA0GCSqGSIb3DQEBBQUAMIGaMQswCQYDVQQGEwJVUzEL
+MAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMRUGFpbmxlc3MgU2VjdXJpdHkx
+LzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFpbmxlc3Mtc2VjdXJpdHkuY29tMSAwHgYDVQQD
+ExdQYWlubGVzcyBTZWN1cml0eSwgSW5jLjAeFw0xNjA4MDExNjIxMDVaFw0xOTExMTQxNjIxMDVa
+MIGaMQswCQYDVQQGEwJVUzELMAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMR
+UGFpbmxlc3MgU2VjdXJpdHkxLzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFpbmxlc3Mtc2Vj
+dXJpdHkuY29tMSAwHgYDVQQDExdQYWlubGVzcyBTZWN1cml0eSwgSW5jLjCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAKPiSkw1y6zMJFjnoPjd5Bh9EA1NhQcoNxJAtgYEJtpH9a2tfjnX
+XncXpbIMIfMgv2VKRAxvKb+knCfSCRtUPM9i998+ZhJY9o6SSFomlMvdaClauPvBhQvQMmJmp1WI
+NgMUHPpzsGlj04kkl7jwiK/oDxp1becikKc10Gr9W03aEJtOaiSqC45zeIgnz9GoQ2tJvz2DDBcd
+daaT1mSVn/lk4ahPC4XaJ08Jn1L6XkVVyDGD38Rwg7r1SFI7ByBFvvQh93Fa48Z7ik0I8s48U1eu
+Hak2gSJ4zfzLndvGy05qMjhRTlxQu+Rt1g7CS3CLcJqqYzWNrEJWpD8Wn7iAMIUCAwEAAaOCATsw
+ggE3MB0GA1UdDgQWBBR1qlvY7r2DqhHu5s+sCUPeqBcQuzCBzwYDVR0jBIHHMIHEgBR1qlvY7r2D
+qhHu5s+sCUPeqBcQu6GBoKSBnTCBmjELMAkGA1UEBhMCVVMxCzAJBgNVBAgTAk1BMQ8wDQYDVQQH
+EwZNYWxkZW4xGjAYBgNVBAoTEVBhaW5sZXNzIFNlY3VyaXR5MS8wLQYJKoZIhvcNAQkBFiBwb3N0
+bWFzdGVyQHBhaW5sZXNzLXNlY3VyaXR5LmNvbTEgMB4GA1UEAxMXUGFpbmxlc3MgU2VjdXJpdHks
+IEluYy6CCQCeklQwj+qNpzAMBgNVHRMEBTADAQH/MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly93
+d3cuZXhhbXBsZS5jb20vZXhhbXBsZV9jYS5jcmwwDQYJKoZIhvcNAQEFBQADggEBAB6J5Zxvq96S
+dIsfEajqU+pANBiA2VTZCpxfIMAKz8KfyzWzFvCM8epvYDliyOjw1zR9cYxhQqOcbPHrjLXheVvC
+ePd3jCUOv+tt1Nw2gS2DiMuq37DOBZOTlPJ3m2NnvJVO3NjB2I+Pk9v3YlG6mkiVc9dNWgO20SqT
+2Y+KvHqA5Of8Cb/suIBftctvGpIyEnqSmU7KB0nhIWe65Bsu60hjHHfX1qhJE7qGKbqNaHujssQ/
+SBXJg7HUhtywv8z3TFoYW0MoBpKGM2Ojc9kQ8f0rYvUKTiD1UfjQoll/Io5xwKy7FXtnmusuCxXe
+WkqDtw0clWg6vkf5Tb9v/JQ2PW0=
+</ca-cert>
+      <subject>Painless Security Server Certificate</subject>
     </trust-anchor>
   </identity>
     <identity>
     <display-name>Yet Another Unique Name</display-name>
     <user>user3</user>
     <password></password>
-    <realm>foo.com</realm>
+    <realm>painless-security.com</realm>
     <services>
-      <service>irc@jabber.project-moonshot.org</service>
-      <service>email@project-moonshot.org</service>
+      <service>irc/painless-security.com</service>
+      <service>email/painless-security.com</service>
     </services>
     <trust-anchor>
-      <ca-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</ca-cert>
-      <subject>Foo</subject>
-      <subject-alt>Bar</subject-alt>
-      <!-- Or alternatively -->
-      <server-cert>ABCDEFGHIJKLMNOPQRSTUVWXYZ123455678910</server-cert>
+      <server-cert>3838E17EC9A2A06D7B6030E3C5727E3466EAB4BB4159DCE7CF6297ADAFC8A56F</server-cert>
     </trust-anchor>
   </identity>
+    <identity>
+    <display-name>A Not Really Unique Name</display-name>
+    <user>user4</user>
+    <password></password>
+    <realm>painless-security.com</realm>
+    <services>
+      <service>ssh/painless-security.com</service>
+      <service>email/painless-security.com</service>
+    </services>
+    <trust-anchor>
+      <server-cert>3838E17EC9A2A06D7B6030E3C5727E3466EAB4BB4159DCE7CF6297ADAFC8A56F</server-cert>
+    </trust-anchor>
+  </identity>
+
 </identities> 

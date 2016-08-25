@@ -1,2 +1,11 @@
 # List of source files which contain translatable strings.
+src/moonshot-idcard-widget.vala
+src/moonshot-identities-manager.vala
+src/moonshot-identity-dialog.vala
 src/moonshot-identity-management-view.vala
+src/moonshot-identity-manager-app.vala
+src/moonshot-password-dialog.vala
+src/moonshot-server.vala
+src/moonshot-trust-anchor-dialog.vala
+src/moonshot-warning-dialog.vala
+src/moonshot-webp-parser.vala

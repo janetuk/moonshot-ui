@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [0.7.2],
+        [1.0.0],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -236,6 +236,7 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
+        libssl
         $GTK_VERSION
         $GEE_VERSION
         $SERVER_IPC_MODULE

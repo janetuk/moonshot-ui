@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,6 +29,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
 */
+
+using Gtk;
+using Pango;
+
 #if OS_WIN32
 extern string? g_win32_get_package_installation_directory_of_module(void *module);
 #endif
@@ -99,4 +103,73 @@ public bool UserForcesFlatFileStore()
         }
     }
     return false;
+}
+
+internal Gdk.Color make_color(uint16 red, uint16 green, uint16 blue)
+{
+    Gdk.Color color = Gdk.Color();
+    color.red = red;
+    color.green = green;
+    color.blue = blue;
+
+    return color;
+}
+
+internal void set_atk_relation(Widget widget, Widget target_widget, Atk.RelationType relationship)
+{
+    var atk_widget = widget.get_accessible();
+    var atk_target_widget = target_widget.get_accessible();
+
+    atk_widget.add_relationship(relationship, atk_target_widget);
+}
+
+
+internal Widget make_ta_fingerprint_widget(TrustAnchor trust_anchor)
+{
+        var fingerprint_label = new Label(_("SHA-256 fingerprint:"));
+        fingerprint_label.set_alignment(0, 0.5f);
+
+        var fingerprint = new TextView();
+        var fontdesc = FontDescription.from_string("monospace 10");
+        fingerprint.modify_font(fontdesc);
+        fingerprint.set_editable(false);
+        fingerprint.set_left_margin(3);
+        var buffer = fingerprint.get_buffer();
+        buffer.set_text(colonize(trust_anchor.server_cert, 16), -1);
+        fingerprint.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+
+        set_atk_relation(fingerprint_label, fingerprint, Atk.RelationType.LABEL_FOR);
+
+        var fingerprint_width_constraint = new ScrolledWindow(null, null);
+        fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
+        fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
+        fingerprint_width_constraint.set_size_request(300, 60);
+        fingerprint_width_constraint.add_with_viewport(fingerprint);
+
+        var vbox = new VBox(false, 0);
+        vbox.pack_start(fingerprint_label, true, true, 2);
+        vbox.pack_start(fingerprint_width_constraint, true, true, 2);
+        return vbox;
+}
+
+    // Yeah, it doesn't mean "colonize" the way you might think... :-)
+internal static string colonize(string input, int bytes_per_line) {
+    return_if_fail(input.length % 2 == 0);
+
+    string result = "";
+    int i = 0;
+    int line_bytes = 0;
+    while (i < input.length) {
+        if (line_bytes == bytes_per_line) {
+            result += "\n";
+            line_bytes = 0;
+        }
+        else if (i > 0) {
+            result += ":";
+        }
+        result += input[i : i + 2];
+        i += 2;
+        line_bytes++;
+    }
+    return result;
 }

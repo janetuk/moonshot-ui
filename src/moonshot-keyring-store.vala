@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,25 +33,35 @@ using Gee;
 
 #if GNOME_KEYRING
 public class KeyringStore : Object, IIdentityCardStore {
+    static MoonshotLogger logger = get_logger("KeyringStore");
+
     private LinkedList<IdCard> id_card_list;
     private const string keyring_store_attribute = "Moonshot";
     private const string keyring_store_version = "1.0";
     private const GnomeKeyring.ItemType item_type = GnomeKeyring.ItemType.GENERIC_SECRET;
 
     public void add_card(IdCard card) {
+        logger.trace("add_card: Adding card '%s' with services: '%s'"
+                     .printf(card.display_name, card.get_services_string("; ")));
+
         id_card_list.add(card);
         store_id_cards();
     }
 
     public IdCard? update_card(IdCard card) {
+        logger.trace("update_card");
+
         id_card_list.remove(card);
         id_card_list.add(card);
+
         store_id_cards();
         foreach (IdCard idcard in id_card_list) {
             if (idcard.display_name == card.display_name) {
                 return idcard;
             }
         }
+
+        logger.error(@"update_card: card '$(card.display_name)' was not found after re-loading!");
         return null;
     }
 
@@ -97,9 +107,19 @@ public class KeyringStore : Object, IIdentityCardStore {
             int rules_patterns_index = -1;
             int rules_always_confirm_index = -1;
             string store_password = null;
+            string ca_cert = "";
+            string server_cert = "";
+            string subject = "";
+            string subject_alt = "";
+            bool   user_verified = false;
+            string ta_datetime_added = "";
             for (i = 0; i < entry.attributes.len; i++) {
                 var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
-                string value = attribute.string_value;
+                string value = "";
+                if (attribute.type == GnomeKeyring.AttributeType.STRING) {
+                    value = attribute.string_value;
+                }
+
                 if (attribute.name == "Issuer") {
                     id_card.issuer = value;
                 } else if (attribute.name == "Username") {
@@ -107,23 +127,34 @@ public class KeyringStore : Object, IIdentityCardStore {
                 } else if (attribute.name == "DisplayName") {
                     id_card.display_name = value;
                 } else if (attribute.name == "Services") {
-                    id_card.services = value.split(";");
+                    id_card.update_services(value.split(";"));
                 } else if (attribute.name == "Rules-Pattern") {
                     rules_patterns_index = i;
                 } else if (attribute.name == "Rules-AlwaysConfirm") {
                     rules_always_confirm_index = i;
                 } else if (attribute.name == "CA-Cert") {
-                    id_card.trust_anchor.ca_cert = value.strip();
+                    ca_cert = value.strip();
                 } else if (attribute.name == "Server-Cert") {
-                    id_card.trust_anchor.server_cert = value;
+                    server_cert = value;
                 } else if (attribute.name == "Subject") {
-                    id_card.trust_anchor.subject = value;
+                    subject = value;
                 } else if (attribute.name == "Subject-Alt") {
-                    id_card.trust_anchor.subject_alt = value;
+                    subject_alt = value;
                 } else if (attribute.name == "StorePassword") {
                     store_password = value;
+                } else if (attribute.name == "TA_User_Verified") {
+                    user_verified = (value == "true");
+                } else if (attribute.name == "TA_DateTime_Added") {
+                    ta_datetime_added = value;
                 }
             }
+
+            var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt, user_verified);
+            if (ta_datetime_added != "") {
+                ta.set_datetime_added(ta_datetime_added);
+            }
+            id_card.set_trust_anchor_from_store(ta);
+
             if ((rules_always_confirm_index != -1) && (rules_patterns_index != -1)) {
                 string rules_patterns_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_patterns_index].string_value;
                 string rules_always_confirm_all = ((GnomeKeyring.Attribute *) entry.attributes.data)[rules_always_confirm_index].string_value;
@@ -152,12 +183,12 @@ public class KeyringStore : Object, IIdentityCardStore {
         }
     }
 
-    public void store_id_cards() {
+    internal void store_id_cards() {
+        logger.trace("store_id_cards");
         clear_keyring();
         foreach (IdCard id_card in this.id_card_list) {
             /* workaround for Centos vala array property bug: use temp array */
             var rules = id_card.rules;
-            var services_array = id_card.services;
             string[] rules_patterns = new string[rules.length];
             string[] rules_always_conf = new string[rules.length];
             
@@ -167,7 +198,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             }
             string patterns = string.joinv(";", rules_patterns);
             string always_conf = string.joinv(";", rules_always_conf);
-            string services = string.joinv(";", services_array);
+            string services = id_card.get_services_string(";");
             GnomeKeyring.AttributeList attributes = new GnomeKeyring.AttributeList();
             uint32 item_id;
             attributes.append_string(keyring_store_attribute, keyring_store_version);
@@ -181,6 +212,8 @@ public class KeyringStore : Object, IIdentityCardStore {
             attributes.append_string("Server-Cert", id_card.trust_anchor.server_cert);
             attributes.append_string("Subject", id_card.trust_anchor.subject);
             attributes.append_string("Subject-Alt", id_card.trust_anchor.subject_alt);
+            attributes.append_string("TA_User_Verified", id_card.trust_anchor.user_verified ? "true" : "false");
+            attributes.append_string("TA_DateTime_Added", id_card.trust_anchor.datetime_added);
             attributes.append_string("StorePassword", id_card.store_password ? "yes" : "no");
 
             GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,

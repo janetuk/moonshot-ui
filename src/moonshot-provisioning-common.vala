@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,12 +33,12 @@
 
 
 namespace WebProvisioning
-{ 
+{
     bool check_stack(SList<string> stack, string[] reference) {
 
         if (stack.length() < reference.length)
             return false;
-    
+
         for (int i = 0; i < reference.length; i++)
         {
             if (stack.nth_data(i) != reference[i])
@@ -51,74 +51,74 @@ namespace WebProvisioning
     bool always_confirm_handler(SList<string> stack)
     {
         string[] always_confirm_path = {"always-confirm", "rule", "selection-rules", "identity", "identities"};
-    
+
         return check_stack(stack, always_confirm_path);
     }
-  
+
     bool
     pattern_handler(SList<string> stack)
     {
         string[] pattern_path = {"pattern", "rule", "selection-rules", "identity", "identities"};
-    
+
         return check_stack(stack, pattern_path);
     }
 
     bool server_cert_handler(SList<string> stack)
     {
         string[] server_cert_path = {"server-cert", "trust-anchor", "identity", "identities"};
-    
+
         return check_stack(stack, server_cert_path);
     }
 
     bool subject_alt_handler(SList<string> stack)
     {
         string[] subject_alt_path = {"subject-alt", "trust-anchor", "identity", "identities"};
-    
+
         return check_stack(stack, subject_alt_path);
     }
 
     bool subject_handler(SList<string> stack)
     {
         string[] subject_path = {"subject", "trust-anchor", "identity", "identities"};
-    
+
         return check_stack(stack, subject_path);
     }
-  
+
     bool ca_cert_handler(SList<string> stack)
     {
         string[] ca_path = {"ca-cert", "trust-anchor", "identity", "identities"};
-    
+
         return check_stack(stack, ca_path);
     }
 
     bool realm_handler(SList<string> stack)
     {
         string[] realm_path = {"realm", "identity", "identities"};
-    
+
         return check_stack(stack, realm_path);
     }
 
     bool password_handler(SList<string> stack)
     {
         string[] password_path = {"password", "identity", "identities"};
-    
+
         return check_stack(stack, password_path);
     }
 
     bool user_handler(SList<string> stack)
     {
         string[] user_path = {"user", "identity", "identities"};
-    
+
         return check_stack(stack, user_path);
     }
 
     bool display_name_handler(SList<string> stack)
     {
         string[] display_name_path = {"display-name", "identity", "identities"};
-    
+
         return check_stack(stack, display_name_path);
     }
-  
+
     public class Parser : Object
     {
         private static MoonshotLogger logger = new MoonshotLogger("WebProvisioning");
@@ -126,96 +126,117 @@ namespace WebProvisioning
         private void start_element_func(MarkupParseContext context,
                                         string element_name,
                                         string[] attribute_names,
-                                        string[] attribute_values) throws MarkupError 
+                                        string[] attribute_values) throws MarkupError
+        {
+            if (element_name == "identity")
             {
-                if (element_name == "identity")
-                {
-                    logger.trace("start_element_func (%p): Adding an identity".printf(this));
-                    card = new IdCard();
-                    _cards += card;
-                }
-                else if (element_name == "rule")
-                {
-                    card.add_rule(Rule());
+                card = new IdCard();
+                _cards += card;
+
+                ta_ca_cert = "";
+                ta_server_cert = "";
+                ta_subject = "";
+                ta_subject_alt = "";
+            }
+            else if (element_name == "rule")
+            {
+                card.add_rule(Rule());
+            }
+        }
+
+        private void end_element_func(MarkupParseContext context,
+                                      string element_name) throws MarkupError
+        {
+            if (element_name == "identity")
+            {
+                if (ta_ca_cert != "" || ta_server_cert != "") {
+                    var ta = new TrustAnchor(ta_ca_cert,
+                                             ta_server_cert,
+                                             ta_subject,
+                                             ta_subject_alt,
+                                             false);
+                    // Set the datetime_added in moonshot-server.vala, since it doesn't get sent via IPC
+                    card.set_trust_anchor_from_store(ta);
                 }
             }
+        }
 
-            private void
-            text_element_func(MarkupParseContext context,
-                              string             text,
-                              size_t             text_len) throws MarkupError {
-                unowned SList<string> stack = context.get_element_stack();
-    
-                if (text_len < 1)
-                    return;
-    
-                logger.trace("text_element_func (%p): text='%s'".printf(this, stack.nth_data(0)));
+        private void
+        text_element_func(MarkupParseContext context,
+                          string             text,
+                          size_t             text_len) throws MarkupError {
+            unowned SList<string> stack = context.get_element_stack();
 
-                if (stack.nth_data(0) == "display-name" && display_name_handler(stack))
-                {
-                    card.display_name = text;
-                }
-                else if (stack.nth_data(0) == "user" && user_handler(stack))
-                {
-                    card.username = text;
-                }
-                else if (stack.nth_data(0) == "password" && password_handler(stack))
-                {
-                    card.password = text;
-                }
-                else if (stack.nth_data(0) == "realm" && realm_handler(stack))
-                {
-                    card.issuer = text;
-                }
-                else if (stack.nth_data(0) == "service")
-                {
-                    card.add_service(text);
-                }
+            if (text_len < 1)
+                return;
 
-                /* Rules */
-                else if (stack.nth_data(0) == "pattern" && pattern_handler(stack))
-                {
-                    /* use temp array to workaround valac 0.10 bug accessing array property length */ 
+            if (stack.nth_data(0) == "display-name" && display_name_handler(stack))
+            {
+                card.display_name = text;
+            }
+            else if (stack.nth_data(0) == "user" && user_handler(stack))
+            {
+                card.username = text;
+            }
+            else if (stack.nth_data(0) == "password" && password_handler(stack))
+            {
+                card.password = text;
+            }
+            else if (stack.nth_data(0) == "realm" && realm_handler(stack))
+            {
+                card.issuer = text;
+            }
+            else if (stack.nth_data(0) == "service")
+            {
+                card.services.add(text);
+            }
+
+            /* Rules */
+            else if (stack.nth_data(0) == "pattern" && pattern_handler(stack))
+            {
+                /* use temp array to workaround valac 0.10 bug accessing array property length */
+                var temp = card.rules;
+                card.rules[temp.length - 1].pattern = text;
+            }
+            else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler(stack))
+            {
+                if (text == "true" || text == "false") {
+                    /* use temp array to workaround valac 0.10 bug accessing array property length*/
                     var temp = card.rules;
-                    card.rules[temp.length - 1].pattern = text;
-                }
-                else if (stack.nth_data(0) == "always-confirm" && always_confirm_handler(stack))
-                {
-                    if (text == "true" || text == "false") {
-                        /* use temp array to workaround valac 0.10 bug accessing array property length*/
-                        var temp = card.rules;
-                        card.rules[temp.length - 1].always_confirm = text;
-                    }
-                }
-                /*Trust anchor*/
-                else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler(stack))
-                {
-                    card.trust_anchor.ca_cert = text;
-                }
-                else if (stack.nth_data(0) == "subject" && subject_handler(stack))
-                {
-                    card.trust_anchor.subject = text;
-                }
-                else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler(stack))
-                {
-                    card.trust_anchor.subject_alt = text;
-                }
-                else if (stack.nth_data(0) == "server-cert" && server_cert_handler(stack))
-                {
-                    card.trust_anchor.server_cert = text;
+                    card.rules[temp.length - 1].always_confirm = text;
                 }
             }
-
-
+            else if (stack.nth_data(0) == "ca-cert" && ca_cert_handler(stack))
+            {
+                ta_ca_cert = text ?? "";
+            }
+            else if (stack.nth_data(0) == "server-cert" && server_cert_handler(stack))
+            {
+                ta_server_cert = text ?? "";
+            }
+            else if (stack.nth_data(0) == "subject" && subject_handler(stack))
+            {
+                ta_subject = text;
+            }
+            else if (stack.nth_data(0) == "subject-alt" && subject_alt_handler(stack))
+            {
+                ta_subject_alt = text;
+            }
+        }
 
         private const MarkupParser parser = {
-            start_element_func, null, text_element_func, null, null
+            start_element_func, end_element_func, text_element_func, null, null
         };
 
         private MarkupParseContext ctx;
 
         private string       text;
         private string       path;
+
+        private string ta_ca_cert;
+        private string ta_server_cert;
+        private string ta_subject;
+        private string ta_subject_alt;
 
         private IdCard card;
         private IdCard[] _cards = {};
@@ -233,20 +254,25 @@ namespace WebProvisioning
             this.path = path;
 
             var file = File.new_for_path(path);
-    
+
             try
             {
                 var dis = new DataInputStream(file.read());
                 string line;
-                while ((line = dis.read_line(null)) != null)
+                while ((line = dis.read_line(null)) != null) {
                     text += line;
+
+                    // Preserve newlines.
+                    //
+                    // This may add an extra newline at EOF. Maybe use
+                    // dis.read_upto("\n", ...) followed by dis.read_byte() instead?
+                    text += "\n";
+                }
             }
             catch(GLib.Error e)
             {
                 error("Could not retreive file size");
             }
-      
-            logger.trace(@"Parser(): read text to parse; length=$(text.length)");
         }
 
         public void parse() {
@@ -257,7 +283,7 @@ namespace WebProvisioning
             catch(GLib.Error e)
             {
                 error("Could not parse %s, invalid content", path);
-            } 
+            }
         }
     }
 }

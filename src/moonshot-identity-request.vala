@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,6 +32,8 @@
 public delegate void ReturnIdentityCallback(IdentityRequest request);
 
 public class IdentityRequest : Object {
+    static MoonshotLogger logger = get_logger("IdentityRequest");
+
     public IdCard? id_card = null;
     public bool complete = false;
     public bool select_default = false;
@@ -79,35 +81,27 @@ public class IdentityRequest : Object {
         return false;
     }
 
-    public void return_identity(IdCard? id_card) {
+    public void return_identity(IdCard? id_card, bool update_card = true) {
         this.id_card = id_card;
         this.complete = true;
 
         /* update id_card service list */
-        if (id_card != null && this.service != null && this.service != "")
+        if (update_card && id_card != null && this.service != null && this.service != "")
         {
-            bool duplicate_service = false;
-
-            foreach (string service in id_card.services)
-            {
-                if (service == this.service)
-                    duplicate_service = true;
-            }
+            bool duplicate_service = id_card.services.contains(this.service);
+            logger.trace("return_identity: duplicate_service=" + duplicate_service.to_string());
             if (duplicate_service == false)
             {
-                string[] services = new string[id_card.services.length + 1];
-
-                for (int i = 0; i < id_card.services.length; i++)
-                    services[i] = id_card.services[i];
-
-                services[id_card.services.length] = this.service;
-                id_card.services = services;
+                logger.trace("return_identity: calling add_service");
+                id_card.services.add(this.service);
+                logger.trace("return_identity: back from add_service");
 
                 this.id_card = this.parent_app.model.update_card(id_card);
             }
         }
 
         return_if_fail(callback != null);
+        logger.trace("return_identity: invoking callback");
         callback(this);
     }
 

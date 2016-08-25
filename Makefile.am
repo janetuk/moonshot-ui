@@ -59,19 +59,24 @@ src_moonshot_SOURCES = \
         src/moonshot-keyring-store.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
-        src/moonshot-add-dialog.vala \
+        src/moonshot-identity-dialog.vala \
         src/moonshot-idcard-widget.vala \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
         src/moonshot-server.vala \
+        src/moonshot-settings.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-provisioning-common.vala \
+        src/moonshot-trust-anchor-dialog.vala \
         src/moonshot-utils.vala \
         src/moonshot-futils.c \
-        src/moonshot-logger.vala
+        src/moonshot-crypto-utils.c \
+        src/moonshot-logger.vala \
+        src/moonshot-warning-dialog.vala
 
 src_moonshot_webp_SOURCES = \
+        src/moonshot-crypto-utils.c \
         src/moonshot-webp-parser.vala \
         src/moonshot-provisioning-common.vala \
         src/moonshot-id.vala \
@@ -83,7 +88,7 @@ src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
@@ -118,8 +123,8 @@ if OS_LINUX
 
 AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
 AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
-src_moonshot_LDFLAGS += -lgnome-keyring
-src_moonshot_webp_LDFLAGS += -lgnome-keyring
+src_moonshot_LDFLAGS += -lgnome-keyring -lcrypto
+src_moonshot_webp_LDFLAGS += -lgnome-keyring -lcrypto
 
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages

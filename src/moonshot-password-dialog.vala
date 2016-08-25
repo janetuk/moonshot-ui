@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,6 +33,8 @@ using Gtk;
 
 class AddPasswordDialog : Dialog
 {
+    private static Gdk.Color white = make_color(65535, 65535, 65535);
+
     private Entry password_entry;
     private CheckButton remember_checkbutton;
 
@@ -46,60 +48,68 @@ class AddPasswordDialog : Dialog
 
     public AddPasswordDialog(IdCard id_card, IdentityRequest? request)
     {
-        this.set_title(_("Please enter password for ") + id_card.display_name);
+        this.set_title(_("Moonshot - Password"));
         this.set_modal(true);
+        this.modify_bg(StateType.NORMAL, white);
 
-        if (request != null) {
-            this.add_buttons(_("Send"), ResponseType.OK,
-                             _("Return to application"), ResponseType.CANCEL);
-        } else {
-            this.add_buttons(_("Done"), ResponseType.OK,
-                             _("Cancel"), ResponseType.CANCEL);
-        }
+        this.add_buttons(_("Cancel"), ResponseType.CANCEL,
+                         _("Connect"), ResponseType.OK);
+
         this.set_default_response(ResponseType.OK);
 
         var content_area = this.get_content_area();
         ((Box) content_area).set_spacing(12);
-        Label service_label = null;
-        Label service_value = null;
-        if (request != null) {
-            service_label = new Label(_("for use with:"));
-            service_label.set_alignment(1, (float) 0.5);
-            service_value = new Label(request.service);
-            service_value.set_alignment(0, (float) 0.5);
-        }
+        content_area.modify_bg(StateType.NORMAL, white);
 
-        var nai_label = new Label(_("Network Access Identifier:"));
-        nai_label.set_alignment(1, (float) 0.5);
+        Label dialog_label = new Label(_("Enter the password for " + id_card.display_name));
+        dialog_label.set_alignment(0, 0);
+
+        var nai_label = new Label(_("User (NAI):"));
+        nai_label.set_alignment(0, 1);
         var nai_value = new Label(id_card.nai);
-        nai_value.set_alignment(0, (float) 0.5);
+        nai_value.set_alignment(0, 0);
 
         var password_label = new Label(_("Password:"));
-        password_label.set_alignment(1, (float) 0.5);
+        password_label.set_alignment(0, (float) 1);
         this.password_entry = new Entry();
         password_entry.set_invisible_char('*');
         password_entry.set_visibility(false);
         password_entry.activates_default = true;
         remember_checkbutton = new CheckButton.with_label(_("Remember password"));
 
-        set_atk_relation(password_entry, password_entry, Atk.RelationType.LABEL_FOR);
+        set_atk_relation(password_label, password_entry, Atk.RelationType.LABEL_FOR);
 
-        var table = new Table(4, 2, false);
+        var table = new Table(6, 1, false);
+        AttachOptions opts = AttachOptions.EXPAND | AttachOptions.FILL;
         int row = 0;
-        table.set_col_spacings(10);
-        table.set_row_spacings(10);
-        if (request != null) {
-            table.attach_defaults(service_label, 0, 1, row, row + 1);
-            table.attach_defaults(service_value, 1, 2, row, row + 1);
-            row++;
-        }
-        table.attach_defaults(nai_label, 0, 1, row, row+1);
-        table.attach_defaults(nai_value, 1, 2, row, row+1);
+        table.set_col_spacings(6);
+        table.set_row_spacings(0);
+        table.attach(dialog_label, 0, 1, row, row + 1, opts, opts, 0, 2);
+//            table.attach_defaults(service_value, 1, 2, row, row + 1);
         row++;
-        table.attach_defaults(password_label, 0, 1, row, row+1);
-        table.attach_defaults(password_entry, 1, 2, row, row+1);
+
+        VBox nai_vbox = new VBox(false, 0);
+        nai_vbox.pack_start(nai_label, false, false, 0);
+        nai_vbox.pack_start(nai_value, false, false, 0);
+        table.attach(nai_vbox, 0, 1, row, row + 1, opts, opts, 0, 12);
         row++;
-        table.attach_defaults(remember_checkbutton,  1, 2, row, row+1);
+
+        VBox password_vbox = new VBox(false, 1);
+        var empty_box2 = new VBox(false, 0);
+        empty_box2.set_size_request(0, 0);
+        password_vbox.pack_start(empty_box2, false, false, 3);
+        password_vbox.pack_start(password_label, false, false, 0);
+        password_vbox.pack_start(password_entry, false, false, 0);
+        table.attach(password_vbox, 0, 1, row, row + 1, opts, opts, 0, 0);
+        row++;
+
+        table.attach(remember_checkbutton,  0, 1, row, row + 1, opts, opts, 20, 2);
+        row++;
+
+        var empty_box3 = new VBox(false, 0);
+        empty_box3.set_size_request(0, 0);
+        table.attach(empty_box3,  0, 1, row, row + 1, opts, opts, 0, 10);
+        row++;
 
         var vbox = new VBox(false, 0);
         vbox.set_border_width(6);
@@ -110,13 +120,5 @@ class AddPasswordDialog : Dialog
         this.set_border_width(6);
         //this.set_resizable(false);
         this.show_all();
-    }
-
-    private void set_atk_relation(Widget widget, Widget target_widget, Atk.RelationType relationship)
-    {
-        var atk_widget = widget.get_accessible();
-        var atk_target_widget = target_widget.get_accessible();
-
-        atk_widget.add_relationship(relationship, atk_target_widget);
     }
 }

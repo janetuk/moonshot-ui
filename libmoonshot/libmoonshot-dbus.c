@@ -435,6 +435,9 @@ int moonshot_install_id_card (const char     *display_name,
                        G_TYPE_INVALID);
 
     g_object_unref (dbus_proxy);
+    g_free(rules_patterns_strv);
+    g_free(rules_always_confirm_strv);
+    g_free(services_strv);
 
     if (g_error != NULL) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,

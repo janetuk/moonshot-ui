@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,6 +86,8 @@ public class PasswordHashTable : Object {
 }
 
 public class IdentityManagerModel : Object {
+    static MoonshotLogger logger = get_logger("IdentityManagerModel");
+
     private const string FILE_NAME = "identities.txt";
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
@@ -94,14 +96,14 @@ public class IdentityManagerModel : Object {
         identities.sort((a, b) => {
                 IdCard id_a = (IdCard )a;
                 IdCard id_b = (IdCard )b;
-                if (id_a.IsNoIdentity() && !id_b.IsNoIdentity()) {
+                if (id_a.is_no_identity() && !id_b.is_no_identity()) {
                     return -1;
-                } else if (id_b.IsNoIdentity() && !id_a.IsNoIdentity()) {
+                } else if (id_b.is_no_identity() && !id_a.is_no_identity()) {
                     return 1;
                 }
                 return strcmp(id_a.display_name, id_b.display_name);
             });
-        if (identities.is_empty || !identities[0].IsNoIdentity())
+        if (identities.is_empty || !identities[0].is_no_identity())
             identities.insert(0, IdCard.NewNoIdentity());
         foreach (IdCard id_card in identities) {
             if (!id_card.store_password) {
@@ -140,23 +142,32 @@ public class IdentityManagerModel : Object {
         return true;
     }
 
-    private bool remove_duplicates(IdCard card)
+    private bool remove_duplicates(IdCard new_card, out ArrayList<IdCard>? old_duplicates)
     {
-        bool duplicate_found = false;
-        bool found = false;
-        do {
-            var cards = this.store.get_card_list();
-            found = false;
-            foreach (IdCard id_card in cards) {
-                if ((card != id_card) && (id_card.nai == card.nai)) {
-                    stdout.printf("removing duplicate id for '%s'\n", card.nai);
-                    remove_card_internal(id_card);
-                    found = duplicate_found = true;
-                    break;
-                }
+        ArrayList<IdCard> dups = new ArrayList<IdCard>();
+        var cards = this.store.get_card_list();
+        foreach (IdCard id_card in cards) {
+            if ((new_card != id_card) && (id_card.nai == new_card.nai)) {
+                dups.add(id_card);
             }
-        } while (found);
-        return duplicate_found;
+        }
+
+        foreach (IdCard id_card in dups) {
+            logger.trace("removing duplicate id for '%s'\n".printf(new_card.nai));
+            remove_card_internal(id_card);
+
+            if (new_card.trust_anchor.Compare(id_card.trust_anchor) == 0) {
+                logger.trace("Old and new cards have same trust anchor. Re-using the datetime_added and user_verified fields from the old card.");
+                new_card.trust_anchor.set_datetime_added(id_card.trust_anchor.datetime_added);
+                new_card.trust_anchor.user_verified = id_card.trust_anchor.user_verified;
+            }
+        }
+
+        if (&old_duplicates != null) {
+            old_duplicates = dups;
+        }
+
+        return (dups.size > 0);
     }
 
     public IdCard? find_id_card(string nai, bool force_flat_file_store) {
@@ -178,9 +189,11 @@ public class IdentityManagerModel : Object {
         return retval;
     }
 
-    public void add_card(IdCard card, bool force_flat_file_store) {
-        if (card.temporary)
+    public void add_card(IdCard card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null) {
+        if (card.temporary) {
+            logger.trace("add_card: card is temporary; returning.");
             return;
+        }
 
         string candidate;
         IIdentityCardStore.StoreType saved_store_type = get_store_type();
@@ -188,7 +201,7 @@ public class IdentityManagerModel : Object {
         if (force_flat_file_store)
             set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
 
-        remove_duplicates(card);
+        remove_duplicates(card, out old_duplicates);
 
         if (!display_name_is_valid(card.display_name, out candidate))
         {
@@ -197,12 +210,18 @@ public class IdentityManagerModel : Object {
 
         if (!card.store_password)
             password_table.CachePassword(card, store);
+
+        logger.trace("add_card: Adding card '%s' with services: '%s'"
+                     .printf(card.display_name, card.get_services_string("; ")));
+
         store.add_card(card);
         set_store_type(saved_store_type);
         card_list_changed();
     }
 
     public IdCard update_card(IdCard card) {
+        logger.trace("update_card");
+
         IdCard retval;
         if (card.temporary) {
             retval = card;
@@ -227,12 +246,16 @@ public class IdentityManagerModel : Object {
 
     public bool remove_card(IdCard card) {
         if (remove_card_internal(card)) {
+            logger.trace(@"remove_card: Removed '$(card.display_name)'");
             card_list_changed();
             return true;
         }
+        logger.warn(@"remove_card: Couldn't remove '$(card.display_name)'");
         return false;
     }
 
+    // The name is misleading: This not only sets the store type,
+    // it also creates a new store instance, which loads the card data.
     public void set_store_type(IIdentityCardStore.StoreType type) {
         if ((store != null) && (store.get_store_type() == type))
             return;
@@ -247,6 +270,21 @@ public class IdentityManagerModel : Object {
             store = new LocalFlatFileStore();
             break;
         }
+
+        // Loop through the loaded IDs. If any trust anchors are old enough that we didn't record
+        // the datetime_added, add it now.
+        string before_now = _("Before ") + TrustAnchor.format_datetime_now();
+        bool save_needed = false;
+        foreach (IdCard id in this.store.get_card_list()) {
+            if (!id.trust_anchor.is_empty() && id.trust_anchor.datetime_added == "") {
+                logger.trace("set_store_type : Set ta_datetime_added for old trust anchor on '%s' to '%s'".printf(id.display_name, before_now));
+                id.trust_anchor.set_datetime_added(before_now);
+                save_needed = true;
+            }
+        }
+        if (save_needed) {
+            this.store.store_id_cards();
+        }
     }
 
     public IIdentityCardStore.StoreType get_store_type() {
@@ -257,8 +295,8 @@ public class IdentityManagerModel : Object {
         foreach (IdCard card in this.store.get_card_list()) {
             // The 'NoIdentity' card is non-trivial if it has services or rules.
             // All other cards are automatically non-trivial.
-            if ((!card.IsNoIdentity()) || 
-                (card.services.length > 0) ||
+            if ((!card.is_no_identity()) || 
+                (card.services.size > 0) ||
                 (card.rules.length > 0)) {
                 return true;
             }
@@ -270,6 +308,7 @@ public class IdentityManagerModel : Object {
     private IdentityManagerApp parent;
 
     public IdentityManagerModel(IdentityManagerApp parent_app, IIdentityCardStore.StoreType store_type) {
+        logger.trace("IdentityManagerModel: store_type=" + store_type.to_string());
         parent = parent_app;
         password_table = new PasswordHashTable();
         set_store_type(store_type);

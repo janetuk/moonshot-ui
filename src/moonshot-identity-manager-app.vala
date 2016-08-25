@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,10 +69,6 @@ public class IdentityManagerApp {
     }
 #endif
 
-    private const int WINDOW_WIDTH = 400;
-    private const int WINDOW_HEIGHT = 500;
-
-
     /** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
     public void show() {
         if (name_is_owned) {
@@ -112,7 +108,7 @@ public class IdentityManagerApp {
             model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
 
         if (!headless)
-            view = new IdentityManagerView(this);
+            view = new IdentityManagerView(this, use_flat_file_store);
         LinkedList<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
@@ -128,14 +124,21 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity(IdCard id, bool force_flat_file_store) {
-        if (view != null) return view.add_identity(id, force_flat_file_store);
-        model.add_card(id, force_flat_file_store);
-        return true;
+    public bool add_identity(IdCard id, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null) {
+        if (view != null) 
+        {
+            logger.trace("add_identity: calling view.add_identity");
+            return view.add_identity(id, force_flat_file_store, out old_duplicates);
+        }
+        else {
+            logger.trace("add_identity: calling model.add_card");
+            model.add_card(id, force_flat_file_store, out old_duplicates);
+            return true;
+        }
     }
 
     public void select_identity(IdentityRequest request) {
-        logger.trace("select_identity");
+        logger.trace("select_identity: request.nai=%s".printf(request.nai ?? "[null]"));
 
         IdCard identity = null;
 
@@ -155,6 +158,7 @@ public class IdentityManagerApp {
                 /* If NAI matches, use this id card */
                 if (has_nai && request.nai == id.nai)
                 {
+                    logger.trace("select_identity: request has nai; returning " + id.display_name);
                     identity = id;
                     break;
                 }
@@ -162,13 +166,9 @@ public class IdentityManagerApp {
                 /* If any service matches we add id card to the candidate list */
                 if (has_srv)
                 {
-                    foreach (string srv in id.services)
-                    {
-                        if (request.service == srv)
-                        {
-                            request.candidates.append(id);
-                            continue;
-                        }
+                    if (id.services.contains(request.service)) {
+                        logger.trace(@"select_identity: request has service '$(request.service); matched on '$(id.display_name)'");
+                        request.candidates.append(id);
                     }
                 }
             }
@@ -176,45 +176,17 @@ public class IdentityManagerApp {
             /* If more than one candidate we dissasociate service from all ids */
             if ((identity == null) && has_srv && request.candidates.length() > 1)
             {
+                logger.trace(@"select_identity: multiple candidates; removing service '$(request.service) from all.");
                 foreach (IdCard id in request.candidates)
                 {
-                    int i = 0;
-                    SList<string> services_list = null;
-                    bool has_service = false;
-
-                    foreach (string srv in id.services)
-                    {
-                        if (srv == request.service)
-                        {
-                            has_service = true;
-                            continue;
-                        }
-                        services_list.append(srv);
-                    }
-                    
-                    if (!has_service)
-                        continue;
-
-                    if (services_list.length() == 0)
-                    {
-                        id.services = {};
-                        continue;
-                    }
-
-                    string[] services = new string[services_list.length()];
-                    foreach (string srv in services_list)
-                    {
-                        services[i] = srv;
-                        i++;
-                    }
-
-                    id.services = services;
+                    id.services.remove(request.service);
                 }
             }
 
             /* If there are no candidates we use the service matching rules */
             if ((identity == null) && (request.candidates.length() == 0))
             {
+                logger.trace("select_identity: No candidates; using service matching rules.");
                 foreach (IdCard id in model.get_card_list())
                 {
                     foreach (Rule rule in id.rules)
@@ -222,6 +194,7 @@ public class IdentityManagerApp {
                         if (!match_service_pattern(request.service, rule.pattern))
                             continue;
 
+                        logger.trace(@"select_identity: ID $(id.display_name) matched on service matching rules.");
                         request.candidates.append(id);
 
                         if (rule.always_confirm == "true")
@@ -231,6 +204,7 @@ public class IdentityManagerApp {
             }
             
             if ((identity == null) && has_nai) {
+                logger.trace("select_identity: Creating temp identity");
                 // create a temp identity
                 string[] components = request.nai.split("@", 2);
                 identity = new IdCard();
@@ -318,7 +292,7 @@ public class IdentityManagerApp {
                 if (!shown) {
                     GLib.error("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
                 } else {
-                    stdout.printf("Showed previously launched identity manager.\n");
+                    stdout.printf(_("Showed previously launched identity manager.\n"));
                     GLib.Process.exit(0);
                 }
             }
@@ -482,6 +456,7 @@ public static int main(string[] args) {
     settings.set_long_property("gtk-menu-images", 0, "moonshot");
 #endif
 
+    //TODO?? Do we need to call Intl.setlocale(LocaleCategory.MESSAGES, "");
     Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,6 +38,13 @@ public MoonshotLogger get_logger(string name) {
 
 #if USE_LOG4VALA
 
+static void glib_default_log_handler(string? log_domain, LogLevelFlags log_level, string message)
+{
+    Log4Vala.Logger logger = Log4Vala.Logger.get_logger(log_domain ?? "Glib");
+    stderr.printf(log_level.to_string() + " : " + message + "\n");
+    logger.error("Glib error level: " + log_level.to_string() + " : " + message);
+}
+
 /** Logger class that wraps the Log4Vala logger */
 public class MoonshotLogger : Object {
     static bool logger_is_initialized = false;
@@ -46,6 +53,8 @@ public class MoonshotLogger : Object {
 
     public MoonshotLogger(string name) {
         if (!logger_is_initialized) {
+            Log.set_default_handler(glib_default_log_handler);
+
             //!! TODO: Don't hard-code the pathname.
             Log4Vala.init("/home/dbreslau/log4vala.conf");
             logger_is_initialized = true;
