@@ -675,7 +675,11 @@ SUCH DAMAGE.
                                      null,
                                      N_("_Help"),
                                      null, null, null };
+
+        // Pick up the translated version of the name, if any
+        helpmenu.label = dgettext(null, helpmenu.label);
         actions += helpmenu;
+
         Gtk.ActionEntry about = { "AboutAction",
                                   #if VALA_0_12
                                   Stock.ABOUT,
@@ -686,6 +690,8 @@ SUCH DAMAGE.
                                   null,
                                   N_("About this application"),
                                   on_about_action };
+
+        about.label = dgettext(null, about.label);
         actions += about;
 
         return actions;
