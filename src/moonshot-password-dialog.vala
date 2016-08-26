@@ -61,7 +61,7 @@ class AddPasswordDialog : Dialog
         ((Box) content_area).set_spacing(12);
         content_area.modify_bg(StateType.NORMAL, white);
 
-        Label dialog_label = new Label(_("Enter the password for " + id_card.display_name));
+        Label dialog_label = new Label(_("Enter the password for ") + id_card.display_name);
         dialog_label.set_alignment(0, 0);
 
         var nai_label = new Label(_("User (NAI):"));
