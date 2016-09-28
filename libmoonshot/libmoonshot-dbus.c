@@ -34,6 +34,7 @@
 
 #include <assert.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <dbus/dbus-glib.h>
@@ -446,4 +447,59 @@ int moonshot_install_id_card (const char     *display_name,
     }
 
     return success;
+}
+
+int moonshot_confirm_ca_certificate (const char           *identity_name,
+                                     const char           *realm,
+                                     const unsigned char  *ca_hash,
+                                     int                   hash_len,
+                                     MoonshotError       **error)
+{
+    GError     *g_error = NULL;
+    int         success = 99;
+    int         confirmed = 99;
+    char        hash_str[65];
+    DBusGProxy *dbus_proxy = get_dbus_proxy (error);
+    int         out = 0;
+    int         i;
+
+    if (*error != NULL) {
+        return FALSE;
+    }
+
+    g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
+
+    /* Convert hash byte array to string */
+    out = 0;
+    for (i = 0; i < hash_len; i++) {
+        sprintf(&(hash_str[out]), "%02X", ca_hash[i]);
+        out += 2;
+    }
+
+    printf("moonshot_confirm_ca_certificate: calling ConfirmCaCertificate; hash='%s'\n", hash_str);
+
+    int call_ok = dbus_g_proxy_call_with_timeout (dbus_proxy,
+                                                  "ConfirmCaCertificate",
+                                                  INFINITE_TIMEOUT,
+                                                  &g_error,
+                                                  G_TYPE_STRING, identity_name,
+                                                  G_TYPE_STRING, realm,
+                                                  G_TYPE_STRING, hash_str,
+                                                  G_TYPE_INVALID,
+                                                  G_TYPE_INT,   &confirmed,
+                                                  G_TYPE_BOOLEAN, &success,
+                                                  G_TYPE_INVALID);
+
+    printf("moonshot_confirm_ca_certificate: back from ConfirmCaCertificate. call_ok=%d; confirmed=%d; success=%d\n", 
+           (call_ok? 1 : 0), confirmed, success);
+
+    g_object_unref (dbus_proxy);
+
+    if (g_error != NULL) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                     g_error->message);
+        return FALSE;
+    }
+
+    return (int) confirmed;
 }

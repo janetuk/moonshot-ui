@@ -45,7 +45,8 @@ src/moonshot-logger.c
 src/moonshot-password-dialog.c
 src/moonshot-provisioning-common-new.vala
 src/moonshot-provisioning-common.c
-src/moonshot-server.c
+src/moonshot-server-linux.c
+src/moonshot-server-msrpc.c
 src/moonshot-settings.c
 src/moonshot-trust-anchor-dialog.c
 src/moonshot-utils.c

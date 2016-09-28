@@ -54,6 +54,7 @@ public class IdentityManagerApp {
     private MoonshotServer ipc_server;
     private bool name_is_owned;
     private bool show_requested;
+    public bool use_flat_file_store {public get; private set;}
 
 #if OS_MACOS
     public OSXApplication osxApp;
@@ -81,13 +82,14 @@ public class IdentityManagerApp {
         }
     }
     
-#if LOG4VALA
+#if USE_LOG4VALA
     // Call this from main() to ensure that the logger is initialized
     internal IdentityManagerApp.dummy() {}
 #endif
 
     public IdentityManagerApp(bool headless, bool use_flat_file_store) {
         use_flat_file_store |= UserForcesFlatFileStore();
+        this.use_flat_file_store = use_flat_file_store;
 
 #if GNOME_KEYRING
         bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
@@ -413,7 +415,8 @@ const GLib.OptionEntry[] options = {
 
 public static int main(string[] args) {
 
-#if LOG4VALA
+#if USE_LOG4VALA
+    // Initialize the logger.
     new IdentityManagerApp.dummy();
 #endif
 

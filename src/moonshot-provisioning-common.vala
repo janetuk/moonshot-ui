@@ -153,8 +153,7 @@ namespace WebProvisioning
                     var ta = new TrustAnchor(ta_ca_cert,
                                              ta_server_cert,
                                              ta_subject,
-                                             ta_subject_alt,
-                                             false);
+                                             ta_subject_alt);
                     // Set the datetime_added in moonshot-server.vala, since it doesn't get sent via IPC
                     card.set_trust_anchor_from_store(ta);
                 }

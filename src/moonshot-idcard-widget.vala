@@ -41,12 +41,12 @@ class IdCardWidget : Box
 
     public IdCard id_card { get; set; default = null; }
     private VBox main_vbox;
-    private HBox table;
+    private HBox hbox;
     private EventBox event_box;
     private bool   is_selected = false;
     private Arrow arrow;
     
-    private Label label;
+    private VBox details;
 
     internal int _position = 0;
     internal int position {
@@ -72,7 +72,7 @@ class IdCardWidget : Box
     public void expand()
     {
         is_selected = true;
-        update_id_card_label();
+        details.show_all();
 
         set_idcard_color();
         arrow.set(ArrowType.DOWN, ARROW_SHADOW);
@@ -81,7 +81,7 @@ class IdCardWidget : Box
     public void collapse()
     {
         is_selected = false;
-        update_id_card_label();
+        details.hide();
 
         set_idcard_color();
         arrow.set(ArrowType.RIGHT, ARROW_SHADOW);
@@ -125,28 +125,11 @@ class IdCardWidget : Box
     }
     
     private void
-    update_id_card_label()
+    make_id_card_label(Label label)
     {
-        // !!TODO: Use a table to format the labels and values
-        string service_spacer = "\n                ";
-
         var display_name = (manager_view.selection_in_progress() && this.id_card.is_no_identity()
                             ? _("Do not use a Moonshot identity for this service") : this.id_card.display_name);
         var label_text = Markup.printf_escaped("<span rise='8000'><big>%s</big></span>", display_name);
-
-        if (is_selected)
-        {
-            if (!this.id_card.is_no_identity()) {
-                label_text += "\n" + _("Username") + ":  " + id_card.username;
-                label_text += "\n" + _("Realm:") + "  " + id_card.issuer;
-                if (!id_card.trust_anchor.is_empty()) {
-                    label_text += "\n" + _("Trust anchor: Enterprise provisioned");
-                }
-            }
-
-            string services_text = _("Services:  ") + this.id_card.get_services_string(service_spacer);
-            label_text += "\n" + services_text;
-        }
 
         label.set_markup(label_text);
     }
@@ -156,25 +139,54 @@ class IdCardWidget : Box
         this.id_card = id_card;
         this.manager_view = manager_view;
 
-        label = new Label(null);
-        label.set_alignment((float) 0, (float) 0.5);
-        label.set_ellipsize(Pango.EllipsizeMode.END);
-        update_id_card_label();
+        var display_name_label = new Label(null);
+        display_name_label.set_alignment((float) 0, (float) 0.5);
+        display_name_label.set_ellipsize(Pango.EllipsizeMode.END);
+        make_id_card_label(display_name_label);
 
-        table = new Gtk.HBox(false, 6);
+        var details_wrapper = new VBox(false, 0);
+        details_wrapper.pack_start(display_name_label, false, false, 0);
+        this.details = new VBox(false, 0);
+        details_wrapper.pack_start(details, false, false, 0);
+
+        if (!this.id_card.is_no_identity()) {
+            var upper_details_text = _("Username") + ":  " + id_card.username;
+            upper_details_text += "\n" + _("Realm:") + "  " + id_card.issuer;
+            if (!id_card.trust_anchor.is_empty()) {
+                upper_details_text += "\n" + _("Trust anchor: Enterprise provisioned");
+            }
+            Label upper_details = new Label(upper_details_text);
+            upper_details.set_alignment(0, 0);
+            details.pack_start(upper_details);
+        }
+        var services_hbox = new HBox(false, 6);
+        Label services_label = new Label(_("Services: "));
+        services_label.set_alignment(0, 0);
+
+        string services_text = this.id_card.get_services_string("\n");
+        Label service_list = new Label(services_text);
+        service_list.set_alignment(0, 0);
+        service_list.set_ellipsize(Pango.EllipsizeMode.END);
+        service_list.set_max_width_chars(50);
+        services_hbox.pack_start(services_label, false, false, 0);
+        services_hbox.pack_start(service_list, false, false, 0);
+        details.pack_start(services_hbox);
+
+        hbox = new Gtk.HBox(false, 6);
         var image = new Image.from_pixbuf(get_pixbuf(id_card));
         if (this.id_card.is_no_identity()) {
             image.clear();
             // Use padding to make the image size =  48x48 (size = 2x padding)
             image.set_padding(24, 24);
         }
-        table.pack_start(image, false, false, 0);
-        table.pack_start(label, true, true, 0);
+        hbox.pack_start(image, false, false, 0);
+        hbox.pack_start(details_wrapper, true, true, 0);
         this.arrow = new Arrow(ArrowType.RIGHT, ARROW_SHADOW);
-        table.pack_start(arrow, false, false);
+        this.arrow.set_alignment((float) 0.5, (float) 0);
+        hbox.pack_start(arrow, false, false);
 
         this.main_vbox = new VBox(false, 12);
-        main_vbox.pack_start(table, true, true, 0);
+        main_vbox.pack_start(hbox, true, true, 0);
         main_vbox.set_border_width(12);
 
         event_box = new EventBox();
@@ -184,6 +196,7 @@ class IdCardWidget : Box
         this.pack_start(event_box, true, true);
 
         this.show_all();
+        details.hide();
 
         set_idcard_color();
     }

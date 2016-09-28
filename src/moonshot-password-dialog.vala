@@ -50,7 +50,7 @@ class AddPasswordDialog : Dialog
     {
         this.set_title(_("Moonshot - Password"));
         this.set_modal(true);
-        this.modify_bg(StateType.NORMAL, white);
+        set_bg_color(this);
 
         this.add_buttons(_("Cancel"), ResponseType.CANCEL,
                          _("Connect"), ResponseType.OK);
@@ -59,7 +59,7 @@ class AddPasswordDialog : Dialog
 
         var content_area = this.get_content_area();
         ((Box) content_area).set_spacing(12);
-        content_area.modify_bg(StateType.NORMAL, white);
+        set_bg_color(content_area);
 
         Label dialog_label = new Label(_("Enter the password for ") + id_card.display_name);
         dialog_label.set_alignment(0, 0);

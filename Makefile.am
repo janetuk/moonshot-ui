@@ -64,7 +64,7 @@ src_moonshot_SOURCES = \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
-        src/moonshot-server.vala \
+        src/moonshot-server-linux.vala \
         src/moonshot-settings.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-provisioning-common.vala \

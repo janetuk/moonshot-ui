@@ -98,10 +98,10 @@ class WarningDialog
 
         // dialog.set_modal(true);
         dialog.set_title(_("Warning"));
-        dialog.modify_bg(StateType.NORMAL, white);
+        set_bg_color(dialog);
 
         // ((Box) content_area).set_spacing(12);
-        content_area.modify_bg(StateType.NORMAL, white);
+        set_bg_color(content_area);
 
         content_area.show_all();
 

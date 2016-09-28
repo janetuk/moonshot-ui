@@ -1,0 +1,24 @@
+<!-- See https://bugs.launchpad.net/moonshot-ui/+bug/1430980, including comments -->
+
+<identities>
+
+  <identity>
+    <display-name>Not No Identity</display-name>
+    <user>someone</user>
+    <password></password>
+    <realm>painless-security.com</realm>
+    <services>
+      <service>something/painless-security.com</service>
+      <service>somethingelse/painless-security.com</service>
+    </services>
+  </identity>
+
+  <identity>
+    <display-name>No Identity</display-name>
+    <services>
+      <service>a_service/painless-security.com</service>
+      <service>another_service/painless-security.com</service>
+    </services>
+  </identity>
+
+</identities> 

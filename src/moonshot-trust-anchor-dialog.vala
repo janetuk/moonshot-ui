@@ -31,18 +31,115 @@
 */
 using Gtk;
 
+public delegate void TrustAnchorConfirmationCallback(TrustAnchorConfirmationRequest request);
+
+public class TrustAnchorConfirmationRequest : GLib.Object {
+    static MoonshotLogger logger = get_logger("TrustAnchorConfirmationRequest");
+
+    IdentityManagerApp parent_app;
+    string userid;
+    string realm;
+    string ca_hash;
+    public bool confirmed = false;
+
+    TrustAnchorConfirmationCallback callback = null;
+
+    public TrustAnchorConfirmationRequest(IdentityManagerApp parent_app,
+                                          string userid,
+                                          string realm,
+                                          string ca_hash)
+    {
+        this.parent_app = parent_app;
+        this.userid = userid;
+        this.realm = realm;
+        this.ca_hash = ca_hash;
+    }
+
+    public void set_callback(owned TrustAnchorConfirmationCallback cb)
+    {
+//        #if VALA_0_12
+            this.callback = ((owned) cb);
+//        #else
+//            this.callback = ((IdCard) => cb(IdCard));
+//        #endif
+    }
+
+    public bool execute() {
+
+        string nai = userid + "@" + realm;
+        IdCard? card = parent_app.model.find_id_card(nai, parent_app.use_flat_file_store);
+        if (card == null) {
+            logger.warn(@"execute: Could not find ID card for NAI $nai; returning false.");
+            return_confirmation(false);
+            return false;
+        }
+        
+        if (!(card.trust_anchor.is_empty() || card.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT)) {
+            logger.warn(@"execute: Trust anchor type for NAI $nai is not empty or SERVER_CERT; returning true.");
+            return_confirmation(true);
+            return false;
+        }
+
+        if (card.trust_anchor.server_cert == ca_hash) {
+            logger.trace(@"execute: Fingerprint for $nai matches stored value; returning true.");
+            return_confirmation(true);
+            return false;
+        }
+
+        var dialog = new TrustAnchorDialog(userid, realm, ca_hash);
+        var response = dialog.run();
+        dialog.destroy();
+        bool is_confirmed = (response == ResponseType.OK);
+
+        if (is_confirmed) {
+            logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
+
+            card.trust_anchor.update_server_fingerprint(ca_hash);
+            parent_app.model.update_card(card);
+        }            
+
+        return_confirmation(is_confirmed);
+
+        /* This function works as a GSourceFunc, so it can be passed to
+         * the main loop from other threads
+         */
+        return false;
+    }
+
+    private void return_confirmation(bool confirmed) {
+        return_if_fail(callback != null);
+
+        this.confirmed = confirmed;
+        logger.trace(@"return_confirmation: confirmed=$confirmed");
+
+        // Send back the confirmation (we can't directly run the
+        // callback because we may be being called from a 'yield')
+        GLib.Idle.add(
+            () => {
+                logger.trace("return_confirmation[Idle handler]: invoking callback");
+                callback(this);
+                return false;
+            }
+            );
+    }
+}
+
+
+
 class TrustAnchorDialog : Dialog
 {
     private static Gdk.Color white = make_color(65535, 65535, 65535);
 
     public bool complete = false;
 
-    public TrustAnchorDialog(IdCard idcard, Window parent)
+    public TrustAnchorDialog(string userid,
+                             string realm,
+                             string ca_hash)
     {
         this.set_title(_("Trust Anchor"));
         this.set_modal(true);
-        this.set_transient_for(parent);
-        this.modify_bg(StateType.NORMAL, white);
+//        this.set_transient_for(parent);
+        set_bg_color(this);
 
         this.add_buttons(_("Cancel"), ResponseType.CANCEL,
                          _("Confirm"), ResponseType.OK);
@@ -51,7 +148,7 @@ class TrustAnchorDialog : Dialog
 
         var content_area = this.get_content_area();
         ((Box) content_area).set_spacing(12);
-        content_area.modify_bg(StateType.NORMAL, white);
+        set_bg_color(content_area);
 
         Label dialog_label = new Label("");
         dialog_label.set_alignment(0, 0);
@@ -62,16 +159,16 @@ class TrustAnchorDialog : Dialog
         dialog_label.set_line_wrap(true);
         dialog_label.set_width_chars(60);
                                                    
-        var user_label = new Label(_("Username: ") + idcard.username);
+        var user_label = new Label(_("Username: ") + userid);
         user_label.set_alignment(0, 0.5f);
 
-        var realm_label = new Label(_("Realm: ") + idcard.issuer);
+        var realm_label = new Label(_("Realm: ") + realm);
         realm_label.set_alignment(0, 0.5f);
 
         Label confirm_label = new Label(_("Please confirm that this is the correct trust anchor."));
         confirm_label.set_alignment(0, 0.5f);
 
-        var trust_anchor_display = make_ta_fingerprint_widget(idcard.trust_anchor);
+        var trust_anchor_display = make_ta_fingerprint_widget(ca_hash);
 
         var vbox = new VBox(false, 0);
         vbox.set_border_width(6);

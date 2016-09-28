@@ -67,10 +67,13 @@ class CustomVBox : VBox
         id_card_widget.position = next_pos++;
     }
 
-    public IdCardWidget? find_idcard_widget(IdCard id_card) {
+    public IdCardWidget? find_idcard_widget(IdCard card) {
+        if (card == null) {
+            return null;
+        }
         foreach (var w in get_children()) {
             IdCardWidget widget = (IdCardWidget) w;
-            if (widget.id_card.nai == id_card.nai) {
+            if (widget.id_card == card) {
                 return widget;
             }
         }

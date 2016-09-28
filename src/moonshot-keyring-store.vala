@@ -111,7 +111,6 @@ public class KeyringStore : Object, IIdentityCardStore {
             string server_cert = "";
             string subject = "";
             string subject_alt = "";
-            bool   user_verified = false;
             string ta_datetime_added = "";
             for (i = 0; i < entry.attributes.len; i++) {
                 var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
@@ -142,14 +141,12 @@ public class KeyringStore : Object, IIdentityCardStore {
                     subject_alt = value;
                 } else if (attribute.name == "StorePassword") {
                     store_password = value;
-                } else if (attribute.name == "TA_User_Verified") {
-                    user_verified = (value == "true");
                 } else if (attribute.name == "TA_DateTime_Added") {
                     ta_datetime_added = value;
                 }
             }
 
-            var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt, user_verified);
+            var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt);
             if (ta_datetime_added != "") {
                 ta.set_datetime_added(ta_datetime_added);
             }
@@ -179,6 +176,7 @@ public class KeyringStore : Object, IIdentityCardStore {
                 id_card.password = entry.secret;
             else
                 id_card.password = null;
+
             id_card_list.add(id_card);
         }
     }
@@ -212,7 +210,6 @@ public class KeyringStore : Object, IIdentityCardStore {
             attributes.append_string("Server-Cert", id_card.trust_anchor.server_cert);
             attributes.append_string("Subject", id_card.trust_anchor.subject);
             attributes.append_string("Subject-Alt", id_card.trust_anchor.subject_alt);
-            attributes.append_string("TA_User_Verified", id_card.trust_anchor.user_verified ? "true" : "false");
             attributes.append_string("TA_DateTime_Added", id_card.trust_anchor.datetime_added);
             attributes.append_string("StorePassword", id_card.store_password ? "yes" : "no");
 

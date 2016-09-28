@@ -43,6 +43,7 @@ public class TrustAnchor : Object
     private static const string CERT_FOOTER = "-----END CERTIFICATE-----";
 
     public enum TrustAnchorType {
+        EMPTY,
         CA_CERT,
         SERVER_CERT
     }
@@ -52,18 +53,16 @@ public class TrustAnchor : Object
     private string _subject_alt = "";
     private string _server_cert = "";
     private string _datetime_added = "";
-    public bool user_verified = false;
 
     private static string fixup (string s) {
         return (s == null ? "" : s.strip());
     }
 
-    public TrustAnchor(string ca_cert, string server_cert, string subject, string subject_alt, bool user_verified) {
+    public TrustAnchor(string ca_cert, string server_cert, string subject, string subject_alt) {
         _ca_cert = fixup(ca_cert);
         _server_cert = fixup(server_cert);
         _subject = fixup(subject);
         _subject_alt = fixup(subject_alt);
-        this.user_verified = user_verified;
 
         // If we're reading from store, this will be overridden (see set_datetime_added)
         _datetime_added = "";
@@ -105,11 +104,12 @@ public class TrustAnchor : Object
     }
 
     public bool is_empty() {
-        return ca_cert == "" && subject == "" && subject_alt == "" && server_cert == "";
+        return ca_cert == "" && server_cert == "";
     }
 
     public TrustAnchorType get_anchor_type() {
-        return server_cert == "" ? TrustAnchorType.CA_CERT : TrustAnchorType.SERVER_CERT;
+        return (server_cert != "" ? TrustAnchorType.SERVER_CERT 
+                : (ca_cert != "" ? TrustAnchorType.CA_CERT : TrustAnchorType.EMPTY));
     }
 
     internal void set_datetime_added(string datetime) {
@@ -120,6 +120,12 @@ public class TrustAnchor : Object
         DateTime now = new DateTime.now_utc();
         string dt = now.format("%b %d %T %Y %Z");
         return dt;
+    }
+
+    internal void update_server_fingerprint(string fingerprint) {
+        this._server_cert = fingerprint;
+        string ta_datetime_added = TrustAnchor.format_datetime_now();
+        this.set_datetime_added(ta_datetime_added);
     }
 
     public int Compare(TrustAnchor other)
@@ -141,7 +147,7 @@ public class TrustAnchor : Object
             return 1;
         }
 
-        // Do not compare the user_verified and datetime_added fields; they are not essential.
+        // Do not compare the datetime_added fields; it's not essential.
 
         return 0;
     }
@@ -331,6 +337,18 @@ public class IdCard : Object
     public string nai { public get; private set;}
 
     public bool store_password { get; set; default = false; }
+
+    // uuid is currently used only for debugging. Must be unique, even between cards with same nai and display name.
+    public string uuid {
+        public get {return _uuid;}
+    }
+    private string _uuid = generate_uuid();
+
+    internal static string generate_uuid() {
+        uint32 rand1 = Random.next_int();
+        uint32 rand2 = Random.next_int();
+        return "%08X.%08X::%s".printf(rand1, rand2, TrustAnchor.format_datetime_now());
+    }
 
     public bool is_no_identity() 
     {

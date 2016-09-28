@@ -68,7 +68,7 @@ public class IdentityManagerView : Window {
 
     internal CheckButton remember_identity_binding = null;
 
-    private IdCard selected_idcard = null;
+    private IdCard selected_card = null;
 
     private string import_directory = null;
 
@@ -103,10 +103,32 @@ public class IdentityManagerView : Window {
         set_default_size(WINDOW_WIDTH, WINDOW_HEIGHT);
         build_ui();
         setup_list_model(); 
-        load_id_cards(); 
+        load_id_cards();
         connect_signals();
+        report_duplicate_nais(); 
     }
     
+    private void report_duplicate_nais() {
+        ArrayList<ArrayList<IdCard>> duplicates;
+        identities_manager.find_duplicate_nai_sets(out duplicates);
+        foreach (ArrayList<IdCard> list in duplicates) {
+            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
+                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify") 
+                + _(" user ID or issuer fields so that they are no longer the same NAI.");
+
+            foreach (var card in list) {
+                message += "\n\nDisplay Name: '%s'\nServices:\n     %s".printf(card.display_name, card.get_services_string(",\n     "));
+            }
+            var msg_dialog = new Gtk.MessageDialog(this,
+                                                   Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                   Gtk.MessageType.INFO,
+                                                   Gtk.ButtonsType.OK,
+                                                   message);
+            msg_dialog.run();
+            msg_dialog.destroy();
+        }
+    }
+
     private void on_card_list_changed() {
         logger.trace("on_card_list_changed");
         load_id_cards();
@@ -258,7 +280,7 @@ public class IdentityManagerView : Window {
     {
         logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
                      .printf(id_card.nai, 
-                             this.selected_idcard == null ? "[null selection]" : this.selected_idcard.nai));
+                             this.selected_card == null ? "[null selection]" : this.selected_card.nai));
 
 
         var id_card_widget = new IdCardWidget(id_card, this);
@@ -266,9 +288,19 @@ public class IdentityManagerView : Window {
         id_card_widget.expanded.connect(this.widget_selected_cb);
         id_card_widget.collapsed.connect(this.widget_unselected_cb);
 
-        if (this.selected_idcard != null && this.selected_idcard.nai == id_card.nai) {
+        if (this.selected_card != null && this.selected_card.nai == id_card.nai) {
             logger.trace(@"add_id_card_widget: Expanding selected idcard widget");
             id_card_widget.expand();
+
+            // After a card is added, modified, or deleted, we reload all the cards.
+            // (I'm not sure why, or if it's necessary to do this.) This means that the
+            // selected_card may now point to a card instance that's not in the current list.
+            // Hence the only way to carry the selection across reloads is to identify
+            // the selected card by its NAI. And hence we need to reset what our idea of the
+            // "selected card" is.
+            // There should be a better way to do this, especially since we're not great
+            // at preventing duplicate NAIs.
+            this.selected_card = id_card;
         }
         return id_card_widget;
     }
@@ -277,7 +309,7 @@ public class IdentityManagerView : Window {
     {
         logger.trace(@"widget_selected_cb: id_card_widget.id_card.display_name='$(id_card_widget.id_card.display_name)'");
 
-        this.selected_idcard = id_card_widget.id_card;
+        this.selected_card = id_card_widget.id_card;
         bool allow_removes = !id_card_widget.id_card.is_no_identity();
         this.remove_button.set_sensitive(allow_removes);
         this.edit_button.set_sensitive(true);
@@ -291,7 +323,7 @@ public class IdentityManagerView : Window {
     {
         logger.trace(@"widget_unselected_cb: id_card_widget.id_card.display_name='$(id_card_widget.id_card.display_name)'");
 
-        this.selected_idcard = null;
+        this.selected_card = null;
         this.remove_button.set_sensitive(false);
         this.edit_button.set_sensitive(false);
         this.custom_vbox.receive_collapsed_event(id_card_widget);
@@ -390,6 +422,9 @@ public class IdentityManagerView : Window {
         switch (result) {
         case ResponseType.OK:
             this.identities_manager.update_card(update_id_card_data(dialog, card));
+
+            // Make sure we haven't created a duplicate NAI via this update.
+            report_duplicate_nais();
             break;
         default:
             break;
@@ -400,11 +435,8 @@ public class IdentityManagerView : Window {
     private void remove_identity(IdCard id_card)
     {
         logger.trace(@"remove_identity: id_card.display_name='$(id_card.display_name)'");
-        if (id_card != this.selected_idcard) {
-            logger.error("remove_identity: id_card != this.selected_idcard!");
-        }
 
-        this.selected_idcard = null;
+        this.selected_card = null;
         this.identities_manager.remove_card(id_card);
 
         // Nothing is selected, so disable buttons
@@ -486,8 +518,7 @@ public class IdentityManagerView : Window {
             set_prompting_service(request.service);
             remember_identity_binding.show();
 
-            if (this.selected_idcard != null
-                && this.custom_vbox.find_idcard_widget(this.selected_idcard) != null) {
+            if (this.custom_vbox.find_idcard_widget(this.selected_card) != null) {
                 // A widget is already selected, and has not been filtered out of the display via search
                 send_button.set_sensitive(true);
             }
@@ -547,11 +578,6 @@ public class IdentityManagerView : Window {
     {
         return_if_fail(this.selection_in_progress());
 
-        if (!check_and_confirm_trust_anchor(id)) {
-            // Allow user to pick again
-            return;
-        }
-
         var request = this.request_queue.pop_head();
         var identity = check_add_password(id, request, identities_manager);
         send_button.set_sensitive(false);
@@ -584,33 +610,6 @@ public class IdentityManagerView : Window {
 
         remember_identity_binding.active = false;
         remember_identity_binding.hide();
-    }
-
-    private bool check_and_confirm_trust_anchor(IdCard id)
-    {
-        if (!id.trust_anchor.is_empty() && id.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT) {
-            if (!id.trust_anchor.user_verified) {
-
-                bool ret = false;
-                int result = ResponseType.CANCEL;
-                var dialog = new TrustAnchorDialog(id, this);
-                while (!dialog.complete)
-                    result = dialog.run();
-
-                switch (result) {
-                case ResponseType.OK:
-                    id.trust_anchor.user_verified = true;
-                    ret = true;
-                    break;
-                default:
-                    break;
-                }
-
-                dialog.destroy();
-                return ret;
-            }
-        }
-        return true;
     }
 
     private void on_about_action()
@@ -663,7 +662,7 @@ SUCH DAMAGE.
         about.set_modal(true);
         about.set_transient_for(this);
         about.response.connect((a, b) => {about.destroy();});
-        about.modify_bg(StateType.NORMAL, white);
+        set_bg_color(about);
         
         about.run();
     }
@@ -717,8 +716,7 @@ SUCH DAMAGE.
 
     private void build_ui()
     {
-        // Note: On Debian7/Gtk+2, the menu bar remains gray. This doesn't happen on Debian8/Gtk+3.
-        this.modify_bg(StateType.NORMAL, white);
+        set_bg_color(this);
 
         create_ui_manager();
 
@@ -798,13 +796,13 @@ SUCH DAMAGE.
         row++;
 
         this.edit_button = new Button.with_label(_("Edit"));
-        edit_button.clicked.connect((w) => {edit_identity_cb(this.selected_idcard);});
+        edit_button.clicked.connect((w) => {edit_identity_cb(this.selected_card);});
         edit_button.set_sensitive(false);
         top_table.attach(make_rigid(edit_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
         this.remove_button = new Button.with_label(_("Remove"));
-        remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_idcard);});
+        remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_card);});
         remove_button.set_sensitive(false);
         top_table.attach(make_rigid(remove_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
@@ -812,7 +810,7 @@ SUCH DAMAGE.
         // push the send button down another row.
         row++;
         this.send_button = new Button.with_label(_("Send"));
-        send_button.clicked.connect((w) => {send_identity_cb(this.selected_idcard);});
+        send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
         // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
@@ -826,7 +824,6 @@ SUCH DAMAGE.
 //        quit_item.hide();
         
         Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
-        menushell.modify_bg(StateType.NORMAL, white);
 
         osxApp.set_menu_bar(menushell);
         osxApp.set_use_quartz_accelerators(true);
@@ -835,7 +832,7 @@ SUCH DAMAGE.
 #else
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
-        menubar.modify_bg(StateType.NORMAL, white);
+        set_bg_color(menubar);
 #endif
         main_vbox.pack_start(top_table, true, true, 6);
 
@@ -947,14 +944,15 @@ SUCH DAMAGE.
                     logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
                 }
             }
-            var msg_dialog = new Gtk.MessageDialog(this,
-                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                               Gtk.MessageType.INFO,
-                                               Gtk.ButtonsType.OK,
-                                               _("Import completed. %d Identities were added or updated."),
-                                               import_count);
-            msg_dialog.run();
-            msg_dialog.destroy();
+            if (import_count == 0) {
+                var msg_dialog = new Gtk.MessageDialog(this,
+                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                       Gtk.MessageType.INFO,
+                                                       Gtk.ButtonsType.OK,
+                                                       _("Import completed. No identities were added or updated."));
+                msg_dialog.run();
+                msg_dialog.destroy();
+            }
         }
         dialog.destroy();
     }

@@ -196,7 +196,7 @@ class IdentityDialog : Dialog
 
         this.set_border_width(6);
         this.set_resizable(false);
-        this.modify_bg(StateType.NORMAL, white);
+        set_bg_color(this);
         this.show_all();
     }
 
@@ -235,11 +235,11 @@ class IdentityDialog : Dialog
         row++;
 
         if (id.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT) {
-            Widget fingerprint = make_ta_fingerprint_widget(id.trust_anchor);
-            ta_table.attach(fingerprint, 0, 1, row, row + 2, fill_and_expand, fill_and_expand, 5, 5);
+            Widget fingerprint = make_ta_fingerprint_widget(id.trust_anchor.server_cert);
+            // ta_table.attach(fingerprint, 0, 1, row, row + 2, fill_and_expand, fill_and_expand, 5, 5);
 
             // To make the fingerprint box wider, try:
-            // ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 20, 5);
+            ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 20, 5);
 
         }
         else {
@@ -370,7 +370,7 @@ class IdentityDialog : Dialog
         var services_table = new Table(card.services.size, 1, false);
         services_table.set_row_spacings(1);
         services_table.set_col_spacings(0);
-        services_table.modify_bg(StateType.NORMAL, white);
+        set_bg_color(services_table);
 
         var table_button_hbox = new HBox(false, 6);
         table_button_hbox.pack_start(services_vscroll, true, true, 4);
@@ -383,7 +383,7 @@ class IdentityDialog : Dialog
         // A table doesn't have a background color, so put it in an EventBox, and
         // set the EventBox's background color instead.
         EventBox table_bg = new EventBox();
-        table_bg.modify_bg(StateType.NORMAL, white);
+        set_bg_color(table_bg);
         table_bg.add(services_table);
         services_vbox_alignment.add(table_bg);
 
