@@ -1,0 +1,521 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B31DAF7CB500702060 /* AppDelegate.m */; };
+		78A330B71DAF7CB500702060 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B61DAF7CB500702060 /* main.m */; };
+		78A330BA1DAF7CB500702060 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B91DAF7CB500702060 /* ViewController.m */; };
+		78A330BC1DAF7CB500702060 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A330BB1DAF7CB500702060 /* Assets.xcassets */; };
+		78A330BF1DAF7CB500702060 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78A330BD1DAF7CB500702060 /* Main.storyboard */; };
+		78A330CA1DAF7CB500702060 /* MoonshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330C91DAF7CB500702060 /* MoonshotTests.m */; };
+		78A330D51DAF7CB500702060 /* MoonshotUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330D41DAF7CB500702060 /* MoonshotUITests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		78A330C61DAF7CB500702060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78A330A71DAF7CB400702060 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78A330AE1DAF7CB500702060;
+			remoteInfo = Moonshot;
+		};
+		78A330D11DAF7CB500702060 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 78A330A71DAF7CB400702060 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 78A330AE1DAF7CB500702060;
+			remoteInfo = Moonshot;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		78A330AF1DAF7CB500702060 /* Moonshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A330B21DAF7CB500702060 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		78A330B31DAF7CB500702060 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		78A330B61DAF7CB500702060 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		78A330B81DAF7CB500702060 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		78A330B91DAF7CB500702060 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		78A330BB1DAF7CB500702060 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		78A330BE1DAF7CB500702060 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		78A330C01DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78A330C51DAF7CB500702060 /* MoonshotTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoonshotTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A330C91DAF7CB500702060 /* MoonshotTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoonshotTests.m; sourceTree = "<group>"; };
+		78A330CB1DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78A330D01DAF7CB500702060 /* MoonshotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoonshotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		78A330D41DAF7CB500702060 /* MoonshotUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoonshotUITests.m; sourceTree = "<group>"; };
+		78A330D61DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		78A330AC1DAF7CB500702060 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330C21DAF7CB500702060 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330CD1DAF7CB500702060 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		78A330A61DAF7CB400702060 = {
+			isa = PBXGroup;
+			children = (
+				78A330B11DAF7CB500702060 /* Moonshot */,
+				78A330C81DAF7CB500702060 /* MoonshotTests */,
+				78A330D31DAF7CB500702060 /* MoonshotUITests */,
+				78A330B01DAF7CB500702060 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		78A330B01DAF7CB500702060 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				78A330AF1DAF7CB500702060 /* Moonshot.app */,
+				78A330C51DAF7CB500702060 /* MoonshotTests.xctest */,
+				78A330D01DAF7CB500702060 /* MoonshotUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		78A330B11DAF7CB500702060 /* Moonshot */ = {
+			isa = PBXGroup;
+			children = (
+				78A330B21DAF7CB500702060 /* AppDelegate.h */,
+				78A330B31DAF7CB500702060 /* AppDelegate.m */,
+				78A330B81DAF7CB500702060 /* ViewController.h */,
+				78A330B91DAF7CB500702060 /* ViewController.m */,
+				78A330BB1DAF7CB500702060 /* Assets.xcassets */,
+				78A330BD1DAF7CB500702060 /* Main.storyboard */,
+				78A330C01DAF7CB500702060 /* Info.plist */,
+				78A330B51DAF7CB500702060 /* Supporting Files */,
+			);
+			path = Moonshot;
+			sourceTree = "<group>";
+		};
+		78A330B51DAF7CB500702060 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				78A330B61DAF7CB500702060 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		78A330C81DAF7CB500702060 /* MoonshotTests */ = {
+			isa = PBXGroup;
+			children = (
+				78A330C91DAF7CB500702060 /* MoonshotTests.m */,
+				78A330CB1DAF7CB500702060 /* Info.plist */,
+			);
+			path = MoonshotTests;
+			sourceTree = "<group>";
+		};
+		78A330D31DAF7CB500702060 /* MoonshotUITests */ = {
+			isa = PBXGroup;
+			children = (
+				78A330D41DAF7CB500702060 /* MoonshotUITests.m */,
+				78A330D61DAF7CB500702060 /* Info.plist */,
+			);
+			path = MoonshotUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		78A330AE1DAF7CB500702060 /* Moonshot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78A330D91DAF7CB500702060 /* Build configuration list for PBXNativeTarget "Moonshot" */;
+			buildPhases = (
+				78A330AB1DAF7CB500702060 /* Sources */,
+				78A330AC1DAF7CB500702060 /* Frameworks */,
+				78A330AD1DAF7CB500702060 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Moonshot;
+			productName = Moonshot;
+			productReference = 78A330AF1DAF7CB500702060 /* Moonshot.app */;
+			productType = "com.apple.product-type.application";
+		};
+		78A330C41DAF7CB500702060 /* MoonshotTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78A330DC1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotTests" */;
+			buildPhases = (
+				78A330C11DAF7CB500702060 /* Sources */,
+				78A330C21DAF7CB500702060 /* Frameworks */,
+				78A330C31DAF7CB500702060 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78A330C71DAF7CB500702060 /* PBXTargetDependency */,
+			);
+			name = MoonshotTests;
+			productName = MoonshotTests;
+			productReference = 78A330C51DAF7CB500702060 /* MoonshotTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		78A330CF1DAF7CB500702060 /* MoonshotUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 78A330DF1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotUITests" */;
+			buildPhases = (
+				78A330CC1DAF7CB500702060 /* Sources */,
+				78A330CD1DAF7CB500702060 /* Frameworks */,
+				78A330CE1DAF7CB500702060 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				78A330D21DAF7CB500702060 /* PBXTargetDependency */,
+			);
+			name = MoonshotUITests;
+			productName = MoonshotUITests;
+			productReference = 78A330D01DAF7CB500702060 /* MoonshotUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		78A330A71DAF7CB400702060 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = Devsy;
+				TargetAttributes = {
+					78A330AE1DAF7CB500702060 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+					};
+					78A330C41DAF7CB500702060 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 78A330AE1DAF7CB500702060;
+					};
+					78A330CF1DAF7CB500702060 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 78A330AE1DAF7CB500702060;
+					};
+				};
+			};
+			buildConfigurationList = 78A330AA1DAF7CB400702060 /* Build configuration list for PBXProject "Moonshot" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 78A330A61DAF7CB400702060;
+			productRefGroup = 78A330B01DAF7CB500702060 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				78A330AE1DAF7CB500702060 /* Moonshot */,
+				78A330C41DAF7CB500702060 /* MoonshotTests */,
+				78A330CF1DAF7CB500702060 /* MoonshotUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		78A330AD1DAF7CB500702060 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78A330BC1DAF7CB500702060 /* Assets.xcassets in Resources */,
+				78A330BF1DAF7CB500702060 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330C31DAF7CB500702060 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330CE1DAF7CB500702060 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		78A330AB1DAF7CB500702060 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78A330BA1DAF7CB500702060 /* ViewController.m in Sources */,
+				78A330B71DAF7CB500702060 /* main.m in Sources */,
+				78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330C11DAF7CB500702060 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78A330CA1DAF7CB500702060 /* MoonshotTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		78A330CC1DAF7CB500702060 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				78A330D51DAF7CB500702060 /* MoonshotUITests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		78A330C71DAF7CB500702060 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78A330AE1DAF7CB500702060 /* Moonshot */;
+			targetProxy = 78A330C61DAF7CB500702060 /* PBXContainerItemProxy */;
+		};
+		78A330D21DAF7CB500702060 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 78A330AE1DAF7CB500702060 /* Moonshot */;
+			targetProxy = 78A330D11DAF7CB500702060 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		78A330BD1DAF7CB500702060 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				78A330BE1DAF7CB500702060 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		78A330D71DAF7CB500702060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		78A330D81DAF7CB500702060 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		78A330DA1DAF7CB500702060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Moonshot/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.Moonshot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		78A330DB1DAF7CB500702060 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = Moonshot/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.Moonshot;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		78A330DD1DAF7CB500702060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MoonshotTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.MoonshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moonshot.app/Contents/MacOS/Moonshot";
+			};
+			name = Debug;
+		};
+		78A330DE1DAF7CB500702060 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MoonshotTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.MoonshotTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moonshot.app/Contents/MacOS/Moonshot";
+			};
+			name = Release;
+		};
+		78A330E01DAF7CB500702060 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MoonshotUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.MoonshotUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Moonshot;
+			};
+			name = Debug;
+		};
+		78A330E11DAF7CB500702060 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = MoonshotUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = Devsy.MoonshotUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = Moonshot;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		78A330AA1DAF7CB400702060 /* Build configuration list for PBXProject "Moonshot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78A330D71DAF7CB500702060 /* Debug */,
+				78A330D81DAF7CB500702060 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		78A330D91DAF7CB500702060 /* Build configuration list for PBXNativeTarget "Moonshot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78A330DA1DAF7CB500702060 /* Debug */,
+				78A330DB1DAF7CB500702060 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		78A330DC1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78A330DD1DAF7CB500702060 /* Debug */,
+				78A330DE1DAF7CB500702060 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		78A330DF1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				78A330E01DAF7CB500702060 /* Debug */,
+				78A330E11DAF7CB500702060 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 78A330A71DAF7CB400702060 /* Project object */;
+}
