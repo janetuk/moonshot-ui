@@ -67,7 +67,7 @@ class CustomVBox : VBox
         id_card_widget.position = next_pos++;
     }
 
-    public IdCardWidget? find_idcard_widget(IdCard card) {
+    public IdCardWidget? find_idcard_widget(IdCard? card) {
         if (card == null) {
             return null;
         }
