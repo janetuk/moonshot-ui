@@ -6,22 +6,29 @@
 //  Copyright © 2016 Devsy. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "MainViewController.h"
 #import "AddIdentityWindow.h"
 #import "EditIdentityWindow.h"
 #import "Identity.h"
 
-@interface ViewController()<NSTableViewDataSource, NSTableViewDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
+@interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
 
+@property (weak) IBOutlet NSView *contentView;
 @property (weak) IBOutlet NSView *detailsView;
 @property (weak) IBOutlet NSTextField *displayNameTextField;
+@property (weak) IBOutlet NSTextField *usernameTextField;
 @property (weak) IBOutlet NSTextField *usernameValueTextField;
+@property (weak) IBOutlet NSTextField *realmTextField;
 @property (weak) IBOutlet NSTextField *realmValueTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorValueTextField;
+@property (weak) IBOutlet NSTextField *servicesTextField;
 @property (weak) IBOutlet NSTextField *servicesValueTextField;
 @property (weak) IBOutlet NSTableView *identitiesTableView;
-@property (strong) IBOutlet NSArrayController *identitiesArrayController;
+@property (weak) IBOutlet NSButton *addIdentityButton;
 @property (weak) IBOutlet NSButton *deleteIdentityButton;
-@property (nonatomic) BOOL runAgain;
+@property (weak) IBOutlet NSButton *importButton;
+@property (weak) IBOutlet NSImageView *userImageView;
 @property (nonatomic, strong) NSWindow *sheetWindow;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
@@ -29,7 +36,9 @@
 
 @end
 
-@implementation ViewController
+@implementation MainViewController
+
+static BOOL runDeleteIdentityAlertAgain;
 
 #pragma mark - View Lifecycle
 
@@ -37,7 +46,9 @@
     [super viewDidLoad];
     self.identitiesArray = [[NSMutableArray alloc] init];
     [self retrieveSavedIdentitiesFromNSUserDefaults];
-    self.runAgain = YES;
+    runDeleteIdentityAlertAgain = YES;
+    [self setupView];
+
 //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"Identities_Array"];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
 }
@@ -46,22 +57,66 @@
     [super setRepresentedObject:representedObject];
 }
 
+#pragma mark - Setup Views
+
+- (void)setupView {
+    [self setupContentView];
+    [self setupDetailsView];
+    [self setupImportButton];
+    [self setupTableViewHeader];
+    [self setupUserImageView];
+}
+
+- (void)setupContentView {
+    [self.contentView.layer setBackgroundColor:[NSColor colorWithRed:224/255.0 green:224/255.0 blue:224/255.0 alpha:1].CGColor];
+    self.contentView.layer.cornerRadius = 5.0;
+}
+
+- (void)setupDetailsView {
+    [self.usernameTextField setStringValue:NSLocalizedString(@"Username", @"")];
+    [self.realmTextField setStringValue:NSLocalizedString(@"Realm", @"")];
+    [self.trustAnchorTextField setStringValue:NSLocalizedString(@"Trust_Anchor", @"")];
+    [self.servicesTextField setStringValue:NSLocalizedString(@"Services", @"")];
+
+    [self.detailsView.layer setBorderWidth:1.0];
+    [self.detailsView.layer setBorderColor:[NSColor lightGrayColor].CGColor];
+    [self.detailsView.layer setBackgroundColor:[NSColor whiteColor].CGColor];
+}
+
+#pragma mark - Setup Import Button
+
+- (void)setupImportButton {
+    [self.importButton setTitle:NSLocalizedString(@"Import_Button", @"")];
+}
+
+#pragma mark - Setup User ImageView
+
+- (void)setupUserImageView {
+    self.userImageView.image = [NSImage imageNamed:@"Profile_icon"];
+}
+
+#pragma mark - Setup TableView Header
+
+- (void)setupTableViewHeader {
+    [self.identitiesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Name", @"")];
+}
+
 #pragma mark - Reload Data
 
 - (void)reloadDetailsViewWithIdentityData {
-    
     Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
     if ([self.identitiesArray count] > 0) {
-        self.displayNameTextField.stringValue = identityObject.displayName;
-        self.usernameValueTextField.stringValue = identityObject.username;
-        self.realmValueTextField.stringValue = identityObject.realm;
-        self.servicesValueTextField.stringValue = @"";
+        [self.displayNameTextField setStringValue: identityObject.displayName];
+        [self.usernameValueTextField setStringValue: identityObject.username];
+        [self.realmValueTextField setStringValue: identityObject.realm];
+        [self.servicesValueTextField setStringValue:@"" ];
+        [self.trustAnchorValueTextField setStringValue:@""];
     }
     else {
-        self.displayNameTextField.stringValue = @"No identity";
-        self.usernameValueTextField.stringValue = @"/";
-        self.realmValueTextField.stringValue = @"/";
-        self.servicesValueTextField.stringValue = @"/";
+        [self.displayNameTextField setStringValue: @"No identity"];
+        [self.usernameValueTextField setStringValue: @"/"];
+        [self.realmValueTextField setStringValue: @"/"];
+        [self.servicesValueTextField setStringValue: @"/"];
     }
 }
 
@@ -73,6 +128,7 @@
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"cellIdentifier" owner:self];
+    cellView.imageView.image = [NSImage imageNamed:@"Profile_icon"];
     if ([self.identitiesArray count] > 0) {
         cellView.textField.stringValue = [[self.identitiesArray objectAtIndex:row] valueForKey:@"displayName"];
     } else {
@@ -81,7 +137,7 @@
     return cellView;
 }
 
-- (void)cancel:(id) sender
+- (void)cancel:(id)sender
 {
     [[self.view window] endSheet:self.sheetWindow];
 }
@@ -126,21 +182,22 @@
 }
 
 - (IBAction)deleteIdentityButtonPressed:(id)sender {
-    if (self.runAgain == NO) {
+    if (runDeleteIdentityAlertAgain == NO) {
         [self deleteFromNSUserDefaults];
         [self.deleteIdentityButton setEnabled:NO];
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
-        [alert addButtonWithTitle:@"OK"];
-        [alert addButtonWithTitle:@"Cancel"];
-        [alert setMessageText: [NSString stringWithFormat:@"Are you sure you want to delete %@ from identity selector ?",[[self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow]valueForKey:@"displayName"]]];
-        [alert setInformativeText:@"This item will be deleted immediately. You can’t undo this action."];
+        [alert addButtonWithTitle:NSLocalizedString(@"Delete_Button", @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
+        [alert setMessageText: [NSString stringWithFormat:NSLocalizedString(@"Delete_Identity_Alert_Message", @""),[[self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow]valueForKey:@"displayName"]]];
+        [alert setInformativeText:NSLocalizedString(@"Alert_Info", @"")];
         [alert setAlertStyle:NSWarningAlertStyle];
         [alert setShowsSuppressionButton:YES];
+        [[alert suppressionButton] setTitle:NSLocalizedString(@"Alert_Suppression_Message", @"")];
         [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
             switch (returnCode) {
-                case 1000:
-                    self.runAgain = (BOOL)![[alert suppressionButton] state];
+                case NSAlertFirstButtonReturn:
+                    runDeleteIdentityAlertAgain = (BOOL)![[alert suppressionButton] state];
                     [self deleteFromNSUserDefaults];
                     [self.deleteIdentityButton setEnabled:NO];
                     break;
@@ -154,45 +211,50 @@
 - (IBAction)importIdentityButtonPressed:(id)sender {
 }
 
+#pragma mark - Keyboard events
+
+- (void)keyUp:(NSEvent *)event {
+    
+    const NSString * character = [event charactersIgnoringModifiers];
+    const unichar code = [character characterAtIndex:0];
+    
+    switch(code) {
+        case NSUpArrowFunctionKey: //up arrow
+            [self.deleteIdentityButton setEnabled:YES];
+            [self reloadDetailsViewWithIdentityData];
+            break;
+        case NSDownArrowFunctionKey: // down arrow
+            [self.deleteIdentityButton setEnabled:YES];
+            [self reloadDetailsViewWithIdentityData];
+            break;
+        default:
+            [self.identitiesTableView deselectRow:self.identitiesTableView.selectedRow];
+            break;
+    }
+}
+
 #pragma mark - AddIdentityWindowDelegate
 
-- (void)didPressCancelAddButton {
-    [[self.view window] endSheet:[self.addIdentityWindow window]];
+- (void)addIdentityWindowCanceled:(NSWindow *)window {
+    [[self.view window] endSheet:window];
 }
 
-- (void)didPressAddIdentityButton {
-    Identity *newIdentity = [[Identity alloc] init];
-    newIdentity.displayName = self.addIdentityWindow.displayNameTextField.stringValue;
-    newIdentity.username = self.addIdentityWindow.usernameTextField.stringValue;
-    newIdentity.realm = self.addIdentityWindow.reamTextField.stringValue;
-    newIdentity.password = self.addIdentityWindow.passwordTextField.stringValue;
-    newIdentity.passwordRemembered = self.addIdentityWindow.rememberPasswordButton.state;
-    newIdentity.dateAdded = [NSDate date];
-    [self.identitiesArray addObject: newIdentity];
+- (void)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+    [self.identitiesArray addObject: identity];
     [self saveIdentityInNSUserDefaults:self.identitiesArray];
-    [[self.view window] endSheet:[self.addIdentityWindow window]];
-}
-
-- (void)didPressRememberPasswordButton {
+    [[self.view window] endSheet:window];
 }
 
 #pragma mark - EditIdentityWindowDelegate
 
-- (void)didPressSaveEditButton {
-    Identity *editedIdentity = [[Identity alloc] init];
-    editedIdentity.displayName = [[self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow] valueForKey:@"displayName"];
-    editedIdentity.username = self.editIdentityWindow.editUsernameTextField.stringValue;
-    editedIdentity.realm = self.editIdentityWindow.editRealmTextField.stringValue;
-    editedIdentity.password = self.editIdentityWindow.editPasswordTextField.stringValue;
-    editedIdentity.passwordRemembered = self.editIdentityWindow.editRememberPasswordButton.state;
-    editedIdentity.dateAdded = [[self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow] valueForKey:@"dateAdded"];
-    [self.identitiesArray replaceObjectAtIndex:self.identitiesTableView.selectedRow withObject:editedIdentity];
+- (void)editIdentityWindow:(NSWindow *)window wantsToEditIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+    [self.identitiesArray replaceObjectAtIndex:self.identitiesTableView.selectedRow withObject:identity];
     [self saveIdentityInNSUserDefaults:self.identitiesArray];
-    [[self.view window] endSheet:[self.editIdentityWindow window]];
+    [[self.view window] endSheet: window];
 }
 
-- (void)didPressCancelEditButton {
-    [[self.view window] endSheet:[self.editIdentityWindow window]];
+- (void)editIdentityWindowCanceled:(NSWindow *)window {
+    [[self.view window] endSheet:window];
 }
 
 #pragma mark - Save in NSUserDefaults

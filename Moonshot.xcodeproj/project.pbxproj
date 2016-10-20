@@ -7,13 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF2C1DD084D600F23D89 /* MainViewController.m */; };
+		7812FF2F1DD0A39800F23D89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7812FF2E1DD0A39800F23D89 /* Localizable.strings */; };
+		7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */; };
+		785833801DB901AE00DF0117 /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 7858337F1DB901AE00DF0117 /* Identity.m */; };
+		788E9B9B1DD4CC24004CCF1B /* Profile_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 788E9B9A1DD4CC24004CCF1B /* Profile_icon.png */; };
+		7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7899E79C1DBF517600E4542E /* AddIdentityWindow.m */; };
+		7899E79F1DBF517600E4542E /* AddIdentityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7899E79D1DBF517600E4542E /* AddIdentityWindow.xib */; };
 		78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B31DAF7CB500702060 /* AppDelegate.m */; };
 		78A330B71DAF7CB500702060 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B61DAF7CB500702060 /* main.m */; };
-		78A330BA1DAF7CB500702060 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330B91DAF7CB500702060 /* ViewController.m */; };
 		78A330BC1DAF7CB500702060 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78A330BB1DAF7CB500702060 /* Assets.xcassets */; };
 		78A330BF1DAF7CB500702060 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78A330BD1DAF7CB500702060 /* Main.storyboard */; };
 		78A330CA1DAF7CB500702060 /* MoonshotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330C91DAF7CB500702060 /* MoonshotTests.m */; };
 		78A330D51DAF7CB500702060 /* MoonshotUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78A330D41DAF7CB500702060 /* MoonshotUITests.m */; };
+		78C73D921DBF8BE300D2BEFB /* EditIdentityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78C73D901DBF8BE300D2BEFB /* EditIdentityWindow.m */; };
+		78C73D931DBF8BE300D2BEFB /* EditIdentityWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78C73D911DBF8BE300D2BEFB /* EditIdentityWindow.xib */; };
+		78FA20741DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FA20721DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m */; };
+		78FA20751DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78FA20731DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib */; };
+		78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FA20771DC8E90200BA9A37 /* AboutWindow.m */; };
+		78FA207A1DC8E90200BA9A37 /* AboutWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78FA20781DC8E90200BA9A37 /* AboutWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,12 +46,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7812FF2B1DD084D600F23D89 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
+		7812FF2C1DD084D600F23D89 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		7812FF2E1DD0A39800F23D89 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		7812FF341DD0DEBF00F23D89 /* NSDate+NSDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NSDateFormatter.h"; sourceTree = "<group>"; };
+		7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NSDateFormatter.m"; sourceTree = "<group>"; };
+		7858337E1DB901AE00DF0117 /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Identity.h; sourceTree = "<group>"; };
+		7858337F1DB901AE00DF0117 /* Identity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Identity.m; sourceTree = "<group>"; };
+		788E9B9A1DD4CC24004CCF1B /* Profile_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Profile_icon.png; sourceTree = "<group>"; };
+		7899E79B1DBF517600E4542E /* AddIdentityWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddIdentityWindow.h; sourceTree = "<group>"; };
+		7899E79C1DBF517600E4542E /* AddIdentityWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddIdentityWindow.m; sourceTree = "<group>"; };
+		7899E79D1DBF517600E4542E /* AddIdentityWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddIdentityWindow.xib; sourceTree = "<group>"; };
 		78A330AF1DAF7CB500702060 /* Moonshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonshot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78A330B21DAF7CB500702060 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		78A330B31DAF7CB500702060 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		78A330B61DAF7CB500702060 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		78A330B81DAF7CB500702060 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		78A330B91DAF7CB500702060 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		78A330BB1DAF7CB500702060 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		78A330BE1DAF7CB500702060 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		78A330C01DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -49,6 +70,15 @@
 		78A330D01DAF7CB500702060 /* MoonshotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoonshotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78A330D41DAF7CB500702060 /* MoonshotUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoonshotUITests.m; sourceTree = "<group>"; };
 		78A330D61DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		78C73D8F1DBF8BE300D2BEFB /* EditIdentityWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditIdentityWindow.h; sourceTree = "<group>"; };
+		78C73D901DBF8BE300D2BEFB /* EditIdentityWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EditIdentityWindow.m; sourceTree = "<group>"; };
+		78C73D911DBF8BE300D2BEFB /* EditIdentityWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EditIdentityWindow.xib; sourceTree = "<group>"; };
+		78FA20711DC8B59D00BA9A37 /* TrustAnchorHelpWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrustAnchorHelpWindow.h; sourceTree = "<group>"; };
+		78FA20721DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrustAnchorHelpWindow.m; sourceTree = "<group>"; };
+		78FA20731DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrustAnchorHelpWindow.xib; sourceTree = "<group>"; };
+		78FA20761DC8E90200BA9A37 /* AboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutWindow.h; sourceTree = "<group>"; };
+		78FA20771DC8E90200BA9A37 /* AboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutWindow.m; sourceTree = "<group>"; };
+		78FA20781DC8E90200BA9A37 /* AboutWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +106,59 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7812FF301DD0DDCD00F23D89 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				7812FF341DD0DEBF00F23D89 /* NSDate+NSDateFormatter.h */,
+				7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		7858337C1DB9015F00DF0117 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				7858337D1DB9015F00DF0117 /* Models */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		7858337D1DB9015F00DF0117 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7858337E1DB901AE00DF0117 /* Identity.h */,
+				7858337F1DB901AE00DF0117 /* Identity.m */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		788E9B971DD4CBC2004CCF1B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				788E9B9A1DD4CC24004CCF1B /* Profile_icon.png */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		7899E79A1DBF517600E4542E /* CustomWindows */ = {
+			isa = PBXGroup;
+			children = (
+				7899E79B1DBF517600E4542E /* AddIdentityWindow.h */,
+				7899E79C1DBF517600E4542E /* AddIdentityWindow.m */,
+				7899E79D1DBF517600E4542E /* AddIdentityWindow.xib */,
+				78C73D8F1DBF8BE300D2BEFB /* EditIdentityWindow.h */,
+				78C73D901DBF8BE300D2BEFB /* EditIdentityWindow.m */,
+				78C73D911DBF8BE300D2BEFB /* EditIdentityWindow.xib */,
+				78FA20711DC8B59D00BA9A37 /* TrustAnchorHelpWindow.h */,
+				78FA20721DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m */,
+				78FA20731DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib */,
+				78FA20761DC8E90200BA9A37 /* AboutWindow.h */,
+				78FA20771DC8E90200BA9A37 /* AboutWindow.m */,
+				78FA20781DC8E90200BA9A37 /* AboutWindow.xib */,
+			);
+			path = CustomWindows;
+			sourceTree = "<group>";
+		};
 		78A330A61DAF7CB400702060 = {
 			isa = PBXGroup;
 			children = (
@@ -99,10 +182,13 @@
 		78A330B11DAF7CB500702060 /* Moonshot */ = {
 			isa = PBXGroup;
 			children = (
+				7812FF301DD0DDCD00F23D89 /* Categories */,
+				7899E79A1DBF517600E4542E /* CustomWindows */,
+				7858337C1DB9015F00DF0117 /* Data */,
 				78A330B21DAF7CB500702060 /* AppDelegate.h */,
 				78A330B31DAF7CB500702060 /* AppDelegate.m */,
-				78A330B81DAF7CB500702060 /* ViewController.h */,
-				78A330B91DAF7CB500702060 /* ViewController.m */,
+				7812FF2B1DD084D600F23D89 /* MainViewController.h */,
+				7812FF2C1DD084D600F23D89 /* MainViewController.m */,
 				78A330BB1DAF7CB500702060 /* Assets.xcassets */,
 				78A330BD1DAF7CB500702060 /* Main.storyboard */,
 				78A330C01DAF7CB500702060 /* Info.plist */,
@@ -114,7 +200,9 @@
 		78A330B51DAF7CB500702060 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				788E9B971DD4CBC2004CCF1B /* Resources */,
 				78A330B61DAF7CB500702060 /* main.m */,
+				7812FF2E1DD0A39800F23D89 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -199,7 +287,7 @@
 		78A330A71DAF7CB400702060 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = Devsy;
 				TargetAttributes = {
 					78A330AE1DAF7CB500702060 = {
@@ -243,8 +331,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				788E9B9B1DD4CC24004CCF1B /* Profile_icon.png in Resources */,
+				7899E79F1DBF517600E4542E /* AddIdentityWindow.xib in Resources */,
 				78A330BC1DAF7CB500702060 /* Assets.xcassets in Resources */,
 				78A330BF1DAF7CB500702060 /* Main.storyboard in Resources */,
+				7812FF2F1DD0A39800F23D89 /* Localizable.strings in Resources */,
+				78C73D931DBF8BE300D2BEFB /* EditIdentityWindow.xib in Resources */,
+				78FA20751DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib in Resources */,
+				78FA207A1DC8E90200BA9A37 /* AboutWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,9 +363,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78A330BA1DAF7CB500702060 /* ViewController.m in Sources */,
 				78A330B71DAF7CB500702060 /* main.m in Sources */,
+				78FA20741DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m in Sources */,
+				78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */,
+				7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */,
 				78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */,
+				785833801DB901AE00DF0117 /* Identity.m in Sources */,
+				7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */,
+				78C73D921DBF8BE300D2BEFB /* EditIdentityWindow.m in Sources */,
+				7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +436,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -383,6 +484,7 @@
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -498,6 +600,7 @@
 				78A330DB1DAF7CB500702060 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		78A330DC1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotTests" */ = {
 			isa = XCConfigurationList;
@@ -506,6 +609,7 @@
 				78A330DE1DAF7CB500702060 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		78A330DF1DAF7CB500702060 /* Build configuration list for PBXNativeTarget "MoonshotUITests" */ = {
 			isa = XCConfigurationList;
@@ -514,6 +618,7 @@
 				78A330E11DAF7CB500702060 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

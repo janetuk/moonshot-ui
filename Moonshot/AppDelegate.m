@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "AboutWindow.h"
 
 @interface AppDelegate ()
 
@@ -18,10 +19,14 @@
     // Insert code here to initialize your application
 }
 
-
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
 }
 
+- (IBAction)about:(id)sender
+{
+    // Show the window:
+    [[AboutWindow defaultController] showWindow:self];
+}
 
 @end
