@@ -476,22 +476,17 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
         out += 2;
     }
 
-    printf("moonshot_confirm_ca_certificate: calling ConfirmCaCertificate; hash='%s'\n", hash_str);
-
-    int call_ok = dbus_g_proxy_call_with_timeout (dbus_proxy,
-                                                  "ConfirmCaCertificate",
-                                                  INFINITE_TIMEOUT,
-                                                  &g_error,
-                                                  G_TYPE_STRING, identity_name,
-                                                  G_TYPE_STRING, realm,
-                                                  G_TYPE_STRING, hash_str,
-                                                  G_TYPE_INVALID,
-                                                  G_TYPE_INT,   &confirmed,
-                                                  G_TYPE_BOOLEAN, &success,
-                                                  G_TYPE_INVALID);
-
-    printf("moonshot_confirm_ca_certificate: back from ConfirmCaCertificate. call_ok=%d; confirmed=%d; success=%d\n", 
-           (call_ok? 1 : 0), confirmed, success);
+    dbus_g_proxy_call_with_timeout (dbus_proxy,
+                                    "ConfirmCaCertificate",
+                                    INFINITE_TIMEOUT,
+                                    &g_error,
+                                    G_TYPE_STRING, identity_name,
+                                    G_TYPE_STRING, realm,
+                                    G_TYPE_STRING, hash_str,
+                                    G_TYPE_INVALID,
+                                    G_TYPE_INT,   &confirmed,
+                                    G_TYPE_BOOLEAN, &success,
+                                    G_TYPE_INVALID);
 
     g_object_unref (dbus_proxy);
 
