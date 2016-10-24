@@ -86,7 +86,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        var dialog = new TrustAnchorDialog(userid, realm, ca_hash);
+        var dialog = new TrustAnchorDialog(card, userid, realm, ca_hash);
         var response = dialog.run();
         dialog.destroy();
         bool is_confirmed = (response == ResponseType.OK);
@@ -132,10 +132,13 @@ class TrustAnchorDialog : Dialog
 
     public bool complete = false;
 
-    public TrustAnchorDialog(string userid,
+    public TrustAnchorDialog(IdCard card,
+                             string userid,
                              string realm,
                              string ca_hash)
     {
+        string server_ta_label_text = null;
+
         this.set_title(_("Trust Anchor"));
         this.set_modal(true);
 //        this.set_transient_for(parent);
@@ -153,7 +156,18 @@ class TrustAnchorDialog : Dialog
         Label dialog_label = new Label("");
         dialog_label.set_alignment(0, 0);
 
-        string label_markup = "<span font-weight='heavy'>" + _("You are using this identity for the first time with the following trust anchor:") + "</span>";
+        string label_markup;
+        if (card.trust_anchor.server_cert == "") {
+            label_markup = "<span font-weight='heavy'>" + _("You are using this identity for the first time with the following trust anchor:") + "</span>";
+        }
+        else {
+            // The server's fingerprint isn't what we're expecting this server to provide.
+            label_markup = "<span font-weight='heavy'>" + _("WARNING: This connection may not be secure! ")
+            + _("The server's trust anchor does not match the expected trust anchor for this server.")
+            + "</span>";
+
+            server_ta_label_text = _("Server's trust anchor (SHA-256 fingerprint) :");
+        }
 
         dialog_label.set_markup(label_markup);
         dialog_label.set_line_wrap(true);
@@ -168,7 +182,7 @@ class TrustAnchorDialog : Dialog
         Label confirm_label = new Label(_("Please confirm that this is the correct trust anchor."));
         confirm_label.set_alignment(0, 0.5f);
 
-        var trust_anchor_display = make_ta_fingerprint_widget(ca_hash);
+        var trust_anchor_display = make_ta_fingerprint_widget(ca_hash, server_ta_label_text);
 
         var vbox = new VBox(false, 0);
         vbox.set_border_width(6);
@@ -177,6 +191,12 @@ class TrustAnchorDialog : Dialog
         vbox.pack_start(realm_label, true, true, 2);
         vbox.pack_start(trust_anchor_display, true, true, 0);
         vbox.pack_start(confirm_label, true, true, 12);
+
+        if (card.trust_anchor.server_cert != "") {
+            var expected_ta_display = make_ta_fingerprint_widget(card.trust_anchor.server_cert, 
+                                                                 _("Expected trust anchor (SHA-256 fingerprint) :"));
+            vbox.pack_start(expected_ta_display, true, true, 0);
+        }
 
         ((Container) content_area).add(vbox);
 

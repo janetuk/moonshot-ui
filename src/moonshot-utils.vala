@@ -124,32 +124,32 @@ internal void set_atk_relation(Widget widget, Widget target_widget, Atk.Relation
 }
 
 
-internal Widget make_ta_fingerprint_widget(string server_cert)
+internal Widget make_ta_fingerprint_widget(string server_cert, string? label_text = null)
 {
-        var fingerprint_label = new Label(_("SHA-256 fingerprint:"));
-        fingerprint_label.set_alignment(0, 0.5f);
+    var fingerprint_label = new Label(label_text ?? _("SHA-256 fingerprint:"));
+    fingerprint_label.set_alignment(0, 0.5f);
 
-        var fingerprint = new TextView();
-        var fontdesc = FontDescription.from_string("monospace 10");
-        fingerprint.modify_font(fontdesc);
-        fingerprint.set_editable(false);
-        fingerprint.set_left_margin(3);
-        var buffer = fingerprint.get_buffer();
-        buffer.set_text(colonize(server_cert, 16), -1);
-        fingerprint.wrap_mode = Gtk.WrapMode.WORD_CHAR;
+    var fingerprint = new TextView();
+    var fontdesc = FontDescription.from_string("monospace 10");
+    fingerprint.modify_font(fontdesc);
+    fingerprint.set_editable(false);
+    fingerprint.set_left_margin(3);
+    var buffer = fingerprint.get_buffer();
+    buffer.set_text(colonize(server_cert, 16), -1);
+    fingerprint.wrap_mode = Gtk.WrapMode.WORD_CHAR;
 
-        set_atk_relation(fingerprint_label, fingerprint, Atk.RelationType.LABEL_FOR);
+    set_atk_relation(fingerprint_label, fingerprint, Atk.RelationType.LABEL_FOR);
 
-        var fingerprint_width_constraint = new ScrolledWindow(null, null);
-        fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
-        fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
-        fingerprint_width_constraint.set_size_request(360, 60);
-        fingerprint_width_constraint.add_with_viewport(fingerprint);
+    var fingerprint_width_constraint = new ScrolledWindow(null, null);
+    fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
+    fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
+    fingerprint_width_constraint.set_size_request(360, 60);
+    fingerprint_width_constraint.add_with_viewport(fingerprint);
 
-        var vbox = new VBox(false, 0);
-        vbox.pack_start(fingerprint_label, true, true, 2);
-        vbox.pack_start(fingerprint_width_constraint, true, true, 2);
-        return vbox;
+    var vbox = new VBox(false, 0);
+    vbox.pack_start(fingerprint_label, true, true, 2);
+    vbox.pack_start(fingerprint_width_constraint, true, true, 2);
+    return vbox;
 }
 
     // Yeah, it doesn't mean "colonize" the way you might think... :-)
@@ -175,11 +175,19 @@ internal static string colonize(string input, int bytes_per_line) {
 }
 
 internal static void clear_password_entry(Entry entry) {
-    string r = "[@R@Fid#4LPu6es@Mqteb<VqK?m%O}dW-:-4`oufKv24l6=k-*q_by*K&j)ftVF";
+    
+    // Overwrite the entry with random data
     var len = entry.get_text().length;
-    r = r.slice(0, len);
+    var random_chars = new char[len + 1];
+    for (int i = 0; i < len; i++) {
+        random_chars[i] = (char) Random.int_range(40, 127);
+    }
+    random_chars[len] = 0;
+    string r = (string) random_chars;
     var buf = entry.get_buffer();
     buf.set_text(r.data);
+
+    // Now delete the data
     buf.delete_text(0, len);
 }
 
