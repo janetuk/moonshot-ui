@@ -64,7 +64,7 @@ public class PasswordHashTable : Object {
     private HashTable<string, Password> password_table;
 
     private static string ComputeHashKey(IdCard card, IIdentityCardStore store) {
-        return "%s_store_%d".printf( card.display_name, store.get_store_type() );
+        return "%s_store_%d".printf( card.nai, store.get_store_type() );
     }
 
     public void CachePassword(IdCard card, IIdentityCardStore store) {
