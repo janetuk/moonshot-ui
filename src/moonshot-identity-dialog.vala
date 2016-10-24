@@ -95,6 +95,14 @@ class IdentityDialog : Dialog
         get { return remember_checkbutton.active; }
     }
 
+    /**
+     * Don't leave passwords in memory longer than necessary.
+     * This may not actually erase the password data bytes, but it seems to be the best we can do.
+     */
+    public void clear_password() {
+        clear_password_entry(password_entry);
+    }
+
     internal ArrayList<string> get_services()
     {
         return card.services;
@@ -194,6 +202,12 @@ class IdentityDialog : Dialog
             remember_checkbutton.set_sensitive(false);
         }
 
+        this.destroy.connect(() => {
+                logger.trace("Destroying IdentityDialog; clearing its password.");
+                this.clear_password();
+            });
+
+
         this.set_border_width(6);
         this.set_resizable(false);
         set_bg_color(this);
@@ -203,25 +217,45 @@ class IdentityDialog : Dialog
     private Widget make_trust_anchor_box(IdCard id)
     {
 
-        Label ta_label = new Label(_("Trust anchor: ")
-                                   + (id.trust_anchor.is_empty() ? _("None") : _("Enterprise provisioned")));
+        int nrows = 7;
+        int ncolumns = 2;
+        string ta_label_prefix = _("Trust anchor: ");
+        string none = _("None");
+
+        HBox trust_anchor_box = new HBox(false, 0);
+
+        Label ta_label = new Label(ta_label_prefix
+                                   + (id.trust_anchor.is_empty() ? none : _("Enterprise provisioned")));
         ta_label.set_alignment(0, 0.5f);
 
         if (id.trust_anchor.is_empty()) {
-            return ta_label;
+            trust_anchor_box.pack_start(ta_label, false, false, 0);
+            return trust_anchor_box;
         }
 
 
         AttachOptions fill_and_expand = AttachOptions.EXPAND | AttachOptions.FILL;
         AttachOptions fill = AttachOptions.FILL;
 
-        Table ta_table = new Table(6, 2, false);
+        Table ta_table = new Table(nrows, ncolumns, false);
         int row = 0;
 
         var ta_clear_button = new Button.with_label(_("Clear Trust Anchor"));
         ta_clear_button.clicked.connect((w) => {
                 clear_trust_anchor = true;
-                ta_table.set_sensitive(false);
+
+                // Clearing the trust_anchor_box's children, and then re-packing
+                // a label into it, doesn't seem to work. Instead, let's clear out
+                // the table's children, and then re-insert a label into it.
+                var children = ta_table.get_children();
+                foreach (var child in children) {
+                    ta_table.remove(child);
+                }
+
+                ta_table.resize(1, ncolumns);
+                ta_label.set_text(ta_label_prefix + none);
+                ta_table.attach(ta_label, 0, 1, 0, 1, 
+                                fill_and_expand, fill_and_expand, 0, 0);
             }
             );
 
@@ -229,50 +263,53 @@ class IdentityDialog : Dialog
         ta_table.attach(ta_clear_button, 1, 2, row, row + 1, fill, fill, 0, 0);
         row++;
 
-        Label added_label = new Label(_("Added : " + id.trust_anchor.datetime_added));
+        Label added_label = new Label(_("Added: " + id.trust_anchor.datetime_added));
         added_label.set_alignment(0, 0.5f);
         ta_table.attach(added_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
         row++;
 
         if (id.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT) {
             Widget fingerprint = make_ta_fingerprint_widget(id.trust_anchor.server_cert);
-            // ta_table.attach(fingerprint, 0, 1, row, row + 2, fill_and_expand, fill_and_expand, 5, 5);
-
-            // To make the fingerprint box wider, try:
-            ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 20, 5);
-
+            ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 5, 5);
         }
         else {
             Label ca_cert_label = new Label(_("CA Certificate:"));
             ca_cert_label.set_alignment(0, 0.5f);
             var export_button = new Button.with_label(_("Export Certificate"));
-            //!!TODO!
             export_button.clicked.connect((w) => {export_certificate(id);});
 
             ta_table.attach(ca_cert_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
             ta_table.attach(export_button, 1, 2, row, row + 1, fill, fill, 0, 0);
             row++;
 
-            //!!TODO: When to show Subject, and when (if ever) show Subject-Altname here?
-            Label subject_label = new Label(_("Subject: ") + id.trust_anchor.subject);
-            subject_label.set_alignment(0, 0.5f);
-            ta_table.attach(subject_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
-            row++;
+            if (id.trust_anchor.subject != "") {
+                Label subject_label = new Label(_("Subject: ") + id.trust_anchor.subject);
+                subject_label.set_alignment(0, 0.5f);
+                ta_table.attach(subject_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
+                row++;
+            }
+
+            if (id.trust_anchor.subject_alt != "") {
+                Label subject_alt_label = new Label(_("Subject-Alt: ") + id.trust_anchor.subject_alt);
+                subject_alt_label.set_alignment(0, 0.5f);
+                ta_table.attach(subject_alt_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
+                row++;
+            }
 
             Label expiration_label = new Label(_("Expiration date: ") + id.trust_anchor.get_expiration_date());
             expiration_label.set_alignment(0, 0.5f);
             ta_table.attach(expiration_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
             row++;
 
-            //!!TODO: What *is* this?
+            //!!TODO: What goes here?
             Label constraint_label = new Label(_("Constraint: "));
             constraint_label.set_alignment(0, 0.5f);
             ta_table.attach(constraint_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
             row++;
         }
 
-        return ta_table;
-
+        trust_anchor_box.pack_start(ta_table, false, false, 0);
+        return trust_anchor_box;
     }
 
     private static void add_as_vbox(Box content_area, Label label, Entry entry)

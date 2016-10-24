@@ -174,6 +174,15 @@ internal static string colonize(string input, int bytes_per_line) {
     return result;
 }
 
+internal static void clear_password_entry(Entry entry) {
+    string r = "[@R@Fid#4LPu6es@Mqteb<VqK?m%O}dW-:-4`oufKv24l6=k-*q_by*K&j)ftVF";
+    var len = entry.get_text().length;
+    r = r.slice(0, len);
+    var buf = entry.get_buffer();
+    buf.set_text(r.data);
+    buf.delete_text(0, len);
+}
+
 static Gdk.Color white;
 static void set_bg_color(Widget w)
 {

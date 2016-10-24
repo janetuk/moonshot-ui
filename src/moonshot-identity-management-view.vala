@@ -559,6 +559,9 @@ public class IdentityManagerView : Window {
                 switch (result) {
                 case ResponseType.OK:
                     identity.password = dialog.password;
+                    // Don't leave passwords in memory longer than necessary.
+                    // (This may not actually clear the data, but it's the best we can do.)
+                    dialog.clear_password();
                     identity.store_password = dialog.remember;
                     if (dialog.remember)
                         identity.temporary = false;
@@ -568,6 +571,8 @@ public class IdentityManagerView : Window {
                     identity = null;
                     break;
                 }
+                // Do this again, in case OK button wasn't selected.
+                dialog.clear_password();
                 dialog.destroy();
             }
         }

@@ -42,6 +42,14 @@ class AddPasswordDialog : Dialog
         get { return password_entry.get_text(); }
     }
 
+    /**
+     * Don't leave passwords in memory longer than necessary.
+     * This may not actually erase the password data bytes, but it seems to be the best we can do.
+     */
+    public void clear_password() {
+        clear_password_entry(password_entry);
+    }
+
     public bool remember {
         get { return remember_checkbutton.get_active(); }
     }
