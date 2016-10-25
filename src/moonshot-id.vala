@@ -66,6 +66,13 @@ public class TrustAnchor : Object
 
         // If we're reading from store, this will be overridden (see set_datetime_added)
         _datetime_added = "";
+
+        // Work around a Portal bug that littered some credential files with this cruft.
+        string cruft = 
+"""<!-- Remove the begin and end lines from the PEM output of
+openssl to produce this format.  Alternatively, base64 encode a DER format certificate -->""";
+        _ca_cert = _ca_cert.replace(cruft, "");
+        stdout.printf("ca_cert is now " + _ca_cert + "\n");
     }
 
     public TrustAnchor.empty() {
