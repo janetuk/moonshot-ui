@@ -72,7 +72,6 @@ public class TrustAnchor : Object
 """<!-- Remove the begin and end lines from the PEM output of
 openssl to produce this format.  Alternatively, base64 encode a DER format certificate -->""";
         _ca_cert = _ca_cert.replace(cruft, "");
-        stdout.printf("ca_cert is now " + _ca_cert + "\n");
     }
 
     public TrustAnchor.empty() {
