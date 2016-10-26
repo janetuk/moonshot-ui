@@ -147,7 +147,7 @@ class TrustAnchorDialog : Dialog
         this.add_buttons(_("Cancel"), ResponseType.CANCEL,
                          _("Confirm"), ResponseType.OK);
 
-        this.set_default_response(ResponseType.OK);
+        this.set_default_response(ResponseType.CANCEL);
 
         var content_area = this.get_content_area();
         ((Box) content_area).set_spacing(12);
