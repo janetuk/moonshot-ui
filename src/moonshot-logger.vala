@@ -55,8 +55,13 @@ public class MoonshotLogger : Object {
         if (!logger_is_initialized) {
             Log.set_default_handler(glib_default_log_handler);
 
-            //!! TODO: Don't hard-code the pathname.
-            Log4Vala.init("/home/dbreslau/log4vala.conf");
+#if IPC_MSRPC
+            // Look for config file in the app's current directory.
+            string conf_file = "log4vala.conf";
+#else
+            string conf_file = GLib.Environment.get_variable("MOONSHOT_UI_LOG_CONFIG");
+#endif
+            Log4Vala.init(conf_file);
             logger_is_initialized = true;
         }
 
