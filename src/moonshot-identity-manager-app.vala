@@ -55,6 +55,7 @@ public class IdentityManagerApp {
     private bool name_is_owned;
     private bool show_requested;
     public bool use_flat_file_store {public get; private set;}
+    public bool headless {public get; private set;}
 
 #if OS_MACOS
     public OSXApplication osxApp;
@@ -88,6 +89,8 @@ public class IdentityManagerApp {
 #endif
 
     public IdentityManagerApp(bool headless, bool use_flat_file_store) {
+        this.headless = headless;
+
         use_flat_file_store |= UserForcesFlatFileStore();
         this.use_flat_file_store = use_flat_file_store;
 

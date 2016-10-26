@@ -39,7 +39,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     IdentityManagerApp parent_app;
     string userid;
     string realm;
-    string ca_hash;
+    string fingerprint;
     public bool confirmed = false;
 
     TrustAnchorConfirmationCallback callback = null;
@@ -47,12 +47,12 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     public TrustAnchorConfirmationRequest(IdentityManagerApp parent_app,
                                           string userid,
                                           string realm,
-                                          string ca_hash)
+                                          string fingerprint)
     {
         this.parent_app = parent_app;
         this.userid = userid;
         this.realm = realm;
-        this.ca_hash = ca_hash;
+        this.fingerprint = fingerprint;
     }
 
     public void set_callback(owned TrustAnchorConfirmationCallback cb)
@@ -80,13 +80,20 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        if (card.trust_anchor.server_cert == ca_hash) {
+        logger.trace("execute: expected cert='%s'; fingerprint='%s'".printf(card.trust_anchor.server_cert, fingerprint));
+        if (card.trust_anchor.server_cert == fingerprint) {
             logger.trace(@"execute: Fingerprint for $nai matches stored value; returning true.");
             return_confirmation(true);
             return false;
         }
 
-        var dialog = new TrustAnchorDialog(card, userid, realm, ca_hash);
+        if (parent_app.headless) {
+            logger.trace(@"execute: Running in headless mode; returning false.");
+            return_confirmation(false);
+            return false;
+        }
+
+        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
         var response = dialog.run();
         dialog.destroy();
         bool is_confirmed = (response == ResponseType.OK);
@@ -94,7 +101,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
         if (is_confirmed) {
             logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
 
-            card.trust_anchor.update_server_fingerprint(ca_hash);
+            card.trust_anchor.update_server_fingerprint(fingerprint);
             parent_app.model.update_card(card);
         }            
 
@@ -135,7 +142,7 @@ class TrustAnchorDialog : Dialog
     public TrustAnchorDialog(IdCard card,
                              string userid,
                              string realm,
-                             string ca_hash)
+                             string fingerprint)
     {
         string server_ta_label_text = _("Server’s trust anchor certificate (SHA-256 fingerprint):");
 
@@ -189,7 +196,7 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_line_wrap(true);
         confirm_label.set_width_chars(60);
 
-        var trust_anchor_display = make_ta_fingerprint_widget(ca_hash, server_ta_label_text);
+        var trust_anchor_display = make_ta_fingerprint_widget(fingerprint, server_ta_label_text);
 
         var vbox = new VBox(false, 0);
         vbox.set_border_width(6);
