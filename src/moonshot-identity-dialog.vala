@@ -69,6 +69,7 @@ class IdentityDialog : Dialog
     private Label message_label;
     public bool complete;
     private IdCard card;
+    private ArrayList<string> services;
 
     private Label selected_item = null;
 
@@ -105,7 +106,7 @@ class IdentityDialog : Dialog
 
     internal ArrayList<string> get_services()
     {
-        return card.services;
+        return services;
     }
 
     public IdentityDialog(IdentityManagerView parent)
@@ -180,6 +181,9 @@ class IdentityDialog : Dialog
 
         this.response.connect(on_response);
         content_area.set_border_width(6);
+
+        this.services = new ArrayList<string>();
+        this.services.add_all(card.services);
 
         if (!is_new_card)
         {
@@ -445,7 +449,7 @@ class IdentityDialog : Dialog
         services_vbox.pack_start(table_button_hbox, true, true, 0);
 
         int i = 0;
-        foreach (string service in card.services)
+        foreach (string service in services)
         {
             var label = new Label(service);
             label.set_alignment((float) 0, (float) 0);
@@ -501,7 +505,7 @@ class IdentityDialog : Dialog
                 if (result)
                 {
                     if (card != null) {
-                        card.services.remove(selected_item.label);
+                        services.remove(selected_item.label);
                         services_table.remove(selected_item.parent);
                         selected_item = null;
                         remove_button.set_sensitive(false);

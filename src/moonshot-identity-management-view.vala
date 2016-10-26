@@ -613,7 +613,7 @@ public class IdentityManagerView : Window {
 
         request.return_identity(identity, remember_identity_binding.active);
 
-        remember_identity_binding.active = false;
+        remember_identity_binding.active = true;
         remember_identity_binding.hide();
     }
 
