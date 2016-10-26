@@ -75,12 +75,7 @@ class WarningDialog
             remember_checkbutton.set_receives_default(false);
             Container action_area = (Container) dialog.get_action_area();
 
-            // This is awful, because it assumes the Yes button is first in the
-            // children (and for that matter, it assumes there are no intermediate
-            // containers.) But searching for "Yes" in the widget text would
-            // cause localization problems.
-            // TODO: Rewrite to use Dialog instead of MessageDialog?
-            var yes_button = action_area.get_children().first().data;
+            Button yes_button = (Button) dialog.get_widget_for_response(ResponseType.YES);
             yes_button.grab_default();
             yes_button.grab_focus();
 
