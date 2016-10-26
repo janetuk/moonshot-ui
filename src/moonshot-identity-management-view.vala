@@ -787,7 +787,7 @@ SUCH DAMAGE.
 
         // Right below id_scrollwin:
         remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
-        remember_identity_binding.active = false;
+        remember_identity_binding.active = true;
         top_table.attach(remember_identity_binding, 0, num_cols / 2, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
 
         var add_button = new Button.with_label(_("Add"));

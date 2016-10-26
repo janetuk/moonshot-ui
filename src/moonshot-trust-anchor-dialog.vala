@@ -158,7 +158,8 @@ class TrustAnchorDialog : Dialog
 
         string label_markup;
         if (card.trust_anchor.server_cert == "") {
-            label_markup = "<span font-weight='heavy'>" + _("You are using this identity for the first time with the following trust anchor:") + "</span>";
+            label_markup = "<span font-weight='heavy'>" 
+            + _("You are using this identity for the first time with the following trust anchor:") + "</span>";
         }
         else {
             // The server's fingerprint isn't what we're expecting this server to provide.

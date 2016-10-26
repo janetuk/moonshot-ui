@@ -242,20 +242,33 @@ class IdentityDialog : Dialog
 
         var ta_clear_button = new Button.with_label(_("Clear Trust Anchor"));
         ta_clear_button.clicked.connect((w) => {
-                clear_trust_anchor = true;
+                var result = WarningDialog.confirm(this,
+                                                   Markup.printf_escaped(
+                                                       "<span font-weight='heavy'>" 
+                                                       + _("You are about to clear the trust anchor fingerprint for '%s'.") 
+                                                       + "</span>",
+                                                       id.display_name)
+                                                   + _("\n\nAre you sure you want to do this?"),
+                                                   "clear_trust_anchor");
 
-                // Clearing the trust_anchor_box's children, and then re-packing
-                // a label into it, doesn't seem to work. Instead, let's clear out
-                // the table's children, and then re-insert a label into it.
-                var children = ta_table.get_children();
-                foreach (var child in children) {
-                    ta_table.remove(child);
+                if (result)
+                {
+                    clear_trust_anchor = true;
+
+                    // Clearing the trust_anchor_box's children, and then re-packing
+                    // a label into it, doesn't seem to work. Instead, let's clear out
+                    // the table's children, and then re-insert a label into it.
+                    var children = ta_table.get_children();
+                    foreach (var child in children) {
+                        ta_table.remove(child);
+                    }
+
+                    ta_table.resize(1, ncolumns);
+                    ta_label.set_text(ta_label_prefix + none);
+                    ta_table.attach(ta_label, 0, 1, 0, 1, 
+                                    fill_and_expand, fill_and_expand, 0, 0);
+
                 }
-
-                ta_table.resize(1, ncolumns);
-                ta_label.set_text(ta_label_prefix + none);
-                ta_table.attach(ta_label, 0, 1, 0, 1, 
-                                fill_and_expand, fill_and_expand, 0, 0);
             }
             );
 
@@ -478,9 +491,11 @@ class IdentityDialog : Dialog
             {
                 var result = WarningDialog.confirm(this,
                                                    Markup.printf_escaped(
-                                                       "<span font-weight='heavy'>You are about to remove the service '%s'.</span>",
+                                                       "<span font-weight='heavy'>"
+                                                       + _("You are about to remove the service\n'%s'.") 
+                                                       + "</span>",
                                                        selected_item.label)
-                                                   + "\n\nAre you sure you want to do this?",
+                                                   + _("\n\nAre you sure you want to do this?"),
                                                    "delete_service");
 
                 if (result)
