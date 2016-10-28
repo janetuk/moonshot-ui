@@ -51,4 +51,11 @@ namespace Moonshot {
                                  string? server_cert,
                                  int force_flat_file_store,
                                  out Moonshot.Error error);
+
+    [CCode (cname = "moonshot_confirm_ca_certificate")]
+    public bool moonshot_confirm_ca_certificate (string identity_name,
+                                                 string realm,
+                                                 string ca_hash,
+                                                 out uint32 confirmed,
+                                                 out Moonshot.Error error);
 }

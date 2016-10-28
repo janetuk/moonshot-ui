@@ -24,19 +24,29 @@ AM_CPPFLAGS =  \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
+
+if LOG4VALA
+MOONSHOT_LOG_PKG= --pkg log4vala-0.1 -X -llog4vala-0.1 --define=USE_LOG4VALA
+MOONSHOT_LOG_LIBS= -llog4vala-0.1
+else
+MOONSHOT_LOG_PKG=
+MOONSHOT_LOG_LIBS=
+endif
+
+
 AM_VALAFLAGS = -g \
         config.vapi \
-	--vapidir=$(top_srcdir)/vapi \
-        --pkg gio-2.0
-
+        --vapidir=$(top_srcdir)/vapi \
+        --pkg gio-2.0 \
+        $(MOONSHOT_LOG_PKG)
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS)  $(GEE_CFLAGS)
+        $(AM_CPPFLAGS) 
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
-libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS) $(GEE_LIBS)
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
 
 include_HEADERS = libmoonshot/libmoonshot.h
@@ -49,31 +59,39 @@ src_moonshot_SOURCES = \
         src/moonshot-keyring-store.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
-        src/moonshot-add-dialog.vala \
+        src/moonshot-identity-dialog.vala \
         src/moonshot-idcard-widget.vala \
         src/moonshot-custom-vbox.vala \
         src/moonshot-identities-manager.vala \
         src/moonshot-identity-request.vala \
-        src/moonshot-server.vala \
+        src/moonshot-server-linux.vala \
+        src/moonshot-settings.vala \
         src/moonshot-password-dialog.vala \
         src/moonshot-provisioning-common.vala \
+        src/moonshot-trust-anchor-dialog.vala \
         src/moonshot-utils.vala \
-        src/moonshot-futils.c
+        src/moonshot-futils.c \
+        src/moonshot-crypto-utils.c \
+        src/moonshot-logger.vala \
+        src/moonshot-warning-dialog.vala
 
 src_moonshot_webp_SOURCES = \
+        src/moonshot-crypto-utils.c \
         src/moonshot-webp-parser.vala \
         src/moonshot-provisioning-common.vala \
-        src/moonshot-id.vala
+        src/moonshot-id.vala \
+        src/moonshot-logger.vala
 
-src_moonshot_VALAFLAGS = --pkg gdk-2.0 --pkg gtk+-2.0 $(AM_VALAFLAGS)
-src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)   $(GEE_CFLAGS)
-src_moonshot_LDADD = $(moonshot_LIBS)  $(GEE_LIBS)
-src_moonshot_LDFLAGS = -g -O0
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg gtk+-2.0 --pkg gdk-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
-src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
-src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la $(GEE_LIBS)
-src_moonshot_webp_LDFLAGS =
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION)   $(AM_VALAFLAGS)
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
+src_moonshot_LDADD = $(moonshot_LIBS)
+src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
+
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
 if OS_WIN32
 
@@ -105,8 +123,8 @@ if OS_LINUX
 
 AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
 AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
-src_moonshot_LDFLAGS += -lgnome-keyring
-src_moonshot_webp_LDFLAGS += -lgnome-keyring
+src_moonshot_LDFLAGS += -lgnome-keyring -lcrypto
+src_moonshot_webp_LDFLAGS += -lgnome-keyring -lcrypto
 
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages
@@ -168,7 +186,7 @@ $(dbusservice_DATA): $(dbusservice_in_files) Makefile
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
-CLEANFILES = $(dbusservice_DATA)
+CLEANFILES = $(dbusservice_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
 if IPC_DBUS_GLIB
 AM_VALAFLAGS += \
@@ -187,12 +205,6 @@ if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
 
-if GEE_0_8
-AM_VALAFLAGS += --pkg gee-0.8
-else
-AM_VALAFLAGS += --pkg gee-1.0
-endif
-
 EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \
 	README.webprovisioning README.windows \
@@ -206,11 +218,11 @@ noinst_PROGRAMS = \
         tests/basic
 
 examples_service_selection_SOURCES = examples/service-selection.c
-examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
-examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS) $(GEE_LIBS)
+examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 examples_client_SOURCES = examples/client.c
-examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS) $(GEE_CFLAGS)
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
 examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c

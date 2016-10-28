@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,38 +33,63 @@ using Gtk;
 
 class CustomVBox : VBox
 {
-    public IdCardWidget current_idcard { get; set; default = null; }
+    static MoonshotLogger logger = get_logger("CustomVBox");
     private IdentityManagerView main_window; 
-
-    public CustomVBox (IdentityManagerView window, bool homogeneous, int spacing)
+    int next_pos = 0;
+    
+    public CustomVBox(IdentityManagerView window, bool homogeneous, int spacing)
     {
         main_window = window;
-        set_homogeneous (homogeneous);
-        set_spacing (spacing);
+        set_homogeneous(homogeneous);
+        set_spacing(spacing);
     }
 
-    public void receive_expanded_event (IdCardWidget id_card_widget)
+    internal void receive_expanded_event(IdCardWidget id_card_widget)
     {
-        var list = get_children ();
+        var list = get_children();
         foreach (Widget id_card in list)
         {
             if (id_card != id_card_widget)
-                ((IdCardWidget) id_card).collapse ();
+                ((IdCardWidget) id_card).collapse();
         }
-        current_idcard = id_card_widget;
         
-        if (current_idcard != null && main_window.request_queue.length > 0)
-            current_idcard.send_button.set_sensitive (true);
         check_resize();
     }
 
-    public void add_id_card_widget (IdCardWidget id_card_widget)
+    internal void receive_collapsed_event(IdCardWidget id_card_widget)
     {
-        pack_start (id_card_widget, false, false);
+        check_resize();
     }
 
-    public void remove_id_card_widget (IdCardWidget id_card_widget)
+    public void add_id_card_widget(IdCardWidget id_card_widget)
     {
-        remove (id_card_widget);
+        pack_start(id_card_widget, false, false);
+        id_card_widget.position = next_pos++;
     }
+
+    public IdCardWidget? find_idcard_widget(IdCard? card) {
+        if (card == null) {
+            return null;
+        }
+        foreach (var w in get_children()) {
+            IdCardWidget widget = (IdCardWidget) w;
+            if (widget.id_card == card) {
+                return widget;
+            }
+        }
+        return null;
+    }
+
+    internal void clear()
+    {
+        logger.trace("clear");
+
+        var children = get_children();
+        foreach (var id_card_widget in children) {
+            remove(id_card_widget);
+        }
+
+        next_pos = 0;
+   }
+    
 }

@@ -187,4 +187,19 @@ int moonshot_install_id_card (const char     *display_name,
                               int             force_flat_file_store,
                               MoonshotError **error);
 
+
+
+/**
+ * moonshot_confirm_ca_certificate
+ * @
+ * Return value: %TRUE if the certificate is approved; %FALSE otherwise
+ */
+
+int moonshot_confirm_ca_certificate (const char           *identity_name,
+                                     const char           *realm,
+                                     const unsigned char  *sha256,
+                                     int                   sha256_length,
+                                     MoonshotError       **error);
+
+
 #endif

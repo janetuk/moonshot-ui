@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [0.7.2],
+        [1.0.0],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -27,7 +27,6 @@ AC_PROG_CC
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
-gee_0_8=no
 # Platform checks
 AC_CANONICAL_HOST
 
@@ -38,10 +37,6 @@ case "$host" in
     linux=no
     SERVER_IPC_MODULE="msrpc-glib2-1.0"
     CLIENT_IPC_MODULE="msrpc-mingw-1.0"
-    PKG_CHECK_MODULES([GTK],
-            [gtk+-2.0 >= 2.18],
-            [GTK_VERSION="gtk+-2.0"]
-    )
     ;;
     
   *darwin*) 
@@ -60,14 +55,6 @@ case "$host" in
 			[gtk-mac-integration >= 1.0.1]
 	)
 
-# TODO: Move to GTK+-3
-#            [gtk+-3.0 >= 2.0],
-#            [GTK_VERSION="gtk+-3.0"]
-    PKG_CHECK_MODULES([GTK],
-            [gtk+-2.0 >= 2.18],
-            [GTK_VERSION="gtk+-2.0"]
-    )
-
     ;;
   *)
     macos=no
@@ -84,19 +71,46 @@ case "$host" in
             [SERVER_IPC_MODULE="gio-2.0"],
             [SERVER_IPC_MODULE="dbus-glib-1"]
     )
-# TODO: Move to GTK+-3
-#            [gtk+-3.0 >= 2.0],
-#            [GTK_VERSION="gtk+-3.0"]
-    PKG_CHECK_MODULES([GTK],
-            [gtk+-2.0 >= 2.18],
-            [GTK_VERSION="gtk+-2.0"]
-    )
-    PKG_CHECK_MODULES(GEE, [gee-0.8 >= 0.5],gee_0_8=yes,
-	[PKG_CHECK_MODULES(GEE,[gee-1.0])])
 
     ;;
 esac
-AM_CONDITIONAL(GEE_0_8,[test "$gee_0_8" = "yes"])
+
+
+# For all platforms: Use Gtk+3.0 if available; else revert to Gtk+2.0
+PKG_CHECK_MODULES([GTK],
+        [gtk+-3.0 >= 3.1],
+        [GTK_VERSION="gtk+-3.0"],
+            [PKG_CHECK_MODULES([GTK],
+                        [gtk+-2.0 >= 2.18],
+                        [GTK_VERSION="gtk+-2.0"]
+            )]                            
+)
+AC_SUBST(GTK_VERSION)
+
+
+# For all platforms: Use gee-0.8 if available; else revert to gee-1.0
+# (yes, gee-0.8 is an upgrade from gee-1.0!)
+PKG_CHECK_MODULES([LIB_GEE],
+        [gee-0.8 >= 0.16],
+        [GEE_VERSION="gee-0.8"],
+            [PKG_CHECK_MODULES([LIB_GEE],
+                        [gee-1.0 >= 0.5],
+                        [GEE_VERSION="gee-1.0"]
+            )]                            
+)
+AC_SUBST(GEE_VERSION)
+
+#enable the optional use of Log4Vala (Must have the package installed!)
+AC_ARG_ENABLE([log4vala],
+[  --enable-log4vala    Enable use of log4vala for logging],
+[case "${enableval}" in
+  yes) log4vala=true ;;
+  no)  log4vala=false ;;
+  *) AC_MSG_ERROR([bad value ${enableval} for --enable-log4vala]) ;;
+esac],[log4vala=false])
+AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+
+
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
 AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
@@ -222,7 +236,9 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
+        libssl
         $GTK_VERSION
+        $GEE_VERSION
         $SERVER_IPC_MODULE
 		$MAC
 ])

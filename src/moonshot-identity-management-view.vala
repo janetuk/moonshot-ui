@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,39 +31,46 @@
 */
 using Gee;
 using Gtk;
+using WebProvisioning;
 
 public class IdentityManagerView : Window {
-    private const int WINDOW_WIDTH = 400;
+    static MoonshotLogger logger = get_logger("IdentityManagerView");
+
+    bool use_flat_file_store = false;
+
+    // The latest year in which Moonshot sources were modified.
+    private static int LATEST_EDIT_YEAR = 2016;
+
+    public static Gdk.Color white = make_color(65535, 65535, 65535);
+
+    private const int WINDOW_WIDTH = 700;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
-#if OS_MACOS
-	public OSXApplication osxApp;
-#endif
+    #if OS_MACOS
+        public OSXApplication osxApp;
+    #endif
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
-    private VBox vbox_right;
-    private VBox login_vbox;
-    private VBox services_vbox;
     private CustomVBox custom_vbox;
-    private VBox services_internal_vbox;
+    private VBox service_prompt_vbox;
+    private Button edit_button;
+    private Button remove_button;
 
-    private Entry issuer_entry;
-    private Entry username_entry;
-    private Entry password_entry;
-    private Label prompting_service;
-    private Label no_identity_title;
-    private CheckButton remember_checkbutton;
-    private Button update_password_button;
-
+    private Button send_button;
+    
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
-    public IdentityManagerModel identities_manager;
+    internal IdentityManagerModel identities_manager;
     private unowned SList<IdCard>    candidates;
 
-    public GLib.Queue<IdentityRequest> request_queue;
+    private GLib.Queue<IdentityRequest> request_queue;
 
-    private HashTable<Gtk.Button, string> service_button_map;
+    internal CheckButton remember_identity_binding = null;
+
+    private IdCard selected_card = null;
+
+    private string import_directory = null;
 
     private enum Columns
     {
@@ -75,46 +82,64 @@ public class IdentityManagerView : Window {
         N_COLUMNS
     }
 
-    private const string layout =
-"<menubar name='MenuBar'>" +
-"        <menu name='FileMenu' action='FileMenuAction'>" +
-"            <menuitem name='AddIdCard' action='AddIdCardAction' />" +
-"            <separator />" +
-"            <menuitem name='Quit' action='QuitAction' />" +
-"        </menu>" +
-"" +
-"        <menu name='HelpMenu' action='HelpMenuAction'>" +
-"             <menuitem name='About' action='AboutAction' />" +
-"        </menu>" +
-"</menubar>";
+    private const string menu_layout =
+    "<menubar name='MenuBar'>" +
+    "        <menu name='HelpMenu' action='HelpMenuAction'>" +
+    "             <menuitem name='About' action='AboutAction' />" +
+    "        </menu>" +
+    "</menubar>";
 
-    public IdentityManagerView(IdentityManagerApp app) {
-       parent_app = app;
-#if OS_MACOS
- 		osxApp = OSXApplication.get_instance();
-#endif
-	   identities_manager = parent_app.model;
-       request_queue = new GLib.Queue<IdentityRequest>();
-       service_button_map = new HashTable<Gtk.Button, string> (direct_hash, direct_equal);
-       this.title = "Moonshot Identity Selector";
-       this.set_position (WindowPosition.CENTER);
-       set_default_size (WINDOW_WIDTH, WINDOW_HEIGHT);
-       build_ui();
-       setup_list_model(); 
-       load_id_cards(); 
-       connect_signals();
+    public IdentityManagerView(IdentityManagerApp app, bool use_flat_file_store) {
+        parent_app = app;
+        this.use_flat_file_store = use_flat_file_store;
+
+        #if OS_MACOS
+            osxApp = OSXApplication.get_instance();
+        #endif
+        identities_manager = parent_app.model;
+        request_queue = new GLib.Queue<IdentityRequest>();
+        this.title = _("Moonshot Identity Selector");
+        this.set_position(WindowPosition.CENTER);
+        set_default_size(WINDOW_WIDTH, WINDOW_HEIGHT);
+        build_ui();
+        setup_list_model(); 
+        load_id_cards();
+        connect_signals();
+        report_duplicate_nais(); 
     }
     
-    public void on_card_list_changed () {
+    private void report_duplicate_nais() {
+        ArrayList<ArrayList<IdCard>> duplicates;
+        identities_manager.find_duplicate_nai_sets(out duplicates);
+        foreach (ArrayList<IdCard> list in duplicates) {
+            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
+                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify") 
+                + _(" user ID or issuer fields so that they are no longer the same NAI.");
+
+            foreach (var card in list) {
+                message += "\n\nDisplay Name: '%s'\nServices:\n     %s".printf(card.display_name, card.get_services_string(",\n     "));
+            }
+            var msg_dialog = new Gtk.MessageDialog(this,
+                                                   Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                   Gtk.MessageType.INFO,
+                                                   Gtk.ButtonsType.OK,
+                                                   message);
+            msg_dialog.run();
+            msg_dialog.destroy();
+        }
+    }
+
+    private void on_card_list_changed() {
+        logger.trace("on_card_list_changed");
         load_id_cards();
     }
     
-    private bool visible_func (TreeModel model, TreeIter iter)
+    private bool visible_func(TreeModel model, TreeIter iter)
     {
         IdCard id_card;
 
-        model.get (iter,
-                   Columns.IDCARD_COL, out id_card);
+        model.get(iter,
+                  Columns.IDCARD_COL, out id_card);
 
         if (id_card == null)
             return false;
@@ -131,7 +156,7 @@ public class IdentityManagerView : Window {
                 return false;
         }
         
-        string entry_text = search_entry.get_text ();
+        string entry_text = search_entry.get_text();
         if (entry_text == null || entry_text == "")
         {
             return true;
@@ -143,31 +168,31 @@ public class IdentityManagerView : Window {
                 continue;
          
 
-            string search_text_casefold = search_text.casefold ();
+            string search_text_casefold = search_text.casefold();
 
             if (id_card.issuer != null)
             {
-              string issuer_casefold = id_card.issuer;
+                string issuer_casefold = id_card.issuer;
 
-              if (issuer_casefold.contains (search_text_casefold))
-                  return true;
+                if (issuer_casefold.contains(search_text_casefold))
+                    return true;
             }
 
             if (id_card.display_name != null)
             {
-                string display_name_casefold = id_card.display_name.casefold ();
+                string display_name_casefold = id_card.display_name.casefold();
               
-                if (display_name_casefold.contains (search_text_casefold))
+                if (display_name_casefold.contains(search_text_casefold))
                     return true;
             }
             
-            if (id_card.services.length > 0)
+            if (id_card.services.size > 0)
             {
                 foreach (string service in id_card.services)
                 {
-                    string service_casefold = service.casefold ();
+                    string service_casefold = service.casefold();
 
-                    if (service_casefold.contains (search_text_casefold))
+                    if (service_casefold.contains(search_text_casefold))
                         return true;
                 }
             }
@@ -175,84 +200,38 @@ public class IdentityManagerView : Window {
         return false;
     }
 
-    private void setup_list_model ()
+    private void setup_list_model()
     {
-      this.listmodel = new Gtk.ListStore (Columns.N_COLUMNS, typeof (IdCard),
-                                                          typeof (Gdk.Pixbuf),
-                                                          typeof (string),
-                                                          typeof (string),
-                                                          typeof (string));
-      this.filter = new TreeModelFilter (listmodel, null);
+        this.listmodel = new Gtk.ListStore(Columns.N_COLUMNS, typeof(IdCard),
+                                           typeof(Gdk.Pixbuf),
+                                           typeof(string),
+                                           typeof(string),
+                                           typeof(string));
+        this.filter = new TreeModelFilter(listmodel, null);
 
-      filter.set_visible_func (visible_func);
+        filter.set_visible_func(visible_func);
     }
 
-    private void search_entry_icon_press_cb (EntryIconPosition pos, Gdk.Event event)
+    private void search_entry_text_changed_cb()
     {
-        if (pos == EntryIconPosition.PRIMARY)
-        {
-            print ("Search entry icon pressed\n");
-        }
-        else
-        {
-            this.search_entry.set_text ("");
-        }
+        this.filter.refilter();
+        redraw_id_card_widgets();
     }
 
-    private void search_entry_text_changed_cb ()
-    {
-        this.filter.refilter ();
-        redraw_id_card_widgets ();
-
-        var has_text = this.search_entry.get_text_length () > 0;
-        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, has_text);
-        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, has_text);
-
-        this.vbox_right.set_visible (false);
-    }
-
-    private bool search_entry_key_press_event_cb (Gdk.EventKey e)
+    private bool search_entry_key_press_event_cb(Gdk.EventKey e)
     {
         if(Gdk.keyval_name(e.keyval) == "Escape")
-           this.search_entry.set_text("");
+            this.search_entry.set_text("");
 
         // Continue processing this event, since the
         // text entry functionality needs to see it too.
         return false;
     }
 
-    private void update_password_cb()
-    {
-        if (this.custom_vbox.current_idcard != null) {
-            var identity = this.custom_vbox.current_idcard.id_card;
-            var dialog = new AddPasswordDialog(identity, null);
-            var result = dialog.run ();
+    private void load_id_cards() {
+        logger.trace("load_id_cards");
 
-            switch (result) {
-            case ResponseType.OK:
-                identity.password = dialog.password;
-                identity.store_password = dialog.remember;
-                if (dialog.remember)
-                    identity.temporary = false;
-                identity = identities_manager.update_card(identity);
-                break;
-            default:
-                break;
-            }
-            dialog.destroy ();
-        }
-    }
-
-    private void load_id_cards () {
-        string current_idcard_nai = null;
-        if (this.custom_vbox.current_idcard != null) {
-            current_idcard_nai = custom_vbox.current_idcard.id_card.nai;
-            custom_vbox.current_idcard = null;
-        }
-        var children = this.custom_vbox.get_children ();
-        foreach (var id_card_widget in children) {
-        remove_id_card_widget((IdCardWidget)id_card_widget);
-        }   
+        custom_vbox.clear();
         this.listmodel->clear();
         LinkedList<IdCard> card_list = identities_manager.get_card_list() ;
         if (card_list == null) {
@@ -260,79 +239,36 @@ public class IdentityManagerView : Window {
         }
 
         foreach (IdCard id_card in card_list) {
-            add_id_card_data (id_card);
-            IdCardWidget id_card_widget = add_id_card_widget (id_card);
-            if (id_card_widget.id_card.nai == current_idcard_nai) {
-                fill_details(id_card_widget);
-                id_card_widget.expand();
-            }
+            logger.trace(@"load_id_cards: Loading card with display name '$(id_card.display_name)'");
+            add_id_card_data(id_card);
+            add_id_card_widget(id_card);
         }
-        if (custom_vbox.current_idcard == null)
-            fill_details(null);
     }
     
-    private void fill_details (IdCardWidget? id_card_widget)
+    private IdCard update_id_card_data(IdentityDialog dialog, IdCard id_card)
     {
-        var vr_children = this.vbox_right.get_children();
-        foreach (var vr_child in vr_children)
-            this.vbox_right.remove(vr_child);
-        if (id_card_widget != null) {
-            var id_card = id_card_widget.id_card;
-            if (id_card.display_name == IdCard.NO_IDENTITY) {
-	        this.vbox_right.pack_start(no_identity_title, false, true, 0);
-            } else {
-                this.issuer_entry.set_text (id_card.issuer);
-	        this.username_entry.set_text (id_card.username);
-	        this.password_entry.set_text (id_card.password ?? "");
-	        this.vbox_right.pack_start(login_vbox, false, true, 0);
-	        this.remember_checkbutton.active = id_card.store_password;
-            }
-            this.vbox_right.pack_start (services_vbox, false, true, 0);
-
-            var children = this.services_internal_vbox.get_children ();
-            foreach (var hbox in children)
-	        services_internal_vbox.remove(hbox);
-            fill_services_vbox (id_card_widget.id_card);
-        }
-    }
-
-    private void show_details (IdCard id_card)
-    {
-       this.vbox_right.set_visible (!vbox_right.get_visible ());
-
-       if (this.vbox_right.get_visible () == false)
-       {
-           this.resize (WINDOW_WIDTH, WINDOW_HEIGHT);
-       }
-    }
-
-    private void details_identity_cb (IdCardWidget id_card_widget)
-    {
-       fill_details (id_card_widget);
-       show_details (id_card_widget.id_card);
-    }
-
-    private IdCard get_id_card_data (AddIdentityDialog dialog)
-    {
-        var id_card = new IdCard ();
-
         id_card.display_name = dialog.display_name;
         id_card.issuer = dialog.issuer;
         id_card.username = dialog.username;
         id_card.password = dialog.password;
         id_card.store_password = dialog.store_password;
-        id_card.services = {};
+
+        id_card.update_services_from_list(dialog.get_services());
+
+        if (dialog.clear_trust_anchor) {
+            id_card.clear_trust_anchor();
+        }
 
         return id_card;
     }
 
-    private void add_id_card_data (IdCard id_card)
+    private void add_id_card_data(IdCard id_card)
     {
         TreeIter   iter;
         Gdk.Pixbuf pixbuf;
-        this.listmodel->append (out iter);
+        this.listmodel->append(out iter);
         pixbuf = get_pixbuf(id_card);
-        listmodel->set (iter,
+        listmodel->set(iter,
                        Columns.IDCARD_COL, id_card,
                        Columns.LOGO_COL, pixbuf,
                        Columns.ISSUER_COL, id_card.issuer,
@@ -340,198 +276,292 @@ public class IdentityManagerView : Window {
                        Columns.PASSWORD_COL, id_card.password);
     }
 
-    private void remove_id_card_data (IdCard id_card)
+    private IdCardWidget add_id_card_widget(IdCard id_card)
     {
-        TreeIter iter;
-        string issuer;
+        logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
+                     .printf(id_card.nai, 
+                             this.selected_card == null ? "[null selection]" : this.selected_card.nai));
 
-        if (listmodel->get_iter_first (out iter))
-        {
-            do
-            {
-                listmodel->get (iter,
-                               Columns.ISSUER_COL, out issuer);
 
-                if (id_card.issuer == issuer)
-                {
-                    listmodel->remove (iter);
-                    break;
-                }
-            }
-            while (listmodel->iter_next (ref iter));
+        var id_card_widget = new IdCardWidget(id_card, this);
+        this.custom_vbox.add_id_card_widget(id_card_widget);
+        id_card_widget.expanded.connect(this.widget_selected_cb);
+        id_card_widget.collapsed.connect(this.widget_unselected_cb);
+
+        if (this.selected_card != null && this.selected_card.nai == id_card.nai) {
+            logger.trace(@"add_id_card_widget: Expanding selected idcard widget");
+            id_card_widget.expand();
+
+            // After a card is added, modified, or deleted, we reload all the cards.
+            // (I'm not sure why, or if it's necessary to do this.) This means that the
+            // selected_card may now point to a card instance that's not in the current list.
+            // Hence the only way to carry the selection across reloads is to identify
+            // the selected card by its NAI. And hence we need to reset what our idea of the
+            // "selected card" is.
+            // There should be a better way to do this, especially since we're not great
+            // at preventing duplicate NAIs.
+            this.selected_card = id_card;
         }
-    }
-
-    private IdCardWidget add_id_card_widget (IdCard id_card)
-    {
-        var id_card_widget = new IdCardWidget (id_card);
-        this.custom_vbox.add_id_card_widget (id_card_widget);
-        id_card_widget.details_id.connect (details_identity_cb);
-        id_card_widget.remove_id.connect (remove_identity_cb);
-        id_card_widget.send_id.connect ((w) => send_identity_cb (w.id_card));
-        id_card_widget.expanded.connect (this.custom_vbox.receive_expanded_event);
-        id_card_widget.expanded.connect (fill_details);
         return id_card_widget;
     }
 
-    public bool add_identity (IdCard id_card, bool force_flat_file_store)
+    private void widget_selected_cb(IdCardWidget id_card_widget)
     {
-#if OS_MACOS
+        logger.trace(@"widget_selected_cb: id_card_widget.id_card.display_name='$(id_card_widget.id_card.display_name)'");
+
+        this.selected_card = id_card_widget.id_card;
+        bool allow_removes = !id_card_widget.id_card.is_no_identity();
+        this.remove_button.set_sensitive(allow_removes);
+        this.edit_button.set_sensitive(true);
+        this.custom_vbox.receive_expanded_event(id_card_widget);
+
+        if (this.selection_in_progress())
+             this.send_button.set_sensitive(true);
+    }
+
+    private void widget_unselected_cb(IdCardWidget id_card_widget)
+    {
+        logger.trace(@"widget_unselected_cb: id_card_widget.id_card.display_name='$(id_card_widget.id_card.display_name)'");
+
+        this.selected_card = null;
+        this.remove_button.set_sensitive(false);
+        this.edit_button.set_sensitive(false);
+        this.custom_vbox.receive_collapsed_event(id_card_widget);
+
+        this.send_button.set_sensitive(false);
+    }
+
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null)
+    {
+        #if OS_MACOS
         /* 
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
          * so for now we will install silently
          */
         var ret = Gtk.ResponseType.YES;
-#else
+        #else
         Gtk.MessageDialog dialog;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
+        logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
+                     .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
         if (prev_id!=null) {
             int flags = prev_id.Compare(id_card);
+            logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
+                if (&old_duplicates != null) {
+                    old_duplicates = new ArrayList<IdCard>();
+                }
+
                 return false; // no changes, no need to update
-            } else if ((flags & (1<<IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
-                dialog = new Gtk.MessageDialog (this,
-                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                            Gtk.MessageType.QUESTION,
-                                            Gtk.ButtonsType.YES_NO,
-                                            _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
-                                            prev_id.display_name,
-                                            prev_id.nai,
-                                            id_card.display_name);
+            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
+                dialog = new Gtk.MessageDialog(this,
+                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                               Gtk.MessageType.QUESTION,
+                                               Gtk.ButtonsType.YES_NO,
+                                               _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
+                                               prev_id.display_name,
+                                               prev_id.nai,
+                                               id_card.display_name);
             } else {
-                dialog = new Gtk.MessageDialog (this,
-                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                            Gtk.MessageType.QUESTION,
-                                            Gtk.ButtonsType.YES_NO,
-                                            _("Would you like to update ID Card '%s' using nai '%s'?"),
-                                            id_card.display_name,
-                                            id_card.nai);
+                dialog = new Gtk.MessageDialog(this,
+                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                               Gtk.MessageType.QUESTION,
+                                               Gtk.ButtonsType.YES_NO,
+                                               _("Would you like to update ID Card '%s' using nai '%s'?"),
+                                               id_card.display_name,
+                                               id_card.nai);
             }
         } else {
-            dialog = new Gtk.MessageDialog (this,
-                                            Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                            Gtk.MessageType.QUESTION,
-                                            Gtk.ButtonsType.YES_NO,
-                                            _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
-                                            id_card.display_name);
+            dialog = new Gtk.MessageDialog(this,
+                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                           Gtk.MessageType.QUESTION,
+                                           Gtk.ButtonsType.YES_NO,
+                                           _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
+                                           id_card.display_name);
         }
-        var ret = dialog.run ();
-        dialog.destroy ();
-#endif
+        var ret = dialog.run();
+        dialog.destroy();
+        #endif
 
         if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card (id_card, force_flat_file_store);
+            this.identities_manager.add_card(id_card, force_flat_file_store, out old_duplicates);
             return true;
         }
-
-        return false;
+        else {
+            if (&old_duplicates != null) {
+                old_duplicates = new ArrayList<IdCard>();
+            }
+            return false;
+        }
     }
 
-    private void add_identity_manual_cb ()
+    private void add_identity_cb()
     {
-        var dialog = new AddIdentityDialog ();
+        var dialog = new IdentityDialog(this);
         int result = ResponseType.CANCEL;
         while (!dialog.complete)
-            result = dialog.run ();
+            result = dialog.run();
 
         switch (result) {
         case ResponseType.OK:
-            this.identities_manager.add_card (get_id_card_data (dialog), false);
+            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false);
             break;
         default:
             break;
         }
-        dialog.destroy ();
+        dialog.destroy();
     }
 
-    private void remove_id_card_widget (IdCardWidget id_card_widget) {
-       this.custom_vbox.remove_id_card_widget (id_card_widget);
-    }
-
-    private void remove_identity (IdCardWidget id_card_widget)
+    private void edit_identity_cb(IdCard card)
     {
-        var id_card = id_card_widget.id_card;
-        remove_id_card_widget (id_card_widget);
+        var dialog = new IdentityDialog.with_idcard(card, _("Edit Identity"), this);
+        int result = ResponseType.CANCEL;
+        while (!dialog.complete)
+            result = dialog.run();
 
-        this.identities_manager.remove_card(id_card);
+        switch (result) {
+        case ResponseType.OK:
+            this.identities_manager.update_card(update_id_card_data(dialog, card));
+
+            // Make sure we haven't created a duplicate NAI via this update.
+            report_duplicate_nais();
+            break;
+        default:
+            break;
+        }
+        dialog.destroy();
     }
 
-    private void redraw_id_card_widgets ()
+    private void remove_identity(IdCard id_card)
+    {
+        logger.trace(@"remove_identity: id_card.display_name='$(id_card.display_name)'");
+
+        this.selected_card = null;
+        this.identities_manager.remove_card(id_card);
+
+        // Nothing is selected, so disable buttons
+        this.edit_button.set_sensitive(false);
+        this.remove_button.set_sensitive(false);
+        this.send_button.set_sensitive(false);
+    }
+
+    private void redraw_id_card_widgets()
     {
         TreeIter iter;
         IdCard id_card;
 
-        var children = this.custom_vbox.get_children ();
-        foreach (var id_card_widget in children)
-            remove_id_card_widget((IdCardWidget )id_card_widget); //id_card_widget.destroy();
+        this.custom_vbox.clear();
 
-        if (filter.get_iter_first (out iter))
+        if (filter.get_iter_first(out iter))
         {
             do
             {
-                filter.get (iter,
-                            Columns.IDCARD_COL, out id_card);
+                filter.get(iter,
+                           Columns.IDCARD_COL, out id_card);
 
-                add_id_card_widget (id_card);
+                add_id_card_widget(id_card);
             }
-            while (filter.iter_next (ref iter));
+            while (filter.iter_next(ref iter));
         }
     }
 
-    private void remove_identity_cb (IdCardWidget id_card_widget)
+    private void remove_identity_cb(IdCard id_card)
     {
-        var id_card = id_card_widget.id_card;
+        bool remove = WarningDialog.confirm(this, 
+                                            Markup.printf_escaped(
+                                                "<span font-weight='heavy'>" + _("You are about to remove the identity '%s'.") + "</span>",
+                                                id_card.display_name)
+                                            + "\n\n" + _("Are you sure you want to do this?"),
+                                            "delete_idcard");
+        if (remove) 
+            remove_identity(id_card);
+    }
 
-        var dialog = new MessageDialog (this,
-                                        DialogFlags.DESTROY_WITH_PARENT,
-                                        MessageType.QUESTION,
-                                        Gtk.ButtonsType.YES_NO,
-                                        _("Are you sure you want to delete %s ID Card?"), id_card.issuer);
-        var result = dialog.run ();
-        switch (result) {
-        case ResponseType.YES:
-            remove_identity (id_card_widget);
-            break;
-        default:
-            break;
+    private void set_prompting_service(string service)
+    {
+        clear_selection_prompts();
+
+        var prompting_service = new Label(_("Identity requested for service:\n%s").printf(service));
+        prompting_service.set_line_wrap(true);
+
+        // left-align
+        prompting_service.set_alignment(0, (float )0.5);
+
+        var selection_prompt = new Label(_("Select your identity:"));
+        selection_prompt.set_alignment(0, 1);
+
+        this.service_prompt_vbox.pack_start(prompting_service, false, false, 12);
+        this.service_prompt_vbox.pack_start(selection_prompt, false, false, 2);
+        this.service_prompt_vbox.show_all();
+    }
+
+    private void clear_selection_prompts()
+    {
+        var list = service_prompt_vbox.get_children();
+        foreach (Widget w in list)
+        {
+            service_prompt_vbox.remove(w);
         }
-        dialog.destroy ();
     }
 
-    public void set_prompting_service(string service)
-    {
-        prompting_service.set_label( _("Identity requested for service: %s").printf(service) );
-    }
 
     public void queue_identity_request(IdentityRequest request)
     {
-        if (this.request_queue.is_empty())
+        bool queue_was_empty = !this.selection_in_progress();
+        this.request_queue.push_tail(request);
+
+        if (queue_was_empty)
         { /* setup widgets */
             candidates = request.candidates;
             filter.refilter();
-            redraw_id_card_widgets ();
+            redraw_id_card_widgets();
             set_prompting_service(request.service);
-            show ();
+            remember_identity_binding.show();
+
+            if (this.custom_vbox.find_idcard_widget(this.selected_card) != null) {
+                // A widget is already selected, and has not been filtered out of the display via search
+                send_button.set_sensitive(true);
+            }
+
+            make_visible();
         }
-        this.request_queue.push_tail (request);
+    }
+
+
+    /** Makes the window visible, or at least, notifies the user that the window
+     * wants to be visible.
+     *
+     * This differs from show() in that show() does not guarantee that the 
+     * window will be moved to the foreground. Actually, neither does this
+     * method, because the user's settings and window manager may affect the
+     * behavior significantly.
+     */
+    public void make_visible()
+    {
+        set_urgency_hint(true);
+        present();
     }
 
     public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
     {
+        logger.trace(@"check_add_password");
         IdCard retval = identity;
         bool idcard_has_pw = (identity.password != null) && (identity.password != "");
         bool request_has_pw = (request.password != null) && (request.password != "");
-        if ((!idcard_has_pw) && (!identity.IsNoIdentity())) {
+        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
             if (request_has_pw) {
                 identity.password = request.password;
                 retval = model.update_card(identity);
             } else {
-                var dialog = new AddPasswordDialog (identity, request);
-                var result = dialog.run ();
+                var dialog = new AddPasswordDialog(identity, request);
+                var result = dialog.run();
 
                 switch (result) {
                 case ResponseType.OK:
                     identity.password = dialog.password;
+                    // Don't leave passwords in memory longer than necessary.
+                    // (This may not actually clear the data, but it's the best we can do.)
+                    dialog.clear_password();
                     identity.store_password = dialog.remember;
                     if (dialog.remember)
                         identity.temporary = false;
@@ -541,28 +571,32 @@ public class IdentityManagerView : Window {
                     identity = null;
                     break;
                 }
-                dialog.destroy ();
+                // Do this again, in case OK button wasn't selected.
+                dialog.clear_password();
+                dialog.destroy();
             }
         }
         return retval;
     }
 
-    public void send_identity_cb (IdCard id)
+    private void send_identity_cb(IdCard id)
     {
-        IdCard identity = id;
-        return_if_fail (request_queue.length > 0);
+        return_if_fail(this.selection_in_progress());
 
-	candidates = null;
-        var request = this.request_queue.pop_head ();
-        identity = check_add_password(identity, request, identities_manager);
-        if (this.request_queue.is_empty())
+        var request = this.request_queue.pop_head();
+        var identity = check_add_password(id, request, identities_manager);
+        send_button.set_sensitive(false);
+
+        candidates = null;
+      
+        if (!this.selection_in_progress())
         {
             candidates = null;
-            prompting_service.set_label(_(""));
+            clear_selection_prompts();
             if (!parent_app.explicitly_launched) {
 // The following occasionally causes the app to exit without sending the dbus
 // reply, so for now we just don't exit
-//                Gtk.main_quit ();
+//                Gtk.main_quit();
 // just hide instead
                 this.hide();
             }
@@ -572,113 +606,24 @@ public class IdentityManagerView : Window {
             set_prompting_service(next.service);
         }
         filter.refilter();
-        redraw_id_card_widgets ();
+        redraw_id_card_widgets();
 
-        if ((identity != null) && (!identity.IsNoIdentity()))
+        if ((identity != null) && (!identity.is_no_identity()))
             parent_app.default_id_card = identity;
 
-        request.return_identity (identity);
+        request.return_identity(identity, remember_identity_binding.active);
+
+        remember_identity_binding.active = true;
+        remember_identity_binding.hide();
     }
 
-    private void label_make_bold (Label label)
+    private void on_about_action()
     {
-        var font_desc = new Pango.FontDescription ();
-
-        font_desc.set_weight (Pango.Weight.BOLD);
-
-        /* This will only affect the weight of the font, the rest is
-         * from the current state of the widget, which comes from the
-         * theme or user prefs, since the font desc only has the
-         * weight flag turned on.
-         */
-        label.modify_font (font_desc);
-    }
-
-    private void fill_services_vbox (IdCard id_card)
-    {
-        int i = 0;
-        var n_columns = id_card.services.length;
-
-        var services_table = new Table (n_columns, 2, false);
-        services_table.set_col_spacings (10);
-        services_table.set_row_spacings (10);
-        this.services_internal_vbox.add (services_table);
-        
-        service_button_map.remove_all ();
-
-        foreach (string service in id_card.services)
-        {
-            var label = new Label (service);
-            label.set_alignment (0, (float) 0.5);
-#if VALA_0_12
-            var remove_button = new Button.from_stock (Stock.REMOVE);
-#else
-            var remove_button = new Button.from_stock (STOCK_REMOVE);
-#endif
-
-
-            service_button_map.insert (remove_button, service);
-            
-            remove_button.clicked.connect ((remove_button) =>
-            {
-              var candidate = service_button_map.lookup (remove_button);
-              if (candidate == null)
-                return;
-              var dialog = new Gtk.MessageDialog (this,
-                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                      Gtk.MessageType.QUESTION,
-                                      Gtk.ButtonsType.YES_NO,
-                                      _("Are you sure you want to stop '%s' ID Card from being used with %s?"),
-                                      custom_vbox.current_idcard.id_card.display_name,
-                                      candidate);
-              var ret = dialog.run();
-              dialog.hide();
-              
-              if (ret == Gtk.ResponseType.YES)
-              {
-                IdCard idcard = custom_vbox.current_idcard.id_card;
-                if (idcard != null) {
-                  SList<string> services = new SList<string>();
-                
-                  foreach (string srv in idcard.services)
-                  {
-                    if (srv == candidate)
-                      continue;
-                    services.append (srv);
-                  }
-                
-                  idcard.services = new string[services.length()];
-                  for (int j=0; j<idcard.services.length; j++)
-                  {
-                    idcard.services[j] = services.nth_data(j);
-                  }
-                
-                  identities_manager.update_card(idcard);
-                }
-              }
-              
-            });
-            services_table.attach_defaults (label, 0, 1, i, i+1);
-            services_table.attach_defaults (remove_button, 1, 2, i, i+1);
-            i++;
-        }
-        this.services_internal_vbox.show_all ();
-    }
-
-    private void on_about_action ()
-    {
-        string[] authors = {
-            "Javier Jardón <jjardon@codethink.co.uk>",
-            "Sam Thursfield <samthursfield@codethink.co.uk>",
-            "Alberto Ruiz <alberto.ruiz@codethink.co.uk>",
-            null
-        };
-
-        string copyright = "Copyright 2011 JANET";
+        string copyright = "Copyright (c) 2011, %d JANET".printf(LATEST_EDIT_YEAR);
 
         string license =
-"""
-Copyright (c) 2011, JANET(UK)
+        """
+Copyright (c) 2011, %d JANET(UK)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -707,247 +652,314 @@ HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 SUCH DAMAGE.
-""";
+""".printf(LATEST_EDIT_YEAR);
 
-        Gtk.show_about_dialog (this,
-            "comments", _("Moonshot project UI"),
-            "copyright", copyright,
-            "website", Config.PACKAGE_URL,
-            "version", Config.PACKAGE_VERSION,
-            "license", license,
-            "website-label", _("Visit the Moonshot project web site"),
-            "authors", authors,
-            "translator-credits", _("translator-credits"),
-            null
-        );
+        AboutDialog about = new AboutDialog();
+
+        about.set_comments(_("Moonshot project UI"));
+        about.set_copyright(copyright);
+        about.set_website(Config.PACKAGE_URL);
+        about.set_website_label(_("Visit the Moonshot project web site"));
+
+        // Note: The package version is configured at the top of moonshot/ui/configure.ac
+        about.set_version(Config.PACKAGE_VERSION);
+        about.set_license(license);
+        about.set_modal(true);
+        about.set_transient_for(this);
+        about.response.connect((a, b) => {about.destroy();});
+        set_bg_color(about);
+        
+        about.run();
     }
 
     private Gtk.ActionEntry[] create_actions() {
         Gtk.ActionEntry[] actions = new Gtk.ActionEntry[0];
 
-        Gtk.ActionEntry filemenu = { "FileMenuAction",
-                                     null,
-                                     N_("_File"),
-                                     null, null, null };
-        actions += filemenu;
-        Gtk.ActionEntry add = { "AddIdCardAction",
-#if VALA_0_12
-                                Stock.ADD,
-#else
-                                STOCK_ADD,
-#endif
-                                N_("Add ID Card"),
-                                null,
-                                N_("Add a new ID Card"),
-                                add_identity_manual_cb };
-        actions += add;
-        Gtk.ActionEntry quit = { "QuitAction",
-#if VALA_0_12
-                                 Stock.QUIT,
-#else
-                                 STOCK_QUIT,
-#endif
-                                 N_("Quit"),
-                                 "<control>Q",
-                                 N_("Quit the application"),
-                                 Gtk.main_quit };
-        actions += quit;
-
         Gtk.ActionEntry helpmenu = { "HelpMenuAction",
                                      null,
                                      N_("_Help"),
                                      null, null, null };
+
+        // Pick up the translated version of the name, if any
+        helpmenu.label = dgettext(null, helpmenu.label);
         actions += helpmenu;
+
         Gtk.ActionEntry about = { "AboutAction",
-#if VALA_0_12
+                                  #if VALA_0_12
                                   Stock.ABOUT,
-#else
+                                  #else
                                   STOCK_ABOUT,
-#endif
+                                  #endif
                                   N_("About"),
                                   null,
                                   N_("About this application"),
                                   on_about_action };
+
+        about.label = dgettext(null, about.label);
         actions += about;
 
         return actions;
     }
 
 
-    private void create_ui_manager ()
+    private void create_ui_manager()
     {
-        Gtk.ActionGroup action_group = new Gtk.ActionGroup ("GeneralActionGroup");
-        action_group.add_actions (create_actions (), this);
-        ui_manager.insert_action_group (action_group, 0);
+        Gtk.ActionGroup action_group = new Gtk.ActionGroup("GeneralActionGroup");
+        action_group.add_actions(create_actions(), this);
+        ui_manager.insert_action_group(action_group, 0);
         try
         {
-            ui_manager.add_ui_from_string (layout, -1);
+            ui_manager.add_ui_from_string(menu_layout, -1);
         }
         catch (Error e)
         {
-            stderr.printf ("%s\n", e.message);
+            stderr.printf("%s\n", e.message);
+            logger.error("create_ui_manager: Caught error: " + e.message);
         }
-        ui_manager.ensure_update ();
+        ui_manager.ensure_update();
     }
 
     private void build_ui()
     {
-        create_ui_manager ();
+        set_bg_color(this);
 
+        create_ui_manager();
+
+        int num_rows = 18;
+        int num_cols = 8;
+        int button_width = 1;
+
+        Table top_table = new Table(num_rows, 10, false);
+        top_table.set_border_width(12);
+
+        AttachOptions fill_and_expand = AttachOptions.EXPAND | AttachOptions.FILL;
+        AttachOptions fill = AttachOptions.FILL;
+        int row = 0;
+
+        service_prompt_vbox = new VBox(false, 0);
+        top_table.attach(service_prompt_vbox, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 12, 0);
+        row++;
+
+        string search_tooltip_text = _("Search for an identity or service");
         this.search_entry = new Entry();
 
-        set_atk_name_description (search_entry, _("Search entry"), _("Search for a specific ID Card"));
-        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.PRIMARY,
-                                                find_icon_sized ("edit-find", Gtk.IconSize.MENU));
-//                                                find_icon_sized ("edit-find-symbolic", Gtk.IconSize.MENU));
-        this.search_entry.set_icon_tooltip_text (EntryIconPosition.PRIMARY,
-                                                 _("Search identity or service"));
-        this.search_entry.set_icon_sensitive (EntryIconPosition.PRIMARY, false);
+        set_atk_name_description(search_entry, _("Search entry"), _("Search for a specific ID Card"));
+        this.search_entry.set_icon_from_pixbuf(EntryIconPosition.SECONDARY,
+                                               find_icon_sized("edit-find", Gtk.IconSize.MENU));
+        this.search_entry.set_icon_tooltip_text(EntryIconPosition.SECONDARY,
+                                                search_tooltip_text);
 
-        this.search_entry.set_icon_from_pixbuf (EntryIconPosition.SECONDARY,
-                                                find_icon_sized ("process-stop", Gtk.IconSize.MENU));
-//                                                find_icon_sized ("edit-clear-symbolic", Gtk.IconSize.MENU));
-        this.search_entry.set_icon_tooltip_text (EntryIconPosition.SECONDARY,
-                                                 _("Clear the current search"));
-        this.search_entry.set_icon_sensitive (EntryIconPosition.SECONDARY, false);
+        this.search_entry.set_tooltip_text(search_tooltip_text);
 
+        this.search_entry.set_icon_sensitive(EntryIconPosition.SECONDARY, false);
 
-        this.search_entry.icon_press.connect (search_entry_icon_press_cb);
-        this.search_entry.notify["text"].connect (search_entry_text_changed_cb);
+        this.search_entry.notify["text"].connect(search_entry_text_changed_cb);
         this.search_entry.key_press_event.connect(search_entry_key_press_event_cb);
+        this.search_entry.set_width_chars(24);
 
-        this.custom_vbox = new CustomVBox (this, false, 6);
+        var search_label_markup ="<small>" + search_tooltip_text + "</small>";
+        var full_search_label = new Label(null);
+        full_search_label.set_markup(search_label_markup);
+        full_search_label.set_alignment(1, 0);
 
-        var viewport = new Viewport (null, null);
-        viewport.set_border_width (6);
-        viewport.set_shadow_type (ShadowType.NONE);
-        viewport.add (custom_vbox);
-        var scroll = new ScrolledWindow (null, null);
-        scroll.set_policy (PolicyType.NEVER, PolicyType.AUTOMATIC);
-        scroll.set_shadow_type (ShadowType.IN);
-        scroll.add_with_viewport (viewport);
-        this.prompting_service = new Label (_(""));
-        // left-align
-        prompting_service.set_alignment(0, (float )0.5);
+        var search_vbox = new VBox(false, 0);
+        search_vbox.pack_start(search_entry, false, false, 0);
+        var search_spacer = new Alignment(0, 0, 0, 0);
+        search_spacer.set_size_request(0, 2);
+        search_vbox.pack_start(search_spacer, false, false, 0);
+        search_vbox.pack_start(full_search_label, false, false, 0);
 
-        var vbox_left = new VBox (false, 0);
-        vbox_left.pack_start (search_entry, false, false, 6);
-        vbox_left.pack_start (scroll, true, true, 0);
-        vbox_left.pack_start (prompting_service, false, false, 6);
-        vbox_left.set_size_request (WINDOW_WIDTH, 0);
+        // Overlap with the service_prompt_box
+        top_table.attach(search_vbox, 5, num_cols - button_width, row - 1, row + 1, fill_and_expand, fill, 0, 12);
+        row++;
 
-        this.no_identity_title = new Label (_("No Identity: Send this identity to services which should not use Moonshot"));
-        no_identity_title.set_alignment(0, (float ) 0.5);
-        no_identity_title.set_line_wrap(true);
-        no_identity_title.show();
+        this.custom_vbox = new CustomVBox(this, false, 2);
 
-        var login_vbox_title = new Label (_("Login: "));
-        label_make_bold (login_vbox_title);
-        login_vbox_title.set_alignment (0, (float) 0.5);
-        var issuer_label = new Label (_("Issuer:"));
-        issuer_label.set_alignment (1, (float) 0.5);
-        this.issuer_entry = new Entry ();
-        issuer_entry.set_can_focus (false);
-        var username_label = new Label (_("Username:"));
-        username_label.set_alignment (1, (float) 0.5);
-        this.username_entry = new Entry ();
-        username_entry.set_can_focus (false);
-        var password_label = new Label (_("Password:"));
-        password_label.set_alignment (1, (float) 0.5);
-        this.password_entry = new Entry ();
-        password_entry.set_invisible_char ('*');
-        password_entry.set_visibility (false);
-        password_entry.set_sensitive (false);
-        this.remember_checkbutton = new CheckButton.with_label (_("Remember password"));
-        remember_checkbutton.set_sensitive(false);
-        this.update_password_button = new Button.with_label (_("Update Password"));
-        this.update_password_button.clicked.connect(update_password_cb);
+        var viewport = new Viewport(null, null);
+        viewport.set_border_width(2);
+        viewport.set_shadow_type(ShadowType.NONE);
+        viewport.add(custom_vbox);
+        var id_scrollwin = new ScrolledWindow(null, null);
+        id_scrollwin.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
+        id_scrollwin.set_shadow_type(ShadowType.IN);
+        id_scrollwin.add_with_viewport(viewport);
+        top_table.attach(id_scrollwin, 0, num_cols - 1, row, num_rows - 1, fill_and_expand, fill_and_expand, 6, 0);
 
-        set_atk_relation (issuer_label, issuer_entry, Atk.RelationType.LABEL_FOR);
-        set_atk_relation (username_label, username_entry, Atk.RelationType.LABEL_FOR);
-        set_atk_relation (password_entry, password_entry, Atk.RelationType.LABEL_FOR);
+        // Right below id_scrollwin:
+        remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
+        remember_identity_binding.active = true;
+        top_table.attach(remember_identity_binding, 0, num_cols / 2, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
 
-        var login_table = new Table (5, 2, false);
-        login_table.set_col_spacings (10);
-        login_table.set_row_spacings (10);
-        login_table.attach_defaults (issuer_label, 0, 1, 0, 1);
-        login_table.attach_defaults (issuer_entry, 1, 2, 0, 1);
-        login_table.attach_defaults (username_label, 0, 1, 1, 2);
-        login_table.attach_defaults (username_entry, 1, 2, 1, 2);
-        login_table.attach_defaults (password_label, 0, 1, 2, 3);
-        login_table.attach_defaults (password_entry, 1, 2, 2, 3);
-        login_table.attach_defaults (remember_checkbutton,  1, 2, 3, 4);
-        login_table.attach_defaults (update_password_button, 0, 1, 4, 5);
-        var login_vbox_alignment = new Alignment (0, 0, 0, 0);
-        login_vbox_alignment.set_padding (0, 0, 12, 0);
-        login_vbox_alignment.add (login_table);
-        this.login_vbox = new VBox (false, 6);
-        login_vbox.pack_start (login_vbox_title, false, true, 0);
-        login_vbox.pack_start (login_vbox_alignment, false, true, 0);
+        var add_button = new Button.with_label(_("Add"));
+        add_button.clicked.connect((w) => {add_identity_cb();});
+        top_table.attach(make_rigid(add_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
 
-        var services_vbox_title = new Label (_("Services:"));
-        label_make_bold (services_vbox_title);
-        services_vbox_title.set_alignment (0, (float) 0.5);
-        var services_vbox_alignment = new Alignment (0, 0, 0, 0);
-        services_vbox_alignment.set_padding (0, 0, 12, 0);
-        this.services_internal_vbox = new VBox (true, 6);
-        services_vbox_alignment.add (services_internal_vbox);
-        this.services_vbox = new VBox (false, 6);
-        services_vbox.pack_start (services_vbox_title, false, true, 0);
-        services_vbox.pack_start (services_vbox_alignment, false, true, 0);
+        var import_button = new Button.with_label(_("Import"));
+        import_button.clicked.connect((w) => {import_identities_cb();});
+        top_table.attach(make_rigid(import_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
 
-        this.vbox_right = new VBox (false, 18);
-        vbox_right.pack_start (login_vbox, false, true, 0);
-        vbox_right.pack_start (services_vbox, false, true, 0);
+        this.edit_button = new Button.with_label(_("Edit"));
+        edit_button.clicked.connect((w) => {edit_identity_cb(this.selected_card);});
+        edit_button.set_sensitive(false);
+        top_table.attach(make_rigid(edit_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
 
-        var hbox = new HBox (false, 12);
-        hbox.pack_start (vbox_left, false, false, 0);
-        hbox.pack_start (vbox_right, true, true, 0);
+        this.remove_button = new Button.with_label(_("Remove"));
+        remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_card);});
+        remove_button.set_sensitive(false);
+        top_table.attach(make_rigid(remove_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
 
-        var main_vbox = new VBox (false, 0);
-        main_vbox.set_border_width (12);
- 
+        // push the send button down another row.
+        row++;
+        this.send_button = new Button.with_label(_("Send"));
+        send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
+        // send_button.set_visible(false);
+        send_button.set_sensitive(false);
+        top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
+
+        var main_vbox = new VBox(false, 0);
+
 #if OS_MACOS
         // hide the  File | Quit menu item which is now on the Mac Menu
-        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
-        quit_item.hide();
+//        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
+//        quit_item.hide();
         
-		Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
-		osxApp.set_menu_bar(menushell);
-		osxApp.set_use_quartz_accelerators(true);
-		osxApp.sync_menu_bar();
-		osxApp.ready(); 
+        Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
+
+        osxApp.set_menu_bar(menushell);
+        osxApp.set_use_quartz_accelerators(true);
+        osxApp.sync_menu_bar();
+        osxApp.ready();
 #else
-        var menubar = this.ui_manager.get_widget ("/MenuBar");
-        main_vbox.pack_start (menubar, false, false, 0);
+        var menubar = this.ui_manager.get_widget("/MenuBar");
+        main_vbox.pack_start(menubar, false, false, 0);
+        set_bg_color(menubar);
 #endif
-        main_vbox.pack_start (hbox, true, true, 0);
-        add (main_vbox);
+        main_vbox.pack_start(top_table, true, true, 6);
+
+        add(main_vbox);
         main_vbox.show_all();
-        this.vbox_right.hide ();
-  } 
 
-    private void set_atk_name_description (Widget widget, string name, string description)
+        if (!this.selection_in_progress())
+            remember_identity_binding.hide();
+    } 
+
+    internal bool selection_in_progress() {
+        return !this.request_queue.is_empty();
+    }
+
+    private void set_atk_name_description(Widget widget, string name, string description)
     {
-       var atk_widget = widget.get_accessible ();
+        var atk_widget = widget.get_accessible();
 
-       atk_widget.set_name (name);
-       atk_widget.set_description (description);
+        atk_widget.set_name(name);
+        atk_widget.set_description(description);
     }
 
     private void connect_signals()
     {
-        this.destroy.connect (Gtk.main_quit);
+        this.destroy.connect(() => {
+                logger.trace("Destroy event; calling Gtk.main_quit()");
+                Gtk.main_quit();
+            });
         this.identities_manager.card_list_changed.connect(this.on_card_list_changed);
+        this.delete_event.connect(() => {return confirm_quit();});
     }
 
-    private static void set_atk_relation (Widget widget, Widget target_widget, Atk.RelationType relationship)
+    private bool confirm_quit() {
+        logger.trace("delete_event intercepted; selection_in_progress()=" + selection_in_progress().to_string());
+
+        if (selection_in_progress()) {
+            var result = WarningDialog.confirm(this,
+                                               Markup.printf_escaped(
+                                                   "<span font-weight='heavy'>" + _("Do you wish to use the %s service?") + "</span>",
+                                                   this.request_queue.peek_head().service)
+                                               + "\n\n" + _("Select Yes to select an ID for this service, or No to cancel"),
+                                               "close_moonshot_window");
+            if (result) {
+                // Prevent other handlers from handling this event; this keeps the window open.
+                return true; 
+            }
+        }
+
+        // Allow the window deletion to proceed.
+        return false;
+    }
+
+    private static Widget make_rigid(Button button) 
     {
-        var atk_widget = widget.get_accessible ();
-        var atk_target_widget = target_widget.get_accessible ();
+        // Hack to prevent the button from growing vertically
+        VBox fixed_height = new VBox(false, 0);
+        fixed_height.pack_start(button, false, false, 0);
 
-        atk_widget.add_relationship (relationship, atk_target_widget);
+        return fixed_height;
     }
+
+    private void import_identities_cb() {
+        var dialog = new FileChooserDialog(_("Import File"),
+                                           this,
+                                           FileChooserAction.OPEN,
+                                           _("Cancel"),ResponseType.CANCEL,
+                                           _("Open"), ResponseType.ACCEPT,
+                                           null);
+
+        if (import_directory != null) {
+            dialog.set_current_folder(import_directory);
+        }
+
+        if (dialog.run() == ResponseType.ACCEPT)
+        {
+            // Save the parent directory to use as default for next save
+            string filename = dialog.get_filename();
+            var file  = File.new_for_path(filename);
+            import_directory = file.get_parent().get_path();
+
+            int import_count = 0;
+
+            var webp = new Parser(filename);
+            dialog.destroy();
+            webp.parse();
+            logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
+            foreach (IdCard card in webp.cards)
+            {
+
+                if (card == null) {
+                    logger.trace(@"import_identities_cb: Skipping null IdCard");
+                    continue;
+                }
+
+                if (!card.trust_anchor.is_empty()) {
+                    string ta_datetime_added = TrustAnchor.format_datetime_now();
+                    card.trust_anchor.set_datetime_added(ta_datetime_added);
+                    logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
+                                 .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
+                }
+
+
+                bool result = add_identity(card, use_flat_file_store);
+                if (result) {
+                    logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
+                    import_count++;
+                }
+                else {
+                    logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
+                }
+            }
+            if (import_count == 0) {
+                var msg_dialog = new Gtk.MessageDialog(this,
+                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                       Gtk.MessageType.INFO,
+                                                       Gtk.ButtonsType.OK,
+                                                       _("Import completed. No identities were added or updated."));
+                msg_dialog.run();
+                msg_dialog.destroy();
+            }
+        }
+        dialog.destroy();
+    }
+
 }
-
-

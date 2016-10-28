@@ -1,6 +1,6 @@
 <identities>
     <identity>
-    <display-name>A Simple Card</display-name>
+    <display-name>No Trust Anchor</display-name>
     <user>user5</user>
     <password></password>
     <realm>painless-security.com</realm>
@@ -9,72 +9,56 @@
   </identity>
 
   <identity>
-    <display-name>Unique Name</display-name>
+    <display-name>Bad CA Certificate</display-name>
     <user>user1</user>
     <password></password>
     <realm>painless-security.com</realm>
     <services>
-      <service>irc/painless-security.com</service>
-      <service>xmpp/painless-security.com</service>
     </services>
     <selection-rules>
-      <rule>
-        <pattern>PATTERN</pattern>
-        <always-confirm>true</always-confirm>
-      </rule>
-      <rule>
-        <pattern>imap/*moonshot.org</pattern>
-        <always-confirm>false</always-confirm>
-      </rule>
     </selection-rules>
     <trust-anchor>
      <!-- PEM encoded, minus header and footer -->
-      <ca-cert>MIIE9jCCA96gAwIBAgIJAJ6SVDCP6o2nMA0GCSqGSIb3DQEBBQUAMIGaMQswCQYD
-VQQGEwJVUzELMAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMR
-UGFpbmxlc3MgU2VjdXJpdHkxLzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFp
-bmxlc3Mtc2VjdXJpdHkuY29tMSAwHgYDVQQDExdQYWlubGVzcyBTZWN1cml0eSwg
-SW5jLjAeFw0xNjA4MDExNjIxMDVaFw0xOTExMTQxNjIxMDVaMIGaMQswCQYDVQQG
-EwJVUzELMAkGA1UECBMCTUExDzANBgNVBAcTBk1hbGRlbjEaMBgGA1UEChMRUGFp
-bmxlc3MgU2VjdXJpdHkxLzAtBgkqhkiG9w0BCQEWIHBvc3RtYXN0ZXJAcGFpbmxl
-c3Mtc2VjdXJpdHkuY29tMSAwHgYDVQQDExdQYWlubGVzcyBTZWN1cml0eSwgSW5j
-LjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAKPiSkw1y6zMJFjnoPjd
-5Bh9EA1NhQcoNxJAtgYEJtpH9a2tfjnXXncXpbIMIfMgv2VKRAxvKb+knCfSCRtU
-PM9i998+ZhJY9o6SSFomlMvdaClauPvBhQvQMmJmp1WINgMUHPpzsGlj04kkl7jw
-iK/oDxp1becikKc10Gr9W03aEJtOaiSqC45zeIgnz9GoQ2tJvz2DDBcddaaT1mSV
-n/lk4ahPC4XaJ08Jn1L6XkVVyDGD38Rwg7r1SFI7ByBFvvQh93Fa48Z7ik0I8s48
-U1euHak2gSJ4zfzLndvGy05qMjhRTlxQu+Rt1g7CS3CLcJqqYzWNrEJWpD8Wn7iA
-MIUCAwEAAaOCATswggE3MB0GA1UdDgQWBBR1qlvY7r2DqhHu5s+sCUPeqBcQuzCB
-zwYDVR0jBIHHMIHEgBR1qlvY7r2DqhHu5s+sCUPeqBcQu6GBoKSBnTCBmjELMAkG
-A1UEBhMCVVMxCzAJBgNVBAgTAk1BMQ8wDQYDVQQHEwZNYWxkZW4xGjAYBgNVBAoT
-EVBhaW5sZXNzIFNlY3VyaXR5MS8wLQYJKoZIhvcNAQkBFiBwb3N0bWFzdGVyQHBh
-aW5sZXNzLXNlY3VyaXR5LmNvbTEgMB4GA1UEAxMXUGFpbmxlc3MgU2VjdXJpdHks
-IEluYy6CCQCeklQwj+qNpzAMBgNVHRMEBTADAQH/MDYGA1UdHwQvMC0wK6ApoCeG
-JWh0dHA6Ly93d3cuZXhhbXBsZS5jb20vZXhhbXBsZV9jYS5jcmwwDQYJKoZIhvcN
-AQEFBQADggEBAB6J5Zxvq96SdIsfEajqU+pANBiA2VTZCpxfIMAKz8KfyzWzFvCM
-8epvYDliyOjw1zR9cYxhQqOcbPHrjLXheVvCePd3jCUOv+tt1Nw2gS2DiMuq37DO
-BZOTlPJ3m2NnvJVO3NjB2I+Pk9v3YlG6mkiVc9dNWgO20SqT2Y+KvHqA5Of8Cb/s
-uIBftctvGpIyEnqSmU7KB0nhIWe65Bsu60hjHHfX1qhJE7qGKbqNaHujssQ/SBXJ
-g7HUhtywv8z3TFoYW0MoBpKGM2Ojc9kQ8f0rYvUKTiD1UfjQoll/Io5xwKy7FXtn
-musuCxXeWkqDtw0clWg6vkf5Tb9v/JQ2PW0=</ca-cert>
+      <ca-cert>MIIE5DCCA8ygAwIBAgIJAOz4PYh7hLBrMA0GCSqGSIb3DQEBBQUAMIGTMQswCQYD
+VQQGEwJGUjEPMA0GA1UECBMGUmFkaXVzMRIwEAYDVQQHEwlTb21ld2hlcmUxFTAT
+BgNVBAoTDEV4YW1wbGUgSW5jLjEgMB4GCSqGSIb3DQEJARYRYWRtaW5AZXhhbXBs
+ZS5vcmcxJjAkBgNVBAMTHUV4YW1wbGUgQ2VydGlmaWNhdGUgQXV0aG9yaXR5MB4X
+DTE2MTAwNDE3MDYwMFoXDTE2MTIwMzE3MDYwMFowgZMxCzAJBgNVBAYTAkZSMQ8w
+DQYDVQQIEwZSYWRpdXMxEjAQBgNVBAcTCVNvbWV3aGVyZTEVMBMGA1UEChMMRXhh
+bXBsZSBJbmMuMSAwHgYJKoZIhvcNAQkBFhFhZG1pbkBleGFtcGxlLm9yZzEmMCQG
+A1UEAxMdRXhhbXBsZSBDZXJ0aWZpY2F0ZSBBdXRob3JpdHkwggEiMA0GCSqGSIb3
+DQEBAQUAA4IBDwAwggEKAoIBAQC3wTX5gGxa/Ge1RN4ZDx67WIeFxmKv6ZkS0c1p
+H2BS7RDGmBrWMG+RMX/kUdSNL1tarnbHknPYzKSdoTsM7bWLQpj1fV8nI4ZAF4Tp
+QG8jQHFmpTfHPjDv+E6wEfilyfXRDpym8ITQfLXTn85zvK82F+153Aqh+BrCyOvJ
+gANAoulArphg0UH6eyBuD+dezqXsinIMXfXZheTXi/TL3oSGjYkwF//WZUpmK5Kx
+w1NupFMjjCJzWf0MtDgG4Gl83JJMzoy/pSKvzWeglvaI8tt64iUkbKNstJT9C0G2
+y+fVM9aVeRAQ+1O1LRaKgqhQMTrs/LPQNUapRKGvkwXlCR6lAgMBAAGjggE3MIIB
+MzAdBgNVHQ4EFgQUMin4EfnT51ecs4f1KjpamdjQUDcwgcgGA1UdIwSBwDCBvYAU
+Min4EfnT51ecs4f1KjpamdjQUDehgZmkgZYwgZMxCzAJBgNVBAYTAkZSMQ8wDQYD
+VQQIEwZSYWRpdXMxEjAQBgNVBAcTCVNvbWV3aGVyZTEVMBMGA1UEChMMRXhhbXBs
+ZSBJbmMuMSAwHgYJKoZIhvcNAQkBFhFhZG1pbkBleGFtcGxlLm9yZzEmMCQGA1UE
+AxMdRXhhbXBsZSBDZXJ0aWZpY2F0ZSBBdXRob3JpdHmCCQDs+D2Ie4SwazAPBgNV
+HRMBAf8EBTADAQH/MDYGA1UdHwQvMC0wK6ApoCeGJWh0dHA6Ly93d3cuZXhhbXBs
+ZS5vcmcvZXhhbXBsZV9jYS5jcmwwDQYJKoZIhvcNAQEFBQADggEBAHzr/erMvZ76
+7FHpf5H3G/TL57k5POnDlTnolXmQdK2eaq0xLhaPuilvNa3txGGI0iBJAD20K5ss
+2o7ULHaAeuNAZ5+zuRx2xZrtLV3FQkugQZb70K/lECf3uCX4S/SqTeOo5VfPjaTM
+6MMgU9Tmvo9a1q7xHzm2yEqzhCbP7dZ4BmUPw9QIkqbirlcQ2GgxOah5m94e2ETf
+4SOBwM+5Lg+CAaCoIC0gpX2R3H+n4edslmiCoyU1r/Q6RQXiyWPdI6jjln08Jdt5
+0/rSpmhObSL0L7/z53+ka7jqW1ZxizVKYJiEIH9Y9Aw/vgf5nhnTgfTPfyPESyCO
+fi186fRC+Zs=</ca-cert>
       <subject>Painless Security Server Certificate</subject>
       <!-- Or alternatively -->
       <server-cert></server-cert>
     </trust-anchor>
   </identity>
   <identity>
-    <display-name>Another Unique Name</display-name>
+    <display-name>Good CA Certificate</display-name>
     <user>user2</user>
     <password></password>
     <realm>painless-security.com</realm>
     <services>
-      <service>irc/painless-security.com</service>
-      <service>email/painless-security.com</service>
     </services>
     <selection-rules>
-      <rule>
-        <pattern>*/painless-security.com</pattern>
-        <always-confirm>true</always-confirm>
-      </rule>
     </selection-rules>
     <trust-anchor>
       <ca-cert>
@@ -111,26 +95,22 @@ lavp3iTNstQs/rdqdI+lPYMokDKXRSD3pK8=
     </trust-anchor>
   </identity>
     <identity>
-    <display-name>Yet Another Unique Name</display-name>
+    <display-name>Good Fingerprint</display-name>
     <user>user3</user>
     <password></password>
     <realm>painless-security.com</realm>
     <services>
-      <service>irc/painless-security.com</service>
-      <service>email/painless-security.com</service>
     </services>
     <trust-anchor>
-      <server-cert>3838E17EC9A2A06D7B6030E3C5727E3466EAB4BB4159DCE7CF6297ADAFC8A56F</server-cert>
+      <server-cert>F2FCC5FAD4CCB7A7236A8AEEF5E94E0C0FB27BEC29DE0AE03C5B455D08D4DE77</server-cert>
     </trust-anchor>
   </identity>
     <identity>
-    <display-name>A Not Really Unique Name</display-name>
+    <display-name>Bad Fingerprint</display-name>
     <user>user4</user>
     <password></password>
     <realm>painless-security.com</realm>
     <services>
-      <service>ssh/painless-security.com</service>
-      <service>email/painless-security.com</service>
     </services>
     <trust-anchor>
       <server-cert>4242424242424242424242424242424242424242424242424242424242424242</server-cert>
