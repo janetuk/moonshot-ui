@@ -1,3 +1,9 @@
+moonshot-ui (1.0.1-1) unstable; urgency=medium
+
+  * Updated changelog
+
+ -- Dan Breslau <dbreslau@painless-security.com>  Mon, 31 Oct 2016 18:12:55 -0400
+
 moonshot-ui (0.9.6-2) unstable; urgency=medium
 
   * Updated changelog
