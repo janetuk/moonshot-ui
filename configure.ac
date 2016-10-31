@@ -91,7 +91,7 @@ AC_SUBST(GTK_VERSION)
 # For all platforms: Use gee-0.8 if available; else revert to gee-1.0
 # (yes, gee-0.8 is an upgrade from gee-1.0!)
 PKG_CHECK_MODULES([LIB_GEE],
-        [gee-0.8 >= 0.16],
+        [gee-0.8 >= 0.10.5],
         [GEE_VERSION="gee-0.8"],
             [PKG_CHECK_MODULES([LIB_GEE],
                         [gee-1.0 >= 0.5],
