@@ -117,12 +117,13 @@ public class IdentityManagerView : Window {
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
 
             foreach (var card in list) {
-                message += "\n\nDisplay Name: '%s'\nServices:\n     %s".printf(card.display_name, card.get_services_string(",\n     "));
+                message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
             }
             var msg_dialog = new Gtk.MessageDialog(this,
                                                    Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                                    Gtk.MessageType.INFO,
                                                    Gtk.ButtonsType.OK,
+                                                   "%s",
                                                    message);
             msg_dialog.run();
             msg_dialog.destroy();
@@ -954,6 +955,7 @@ SUCH DAMAGE.
                                                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                                        Gtk.MessageType.INFO,
                                                        Gtk.ButtonsType.OK,
+                                                       "%s",
                                                        _("Import completed. No identities were added or updated."));
                 msg_dialog.run();
                 msg_dialog.destroy();
