@@ -61,7 +61,7 @@ class WarningDialog
                                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                                      Gtk.MessageType.WARNING,
                                                      Gtk.ButtonsType.YES_NO,
-                                                     "");
+                                                     "%s", "");
 
         var content_area = dialog.get_content_area();
         CheckButton remember_checkbutton = null;
