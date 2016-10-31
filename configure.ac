@@ -236,6 +236,7 @@ PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
         glib-2.0 >= 2.22
         gobject-2.0 >= 2.22
+        libssl
         $GTK_VERSION
         $GEE_VERSION
         $SERVER_IPC_MODULE
