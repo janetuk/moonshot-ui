@@ -1,3 +1,11 @@
+moonshot-ui (1.0.0-1) unstable; urgency=medium
+
+  * UI has been redesigned
+  * moonshot now asks user to confirm the server's fingerprint if none is configured,
+    or warns if mismatch.
+
+ -- Dan Breslau <dbreslau@painless-security.com>  Mon, 31 Oct 2016 15:14:23 -0400
+
 moonshot-ui (0.7.2-1) unstable; urgency=high
 
   * New upstream Version, Closes: #787880
