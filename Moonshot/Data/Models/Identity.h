@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface Identity : NSObject
-
+@property (nonatomic,strong) NSString *identityId;// GUID
 @property (nonatomic,strong) NSString *displayName;
 @property (nonatomic,strong) NSString *username;
 @property (nonatomic,strong) NSString *password;
