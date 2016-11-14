@@ -162,6 +162,7 @@ static BOOL runDeleteServiceAlertAgain;
 - (IBAction)saveChangesButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(editIdentityWindow:wantsToEditIdentity:rememberPassword:)]) {
         Identity *identityObject = [[Identity alloc] init];
+        identityObject.identityId = [[self.identitiesArray objectAtIndex:self.index] valueForKey:@"identityId"];
         identityObject.displayName = [[self.identitiesArray objectAtIndex:self.index] valueForKey:@"displayName"];
         identityObject.username = self.editUsernameValueTextField.stringValue;
         identityObject.realm = self.editRealmValueTextField.stringValue;

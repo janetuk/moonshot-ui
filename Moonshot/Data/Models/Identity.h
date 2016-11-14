@@ -24,5 +24,6 @@
 - (id)initWithDictionaryObject:(NSDictionary *)identityDict;
 - (id)initWithCoder:(NSCoder *)decoder;
 - (void)encodeWithCoder:(NSCoder *)encoder;
++ (void)extractIdentitiesFromArray:(NSArray *)identitiesArray;
 
 @end

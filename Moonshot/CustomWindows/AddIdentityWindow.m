@@ -7,6 +7,7 @@
 //
 
 #import "AddIdentityWindow.h"
+#import "NSString+GUID.h"
 
 @interface AddIdentityWindow ()<NSTextFieldDelegate>
 @property (weak) IBOutlet NSTextField *displayNameTextField;
@@ -44,6 +45,7 @@
 - (IBAction)saveChangesButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(addIdentityWindow:wantsToAddIdentity:rememberPassword:)]) {
         Identity *identityObject = [[Identity alloc] init];
+        identityObject.identityId = [NSString getUUID];
         identityObject.displayName = self.displayNameValueTextField.stringValue;
         identityObject.username = self.usernameValueTextField.stringValue;
         identityObject.realm = self.realmValueTextField.stringValue;

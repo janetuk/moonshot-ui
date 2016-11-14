@@ -10,6 +10,7 @@
 #import "AddIdentityWindow.h"
 #import "EditIdentityWindow.h"
 #import "Identity.h"
+#import "MSTIdentityDataLayer.h"
 
 @interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
 
@@ -44,8 +45,7 @@ static BOOL runDeleteIdentityAlertAgain;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.identitiesArray = [[NSMutableArray alloc] init];
-    [self retrieveSavedIdentitiesFromNSUserDefaults];
+    [self getSavedIdentities];
     runDeleteIdentityAlertAgain = YES;
     [self setupView];
 
@@ -99,6 +99,17 @@ static BOOL runDeleteIdentityAlertAgain;
 
 - (void)setupTableViewHeader {
     [self.identitiesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Name", @"")];
+}
+
+#pragma mark - Get
+
+- (void)getSavedIdentities {
+    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
+        if (items) {
+            self.identitiesArray = [NSMutableArray arrayWithArray:items];
+            [self.identitiesTableView reloadData];
+        }
+    }];
 }
 
 #pragma mark - Reload Data
@@ -182,9 +193,9 @@ static BOOL runDeleteIdentityAlertAgain;
 }
 
 - (IBAction)deleteIdentityButtonPressed:(id)sender {
+    Identity *identityToDelete = self.identitiesArray[self.identitiesTableView.selectedRow];
     if (runDeleteIdentityAlertAgain == NO) {
-        [self deleteFromNSUserDefaults];
-        [self.deleteIdentityButton setEnabled:NO];
+        [self deleteSelectedIdentity:identityToDelete];
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert addButtonWithTitle:NSLocalizedString(@"Delete_Button", @"")];
@@ -198,8 +209,7 @@ static BOOL runDeleteIdentityAlertAgain;
             switch (returnCode) {
                 case NSAlertFirstButtonReturn:
                     runDeleteIdentityAlertAgain = (BOOL)![[alert suppressionButton] state];
-                    [self deleteFromNSUserDefaults];
-                    [self.deleteIdentityButton setEnabled:NO];
+                    [self deleteSelectedIdentity:identityToDelete];
                     break;
                 default:
                     break;
@@ -214,7 +224,6 @@ static BOOL runDeleteIdentityAlertAgain;
 #pragma mark - Keyboard events
 
 - (void)keyUp:(NSEvent *)event {
-    
     const NSString * character = [event charactersIgnoringModifiers];
     const unichar code = [character characterAtIndex:0];
     
@@ -240,16 +249,51 @@ static BOOL runDeleteIdentityAlertAgain;
 }
 
 - (void)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    [self.identitiesArray addObject: identity];
-    [self saveIdentityInNSUserDefaults:self.identitiesArray];
-    [[self.view window] endSheet:window];
+    [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
+        if (!error) {
+            [self getSavedIdentities];
+            [[self.view window] endSheet:window];
+        } else {
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
+            [alert setMessageText:NSLocalizedString(@"Alert_Add_Identity_Error_Message", @"")];
+            [alert setInformativeText:NSLocalizedString(@"Alert_Error_Info", @"")];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+                switch (returnCode) {
+                    case NSAlertFirstButtonReturn:
+                        break;
+                    default:
+                        break;
+                }
+            }];
+        }
+    }];
 }
 
 #pragma mark - EditIdentityWindowDelegate
 
 - (void)editIdentityWindow:(NSWindow *)window wantsToEditIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    [self.identitiesArray replaceObjectAtIndex:self.identitiesTableView.selectedRow withObject:identity];
-    [self saveIdentityInNSUserDefaults:self.identitiesArray];
+    [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
+        if (!error) {
+            NSLog(@"");
+        } else {
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
+            [alert setMessageText:[NSString stringWithFormat: NSLocalizedString(@"Alert_Edit_Identity_Error_Message", @""),identity.displayName]];
+            [alert setInformativeText:NSLocalizedString(@"Alert_Error_Info", @"")];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert beginSheetModalForWindow:window completionHandler:^(NSModalResponse returnCode) {
+                switch (returnCode) {
+                    case NSAlertFirstButtonReturn:
+                        break;
+                    default:
+                        break;
+                }
+            }];
+
+        }
+    }];
     [[self.view window] endSheet: window];
 }
 
@@ -257,38 +301,27 @@ static BOOL runDeleteIdentityAlertAgain;
     [[self.view window] endSheet:window];
 }
 
-#pragma mark - Save in NSUserDefaults
-
-- (void)saveIdentityInNSUserDefaults:(NSMutableArray *)identitiesArray {
-    
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:identitiesArray];
-    [userDefaults setObject:encodedObject forKey:@"Identities_Array"];
-    [userDefaults synchronize];
-    [self retrieveSavedIdentitiesFromNSUserDefaults];
-}
-
-- (void)retrieveSavedIdentitiesFromNSUserDefaults {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"Identities_Array"] != nil) {
-        NSData *encodedObject = [userDefaults objectForKey:@"Identities_Array"];
-        [self.identitiesArray removeAllObjects];
-        self.identitiesArray = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-        [self.identitiesTableView reloadData];
-    }
-}
-
-- (void)deleteFromNSUserDefaults {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"Identities_Array"] != nil) {
-        NSData *encodedObject = [userDefaults objectForKey:@"Identities_Array"];
-        [self.identitiesArray removeAllObjects];
-        self.identitiesArray = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-        if ([self.identitiesArray count] > 0) {
-            [self.identitiesArray removeObjectAtIndex:self.identitiesTableView.selectedRow];
+- (void)deleteSelectedIdentity:(Identity *)identity {
+    [[MSTIdentityDataLayer sharedInstance] removeIdentity:identity withBlock:^(NSError *error) {
+        if (!error) {
+            [self getSavedIdentities];
+            [self.deleteIdentityButton setEnabled:NO];
+        } else {
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
+            [alert setMessageText:[NSString stringWithFormat: NSLocalizedString(@"Alert_Delete_Identity_Error_Message", @""),identity.displayName]];
+            [alert setInformativeText:NSLocalizedString(@"Alert_Error_Info", @"")];
+            [alert setAlertStyle:NSWarningAlertStyle];
+            [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
+                switch (returnCode) {
+                    case NSAlertFirstButtonReturn:
+                        break;
+                    default:
+                        break;
+                }
+            }];
         }
-        [self saveIdentityInNSUserDefaults:self.identitiesArray];
-        [self.identitiesTableView reloadData];
-    }
+    }];
 }
+
 @end

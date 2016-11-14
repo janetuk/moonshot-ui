@@ -11,6 +11,7 @@
 		7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF2C1DD084D600F23D89 /* MainViewController.m */; };
 		7812FF2F1DD0A39800F23D89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7812FF2E1DD0A39800F23D89 /* Localizable.strings */; };
 		7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */; };
+		78522F7B1DDA21B300D5C231 /* NSString+GUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 78522F7A1DDA21B300D5C231 /* NSString+GUID.m */; };
 		785833801DB901AE00DF0117 /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 7858337F1DB901AE00DF0117 /* Identity.m */; };
 		788E9B9B1DD4CC24004CCF1B /* Profile_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 788E9B9A1DD4CC24004CCF1B /* Profile_icon.png */; };
 		7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7899E79C1DBF517600E4542E /* AddIdentityWindow.m */; };
@@ -54,6 +55,8 @@
 		7812FF2E1DD0A39800F23D89 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		7812FF341DD0DEBF00F23D89 /* NSDate+NSDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NSDateFormatter.h"; sourceTree = "<group>"; };
 		7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NSDateFormatter.m"; sourceTree = "<group>"; };
+		78522F791DDA21B300D5C231 /* NSString+GUID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+GUID.h"; sourceTree = "<group>"; };
+		78522F7A1DDA21B300D5C231 /* NSString+GUID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+GUID.m"; sourceTree = "<group>"; };
 		7858337E1DB901AE00DF0117 /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Identity.h; sourceTree = "<group>"; };
 		7858337F1DB901AE00DF0117 /* Identity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Identity.m; sourceTree = "<group>"; };
 		788E9B9A1DD4CC24004CCF1B /* Profile_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Profile_icon.png; sourceTree = "<group>"; };
@@ -114,6 +117,8 @@
 			children = (
 				7812FF341DD0DEBF00F23D89 /* NSDate+NSDateFormatter.h */,
 				7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */,
+				78522F791DDA21B300D5C231 /* NSString+GUID.h */,
+				78522F7A1DDA21B300D5C231 /* NSString+GUID.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -371,6 +376,7 @@
 				78A330B71DAF7CB500702060 /* main.m in Sources */,
 				78FA20741DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m in Sources */,
 				2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */,
+				78522F7B1DDA21B300D5C231 /* NSString+GUID.m in Sources */,
 				78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */,
 				7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */,
 				78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */,

@@ -14,6 +14,7 @@
     self = [super init];
     if(self){
         if([identityDict isKindOfClass:[NSDictionary class]]){
+            self.identityId = identityDict[@"identityId"];
             self.displayName = identityDict[@"displayName"];
             self.username = identityDict[@"username"];
             self.password = identityDict[@"password"];
@@ -29,6 +30,7 @@
 
 - (NSDictionary *)getDictionaryRepresentation {
     NSMutableDictionary *resultDict = [[NSMutableDictionary alloc] init];
+    [resultDict setObject:self.identityId forKey:@"identityId"];
     [resultDict setObject:self.displayName forKey:@"displayName"];
     [resultDict setObject:self.username forKey:@"username"];
     [resultDict setObject:self.password forKey:@"password"];
@@ -43,6 +45,7 @@
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super init])) {
+        self.identityId = [decoder decodeObjectForKey:@"identityId"];
         self.displayName = [decoder decodeObjectForKey:@"displayName"];
         self.username = [decoder decodeObjectForKey:@"username"];
         self.password = [decoder decodeObjectForKey:@"password"];
@@ -56,6 +59,7 @@
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
+    [encoder encodeObject:self.identityId forKey:@"identityId"];
     [encoder encodeObject:self.displayName forKey:@"displayName"];
     [encoder encodeObject:self.username forKey:@"username"];
     [encoder encodeObject:self.password forKey:@"password"];
@@ -65,7 +69,5 @@
     [encoder encodeBool:self.caCertificate forKey:@"caCertificate"];
     [encoder encodeBool:self.trustAnchor forKey:@"trustAnchor"];
 }
-
-#pragma mark -
 
 @end
