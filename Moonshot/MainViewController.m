@@ -34,6 +34,7 @@
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) EditIdentityWindow *editIdentityWindow;
+@property (weak) IBOutlet NSSearchField *searchField;
 
 @end
 
@@ -179,7 +180,6 @@ static BOOL runDeleteIdentityAlertAgain;
 - (IBAction)addIdentityButtonPressed:(id)sender {
     self.addIdentityWindow = [[AddIdentityWindow alloc] initWithWindowNibName:@"AddIdentityWindow"];
     self.addIdentityWindow.delegate = self;
-    
     [self.view.window beginSheet:self.addIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSModalResponseOK:
@@ -322,6 +322,16 @@ static BOOL runDeleteIdentityAlertAgain;
             }];
         }
     }];
+}
+
+- (void)controlTextDidChange:(NSNotification *)notification {
+    if ([self.searchField.stringValue isEqualToString:@""]) {
+        [self getSavedIdentities];
+    } else {
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"displayName CONTAINS[cd] %@", self.searchField.stringValue];
+        self.identitiesArray  = [[self.identitiesArray filteredArrayUsingPredicate:predicate] mutableCopy];
+        [self.identitiesTableView reloadData];
+    }
 }
 
 @end

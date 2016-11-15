@@ -48,7 +48,7 @@
                         <rect key="frame" x="49" y="7" width="383" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Copyright © 2015 JANET. All Rights Reserved. License Agreement" id="Pft-8l-TEX">
-                            <font key="font" metaFont="system" size="12"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.41159326424870468" green="0.41159326424870468" blue="0.41159326424870468" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -68,7 +68,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="roundTextured" title="Button" bezelStyle="texturedRounded" alignment="left" controlSize="mini" imageScaling="proportionallyDown" inset="2" id="yt1-ED-FNO">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" metaFont="system" size="11"/>
+                            <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="urlButtonPressed:" target="-2" id="Pcd-h2-Qg5"/>

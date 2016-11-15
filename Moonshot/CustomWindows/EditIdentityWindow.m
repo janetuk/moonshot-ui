@@ -10,6 +10,7 @@
 #import "Identity.h"
 #import "TrustAnchorHelpWindow.h"
 #import "NSDate+NSDateFormatter.h"
+#import "MSTIdentityDataLayer.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 @property (weak) IBOutlet NSTextField *rememberPasswordTextField;
@@ -109,18 +110,16 @@ static BOOL runDeleteServiceAlertAgain;
 #pragma mark - Load Saved Data
 
 - (void)loadSavedData {
-    NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
-    if([[NSUserDefaults standardUserDefaults] objectForKey:@"Identities_Array"] != nil) {
-        NSData *encodedObject = [userDefaults objectForKey:@"Identities_Array"];
-        [self.identitiesArray removeAllObjects];
-        self.identitiesArray = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-    }
+    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
+        if (items) {
+            self.identitiesArray = [items mutableCopy];;
+        }
+    }];
     Identity *identityObject = [self.identitiesArray objectAtIndex:self.index];
     [self.editUsernameValueTextField setStringValue:identityObject.username];
     [self.editRealmValueTextField setStringValue:identityObject.realm];
     [self.editPasswordValueTextField setStringValue:identityObject.password];
     [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:identityObject.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
-    
     [self.editRememberPasswordButton setState:identityObject.passwordRemembered];
 }
 
