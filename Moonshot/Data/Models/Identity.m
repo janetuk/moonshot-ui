@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/20/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "Identity.h"
@@ -22,7 +21,9 @@
             self.dateAdded = identityDict[@"dateAdded"];
             self.passwordRemembered = [identityDict[@"passwordRemembered"] boolValue];
             self.caCertificate = [identityDict[@"caCertificate"] boolValue];
-            self.trustAnchor = [identityDict[@"trustAnchor"] boolValue];
+            self.trustAnchor = identityDict[@"trustAnchor"];
+            self.servicesArray = identityDict[@"trustAnchorArray"];
+            self.trustAnchorArray = identityDict[@"trustAnchorArray"];
         }
     }
     return self;
@@ -38,7 +39,9 @@
     [resultDict setObject:self.dateAdded forKey:@"dateAdded"];
     [resultDict setObject:[NSNumber numberWithBool:self.passwordRemembered] forKey:@"passwordRemembered"];
     [resultDict setObject:[NSNumber numberWithBool:self.caCertificate] forKey:@"caCertificate"];
-    [resultDict setObject:[NSNumber numberWithBool:self.trustAnchor] forKey:@"trustAnchor"];
+    [resultDict setObject:self.trustAnchor forKey:@"trustAnchor"];
+    [resultDict setObject:self.servicesArray forKey:@"servicesArray"];
+    [resultDict setObject:self.trustAnchorArray forKey:@"trustAnchorArray"];
 
     return resultDict;
 }
@@ -53,7 +56,9 @@
         self.dateAdded = [decoder decodeObjectForKey:@"dateAdded"];
         self.passwordRemembered = [decoder decodeBoolForKey:@"passwordRemembered"];
         self.caCertificate = [decoder decodeBoolForKey:@"caCertificate"];
-        self.trustAnchor = [decoder decodeBoolForKey:@"trustAnchor"];
+        self.trustAnchor = [decoder decodeObjectForKey:@"trustAnchor"];
+        self.servicesArray = [decoder decodeObjectForKey:@"servicesArray"];
+        self.trustAnchorArray = [decoder decodeObjectForKey:@"trustAnchorArray"];
     }
     return self;
 }
@@ -67,7 +72,9 @@
     [encoder encodeObject:self.dateAdded forKey:@"dateAdded"];
     [encoder encodeBool:self.passwordRemembered forKey:@"passwordRemembered"];
     [encoder encodeBool:self.caCertificate forKey:@"caCertificate"];
-    [encoder encodeBool:self.trustAnchor forKey:@"trustAnchor"];
+    [encoder encodeObject:self.trustAnchor forKey:@"trustAnchor"];
+    [encoder encodeObject:self.servicesArray forKey:@"servicesArray"];
+    [encoder encodeObject:self.trustAnchorArray forKey:@"trustAnchorArray"];
 }
 
 @end

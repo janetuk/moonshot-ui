@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/25/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "EditIdentityWindow.h"
@@ -23,9 +22,29 @@
 @property (weak) IBOutlet NSTextField *subjectValueTextField;
 @property (weak) IBOutlet NSTextField *subjectTextField;
 @property (weak) IBOutlet NSTextField *caCertificateTextField;
+@property (weak) IBOutlet NSTextField *editIdentityDateAddedTextField;
+@property (weak) IBOutlet NSTextField *servicesTitleTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorTextField;
+@property (weak) IBOutlet NSTextField *dateAddedTitleTextField;
+@property (weak) IBOutlet NSTextField *editUsernameValueTextField;
+@property (weak) IBOutlet NSTextField *editRealmValueTextField;
+@property (weak) IBOutlet NSTextField *editUsernameTextField;
+@property (weak) IBOutlet NSTextField *editRealmTextField;
+@property (weak) IBOutlet NSTextField *editPasswordTextField;
+@property (weak) IBOutlet NSSecureTextField *editPasswordValueTextField;
+@property (weak) IBOutlet NSButton *editRememberPasswordButton;
+@property (weak) IBOutlet NSButton *clearTrustAnchorButton;
+@property (weak) IBOutlet NSButton *editIdentityDeleteServiceButton;
+@property (weak) IBOutlet NSButton *editIdentityCancelButton;
+@property (weak) IBOutlet NSButton *editIdentitySaveButton;
+@property (weak) IBOutlet NSButton *editIdentityHelpButton;
+@property (weak) IBOutlet NSTableView *editIdentityServicesTableView;
+@property (weak) IBOutlet NSView *servicesView;
+@property (weak) IBOutlet NSView *certificateView;
+@property (strong) IBOutlet NSView *shaFingerprintView;
+@property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
-@property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
 
 @end
 
@@ -38,7 +57,6 @@ static BOOL runDeleteServiceAlertAgain;
 
 - (void)windowDidLoad {
     [super windowDidLoad];
-    self.servicesArray = [NSMutableArray arrayWithObjects:@"google.com",@"developer.apple.com",@"dev.ja.net",@"devsy.com",nil];
     [self setupView];
     runClearTrustAnchorAlertAgain = YES;
     runDeleteServiceAlertAgain = YES;
@@ -83,10 +101,9 @@ static BOOL runDeleteServiceAlertAgain;
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    Identity *identityObject = [[Identity alloc] init];
-    if (identityObject.caCertificate) {
+    if (self.identityToEdit.caCertificate) {
         [self.shaFingerprintView setHidden:YES];
-    } else if (identityObject.trustAnchor) {
+    } else if (![self.identityToEdit.trustAnchor isEqualToString:@"None"]) {
         [self.certificateView setHidden:YES];
     } else {
         [self.certificateView setHidden:YES];
@@ -112,15 +129,16 @@ static BOOL runDeleteServiceAlertAgain;
 - (void)loadSavedData {
     [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         if (items) {
-            self.identitiesArray = [items mutableCopy];;
+            self.identitiesArray = [items mutableCopy];
+            self.servicesArray = self.identityToEdit.servicesArray;
         }
     }];
-    Identity *identityObject = [self.identitiesArray objectAtIndex:self.index];
-    [self.editUsernameValueTextField setStringValue:identityObject.username];
-    [self.editRealmValueTextField setStringValue:identityObject.realm];
-    [self.editPasswordValueTextField setStringValue:identityObject.password];
-    [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:identityObject.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
-    [self.editRememberPasswordButton setState:identityObject.passwordRemembered];
+    [self.editUsernameValueTextField setStringValue:self.identityToEdit.username];
+    [self.editRealmValueTextField setStringValue:self.identityToEdit.realm];
+    [self.editPasswordValueTextField setStringValue:self.identityToEdit.password];
+    [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:self.identityToEdit.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
+    [self.editRememberPasswordButton setState:self.identityToEdit.passwordRemembered];
+    [self.trustAnchorValueTextField setStringValue:self.identityToEdit.trustAnchor];
 }
 
 #pragma mark - Delete Services
@@ -132,6 +150,11 @@ static BOOL runDeleteServiceAlertAgain;
 }
 
 #pragma mark - Button Actions
+
+
+- (IBAction)singleAction:(id)sender {
+    [self.editIdentityDeleteServiceButton setEnabled:YES];
+}
 
 - (IBAction)deleteServiceButtonPressed:(id)sender {
     if (runDeleteServiceAlertAgain == NO) {
@@ -160,15 +183,16 @@ static BOOL runDeleteServiceAlertAgain;
 
 - (IBAction)saveChangesButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(editIdentityWindow:wantsToEditIdentity:rememberPassword:)]) {
-        Identity *identityObject = [[Identity alloc] init];
-        identityObject.identityId = [[self.identitiesArray objectAtIndex:self.index] valueForKey:@"identityId"];
-        identityObject.displayName = [[self.identitiesArray objectAtIndex:self.index] valueForKey:@"displayName"];
-        identityObject.username = self.editUsernameValueTextField.stringValue;
-        identityObject.realm = self.editRealmValueTextField.stringValue;
-        identityObject.password = self.editPasswordValueTextField.stringValue;
-        identityObject.passwordRemembered = self.editRememberPasswordButton.state;
-        identityObject.dateAdded = [[self.identitiesArray objectAtIndex:self.index] valueForKey:@"dateAdded"];
-        [self.delegate editIdentityWindow:self.window wantsToEditIdentity:identityObject rememberPassword:self.editRememberPasswordButton.state];
+        self.identityToEdit.identityId = self.identityToEdit.identityId;
+        self.identityToEdit.displayName = self.identityToEdit.displayName;
+        self.identityToEdit.username = self.editUsernameValueTextField.stringValue;
+        self.identityToEdit.realm = self.editRealmValueTextField.stringValue;
+        self.identityToEdit.password = self.editPasswordValueTextField.stringValue;
+        self.identityToEdit.passwordRemembered = self.editRememberPasswordButton.state;
+        self.identityToEdit.dateAdded = self.identityToEdit.dateAdded;
+        self.identityToEdit.servicesArray = self.servicesArray;
+        self.identityToEdit.trustAnchor = self.identityToEdit.trustAnchor;
+        [self.delegate editIdentityWindow:self.window wantsToEditIdentity:self.identityToEdit rememberPassword:self.editRememberPasswordButton.state];
     }
 }
 
@@ -179,7 +203,7 @@ static BOOL runDeleteServiceAlertAgain;
 }
 
 - (IBAction)helpButtonPressed:(id)sender {
-    self.helpWindow = [[TrustAnchorHelpWindow alloc] initWithWindowNibName:@"TrustAnchorHelpWindow"];
+    self.helpWindow = [[TrustAnchorHelpWindow alloc] initWithWindowNibName: NSStringFromClass([TrustAnchorHelpWindow class])];
     [self.helpWindow showWindow:self];;
 }
 
@@ -189,11 +213,11 @@ static BOOL runDeleteServiceAlertAgain;
     } else {
         NSAlert *alert = [[NSAlert alloc] init];
         [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
-        [alert setMessageText: NSLocalizedString(@"Clear_Trust_Anchor_Alert_Message", @"")];
-        [alert setInformativeText:NSLocalizedString(@"Alert_Info", @"")];
+        //[alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
+        [alert setMessageText: NSLocalizedString(@"Alert_Import_Message", @"")];
+        [alert setInformativeText:NSLocalizedString(@"Alert_Import_Info", @"")];
         [alert setAlertStyle:NSWarningAlertStyle];
-        [alert setShowsSuppressionButton:YES];
+        //[alert setShowsSuppressionButton:YES];
         [[alert suppressionButton] setTitle:NSLocalizedString(@"Alert_Suppression_Message", @"")];
         [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
             switch (returnCode) {
@@ -237,7 +261,4 @@ static BOOL runDeleteServiceAlertAgain;
     return cellView;
 }
 
-- (IBAction)singleAction:(id)sender {
-    [self.editIdentityDeleteServiceButton setEnabled:YES];
-}
 @end

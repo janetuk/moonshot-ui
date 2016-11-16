@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 11/1/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "AboutWindow.h"
@@ -31,7 +30,7 @@
 
 - (instancetype)init
 {
-    if (self = [super initWithWindowNibName:@"AboutWindow" owner:self]) {
+    if (self = [super initWithWindowNibName: NSStringFromClass([AboutWindow class]) owner:self]) {
         // (nothing yet...)
     }
     return self;
@@ -76,11 +75,13 @@
 - (void)mouseEntered:(NSEvent *)event {
     [self.urlButton.layer setBackgroundColor:[NSColor lightGrayColor].CGColor];
     [self setURLButtonTitleColor:[NSColor whiteColor]];
+    [self.urlButton setImage:[NSImage imageNamed:@"selected_button"]];
 }
 
 - (void)mouseExited:(NSEvent *)event {
     [self.urlButton.layer setBackgroundColor:self.window.backgroundColor.CGColor];
     [self setURLButtonTitleColor:[NSColor blackColor]];
+    [self.urlButton setImage:[NSImage imageNamed:@"default_button"]];
 }
 
 - (void)setURLButtonTitleColor:(NSColor *)titleColor {

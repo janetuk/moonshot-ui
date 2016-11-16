@@ -3,21 +3,29 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 11/1/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "TrustAnchorHelpWindow.h"
 
 @interface TrustAnchorHelpWindow ()
-
+@property (weak) IBOutlet NSTextField *trustAnchorTitleTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorInfoTextField;
 @end
 
 @implementation TrustAnchorHelpWindow
 
+#pragma mark - Windows Lifecycle
+
 - (void)windowDidLoad {
     [super windowDidLoad];
-    
-    // Implement this method to handle any initialization after your window controller's window has been loaded from its nib file.
+    [self setupWindow];
+}
+
+#pragma mark - Window Setup
+
+- (void)setupWindow {
+    [self.trustAnchorTitleTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Title", @"")];
+    [self.trustAnchorInfoTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Info", @"")];
 }
 
 @end

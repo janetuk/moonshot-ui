@@ -3,11 +3,11 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/13/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "AppDelegate.h"
 #import "AboutWindow.h"
+#import "MSTConstants.h"
 
 @interface AppDelegate ()
 
@@ -23,10 +23,22 @@
     // Insert code here to tear down your application
 }
 
-- (IBAction)about:(id)sender
-{
-    // Show the window:
+#pragma mark - Button Actions
+
+- (IBAction)about:(id)sender {
     [[AboutWindow defaultController] showWindow:self];
+}
+
+- (IBAction)addNewIdentity:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_IDENTITY_NOTIFICATION object:nil];
+}
+
+- (IBAction)editIdentity:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:EDIT_IDENTITY_NOTIFICATION object:nil];
+}
+
+- (IBAction)removeIdentity:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:REMOVE_IDENTITY_NOTIFICATION object:nil];
 }
 
 @end

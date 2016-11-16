@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/13/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "MainViewController.h"
@@ -11,9 +10,9 @@
 #import "EditIdentityWindow.h"
 #import "Identity.h"
 #import "MSTIdentityDataLayer.h"
+#import "MSTConstants.h"
 
 @interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
-
 @property (weak) IBOutlet NSView *contentView;
 @property (weak) IBOutlet NSView *detailsView;
 @property (weak) IBOutlet NSTextField *displayNameTextField;
@@ -30,12 +29,13 @@
 @property (weak) IBOutlet NSButton *deleteIdentityButton;
 @property (weak) IBOutlet NSButton *importButton;
 @property (weak) IBOutlet NSImageView *userImageView;
+@property (weak) IBOutlet NSImageView *backgroundImageView;
+@property (weak) IBOutlet NSImageView *contentViewBackgroundImage;
+@property (weak) IBOutlet NSSearchField *searchField;
 @property (nonatomic, strong) NSWindow *sheetWindow;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) EditIdentityWindow *editIdentityWindow;
-@property (weak) IBOutlet NSSearchField *searchField;
-
 @end
 
 @implementation MainViewController
@@ -49,13 +49,23 @@ static BOOL runDeleteIdentityAlertAgain;
     [self getSavedIdentities];
     runDeleteIdentityAlertAgain = YES;
     [self setupView];
-
+    [self registerForNSNotifications];
+//
 //    [[NSUserDefaults standardUserDefaults] removeObjectForKey:@"Identities_Array"];
 //    [[NSUserDefaults standardUserDefaults] synchronize];
+
 }
 
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];
+}
+
+- (void)viewWillDisappear {
+    [self deregisterForNSNotifications];
+}
+
+- (void)dealloc {
+    [self deregisterForNSNotifications];
 }
 
 #pragma mark - Setup Views
@@ -66,11 +76,13 @@ static BOOL runDeleteIdentityAlertAgain;
     [self setupImportButton];
     [self setupTableViewHeader];
     [self setupUserImageView];
+    [self setupBackgroundImageView];
 }
 
 - (void)setupContentView {
     [self.contentView.layer setBackgroundColor:[NSColor colorWithRed:224/255.0 green:224/255.0 blue:224/255.0 alpha:1].CGColor];
     self.contentView.layer.cornerRadius = 5.0;
+    
 }
 
 - (void)setupDetailsView {
@@ -79,9 +91,16 @@ static BOOL runDeleteIdentityAlertAgain;
     [self.trustAnchorTextField setStringValue:NSLocalizedString(@"Trust_Anchor", @"")];
     [self.servicesTextField setStringValue:NSLocalizedString(@"Services", @"")];
 
-    [self.detailsView.layer setBorderWidth:1.0];
-    [self.detailsView.layer setBorderColor:[NSColor lightGrayColor].CGColor];
-    [self.detailsView.layer setBackgroundColor:[NSColor whiteColor].CGColor];
+//    [self.detailsView.layer setBorderWidth:1.0];
+//    [self.detailsView.layer setBorderColor:[NSColor lightGrayColor].CGColor];
+//    [self.detailsView.layer setBackgroundColor:[NSColor whiteColor].CGColor];
+}
+
+- (void)setupBackgroundImageView {
+    [self.backgroundImageView setWantsLayer:YES];
+    self.backgroundImageView.layer.borderWidth = 1.0;
+    self.backgroundImageView.layer.masksToBounds = YES;
+    [self.backgroundImageView.layer setBorderColor:[NSColor lightGrayColor].CGColor];
 }
 
 #pragma mark - Setup Import Button
@@ -93,7 +112,7 @@ static BOOL runDeleteIdentityAlertAgain;
 #pragma mark - Setup User ImageView
 
 - (void)setupUserImageView {
-    self.userImageView.image = [NSImage imageNamed:@"Profile_icon"];
+    self.userImageView.image = [NSImage imageNamed:@"user_info_large"];
 }
 
 #pragma mark - Setup TableView Header
@@ -121,15 +140,39 @@ static BOOL runDeleteIdentityAlertAgain;
         [self.displayNameTextField setStringValue: identityObject.displayName];
         [self.usernameValueTextField setStringValue: identityObject.username];
         [self.realmValueTextField setStringValue: identityObject.realm];
-        [self.servicesValueTextField setStringValue:@"" ];
-        [self.trustAnchorValueTextField setStringValue:@""];
+        [self.trustAnchorValueTextField setStringValue:identityObject.trustAnchor];
+        NSMutableString *servisesString = [[NSMutableString alloc] init];
+        for (NSObject *obj in identityObject.servicesArray)
+        {
+            [servisesString appendString:[[obj description] stringByAppendingString:@"; "]];
+            [self.servicesValueTextField setStringValue:servisesString];
+        }
+        if ([identityObject.identityId isEqualToString:@"NOIDENTITY"]) {
+            [self.servicesValueTextField setStringValue:@"No Identity"];
+        }
     }
-    else {
-        [self.displayNameTextField setStringValue: @"No identity"];
-        [self.usernameValueTextField setStringValue: @"/"];
-        [self.realmValueTextField setStringValue: @"/"];
-        [self.servicesValueTextField setStringValue: @"/"];
-    }
+}
+
+#pragma mark - NSNotification center
+
+- (void)registerForNSNotifications {
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter addObserver:self
+                           selector:@selector(addIdentityButtonPressed:)
+                               name:ADD_IDENTITY_NOTIFICATION object:nil];
+    [notificationCenter addObserver:self
+                           selector:@selector(doubleAction:)
+                               name:EDIT_IDENTITY_NOTIFICATION object:nil];
+    [notificationCenter addObserver:self
+                           selector:@selector(deleteIdentityButtonPressed:)
+                               name:REMOVE_IDENTITY_NOTIFICATION object:nil];
+}
+
+- (void)deregisterForNSNotifications {
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+    [notificationCenter removeObserver:ADD_IDENTITY_NOTIFICATION];
+    [notificationCenter removeObserver:EDIT_IDENTITY_NOTIFICATION];
+    [notificationCenter removeObserver:REMOVE_IDENTITY_NOTIFICATION];
 }
 
 #pragma mark - NSTableViewDataSource & NSTableViewDelegate
@@ -140,9 +183,10 @@ static BOOL runDeleteIdentityAlertAgain;
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"cellIdentifier" owner:self];
-    cellView.imageView.image = [NSImage imageNamed:@"Profile_icon"];
+    cellView.imageView.image = [NSImage imageNamed:@"user_info_thumbnail"];
+    Identity *identityObject = [self.identitiesArray objectAtIndex:row];
     if ([self.identitiesArray count] > 0) {
-        cellView.textField.stringValue = [[self.identitiesArray objectAtIndex:row] valueForKey:@"displayName"];
+        cellView.textField.stringValue = identityObject.displayName;
     } else {
         cellView.textField.stringValue = @"No identity";
     }
@@ -155,9 +199,10 @@ static BOOL runDeleteIdentityAlertAgain;
 }
 
 - (IBAction)doubleAction:(id)sender {
-    self.editIdentityWindow = [[EditIdentityWindow alloc] initWithWindowNibName:@"EditIdentityWindow"];
+    self.editIdentityWindow = [[EditIdentityWindow alloc] initWithWindowNibName: NSStringFromClass([EditIdentityWindow class])];
     self.editIdentityWindow.delegate = self;
-    self.editIdentityWindow.index = self.identitiesTableView.selectedRow;
+    Identity *identityToEdit = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
+    self.editIdentityWindow.identityToEdit = identityToEdit;
     [self.view.window beginSheet:self.editIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSModalResponseOK:
@@ -171,6 +216,7 @@ static BOOL runDeleteIdentityAlertAgain;
 }
 
 - (IBAction)singleAction:(id)sender {
+    [self setMenuItemsStatus:YES];
     [self.deleteIdentityButton setEnabled:YES];
     [self reloadDetailsViewWithIdentityData];
 }
@@ -178,7 +224,7 @@ static BOOL runDeleteIdentityAlertAgain;
 #pragma mark - Button Actions
 
 - (IBAction)addIdentityButtonPressed:(id)sender {
-    self.addIdentityWindow = [[AddIdentityWindow alloc] initWithWindowNibName:@"AddIdentityWindow"];
+    self.addIdentityWindow = [[AddIdentityWindow alloc] initWithWindowNibName: NSStringFromClass([AddIdentityWindow class])];
     self.addIdentityWindow.delegate = self;
     [self.view.window beginSheet:self.addIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
@@ -200,7 +246,7 @@ static BOOL runDeleteIdentityAlertAgain;
         NSAlert *alert = [[NSAlert alloc] init];
         [alert addButtonWithTitle:NSLocalizedString(@"Delete_Button", @"")];
         [alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
-        [alert setMessageText: [NSString stringWithFormat:NSLocalizedString(@"Delete_Identity_Alert_Message", @""),[[self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow]valueForKey:@"displayName"]]];
+        [alert setMessageText: [NSString stringWithFormat:NSLocalizedString(@"Delete_Identity_Alert_Message", @""),identityToDelete.displayName]];
         [alert setInformativeText:NSLocalizedString(@"Alert_Info", @"")];
         [alert setAlertStyle:NSWarningAlertStyle];
         [alert setShowsSuppressionButton:YES];
@@ -242,6 +288,14 @@ static BOOL runDeleteIdentityAlertAgain;
     }
 }
 
+- (IBAction)infoButtonPressed:(id)sender {
+    [self showInfoAlert];
+}
+
+- (IBAction)importButtonPressed:(id)sender {
+    [self showInfoAlert];
+}
+
 #pragma mark - AddIdentityWindowDelegate
 
 - (void)addIdentityWindowCanceled:(NSWindow *)window {
@@ -252,6 +306,8 @@ static BOOL runDeleteIdentityAlertAgain;
     [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
             [self getSavedIdentities];
+            [self.deleteIdentityButton setEnabled:NO];
+            [self setMenuItemsStatus:NO];
             [[self.view window] endSheet:window];
         } else {
             NSAlert *alert = [[NSAlert alloc] init];
@@ -274,9 +330,11 @@ static BOOL runDeleteIdentityAlertAgain;
 #pragma mark - EditIdentityWindowDelegate
 
 - (void)editIdentityWindow:(NSWindow *)window wantsToEditIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+    [self.deleteIdentityButton setEnabled:NO];
+    [self setMenuItemsStatus:NO];
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
-            NSLog(@"");
+            [self getSavedIdentities];
         } else {
             NSAlert *alert = [[NSAlert alloc] init];
             [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
@@ -306,6 +364,7 @@ static BOOL runDeleteIdentityAlertAgain;
         if (!error) {
             [self getSavedIdentities];
             [self.deleteIdentityButton setEnabled:NO];
+            [self setMenuItemsStatus:NO];
         } else {
             NSAlert *alert = [[NSAlert alloc] init];
             [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
@@ -332,6 +391,31 @@ static BOOL runDeleteIdentityAlertAgain;
         self.identitiesArray  = [[self.identitiesArray filteredArrayUsingPredicate:predicate] mutableCopy];
         [self.identitiesTableView reloadData];
     }
+}
+
+#pragma mark - Info Alert
+
+- (void)showInfoAlert {
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
+    [alert setMessageText: NSLocalizedString(@"Alert_Import_Message", @"")];
+    [alert setInformativeText: NSLocalizedString(@"Alert_Import_Info", @"")];
+    [alert setAlertStyle:NSInformationalAlertStyle];
+    [alert beginSheetModalForWindow:[self.view window] completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                break;
+            default:
+                break;
+        }
+    }];
+}
+
+#pragma mark - Menu Items Status
+
+- (void)setMenuItemsStatus:(BOOL)status {
+    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:@"Identity"] submenu] itemWithTitle:@"Edit"] setEnabled:status];
+    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:@"Identity"] submenu] itemWithTitle:@"Remove"] setEnabled:status];
 }
 
 @end

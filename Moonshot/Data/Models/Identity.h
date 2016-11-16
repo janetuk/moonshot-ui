@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/20/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -18,8 +17,10 @@
 @property (nonatomic, strong) NSDate *dateAdded;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
+@property (nonatomic, retain) NSArray *trustAnchorArray;
 @property (nonatomic, assign) BOOL caCertificate;
-@property (nonatomic, assign) BOOL trustAnchor;
+@property (nonatomic, strong) NSString *trustAnchor;
+
 
 - (id)initWithDictionaryObject:(NSDictionary *)identityDict;
 - (id)initWithCoder:(NSCoder *)decoder;

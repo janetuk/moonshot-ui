@@ -3,7 +3,6 @@
   Moonshot
 
   Created by Elena Jakjoska on 11/7/16.
-  Copyright © 2016 Devsy. All rights reserved.
 */
 
 //MAIN
@@ -30,6 +29,10 @@
 "Constraint" = "Constraint:";
 "Services_Edit" = "Services:";
 "None" = "None";
+
+//TRUST ANCHOR
+"Trust_Anchor_Title" = "Trust Anchor";
+"Trust_Anchor_Info" = "A trust anchor is specific information that is unique to your organisation's authentication server such as a fingerprint of the server certificate, or the CA certificate itself. This allows your credentials to be guaranteed and sent only to your organisation's authentication server and not a server claiming to be it by name.";
 
 //ABOUT
 "Overview" = "Overview";
@@ -58,5 +61,8 @@
 "Alert_Add_Identity_Error_Message" = "The identity was not added.";
 "Alert_Edit_Identity_Error_Message" = "The identity %@ was not edited.";
 "Alert_Delete_Identity_Error_Message" = "The identity %@ was not deleted.";
-"Alert_Error_Info" = "Please try again later.";
+"Alert_Import_Info" = "This feature will be implemented when we implement importing to keychain";
+"Alert_Import_Message" = "";
+
+
 

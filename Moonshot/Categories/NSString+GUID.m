@@ -3,19 +3,16 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 11/14/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "NSString+GUID.h"
 
 @implementation NSString (GUID)
 
-+ (NSString *)getUUID
-{
++ (NSString *)getUUID {
     CFUUIDRef theUUID = CFUUIDCreate(NULL);
     CFStringRef string = CFUUIDCreateString(NULL, theUUID);
     CFRelease(theUUID);
     return (__bridge NSString *)string;
 }
-
 @end

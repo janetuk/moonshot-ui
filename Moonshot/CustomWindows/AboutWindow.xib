@@ -18,7 +18,7 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
-            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="480" height="250"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
@@ -58,22 +58,22 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="6wz-R3-qsm"/>
                     </imageView>
-                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mrf-kg-GBE">
-                        <rect key="frame" x="51" y="60" width="130" height="130"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="rQG-Cj-U0o"/>
-                    </imageView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4VR-OI-DJa">
                         <rect key="frame" x="212" y="129" width="194" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="roundTextured" title="Button" bezelStyle="texturedRounded" alignment="left" controlSize="mini" imageScaling="proportionallyDown" inset="2" id="yt1-ED-FNO">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <buttonCell key="cell" type="roundTextured" title="Button" bezelStyle="texturedRounded" image="default_button" imagePosition="left" alignment="left" alternateImage="selected_button" controlSize="mini" imageScaling="proportionallyDown" inset="2" id="yt1-ED-FNO">
+                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                             <font key="font" metaFont="smallSystem"/>
                         </buttonCell>
                         <connections>
                             <action selector="urlButtonPressed:" target="-2" id="Pcd-h2-Qg5"/>
                         </connections>
                     </button>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mrf-kg-GBE">
+                        <rect key="frame" x="40" y="73" width="138" height="138"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="about_image" id="rQG-Cj-U0o"/>
+                    </imageView>
                 </subviews>
             </view>
             <toolbar key="toolbar" implicitIdentifier="63476C2D-EECB-4F29-BE9B-8B2E6E1AFDE5" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="DMe-l5-IoT">
@@ -113,7 +113,12 @@
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="42" y="136"/>
+            <point key="canvasLocation" x="-109" y="83"/>
         </window>
     </objects>
+    <resources>
+        <image name="about_image" width="138" height="138"/>
+        <image name="default_button" width="14" height="14"/>
+        <image name="selected_button" width="14" height="14"/>
+    </resources>
 </document>

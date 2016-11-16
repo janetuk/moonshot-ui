@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Ivan Aleksovski on 11/11/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "MSTIdentityDataLayer.h"
@@ -32,8 +31,11 @@ static MSTIdentityDataLayer *sharedInstance;
 		Identity *noIdentity = [[Identity alloc] init];
 		noIdentity.identityId = @"NOIDENTITY";
 		noIdentity.displayName = @"No Identity";
-
-		NSMutableArray *itemsWithNoIdentity = [items mutableCopy];
+        noIdentity.username = @"No Identity";
+        noIdentity.realm = @"No Identity";
+        noIdentity.trustAnchor = @"No Identity";
+        noIdentity.servicesArray = [NSMutableArray arrayWithObjects:@"No Identity",nil];
+        NSMutableArray *itemsWithNoIdentity = [items mutableCopy];
 		[itemsWithNoIdentity addObject:noIdentity];
 		block(itemsWithNoIdentity);
 	}];
@@ -47,19 +49,16 @@ static MSTIdentityDataLayer *sharedInstance;
 	}
 }
 
-
 - (void)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
     __block NSMutableArray *newIdentityArray = [[NSMutableArray alloc] init];
     [self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         newIdentityArray = [items mutableCopy];
-		[newIdentityArray addObject:newIdentity];
-		NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:newIdentityArray];
-		[[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:@"Identities_Array"];
-		[[NSUserDefaults standardUserDefaults] synchronize];
-
-		NSError *error;
-		block(error);
     }];
+    [newIdentityArray addObject:newIdentity];
+    [self saveObject:newIdentityArray forKey:@"Identities_Array"];
+    
+    NSError *error;
+    block(error);
 }
 
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
@@ -73,9 +72,7 @@ static MSTIdentityDataLayer *sharedInstance;
         for (int i = 0; i < [newIdentityArray count]; i++) {
             if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
                 [newIdentityArray replaceObjectAtIndex:i withObject:newIdentity];
-                NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:newIdentityArray];
-                [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:@"Identities_Array"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self saveObject:newIdentityArray forKey:@"Identities_Array"];
                 break;
             }
         }
@@ -96,9 +93,7 @@ static MSTIdentityDataLayer *sharedInstance;
             for (int i = 0; i < [newIdentityArray count]; i++) {
                 if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
                     [newIdentityArray removeObjectAtIndex:i];
-                    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:newIdentityArray];
-                    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:@"Identities_Array"];
-                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [self saveObject:newIdentityArray forKey:@"Identities_Array"];
                     break;
                 }
             }
@@ -107,4 +102,11 @@ static MSTIdentityDataLayer *sharedInstance;
 		block(error);
     }];
 }
+
+- (void)saveObject:(id)object forKey:(NSString *)defaultsKey {
+    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:object];
+    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:defaultsKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 @end

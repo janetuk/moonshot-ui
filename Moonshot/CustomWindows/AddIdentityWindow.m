@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 10/21/16.
-//  Copyright © 2016 Devsy. All rights reserved.
 //
 
 #import "AddIdentityWindow.h"
@@ -15,6 +14,11 @@
 @property (weak) IBOutlet NSTextField *realmTextField;
 @property (weak) IBOutlet NSTextField *passwordTextField;
 @property (weak) IBOutlet NSTextField *rememberPasswordTextField;
+@property (weak) IBOutlet NSTextField *displayNameValueTextField;
+@property (weak) IBOutlet NSTextField *realmValueTextField;
+@property (weak) IBOutlet NSTextField *usernameValueTextField;
+@property (weak) IBOutlet NSSecureTextField *passwordValueTextField;
+@property (weak) IBOutlet NSButton *rememberPasswordButton;
 @property (weak) IBOutlet NSButton *cancelButton;
 @property (weak) IBOutlet NSButton *addIdentityButton;
 @end
@@ -52,6 +56,8 @@
         identityObject.password = self.passwordValueTextField.stringValue;
         identityObject.passwordRemembered = self.rememberPasswordButton.state;
         identityObject.dateAdded = [NSDate date];
+        identityObject.servicesArray = [NSMutableArray arrayWithObjects:@"google.com",@"developer.apple.com",@"dev.ja.net",@"amsys.com",nil];
+        identityObject.trustAnchor = [self randomElementFromArray];
         [self.delegate addIdentityWindow:self.window wantsToAddIdentity:identityObject rememberPassword:self.rememberPasswordButton.state];
     }
 }
@@ -60,6 +66,16 @@
     if ([self.delegate respondsToSelector:@selector(addIdentityWindowCanceled:)]) {
         [self.delegate addIdentityWindowCanceled:self.window];
     }
+}
+
+#pragma mark - Random element from Array
+
+- (NSString *)randomElementFromArray {
+    NSMutableArray *array = [NSMutableArray arrayWithObjects:@"Enterprise provisioned",@"None",nil];
+    uint32_t myCount = (uint32_t)[array count];
+    uint32_t rnd = arc4random_uniform(myCount);
+    NSString *randomObject = [array objectAtIndex:rnd];
+    return randomObject;
 }
 
 #pragma mark - NSTextFieldDelegate
