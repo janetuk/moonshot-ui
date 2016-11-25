@@ -1,0 +1,79 @@
+//
+//  ConnectIdentityWindow.m
+//  Moonshot
+//
+//  Created by Elena Jakjoska on 11/25/16.
+//
+
+#import "ConnectIdentityWindow.h"
+#import "Identity+Utilities.h"
+
+@interface ConnectIdentityWindow ()
+@property (weak) IBOutlet NSTextField *connectIdentityTitleTextField;
+@property (weak) IBOutlet NSTextField *connectIdentityUserTitleTextField;
+@property (weak) IBOutlet NSTextField *connectIdentityUserValueTextField;
+@property (weak) IBOutlet NSTextField *connectIdentityPasswordTitleTextField;
+@property (weak) IBOutlet NSSecureTextField *connectIdentityPasswordValueTextField;
+@property (weak) IBOutlet NSButton *connectIdentityRememberPasswordButton;
+@property (weak) IBOutlet NSButton *connectIdentityCancelButton;
+@property (weak) IBOutlet NSButton *connectIdentityConnectButton;
+@end
+
+@implementation ConnectIdentityWindow
+
+#pragma mark - Window Lifecycle
+
+- (void)windowDidLoad {
+    [super windowDidLoad];
+    [self setupWindow];
+}
+
+#pragma mark - Setup Window
+
+- (void)setupWindow {
+    [self setupTextFields];
+    [self setupButtons];
+}
+
+- (void)setupTextFields {
+    NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Enter_Password", @""),self.identityObject.displayName];
+    [self.connectIdentityTitleTextField setStringValue:[NSString stringWithFormat:@"%@ @ %@",title,[Identity getServicesStringForIdentity:self.identityObject]]];
+    [self.connectIdentityUserTitleTextField setStringValue:NSLocalizedString(@"User_Naj", @"")];
+    [self.connectIdentityUserValueTextField setStringValue:[NSString stringWithFormat:@"%@@%@",self.identityObject.displayName,self.identityObject.servicesArray.lastObject]];
+    [self.connectIdentityPasswordTitleTextField setStringValue:NSLocalizedString(@"Password_Add",@"")];
+}
+
+#pragma mark - Setup Buttons
+
+- (void)setupButtons {
+    [self.connectIdentityConnectButton setTitle:NSLocalizedString(@"Connect_Identity_Button", @"")];
+    [self.connectIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
+    [self.connectIdentityRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
+}
+
+#pragma mark - Button Actions
+
+- (IBAction)connectIdentityCancelButtonPressed:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(connectIdentityWindowCanceled:)]) {
+        [self.delegate connectIdentityWindowCanceled:self.window];
+    }
+}
+
+- (IBAction)connectIdentityConnectButtonPressed:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
+        [self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
+    }
+}
+
+#pragma mark - NSTextFieldDelegate
+
+- (void)controlTextDidChange:(NSNotification *)notification {
+    [self.connectIdentityConnectButton setEnabled:[self isRequiredDataFilled]];
+}
+
+- (BOOL)isRequiredDataFilled {
+    BOOL connectIdentityButtonDisabled = [self.connectIdentityPasswordValueTextField.stringValue isEqualToString:@""];
+    return !connectIdentityButtonDisabled;
+}
+
+@end

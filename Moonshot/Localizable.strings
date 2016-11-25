@@ -1,7 +1,6 @@
 /* 
   Localizable.strings
   Moonshot
-
   Created by Elena Jakjoska on 11/7/16.
 */
 
@@ -11,12 +10,22 @@
 "Trust_Anchor" = "Trust anchor";
 "Services" = "Services";
 "Name" = "Name";
+"Identity_Manager_Window_Title" = "Moonshot - Identity Manager";
+"No_Identity" = "No identity";
+
+//IDENTITY SELECTOR
+"Select_Identity_Title" = "Select your identity";
+"Requested_Identity_Title" = "Identity requested for service:";
+"Enter_Password" = "Enter the password for %@";
+"User_Naj" = "User (NAJ):";
+"Identity_Selector_Window_Title" = "Moonshot - Identity Selector";
 
 //ADD IDENTITY
 "Display_Name_Add" = "Display Name:";
 "Username_Add" = "User Name:";
 "Realm_Add" = "Realm:";
 "Password_Add" = "Password:";
+"Enterprise_provisioned" = "Enterprise provisioned";
 
 //EDIT IDENTITY
 "Remember_Password" = "Remember password";
@@ -42,6 +51,10 @@
 "Product_Website" = "Check the %@ Website";
 "Website_URL" = "https://www.jisc.ac.uk/rd/projects/moonshot";
 "Copyright" = "Copyright © 2015 JANET. All Rights Reserved. License Agreement";
+//MENU ITEMS
+"Menu_Identity" = "Identity";
+"Menu_Edit" = "Edit";
+"Menu_Remove" = "Remove";
 
 //BUTTONS
 "OK_Button" = "OK";
@@ -49,20 +62,29 @@
 "Save_Changes_Button" = "Save changes";
 "Delete_Button" = "Delete";
 "Add_Identity_Button" = "Add Identity";
+"Create_Identity_Button" = "Create";
 "Import_Button" = "Import";
 "Clear_Trust_Anchor_Button" = "Clear Trust Anchor";
+"Create_Identity_Button" = "Create Identity";
+"Connect_Identity_Button" = "Connect";
+"Remember_Identity_Choice_Button" = "Remember my identity choice for this service";
 
 //ALERTS
 "Clear_Trust_Anchor_Alert_Message" = "Are you sure you want to clear %@ from identity selector?";
 "Delete_Identity_Alert_Message" = "Are you sure you want to delete %@ from identity selector?";
 "Delete_Service_Alert_Message" = "Are you sure you want to delete the service %@?";
 "Alert_Info" = "This item will be deleted immediately. You can't undo this action.";
+"Alert_Error_Info" = "Try again later";
 "Alert_Suppression_Message" = "Do not show this message again";
 "Alert_Add_Identity_Error_Message" = "The identity was not added.";
 "Alert_Edit_Identity_Error_Message" = "The identity %@ was not edited.";
 "Alert_Delete_Identity_Error_Message" = "The identity %@ was not deleted.";
 "Alert_Import_Info" = "This feature will be implemented when we implement importing to keychain";
 "Alert_Import_Message" = "";
-
-
+"Alert_Incorrect_User_Pass_Messsage" = "Incorrect username or password";
+"Alert_Incorrect_User_Pass_Info" = "Please ensure the username and password are correct";
+"Alert_No_Identity_Selected_Message" = "No identity selected";
+"Alert_No_Identity_Selected_Info" = "Please select an option to access the service";
+"Alert_Success_Identity_Connected" = "Identity was successfully connected!";
+"Alert_Error_Identity_Connected" = "Identity was not connected!";
 

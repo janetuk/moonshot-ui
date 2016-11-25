@@ -10,38 +10,50 @@
 #import "TrustAnchorHelpWindow.h"
 #import "NSDate+NSDateFormatter.h"
 #import "MSTIdentityDataLayer.h"
+#import "NSWindow+Utilities.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
-@property (weak) IBOutlet NSTextField *rememberPasswordTextField;
-@property (weak) IBOutlet NSTextField *shaFingerprintTextField;
-@property (weak) IBOutlet NSTextField *trustAnchorValueTextField;
-@property (weak) IBOutlet NSTextField *constraintValueTextField;
-@property (weak) IBOutlet NSTextField *constraintTextField;
-@property (weak) IBOutlet NSTextField *expirationDateValueTextField;
-@property (weak) IBOutlet NSTextField *expirationDateTextField;
-@property (weak) IBOutlet NSTextField *subjectValueTextField;
-@property (weak) IBOutlet NSTextField *subjectTextField;
-@property (weak) IBOutlet NSTextField *caCertificateTextField;
-@property (weak) IBOutlet NSTextField *editIdentityDateAddedTextField;
+
+//Services View
+@property (weak) IBOutlet NSView *servicesView;
 @property (weak) IBOutlet NSTextField *servicesTitleTextField;
-@property (weak) IBOutlet NSTextField *trustAnchorTextField;
-@property (weak) IBOutlet NSTextField *dateAddedTitleTextField;
-@property (weak) IBOutlet NSTextField *editUsernameValueTextField;
-@property (weak) IBOutlet NSTextField *editRealmValueTextField;
-@property (weak) IBOutlet NSTextField *editUsernameTextField;
-@property (weak) IBOutlet NSTextField *editRealmTextField;
-@property (weak) IBOutlet NSTextField *editPasswordTextField;
-@property (weak) IBOutlet NSSecureTextField *editPasswordValueTextField;
-@property (weak) IBOutlet NSButton *editRememberPasswordButton;
-@property (weak) IBOutlet NSButton *clearTrustAnchorButton;
+@property (weak) IBOutlet NSTableView *editIdentityServicesTableView;
 @property (weak) IBOutlet NSButton *editIdentityDeleteServiceButton;
 @property (weak) IBOutlet NSButton *editIdentityCancelButton;
 @property (weak) IBOutlet NSButton *editIdentitySaveButton;
+
+//Button Actions
+@property (weak) IBOutlet NSButton *editRememberPasswordButton;
+@property (weak) IBOutlet NSButton *clearTrustAnchorButton;
 @property (weak) IBOutlet NSButton *editIdentityHelpButton;
-@property (weak) IBOutlet NSTableView *editIdentityServicesTableView;
-@property (weak) IBOutlet NSView *servicesView;
+
+//Certificate View
 @property (weak) IBOutlet NSView *certificateView;
+@property (weak) IBOutlet NSTextField *caCertificateTextField;
+@property (weak) IBOutlet NSTextField *subjectTextField;
+@property (weak) IBOutlet NSTextField *subjectValueTextField;
+@property (weak) IBOutlet NSTextField *expirationDateTextField;
+@property (weak) IBOutlet NSTextField *expirationDateValueTextField;
+@property (weak) IBOutlet NSTextField *constraintTextField;
+@property (weak) IBOutlet NSTextField *constraintValueTextField;
+
+//Fingerprint View
 @property (strong) IBOutlet NSView *shaFingerprintView;
+@property (weak) IBOutlet NSTextField *shaFingerprintTextField;
+@property (weak) IBOutlet NSTextField *shaFingerprintValueTextField;
+
+//Identity Details
+@property (weak) IBOutlet NSTextField *trustAnchorTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorValueTextField;
+@property (weak) IBOutlet NSTextField *editIdentityDateAddedTextField;
+@property (weak) IBOutlet NSTextField *dateAddedTitleTextField;
+@property (weak) IBOutlet NSTextField *editUsernameTextField;
+@property (weak) IBOutlet NSTextField *editUsernameValueTextField;
+@property (weak) IBOutlet NSTextField *editRealmTextField;
+@property (weak) IBOutlet NSTextField *editRealmValueTextField;
+@property (weak) IBOutlet NSTextField *editPasswordTextField;
+@property (weak) IBOutlet NSSecureTextField *editPasswordValueTextField;
+
 @property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
@@ -50,16 +62,11 @@
 
 @implementation EditIdentityWindow
 
-static BOOL runClearTrustAnchorAlertAgain;
-static BOOL runDeleteServiceAlertAgain;
-
 #pragma mark - Window Lifecycle
 
 - (void)windowDidLoad {
     [super windowDidLoad];
     [self setupView];
-    runClearTrustAnchorAlertAgain = YES;
-    runDeleteServiceAlertAgain = YES;
 }
 
 #pragma mark - Setup View
@@ -86,7 +93,7 @@ static BOOL runDeleteServiceAlertAgain;
     [self.expirationDateTextField setStringValue:NSLocalizedString(@"Expiration_Date", @"")];
     [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
     [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
-    [self.rememberPasswordTextField setStringValue:NSLocalizedString(@"Remember_Password", @"")];
+    [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
 }
 
@@ -127,10 +134,11 @@ static BOOL runDeleteServiceAlertAgain;
 #pragma mark - Load Saved Data
 
 - (void)loadSavedData {
+    __weak __typeof__(self) weakSelf = self;
     [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         if (items) {
-            self.identitiesArray = [items mutableCopy];
-            self.servicesArray = self.identityToEdit.servicesArray;
+            weakSelf.identitiesArray = [items mutableCopy];
+            weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
         }
     }];
     [self.editUsernameValueTextField setStringValue:self.identityToEdit.username];
@@ -157,28 +165,16 @@ static BOOL runDeleteServiceAlertAgain;
 }
 
 - (IBAction)deleteServiceButtonPressed:(id)sender {
-    if (runDeleteServiceAlertAgain == NO) {
-        [self deleteService];
-    } else {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert addButtonWithTitle:NSLocalizedString(@"Delete_Button", @"")];
-        [alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
-        [alert setMessageText:[NSString stringWithFormat:NSLocalizedString(@"Delete_Service_Alert_Message", @""),self.servicesArray[self.editIdentityServicesTableView.selectedRow]]];
-        [alert setInformativeText:NSLocalizedString(@"Alert_Info", @"")];
-        [alert setAlertStyle:NSWarningAlertStyle];
-        [alert setShowsSuppressionButton:YES];
-        [[alert suppressionButton] setTitle:NSLocalizedString(@"Alert_Suppression_Message", @"")];
-        [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
-            switch (returnCode) {
-                case NSAlertFirstButtonReturn:
-                    runDeleteServiceAlertAgain = (BOOL)![[alert suppressionButton] state];
-                    [self deleteService];
-                    break;
-                default:
-                    break;
-            }
-        }];
-    }
+    __weak __typeof__(self) weakSelf = self;
+    [self.window addAlertWithButtonTitle:NSLocalizedString(@"Delete_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:[NSString stringWithFormat:NSLocalizedString(@"Delete_Service_Alert_Message", @""),self.servicesArray[self.editIdentityServicesTableView.selectedRow]] informativeText:NSLocalizedString(@"Alert_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                [weakSelf deleteService];
+                break;
+            default:
+                break;
+        }
+    }];
 }
 
 - (IBAction)saveChangesButtonPressed:(id)sender {
@@ -208,28 +204,15 @@ static BOOL runDeleteServiceAlertAgain;
 }
 
 - (IBAction)clearTrustAnchorPressed:(id)sender {
-    if (runClearTrustAnchorAlertAgain == NO) {
-        //TODO: clear TrustAnchor
-    } else {
-        NSAlert *alert = [[NSAlert alloc] init];
-        [alert addButtonWithTitle:NSLocalizedString(@"OK_Button", @"")];
-        //[alert addButtonWithTitle:NSLocalizedString(@"Cancel_Button", @"")];
-        [alert setMessageText: NSLocalizedString(@"Alert_Import_Message", @"")];
-        [alert setInformativeText:NSLocalizedString(@"Alert_Import_Info", @"")];
-        [alert setAlertStyle:NSWarningAlertStyle];
-        //[alert setShowsSuppressionButton:YES];
-        [[alert suppressionButton] setTitle:NSLocalizedString(@"Alert_Suppression_Message", @"")];
-        [alert beginSheetModalForWindow:self.window completionHandler:^(NSModalResponse returnCode) {
-            switch (returnCode) {
-                case NSAlertFirstButtonReturn:
-                    runDeleteServiceAlertAgain = (BOOL)![[alert suppressionButton] state];
-                    //TODO: clear TrustAnchor
-                    break;
-                default:
-                    break;
-            }
-        }];
-    }
+    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Import_Message", @"") informativeText:NSLocalizedString(@"Alert_Import_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                //TODO: clear TrustAnchor
+                break;
+            default:
+                break;
+        }
+    }];
 }
 
 #pragma mark - NSTextFieldDelegate
@@ -255,8 +238,6 @@ static BOOL runDeleteServiceAlertAgain;
     NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentityIdentifier" owner:self];
     if ([self.servicesArray count] > 0) {
         cellView.textField.stringValue = [self.servicesArray objectAtIndex:row];
-    } else {
-        cellView.textField.stringValue = @"No services";
     }
     return cellView;
 }

@@ -6,6 +6,8 @@
 //
 
 #import "MSTIdentityDataLayer.h"
+#import "MSTKeychainHelper.h"
+#import "MSTConstants.h"
 
 @implementation MSTIdentityDataLayer
 
@@ -13,8 +15,7 @@
 
 static MSTIdentityDataLayer *sharedInstance;
 
-+ (MSTIdentityDataLayer *)sharedInstance
-{
++ (MSTIdentityDataLayer *)sharedInstance {
     @synchronized(self)
     {
         static dispatch_once_t once;
@@ -29,12 +30,12 @@ static MSTIdentityDataLayer *sharedInstance;
 	[self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
 		//Add the "no identity"
 		Identity *noIdentity = [[Identity alloc] init];
-		noIdentity.identityId = @"NOIDENTITY";
-		noIdentity.displayName = @"No Identity";
-        noIdentity.username = @"No Identity";
-        noIdentity.realm = @"No Identity";
-        noIdentity.trustAnchor = @"No Identity";
-        noIdentity.servicesArray = [NSMutableArray arrayWithObjects:@"No Identity",nil];
+		noIdentity.identityId = MST_NO_IDENTITY;
+		noIdentity.displayName = NSLocalizedString(@"No_Identity", @"");
+        noIdentity.username = NSLocalizedString(@"No_Identity", @"");
+        noIdentity.realm = NSLocalizedString(@"No_Identity", @"");
+        noIdentity.trustAnchor = NSLocalizedString(@"No_Identity", @"");
+        noIdentity.servicesArray = [NSMutableArray arrayWithObjects:NSLocalizedString(@"No_Identity", @""),nil];
         NSMutableArray *itemsWithNoIdentity = [items mutableCopy];
 		[itemsWithNoIdentity addObject:noIdentity];
 		block(itemsWithNoIdentity);
@@ -42,11 +43,11 @@ static MSTIdentityDataLayer *sharedInstance;
 }
 
 - (void)getAllRealIdentitiesWithBlock:(void (^)(NSArray <Identity *> *items))block {
-	if([[NSUserDefaults standardUserDefaults] objectForKey:@"Identities_Array"] != nil) {
-		NSData *encodedObject = [[NSUserDefaults standardUserDefaults] objectForKey:@"Identities_Array"];
-		NSArray *items = [NSKeyedUnarchiver unarchiveObjectWithData:encodedObject];
-		block(items);
-	}
+    NSMutableArray *items = [NSMutableArray array];
+    if ([MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES]) {
+        items = [MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES];
+    }
+    block(items);
 }
 
 - (void)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
@@ -55,24 +56,25 @@ static MSTIdentityDataLayer *sharedInstance;
         newIdentityArray = [items mutableCopy];
     }];
     [newIdentityArray addObject:newIdentity];
-    [self saveObject:newIdentityArray forKey:@"Identities_Array"];
+    [self saveObject:newIdentityArray forKey:MST_IDENTITIES];
     
     NSError *error;
     block(error);
 }
 
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
-	if ([newIdentity.identityId isEqualToString:@"NOIDENTITY"]) {
+	if ([newIdentity.identityId isEqualToString:MST_NO_IDENTITY]) {
 		NSError *error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:9999 userInfo:@{}];
 		block(error);
 		return;
 	}
     [self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
+        __weak __typeof__(self) weakSelf = self;
         NSMutableArray *newIdentityArray = [[NSMutableArray arrayWithArray:items] mutableCopy];
         for (int i = 0; i < [newIdentityArray count]; i++) {
             if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
                 [newIdentityArray replaceObjectAtIndex:i withObject:newIdentity];
-                [self saveObject:newIdentityArray forKey:@"Identities_Array"];
+                [weakSelf saveObject:newIdentityArray forKey:MST_IDENTITIES];
                 break;
             }
         }
@@ -82,18 +84,19 @@ static MSTIdentityDataLayer *sharedInstance;
 }
 
 - (void)removeIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
-	if ([newIdentity.identityId isEqualToString:@"NOIDENTITY"]) {
+	if ([newIdentity.identityId isEqualToString:MST_NO_IDENTITY]) {
 		NSError *error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:9999 userInfo:@{}];
 		block(error);
 		return;
 	}
     [self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         NSMutableArray *newIdentityArray = [[NSMutableArray arrayWithArray:items] mutableCopy];
+        __weak __typeof__(self) weakSelf = self;
         if ([newIdentityArray count] > 0) {
             for (int i = 0; i < [newIdentityArray count]; i++) {
                 if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
                     [newIdentityArray removeObjectAtIndex:i];
-                    [self saveObject:newIdentityArray forKey:@"Identities_Array"];
+                    [weakSelf saveObject:newIdentityArray forKey:MST_IDENTITIES];
                     break;
                 }
             }
@@ -104,9 +107,9 @@ static MSTIdentityDataLayer *sharedInstance;
 }
 
 - (void)saveObject:(id)object forKey:(NSString *)defaultsKey {
-    NSData *encodedObject = [NSKeyedArchiver archivedDataWithRootObject:object];
-    [[NSUserDefaults standardUserDefaults] setObject:encodedObject forKey:defaultsKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [MSTKeychainHelper archiveObject:object forKey:defaultsKey];
 }
+
+
 
 @end

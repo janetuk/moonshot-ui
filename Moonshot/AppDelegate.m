@@ -8,19 +8,61 @@
 #import "AppDelegate.h"
 #import "AboutWindow.h"
 #import "MSTConstants.h"
+#import "MainViewController.h"
+#import "MSTIdentitySelectorViewController.h"
 
 @interface AppDelegate ()
-
+@property (strong) IBOutlet NSWindow *window;
+@property (nonatomic, strong) IBOutlet NSViewController *viewController;
+@property (nonatomic, strong) NSString *serviceString;
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
+    BOOL serviceStringExists = !self.serviceString;
+    BOOL serviceStringEmpty = [self.serviceString isEqualToString:@""];
+    
+    if (serviceStringExists || serviceStringEmpty) {
+        [self setIdentityManagerViewController];
+    } else {
+        [self setIdentitySelectorViewController];
+    }
+}
+
+- (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+    // Register ourselves as a URL handler for this URL
+    [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:)forEventClass:kInternetEventClass andEventID:kAEGetURL];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
+}
+
+- (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
+    NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
+    NSString *urlParameter = [[url host] stringByRemovingPercentEncoding];
+    self.serviceString = urlParameter;
+    if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]] count] > 0) {
+        [self setIdentitySelectorViewController];
+    }
+}
+
+#pragma mark - Set Content ViewController
+
+- (void)setIdentitySelectorViewController {
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    _viewController = [storyBoard instantiateControllerWithIdentifier:@"MSTIdentitySelectorViewController"];
+    ((MSTIdentitySelectorViewController *)_viewController).service = self.serviceString;
+    [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
+    [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Selector_Window_Title", @"")];
+}
+
+- (void)setIdentityManagerViewController {
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    _viewController = [storyBoard instantiateControllerWithIdentifier:@"MainViewController"];
+    [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
+    [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Manager_Window_Title", @"")];
 }
 
 #pragma mark - Button Actions
@@ -30,15 +72,15 @@
 }
 
 - (IBAction)addNewIdentity:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:ADD_IDENTITY_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MST_ADD_IDENTITY_NOTIFICATION object:nil];
 }
 
 - (IBAction)editIdentity:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:EDIT_IDENTITY_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MST_EDIT_IDENTITY_NOTIFICATION object:nil];
 }
 
 - (IBAction)removeIdentity:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:REMOVE_IDENTITY_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MST_REMOVE_IDENTITY_NOTIFICATION object:nil];
 }
 
 @end

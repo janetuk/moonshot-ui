@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="11762" systemVersion="16C67" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11542"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="11762"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,10 +28,10 @@
                 <outlet property="editUsernameValueTextField" destination="8oT-Bn-WRX" id="SX1-Fm-jje"/>
                 <outlet property="expirationDateTextField" destination="FTM-OD-lZb" id="kRW-Qw-Pcy"/>
                 <outlet property="expirationDateValueTextField" destination="tZ6-S7-dbE" id="XUj-jn-4hW"/>
-                <outlet property="rememberPasswordTextField" destination="2v3-t3-VhG" id="BCv-7R-YnZ"/>
                 <outlet property="servicesTitleTextField" destination="qYt-OM-YZI" id="6Pg-qs-Sar"/>
                 <outlet property="servicesView" destination="Whg-Je-cc8" id="PIf-bt-GxN"/>
                 <outlet property="shaFingerprintTextField" destination="Q5L-Dq-oBf" id="jPK-Ap-Ncd"/>
+                <outlet property="shaFingerprintValueTextField" destination="5cb-uj-tcE" id="NNF-4J-SUr"/>
                 <outlet property="shaFingerprintView" destination="K6C-qa-Ly5" id="enR-6k-rgV"/>
                 <outlet property="subjectTextField" destination="qiP-NR-AI8" id="mbJ-R7-PBT"/>
                 <outlet property="subjectValueTextField" destination="F46-w3-JaT" id="PaU-Bc-QwU"/>
@@ -122,23 +121,6 @@
                             <outlet property="delegate" destination="-2" id="hNw-dr-rJs"/>
                         </connections>
                     </secureTextField>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2v3-t3-VhG">
-                        <rect key="frame" x="42" y="346" width="138" height="24"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="gUP-n1-gCb">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qd8-oh-N2J">
-                        <rect key="frame" x="13" y="351" width="28" height="18"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="check" title="Check" bezelStyle="regularSquare" imagePosition="only" inset="2" id="evu-CU-YcW">
-                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                            <font key="font" metaFont="system"/>
-                        </buttonCell>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nFC-8g-M5R">
                         <rect key="frame" x="18" y="325" width="88" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -414,12 +396,20 @@ Gw
                             <action selector="helpButtonPressed:" target="-2" id="6tD-bR-4WR"/>
                         </connections>
                     </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qd8-oh-N2J">
+                        <rect key="frame" x="18" y="351" width="162" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" inset="2" id="evu-CU-YcW">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="OlK-Fy-KHs"/>
             </connections>
-            <point key="canvasLocation" x="270" y="117"/>
+            <point key="canvasLocation" x="269.5" y="116.5"/>
         </window>
         <menu id="QkQ-NO-TBq">
             <items>

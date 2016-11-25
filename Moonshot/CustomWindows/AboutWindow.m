@@ -11,8 +11,8 @@
 @property (weak) IBOutlet NSSegmentedControl *aboutWindowSegmentedControl;
 @property (weak) IBOutlet NSTextField *productNameTextField;
 @property (weak) IBOutlet NSTextField *productVersionTextField;
-@property (nonatomic, strong) NSString *productName;
 @property (weak) IBOutlet NSButton *urlButton;
+@property (nonatomic, strong) NSString *productName;
 @end
 
 @implementation AboutWindow
