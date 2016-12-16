@@ -144,7 +144,7 @@ class TrustAnchorDialog : Dialog
                              string realm,
                              string fingerprint)
     {
-        string server_ta_label_text = _("Server’s trust anchor certificate (SHA-256 fingerprint):");
+        string server_ta_label_text = _("Server's trust anchor certificate (SHA-256 fingerprint):");
 
         this.set_title(_("Trust Anchor"));
         this.set_modal(true);
