@@ -14,7 +14,7 @@
 
 @implementation TrustAnchorHelpWindow
 
-#pragma mark - Windows Lifecycle
+#pragma mark - Window Lifecycle
 
 - (void)windowDidLoad {
     [super windowDidLoad];

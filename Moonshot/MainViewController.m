@@ -13,8 +13,9 @@
 #import "MSTConstants.h"
 #import "NSWindow+Utilities.h"
 #import "Identity+Utilities.h"
+#import "NSString+GUID.h"
 
-@interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
+@interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, NSXMLParserDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
 
 //View
 @property (weak) IBOutlet NSSearchField *searchField;
@@ -47,6 +48,10 @@
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) EditIdentityWindow *editIdentityWindow;
+@property (nonatomic, strong) NSMutableDictionary *identityObject;
+@property (nonatomic, strong) NSMutableArray *xmlArray;
+@property (nonatomic, strong) NSMutableArray *xmlServicesArray;
+@property (nonatomic, strong) NSMutableString *xmlString;
 
 @end
 
@@ -223,9 +228,17 @@
 
 - (IBAction)singleAction:(id)sender {
     if (self.identitiesTableView.selectedRow != -1) {
-        [self setMenuItemsStatus:YES];
-        [self.deleteIdentityButton setEnabled:YES];
-        [self reloadDetailsViewWithIdentityData:YES];
+        Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
+        BOOL isNoIdentityObjectSelected = [identityObject.identityId isEqualToString:@"NOIDENTITY"];
+        if (isNoIdentityObjectSelected) {
+            [self setMenuItemsStatus:NO];
+            [self.deleteIdentityButton setEnabled:NO];
+            [self reloadDetailsViewWithIdentityData:NO];
+        } else {
+            [self setMenuItemsStatus:YES];
+            [self.deleteIdentityButton setEnabled:YES];
+            [self reloadDetailsViewWithIdentityData:YES];
+        }
     } else {
         [self setMenuItemsStatus:NO];
         [self.deleteIdentityButton setEnabled:NO];
@@ -264,7 +277,51 @@
     }];
 }
 
-- (IBAction)importIdentityButtonPressed:(id)sender {
+- (IBAction)infoButtonPressed:(id)sender {
+    [self showInfoAlert];
+}
+
+- (IBAction)importButtonPressed:(id)sender {
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    [panel setPrompt:@"Select"];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:YES];
+    [panel setAllowedFileTypes:[NSArray arrayWithObject:@"xml"]];
+    [panel setDirectoryURL:[NSURL fileURLWithPath:[@"~/Documents" stringByExpandingTildeInPath] isDirectory:YES]];
+    NSInteger clicked = [panel runModal];
+
+    if (clicked == NSFileHandlingPanelOKButton) {
+        for (NSURL *url in [panel URLs]) {
+            NSXMLParser *xmlparser = [[NSXMLParser alloc] initWithContentsOfURL:url];
+            [xmlparser setDelegate:self];
+            [xmlparser parse];
+        }
+        [self convertObjectsFromXMLArrayToIdentityObjects];
+        if (self.xmlArray.count > 0) {
+            for (Identity *identityObject in self.xmlArray) {
+                [self addIdentity:identityObject forWindow:self.view.window];
+            }
+        }
+    }
+}
+
+#pragma mark - Convert Objects From XMLArray To Identity Objects
+
+- (void)convertObjectsFromXMLArrayToIdentityObjects {
+    for (int i = 0; i< self.xmlArray.count; i++) {
+        Identity *identityObject = [Identity new];
+        NSObject *xmlObject = [self.xmlArray objectAtIndex:i];
+        identityObject.identityId = [NSString getUUID];
+        identityObject.displayName = [xmlObject valueForKey:@"display-name"] ?: @"None";
+        identityObject.username = [xmlObject valueForKey:@"user"] ?: @"None";
+        identityObject.password = [xmlObject valueForKey:@"password"] ?: @"None";
+        identityObject.trustAnchor = @"None";
+        identityObject.realm = [xmlObject valueForKey:@"realm"] ?: @"None";
+        identityObject.servicesArray = [xmlObject valueForKey:@"services"] ?: [NSMutableArray arrayWithObject:@"None"];
+        identityObject.passwordRemembered = NO;
+        identityObject.dateAdded = [NSDate date];
+        [self.xmlArray replaceObjectAtIndex:i withObject:identityObject];
+    }
 }
 
 #pragma mark - Keyboard events
@@ -272,13 +329,12 @@
 - (void)keyUp:(NSEvent *)event {
     const NSString * character = [event charactersIgnoringModifiers];
     const unichar code = [character characterAtIndex:0];
-    
     switch(code) {
-        case NSUpArrowFunctionKey: //up arrow
+        case NSUpArrowFunctionKey: 
             [self.deleteIdentityButton setEnabled:YES];
             [self reloadDetailsViewWithIdentityData:YES];
             break;
-        case NSDownArrowFunctionKey: // down arrow
+        case NSDownArrowFunctionKey:
             [self.deleteIdentityButton setEnabled:YES];
             [self reloadDetailsViewWithIdentityData:YES];
             break;
@@ -288,14 +344,6 @@
     }
 }
 
-- (IBAction)infoButtonPressed:(id)sender {
-    [self showInfoAlert];
-}
-
-- (IBAction)importButtonPressed:(id)sender {
-    [self showInfoAlert];
-}
-
 #pragma mark - AddIdentityWindowDelegate
 
 - (void)addIdentityWindowCanceled:(NSWindow *)window {
@@ -303,25 +351,7 @@
 }
 
 - (void)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
-        if (!error) {
-            [weakSelf getSavedIdentities];
-            [weakSelf.deleteIdentityButton setEnabled:NO];
-            [weakSelf reloadDetailsViewWithIdentityData:NO];
-            [weakSelf setMenuItemsStatus:NO];
-            [[weakSelf.view window] endSheet:window];
-        } else {
-            [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Add_Identity_Error_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-                switch (returnCode) {
-                    case NSAlertFirstButtonReturn:
-                        break;
-                    default:
-                        break;
-                }
-            }];
-        }
-    }];
+    [self addIdentity:identity forWindow:window];
 }
 
 #pragma mark - EditIdentityWindowDelegate
@@ -348,6 +378,8 @@
     }];
 }
 
+#pragma mark - Delete Identity
+
 - (void)editIdentityWindowCanceled:(NSWindow *)window {
     [[self.view window] endSheet:window];
 }
@@ -373,6 +405,8 @@
     }];
 }
 
+#pragma mark - NSTextFieldDelegate
+
 - (void)controlTextDidChange:(NSNotification *)notification {
     if ([self.searchField.stringValue isEqualToString:@""]) {
         [self getSavedIdentities];
@@ -386,9 +420,10 @@
 #pragma mark - Info Alert
 
 - (void)showInfoAlert {
-    [[self.view window] addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText: NSLocalizedString(@"Alert_Import_Message", @"")informativeText:NSLocalizedString(@"Alert_Import_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+    [[self.view window] addAlertWithButtonTitle:NSLocalizedString(@"Read_More_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText: NSLocalizedString(@"Alert_Import_Message", @"")informativeText:NSLocalizedString(@"Alert_Import_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:
+                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:NSLocalizedString(@"Wiki_URL", @"")]];
                 break;
             default:
                 break;
@@ -403,4 +438,129 @@
     [[[[[[NSApplication sharedApplication] menu] itemWithTitle:NSLocalizedString(@"Menu_Identity", @"")] submenu] itemWithTitle:NSLocalizedString(@"Menu_Remove", @"")] setEnabled:status];
 }
 
+#pragma mark - Add Identity
+
+- (void)addIdentity:(Identity *)identity forWindow:(NSWindow *)window {
+    __weak __typeof__(self) weakSelf = self;
+    [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
+        if (!error) {
+            [weakSelf getSavedIdentities];
+            [weakSelf.deleteIdentityButton setEnabled:NO];
+            [weakSelf reloadDetailsViewWithIdentityData:NO];
+            [weakSelf setMenuItemsStatus:NO];
+            [[weakSelf.view window] endSheet:window];
+        } else {
+            [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Add_Identity_Error_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+                switch (returnCode) {
+                    case NSAlertFirstButtonReturn:
+                        break;
+                    default:
+                        break;
+                }
+            }];
+        }
+    }];
+}
+
+#pragma mark - Edit Identity
+
+- (void)editIdentity:(Identity *)identity forWindow:(NSWindow *)window {
+    __weak __typeof__(self) weakSelf = self;
+    [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
+        if (!error) {
+            [weakSelf getSavedIdentities];
+            [[weakSelf.view window] endSheet: window];
+        } else {
+            [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:[NSString stringWithFormat: NSLocalizedString(@"Alert_Edit_Identity_Error_Message", @""),identity.displayName] informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+                switch (returnCode) {
+                    case NSAlertFirstButtonReturn:
+                        break;
+                    default:
+                        break;
+                }
+            }];
+        }
+    }];
+}
+
+#pragma mark - NSXMLParserDelegate
+
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName attributes:(NSDictionary *)attributeDict {
+    if([elementName isEqualToString:@"identities"])
+        self.xmlArray = [[NSMutableArray alloc] init];
+    if([elementName isEqualToString:@"identity"])
+        self.identityObject = [[NSMutableDictionary alloc] init];
+    if ([elementName isEqualToString:@"services"]) {
+        self.xmlServicesArray = [[NSMutableArray alloc] init];
+    }
+}
+
+- (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
+    if(!self.xmlString) {
+        self.xmlString = [[NSMutableString alloc] initWithString:string];
+    } else {
+        [self.xmlString appendString:string];
+    }
+}
+
+- (void)parser:(NSXMLParser *)parser didEndElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qName {
+    if (self.xmlString) {
+        if ([elementName isEqualToString:@"service"]) {
+            [self.xmlServicesArray addObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+        }else {
+            [self.identityObject setObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:elementName];
+        }
+        if (self.xmlServicesArray) {
+            [self.identityObject setObject:self.xmlServicesArray forKey:@"services"];
+        }
+        if ([elementName isEqualToString:@"identity"]) {
+            [self.xmlArray addObject:self.identityObject];
+        }
+        self.xmlString = nil;
+    }
+}
+
+- (void)parser:(NSXMLParser *)parser parseErrorOccurred:(NSError *)parseError {
+    [self showErrorParsingAlert];
+}
+
+- (void)parser:(NSXMLParser *)parser validationErrorOccurred:(NSError *)validationError {
+    [self showErrorParsingAlert];
+}
+
+- (void)parserDidEndDocument:(NSXMLParser *)parser {
+    if (!parser.parserError) {
+        [self showSuccessParsingAlert];
+    } else {
+        [self showErrorParsingAlert];
+    }
+}
+
+#pragma mark - Parsing Alerts
+
+- (void)showErrorParsingAlert {
+    [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"Read_More_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Error_Parsing_XML_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Parsing_XML_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                break;
+            case NSAlertSecondButtonReturn:
+                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:NSLocalizedString(@"Wiki_URL", @"")]];
+                break;
+            default:
+                break;
+        }
+    }];
+}
+
+- (void)showSuccessParsingAlert {
+    NSString *informativeText = (self.xmlArray.count > 1) ? [NSString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info", @""),self.xmlArray.count] : [NSString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info_One", @""),self.xmlArray.count];
+    [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Success_Parsing_XML_Message", @"") informativeText:informativeText alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                break;
+            default:
+                break;
+        }
+    }];
+}
 @end

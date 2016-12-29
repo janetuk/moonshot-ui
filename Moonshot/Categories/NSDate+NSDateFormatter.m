@@ -9,7 +9,6 @@
 
 @implementation NSDate (NSDateFormatter)
 
-
 #pragma mark - NSDateFormatter Date to String
 
 + (NSString *)formatDate:(NSDate *)date withFormat:(NSString *)dateFormat {

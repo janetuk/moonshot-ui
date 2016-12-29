@@ -188,6 +188,7 @@
 		78A330D61DAF7CB500702060 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78A664371DF6F93F006BA1F4 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		78A664391DF6F945006BA1F4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		78AA8C6F1E11359700718276 /* Moonshot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moonshot.entitlements; sourceTree = "<group>"; };
 		78BAF4351E02F30B006928B6 /* Identity+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Identity+Utilities.h"; sourceTree = "<group>"; };
 		78BAF4361E02F30B006928B6 /* Identity+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "Identity+Utilities.m"; sourceTree = "<group>"; };
 		78C73D8F1DBF8BE300D2BEFB /* EditIdentityWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditIdentityWindow.h; sourceTree = "<group>"; };
@@ -373,6 +374,7 @@
 		78A330B11DAF7CB500702060 /* Moonshot */ = {
 			isa = PBXGroup;
 			children = (
+				78AA8C6F1E11359700718276 /* Moonshot.entitlements */,
 				78A6643B1DF6FBE6006BA1F4 /* External */,
 				7812FF301DD0DDCD00F23D89 /* Categories */,
 				7899E79A1DBF517600E4542E /* CustomWindows */,
@@ -510,6 +512,11 @@
 						DevelopmentTeam = SXB4DU6LG5;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 1;
+							};
+						};
 					};
 					78A330C41DAF7CB500702060 = {
 						CreatedOnToolsVersion = 8.0;
@@ -786,6 +793,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SXB4DU6LG5;
@@ -805,6 +813,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SXB4DU6LG5;

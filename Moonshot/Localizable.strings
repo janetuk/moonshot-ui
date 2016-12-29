@@ -12,6 +12,7 @@
 "Name" = "Name";
 "Identity_Manager_Window_Title" = "Moonshot - Identity Manager";
 "No_Identity" = "No identity";
+"Wiki_URL" = "https://wiki.moonshot.ja.net/display/TR/moonshot-webp+XML+Format";
 
 //IDENTITY SELECTOR
 "Select_Identity_Title" = "Select your identity";
@@ -51,6 +52,7 @@
 "Product_Website" = "Check the %@ Website";
 "Website_URL" = "https://www.jisc.ac.uk/rd/projects/moonshot";
 "Copyright" = "Copyright © 2015 JANET. All Rights Reserved. License Agreement";
+
 //MENU ITEMS
 "Menu_Identity" = "Identity";
 "Menu_Edit" = "Edit";
@@ -68,6 +70,7 @@
 "Create_Identity_Button" = "Create Identity";
 "Connect_Identity_Button" = "Connect";
 "Remember_Identity_Choice_Button" = "Remember my identity choice for this service";
+"Read_More_Button" = "Read More";
 
 //ALERTS
 "Clear_Trust_Anchor_Alert_Message" = "Are you sure you want to clear %@ from identity selector?";
@@ -79,12 +82,17 @@
 "Alert_Add_Identity_Error_Message" = "The identity was not added.";
 "Alert_Edit_Identity_Error_Message" = "The identity %@ was not edited.";
 "Alert_Delete_Identity_Error_Message" = "The identity %@ was not deleted.";
-"Alert_Import_Info" = "This feature will be implemented when we implement importing to keychain";
-"Alert_Import_Message" = "";
+"Alert_Import_Info" = "Importing allows you to select xml file from your computer and import the containing identities. For more information go to the wikipedia page.";
+"Alert_Import_Message" = "Importing info";
 "Alert_Incorrect_User_Pass_Messsage" = "Incorrect username or password";
 "Alert_Incorrect_User_Pass_Info" = "Please ensure the username and password are correct";
 "Alert_No_Identity_Selected_Message" = "No identity selected";
 "Alert_No_Identity_Selected_Info" = "Please select an option to access the service";
 "Alert_Success_Identity_Connected" = "Identity was successfully connected!";
 "Alert_Error_Identity_Connected" = "Identity was not connected!";
+"Alert_Error_Parsing_XML_Info" = "Please read more about how importing works.";
+"Alert_Error_Parsing_XML_Message" = "Importing failed!";
+"Alert_Success_Parsing_XML_Message" = "Importing succeed!";
+"Alert_Success_Parsing_XML_Info" = "You successfully imported %d identities.";
+"Alert_Success_Parsing_XML_Info_One" = "You successfully imported %d identity.";
 

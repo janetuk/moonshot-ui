@@ -17,6 +17,8 @@
 
 @implementation AboutWindow
 
+#pragma mark - Init
+
 + (instancetype)defaultController
 {
     static id staticInstance = nil;
@@ -35,6 +37,8 @@
     }
     return self;
 }
+
+#pragma mark - Window Lifecycle
 
 - (void)windowDidLoad {
     [super windowDidLoad];
