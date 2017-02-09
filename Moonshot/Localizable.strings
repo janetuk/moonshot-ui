@@ -82,7 +82,7 @@
 "Alert_Add_Identity_Error_Message" = "The identity was not added.";
 "Alert_Edit_Identity_Error_Message" = "The identity %@ was not edited.";
 "Alert_Delete_Identity_Error_Message" = "The identity %@ was not deleted.";
-"Alert_Import_Info" = "Importing allows you to select xml file from your computer and import the containing identities. For more information go to the wikipedia page.";
+"Alert_Import_Info" = "Importing allows you to select xml file from your computer and import the containing identities. For more information go to our wiki page.";
 "Alert_Import_Message" = "Importing info";
 "Alert_Incorrect_User_Pass_Messsage" = "Incorrect username or password";
 "Alert_Incorrect_User_Pass_Info" = "Please ensure the username and password are correct";
