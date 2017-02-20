@@ -182,7 +182,7 @@ public class IdentityManagerModel : Object {
 
         bool found = false;
         foreach (IdCard id_card in card_list) {
-            logger.trace(@"load_id_cards: Loading card with display name '$(id_card.display_name)'");
+            logger.trace(@"load_id_cards: Loading card with display name '$(id_card.display_name)' and nai '$(id_card.nai)'");
 
             //!!TODO: This uniqueness check really belongs somewhere else -- like where we add
             // IDs, and/or read them from storage. However, we should never hit this.

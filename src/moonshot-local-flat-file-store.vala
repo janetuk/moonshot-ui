@@ -82,7 +82,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             key_file.load_from_file(filename, KeyFileFlags.NONE);
         }
         catch (Error e) {
-            stdout.printf("Error: %s\n", e.message);
+            stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
             return;
         }
 
@@ -130,8 +130,8 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 id_card_list.add(id_card);
             }
             catch (Error e) {
-                logger.error("load_id_cards: Error while loading keyfile: %s\n".printf(e.message));
-                stdout.printf("Error:  %s\n", e.message);
+                logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
+                stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
             }
         }
     }

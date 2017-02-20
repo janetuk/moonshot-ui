@@ -329,9 +329,9 @@ public class IdentityManagerApp {
                                "org.janet.Moonshot",
                                GLib.BusNameOwnerFlags.NONE,
                                bus_acquired_cb,
-                               (conn, name) => {logger.trace("init_ipc_server: name_acquired_closure");},
+                               (conn, name) => {logger.trace("init_ipc_server: name_acquired_closure; conn=" + (conn==null?"null":"non-null"));},
                                (conn, name) => {
-                                   logger.trace("init_ipc_server: name_lost_closure");
+                                   logger.trace("init_ipc_server: name_lost_closure; conn=" + (conn==null?"null":"non-null"));
                                    bool shown=false;
                                    try {
                                        IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
@@ -354,14 +354,16 @@ public class IdentityManagerApp {
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);
         bool shown = false;
+	var our_name = "org.janet.Moonshot";
         GLib.Bus.own_name(GLib.BusType.SESSION,
-                          "org.janet.Moonshot",
+                          our_name,
                           GLib.BusNameOwnerFlags.NONE,
                           bus_acquired_cb,
 
                           // Name acquired callback:
                           (conn, name) => {
-                              logger.trace(@"init_ipc_server: name_acquired_closure; show_requested=$show_requested");
+                              logger.trace(@"init_ipc_server: name_acquired_closure; show_requested=$show_requested; conn="
+			      + (conn==null?"null":"non-null; name='" + name + "'"));
 
                               name_is_owned = true;
 
@@ -374,7 +376,7 @@ public class IdentityManagerApp {
                           },
 
                           // Name lost callback:
-                          (conn, name) => {
+                          () => {
                               logger.trace("init_ipc_server: name_lost_closure");
 
                               // This callback usually means that another moonshot is already running.
@@ -386,15 +388,15 @@ public class IdentityManagerApp {
 
                               try {
                                   if (!shown) {
-                                      IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+                                      IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, our_name, "/org/janet/moonshot");
                                       shown = manager.show_ui();
                                   }
                               } catch (IOError e) {
                                   logger.error("init_ipc_server.name_lost_closure: Caught IOError: " + e.message);
                               }
                               if (!shown) {
-                                  logger.error("init_ipc_server.name_lost_closure: Couldn't own name %s on dbus or show previously launched identity manager".printf(name));
-                                  GLib.error("Couldn't own name %s on dbus or show previously launched identity manager.", name);
+                                  logger.error("init_ipc_server.name_lost_closure: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(our_name));
+                                  GLib.error("Couldn't own name '%s' on dbus or show previously launched identity manager.", our_name);
                               } else {
                                   logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
                                   stdout.printf("Showed previously launched identity manager.\n");
