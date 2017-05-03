@@ -210,7 +210,7 @@ public class IdentityManagerModel : Object {
     }
 
 
-    public IdCard? find_id_card(string nai, bool force_flat_file_store) {
+    public IdCard? find_id_card(string? nai, bool force_flat_file_store) {
         IdCard? retval = null;
         IIdentityCardStore.StoreType saved_store_type = get_store_type();
         if (force_flat_file_store)
