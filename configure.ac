@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.0.0],
+        [1.0.3],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -86,6 +86,19 @@ PKG_CHECK_MODULES([GTK],
             )]                            
 )
 AC_SUBST(GTK_VERSION)
+
+
+# For all platforms: Use Log4Vala 0.2 if available; else revert to 0.1
+PKG_CHECK_MODULES([LOG4VALA],
+        [log4vala-0.2],
+        [LOG4VALA_VERSION="log4vala-0.2"],
+            [PKG_CHECK_MODULES([LOG4VALA],
+                        [log4vala-0.1],
+                        [LOG4VALA_VERSION="log4vala-0.1"]
+            )]                            
+)
+AC_SUBST(LOG4VALA_VERSION)
+
 
 
 # For all platforms: Use gee-0.8 if available; else revert to gee-1.0
