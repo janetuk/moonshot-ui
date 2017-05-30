@@ -279,6 +279,11 @@ public class IdentityManagerView : Window {
 
     private IdCardWidget add_id_card_widget(IdCard id_card)
     {
+        if (id_card == null) {
+            logger.trace("add_id_card_widget: id_card == null; returning.");
+            return null;
+        }
+
         logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
                      .printf(id_card.nai, 
                              this.selected_card == null ? "[null selection]" : this.selected_card.nai));

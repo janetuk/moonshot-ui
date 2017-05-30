@@ -41,8 +41,8 @@ public MoonshotLogger get_logger(string name) {
 static void glib_default_log_handler(string? log_domain, LogLevelFlags log_level, string message)
 {
     Log4Vala.Logger logger = Log4Vala.Logger.get_logger(log_domain ?? "Glib");
-    stderr.printf(log_level.to_string() + " : " + message + "\n");
-    logger.error("Glib error level: " + log_level.to_string() + " : " + message);
+    stderr.printf(log_level.to_string() + " : " + message ?? "" + "\n");
+    logger.error("Glib error level: " + log_level.to_string() + " : " + (message ?? ""));
 }
 
 /** Logger class that wraps the Log4Vala logger */

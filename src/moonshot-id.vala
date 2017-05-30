@@ -406,6 +406,7 @@ public class IdCard : Object
     { 
         IdCard card = new IdCard();
         card.display_name = NO_IDENTITY;
+	card._nai = "";
         return card;
     }
 
