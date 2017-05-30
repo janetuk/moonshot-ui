@@ -1,3 +1,9 @@
+moonshot-ui (1.0.2-3) unstable; urgency=medium
+
+  * Various stability fixes.
+
+ -- Painless Security <build@painless-security.com>  Tue, 30 May 2017 18:31:00 -0400
+
 moonshot-ui (1.0.2-2) unstable; urgency=medium
 
   * Updated changelog
