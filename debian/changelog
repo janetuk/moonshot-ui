@@ -1,6 +1,6 @@
 moonshot-ui (1.0.3-2) experimental; urgency=medium
 
-  * Upload to debian experimental
+  * Upload to debian experimental, Closes: #864957
 
  -- Sam Hartman <hartmans@debian.org>  Sun, 09 Jul 2017 16:20:36 -0400
 
