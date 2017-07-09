@@ -18,3 +18,6 @@ override_dh_auto_build:
 	# force valac run
 	rm *.stamp 2>/dev/null ||true
 	dh_auto_build
+
+override_dh_makeshlibs:
+	dh_makeshlibs -plibmoonshot1 -V'libmoonshot1 (>= 1.0.3)'
