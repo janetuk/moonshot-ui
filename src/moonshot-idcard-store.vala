@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014, JANET(UK)
+ * Copyright (c) 2011-2016, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -42,5 +42,8 @@ public interface IIdentityCardStore : Object {
     public abstract IdCard? update_card(IdCard card);
     public abstract StoreType get_store_type();
     public abstract LinkedList<IdCard> get_card_list(); 
+
+    // Note that (at least right now) store_id_cards() will re-load the cards after saving them.
+    internal abstract void store_id_cards(); 
 }
 

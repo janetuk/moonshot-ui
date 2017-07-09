@@ -1,16 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the moonshot-ui package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#: src/moonshot-identity-management-view.vala:561
-#: src/moonshot-identity-management-view.vala:829
+#: src/moonshot-identity-manager-app.vala:448
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: moonshot-ui 0.7.2\n"
+"Project-Id-Version: moonshot-ui 1.0.3\n"
 "Report-Msgid-Bugs-To: moonshot-community@jiscmail.ac.uk\n"
-"POT-Creation-Date: 2015-07-14 19:31+0000\n"
+"POT-Creation-Date: 2017-07-09 19:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,127 +18,405 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/moonshot-identity-management-view.vala:397
+#: src/moonshot-idcard-widget.vala:131
+msgid "Do not use a Moonshot identity for this service"
+msgstr ""
+
+#: src/moonshot-idcard-widget.vala:153 src/moonshot-identity-dialog.vala:57
+msgid "Username"
+msgstr ""
+
+#: src/moonshot-idcard-widget.vala:154
+msgid "Realm:"
+msgstr ""
+
+#: src/moonshot-idcard-widget.vala:156
+msgid "Trust anchor: Enterprise provisioned"
+msgstr ""
+
+#: src/moonshot-idcard-widget.vala:163
+msgid "Services: "
+msgstr ""
+
+#: src/moonshot-identities-manager.vala:316
+msgid "Before "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:55
+msgid "Display Name"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:56
+msgid "Realm"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:58
+msgid "Password"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:114
+msgid "Add ID Card"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:130
+msgid "OK"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:154 src/moonshot-password-dialog.vala:86
+msgid "Remember password"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:226
+msgid "Trust anchor: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:227
+msgid "None"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:232
+msgid "Enterprise provisioned"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:247
+msgid "Clear Trust Anchor"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:252
+#, c-format
+msgid "You are about to clear the trust anchor fingerprint for '%s'."
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:255 src/moonshot-identity-dialog.vala:502
+msgid ""
+"\n"
+"\n"
+"Are you sure you want to do this?"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:283
+msgid "Added: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:293
+msgid "CA Certificate:"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:295
+msgid "Export Certificate"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:303
+msgid "Subject: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:310
+msgid "Subject-Alt: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:316
+msgid "Expiration date: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:322
+msgid "Constraint: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:348
+msgid "Missing required field: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:349
+msgid "Missing required fields: "
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:444
+msgid "Services:"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:499
+#, c-format
+msgid ""
+"You are about to remove the service\n"
+"'%s'."
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:525
+#: src/moonshot-identity-management-view.vala:912
+#: src/moonshot-password-dialog.vala:63
+#: src/moonshot-trust-anchor-dialog.vala:154
+msgid "Cancel"
+msgstr ""
+
+#: src/moonshot-identity-dialog.vala:526
+msgid "Save"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:101
+msgid "Moonshot Identity Selector"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:115
+#, c-format
+msgid ""
+"The following identities use the same Network Access Identifier (NAI),\n"
+"'%s'."
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:116
+msgid ""
+"\n"
+"\n"
+"Duplicate NAIs are not allowed. Please remove identities you don't need, or "
+"modify"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:117
+msgid " user ID or issuer fields so that they are no longer the same NAI."
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:120
+#, c-format
+msgid ""
+"\n"
+"\n"
+"Display Name: '%s'\n"
+"Services:\n"
+"     %s"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:367
 #, c-format
 msgid ""
 "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card "
 "'%s'?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:406
+#: src/moonshot-identity-management-view.vala:376
 #, c-format
 msgid "Would you like to update ID Card '%s' using nai '%s'?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:415
+#: src/moonshot-identity-management-view.vala:385
 #, c-format
 msgid "Would you like to add '%s' ID Card to the ID Card Organizer?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:489
-#, c-format
-msgid "Are you sure you want to delete %s ID Card?"
+#: src/moonshot-identity-management-view.vala:423
+msgid "Edit Identity"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:503
+#: src/moonshot-identity-management-view.vala:478
 #, c-format
-msgid "Identity requested for service: %s"
+msgid "You are about to remove the identity '%s'."
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:631
-#, c-format
-msgid "Are you sure you want to stop '%s' ID Card from being used with %s?"
+#: src/moonshot-identity-management-view.vala:480
+msgid "Are you sure you want to do this?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:713
+#: src/moonshot-identity-management-view.vala:490
+#, c-format
+msgid ""
+"Identity requested for service:\n"
+"%s"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:496
+msgid "Select your identity:"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:665
 msgid "Moonshot project UI"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:718
+#: src/moonshot-identity-management-view.vala:668
 msgid "Visit the Moonshot project web site"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:720
-msgid "translator-credits"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:730
-msgid "_File"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:739
-msgid "Add ID Card"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:741
-msgid "Add a new ID Card"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:750
-msgid "Quit"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:752
-msgid "Quit the application"
-msgstr ""
-
-#: src/moonshot-identity-management-view.vala:758
+#: src/moonshot-identity-management-view.vala:686
 msgid "_Help"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:767
+#: src/moonshot-identity-management-view.vala:699
 msgid "About"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:769
+#: src/moonshot-identity-management-view.vala:701
 msgid "About this application"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:799
+#: src/moonshot-identity-management-view.vala:749
+msgid "Search for an identity or service"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:752
 msgid "Search entry"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:799
+#: src/moonshot-identity-management-view.vala:752
 msgid "Search for a specific ID Card"
 msgstr ""
 
+#: src/moonshot-identity-management-view.vala:795
+msgid "Remember my identity choice for this service"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:799
+msgid "Add"
+msgstr ""
+
 #: src/moonshot-identity-management-view.vala:804
-msgid "Search identity or service"
+msgid "Import"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:811
-msgid "Clear the current search"
+#: src/moonshot-identity-management-view.vala:809
+msgid "Edit"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:839
-msgid ""
-"No Identity: Send this identity to services which should not use Moonshot"
+#: src/moonshot-identity-management-view.vala:815
+msgid "Remove"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:844
-msgid "Login: "
+#: src/moonshot-identity-management-view.vala:823
+msgid "Send"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:847
-msgid "Issuer:"
+#: src/moonshot-identity-management-view.vala:885
+#, c-format
+msgid "Do you wish to use the %s service?"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:851
-msgid "Username:"
+#: src/moonshot-identity-management-view.vala:887
+msgid "Select Yes to select an ID for this service, or No to cancel"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:855
+#: src/moonshot-identity-management-view.vala:909
+msgid "Import File"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:913
+msgid "Open"
+msgstr ""
+
+#: src/moonshot-identity-management-view.vala:964
+msgid "Import completed. No identities were added or updated."
+msgstr ""
+
+#: src/moonshot-identity-manager-app.vala:300
+msgid "Showed previously launched identity manager.\n"
+msgstr ""
+
+#: src/moonshot-identity-manager-app.vala:441
+#: src/moonshot-identity-manager-app.vala:453
+#, c-format
+msgid "error: %s\n"
+msgstr ""
+
+#: src/moonshot-identity-manager-app.vala:442
+#: src/moonshot-identity-manager-app.vala:454
+#, c-format
+msgid "Run '%s --help' to see a full list of available options\n"
+msgstr ""
+
+#: src/moonshot-identity-manager-app.vala:449
+msgid "unable to initialize window\n"
+msgstr ""
+
+#: src/moonshot-password-dialog.vala:59
+msgid "Moonshot - Password"
+msgstr ""
+
+#: src/moonshot-password-dialog.vala:64
+msgid "Connect"
+msgstr ""
+
+#: src/moonshot-password-dialog.vala:72
+msgid "Enter the password for "
+msgstr ""
+
+#: src/moonshot-password-dialog.vala:75
+msgid "User (NAI):"
+msgstr ""
+
+#: src/moonshot-password-dialog.vala:80
 msgid "Password:"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:861
-msgid "Remember password"
+#: src/moonshot-trust-anchor-dialog.vala:147
+msgid "Server's trust anchor certificate (SHA-256 fingerprint):"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:863
-msgid "Update Password"
+#: src/moonshot-trust-anchor-dialog.vala:149
+msgid "Trust Anchor"
 msgstr ""
 
-#: src/moonshot-identity-management-view.vala:888
-msgid "Services:"
+#: src/moonshot-trust-anchor-dialog.vala:155
+msgid "Confirm"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:169
+msgid ""
+"You are using this identity for the first time with the following trust "
+"anchor:"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:174
+#, c-format
+msgid ""
+"WARNING: The certificate we received for the authentication server for %s"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:175
+msgid ""
+" is different than expected.  Either the server certificate has changed, or "
+"an"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:176
+msgid ""
+" attack may be underway.  If you proceed to the wrong server, your login "
+"credentials may be compromised."
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:184
+msgid "Username: "
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:187
+msgid "Realm: "
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:190
+msgid ""
+"\n"
+"Please check with your realm administrator for the correct fingerprint"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:191
+msgid " for your authentication server.  If it matches the above fingerprint,"
+msgstr ""
+
+#: src/moonshot-trust-anchor-dialog.vala:192
+msgid " confirm the change.  If not, then cancel."
+msgstr ""
+
+#: src/moonshot-warning-dialog.vala:71
+msgid "Do not show this message again"
+msgstr ""
+
+#: src/moonshot-warning-dialog.vala:95
+msgid "Warning"
+msgstr ""
+
+#: src/moonshot-webp-parser.vala:65
+#, c-format
+msgid ""
+"Usage %s [-f] WEB_PROVISIONING_FILE\n"
+" -f: add identities to flat file store.\n"
+msgstr ""
+
+#: src/moonshot-webp-parser.vala:72
+#, c-format
+msgid "%s does not exist\n"
 msgstr ""
