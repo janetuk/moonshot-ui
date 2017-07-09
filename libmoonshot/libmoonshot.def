@@ -1,7 +1,0 @@
-LIBRARY libmoonshot-0.dll
-EXPORTS
-    moonshot_error_free
-    moonshot_error_new
-    moonshot_get_default_identity
-    moonshot_get_identity
-    moonshot_confirm_ca_certificate

@@ -1,5 +1,5 @@
 Name:           moonshot-ui
-Version:        0.7.2
+Version:        1.0.3
 Release:        2%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
