@@ -1,3 +1,9 @@
+moonshot-ui (1.0.3-3) unstable; urgency=medium
+
+  * Version number bump
+
+ -- Painless Security <build@painless-security.com>  Tue, 25 Jul 2017 21:50:00 -0500
+
 moonshot-ui (1.0.3-2) experimental; urgency=medium
 
   * Upload to debian experimental, Closes: #864957
