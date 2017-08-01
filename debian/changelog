@@ -1,3 +1,9 @@
+moonshot-ui (1.0.5+deb7b1) unstable; urgency=medium
+
+  * Version number bump for Debian 7 builds
+
+ -- Painless Security <build@painless-security.com>  Tue, 1 Aug 2017 10:29:00 -0500
+
 moonshot-ui (1.0.5-1) unstable; urgency=medium
 
   * Version number bump
