@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.0.3],
+        [1.0.5],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
