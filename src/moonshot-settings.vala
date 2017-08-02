@@ -72,13 +72,13 @@ private void save_keyfile(KeyFile key_file)
     File dest = null;
 
     // Make the directory if it doesn't already exist; ignore errors.
-	try {
-		File dir = File.new_for_path(config_dir);
+    try {
+        File dir = File.new_for_path(config_dir);
         dest = dir.get_child(KEY_FILE_NAME);
-		dir.make_directory_with_parents();
-	} catch (Error e) {
+        dir.make_directory_with_parents();
+    } catch (Error e) {
         logger().trace("save_keyfile: make_directory_with_parents threw error (this is usually ignorable) : " + e.message);
-	}
+    }
 
     // It would be nice to use key_file.save_to_file, but the binding doesn't exist
     // in earlier versions of valac
@@ -91,7 +91,7 @@ private void save_keyfile(KeyFile key_file)
         // var ds = new DataOutputStream(s);
         // ds.put_string(data);
         string new_etag;
-        dest.replace_contents(data.data, null, false, FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE, out new_etag);
+        dest.replace_contents(data, data.length, null, false, FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE, out new_etag);
     }
     catch(Error e) {
         logger().error("save_keyfile: error when writing to file: " + e.message);

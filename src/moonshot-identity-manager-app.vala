@@ -271,8 +271,9 @@ public class IdentityManagerApp {
     }
 #elif IPC_DBUS_GLIB
     private void init_ipc_server() {
+        DBus.Connection? conn = null;
         try {
-            var conn = DBus.Bus.get(DBus.BusType.SESSION);
+            conn = DBus.Bus.get(DBus.BusType.SESSION);
             dynamic DBus.Object bus = conn.get_object("org.freedesktop.DBus",
                                                       "/org/freedesktop/DBus",
                                                       "org.freedesktop.DBus");
@@ -354,7 +355,7 @@ public class IdentityManagerApp {
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);
         bool shown = false;
-	var our_name = "org.janet.Moonshot";
+        var our_name = "org.janet.Moonshot";
         GLib.Bus.own_name(GLib.BusType.SESSION,
                           our_name,
                           GLib.BusNameOwnerFlags.NONE,
@@ -363,7 +364,7 @@ public class IdentityManagerApp {
                           // Name acquired callback:
                           (conn, name) => {
                               logger.trace(@"init_ipc_server: name_acquired_closure; show_requested=$show_requested; conn="
-			      + (conn==null?"null":"non-null; name='" + name + "'"));
+                              + (conn==null?"null":"non-null; name='" + name + "'"));
 
                               name_is_owned = true;
 

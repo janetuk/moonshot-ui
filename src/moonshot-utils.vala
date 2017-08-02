@@ -185,10 +185,20 @@ internal static void clear_password_entry(Entry entry) {
     random_chars[len] = 0;
     string r = (string) random_chars;
     var buf = entry.get_buffer();
+#if VALA_0_12
+    // Not sure if this works in 12; it definitely doesn't work in 10.
     buf.set_text(r.data);
 
     // Now delete the data
     buf.delete_text(0, len);
+#else
+    string[] a = new string[1];
+    a[0] = r;
+    buf.set_text(a);
+
+    // Now delete the data
+    buf.delete_text(0, (int) len);
+#endif
 }
 
 static Gdk.Color white;

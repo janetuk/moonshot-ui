@@ -537,8 +537,10 @@ class IdentityDialog : Dialog
         {
             // Export the certificate in PEM format.
 
-            const string CERT_HEADER = "-----BEGIN CERTIFICATE-----\n";
-            const string CERT_FOOTER = "\n-----END CERTIFICATE-----\n";
+            // const string CERT_HEADER = "-----BEGIN CERTIFICATE-----\n";
+            // const string CERT_FOOTER = "\n-----END CERTIFICATE-----\n";
+            string CERT_HEADER = "-----BEGIN CERTIFICATE-----\n";
+            string CERT_FOOTER = "\n-----END CERTIFICATE-----\n";
 
             // Strip any embedded newlines in the certificate...
             string cert = id.trust_anchor.ca_cert.replace("\n", "");
@@ -558,8 +560,12 @@ class IdentityDialog : Dialog
             string filename = dialog.get_filename();
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+#if VALA_0_12
+	    // Not sure if this works in 12; it definitely doesn't work in 10.
             stream.write(newcert.data);
-
+#else
+            stream.write(newcert.data, newcert.length);
+#endif
             // Save the parent directory to use as default for next save
             export_directory = file.get_parent().get_path();
         }
