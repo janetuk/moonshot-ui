@@ -123,9 +123,10 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
     }
 
     internal static string format_datetime_now() {
-        DateTime now = new DateTime.now_utc();
-        string dt = now.format("%b %d %T %Y %Z");
-        return dt;
+         // DateTime now = new DateTime.now_utc();
+	 //         string dt = now.format("%b %d %T %Y %Z");
+	 //        return dt;
+	 return "Sorry; formatted date/time strings not available on Centos 6";
     }
 
     internal void update_server_fingerprint(string fingerprint) {

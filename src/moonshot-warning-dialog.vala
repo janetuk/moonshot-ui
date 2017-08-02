@@ -75,9 +75,10 @@ class WarningDialog
             remember_checkbutton.set_receives_default(false);
             Container action_area = (Container) dialog.get_action_area();
 
-            Button yes_button = (Button) dialog.get_widget_for_response(ResponseType.YES);
-            yes_button.grab_default();
-            yes_button.grab_focus();
+	    //!! dialog.get_widget_for_response is not available on Centos 6
+            // Button yes_button = (Button) dialog.get_widget_for_response(ResponseType.YES);
+	    //             yes_button.grab_default();
+	    //            yes_button.grab_focus();
 
 // Not sure if 0.26 is the minimum for MessageDialog.get_message_area. 0.16 sure isn't :-(
 #if VALA_0_26
