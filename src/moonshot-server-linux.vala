@@ -228,15 +228,13 @@ public class MoonshotServer : Object {
             idcard.rules = rules;
         }
 
-        ArrayList<IdCard>? old_duplicates = null;
-        var ret = parent_app.add_identity(idcard, (force_flat_file_store != 0), out old_duplicates);
+        ArrayList<IdCard> old_duplicates = new ArrayList<IdCard>();
+        var ret = parent_app.add_identity(idcard, (force_flat_file_store != 0), old_duplicates);
 
-        if (old_duplicates != null) {
-            // Printing to stdout here is ugly behavior; but it's old behavior that
-            // may be expected. (TODO: Do we need to keep this?)
-            foreach (IdCard id_card in old_duplicates) {
-                stdout.printf("removed duplicate id for '%s'\n", id_card.nai);
-            }
+        // Printing to stdout here is ugly behavior; but it's old behavior that
+        // may be expected. (TODO: Do we need to keep this?)
+        foreach (IdCard id_card in old_duplicates) {
+            stdout.printf("removed duplicate id for '%s'\n", id_card.nai);
         }
         return ret;
     }

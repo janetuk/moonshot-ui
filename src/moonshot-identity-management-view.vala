@@ -336,8 +336,9 @@ public class IdentityManagerView : Window {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
     {
+	old_duplicates.clear();
         #if OS_MACOS
         /* 
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
@@ -353,10 +354,6 @@ public class IdentityManagerView : Window {
             int flags = prev_id.Compare(id_card);
             logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
-                if (&old_duplicates != null) {
-                    old_duplicates = new ArrayList<IdCard>();
-                }
-
                 return false; // no changes, no need to update
             } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
                 dialog = new Gtk.MessageDialog(this,
@@ -389,13 +386,10 @@ public class IdentityManagerView : Window {
         #endif
 
         if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, out old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
             return true;
         }
         else {
-            if (&old_duplicates != null) {
-                old_duplicates = new ArrayList<IdCard>();
-            }
             return false;
         }
     }
@@ -409,7 +403,9 @@ public class IdentityManagerView : Window {
 
         switch (result) {
         case ResponseType.OK:
-            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false);
+	    // Work around Vala compiler bug in Centos 6 by passing in a throwaway "old_duplicates" array
+	    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
+            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false, tmp_old_dups);
             break;
         default:
             break;
@@ -945,7 +941,8 @@ SUCH DAMAGE.
                 }
 
 
-                bool result = add_identity(card, use_flat_file_store);
+		var old_duplicates = new ArrayList<IdCard>();
+                bool result = add_identity(card, use_flat_file_store, old_duplicates);
                 if (result) {
                     logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                     import_count++;

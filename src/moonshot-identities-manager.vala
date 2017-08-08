@@ -142,17 +142,17 @@ public class IdentityManagerModel : Object {
         return true;
     }
 
-    private bool remove_duplicates(IdCard new_card, out ArrayList<IdCard>? old_duplicates)
+    private bool remove_duplicates(IdCard new_card, ArrayList<IdCard> old_duplicates)
     {
-        ArrayList<IdCard> dups = new ArrayList<IdCard>();
+	old_duplicates.clear();
         var cards = this.store.get_card_list();
         foreach (IdCard id_card in cards) {
             if ((new_card != id_card) && (id_card.nai == new_card.nai)) {
-                dups.add(id_card);
+                old_duplicates.add(id_card);
             }
         }
 
-        foreach (IdCard id_card in dups) {
+        foreach (IdCard id_card in old_duplicates) {
             logger.trace("removing duplicate id for '%s'\n".printf(new_card.nai));
             remove_card_internal(id_card);
 
@@ -162,11 +162,7 @@ public class IdentityManagerModel : Object {
             }
         }
 
-        if (&old_duplicates != null) {
-            old_duplicates = dups;
-        }
-
-        return (dups.size > 0);
+        return (old_duplicates.size > 0);
     }
 
 
@@ -229,7 +225,7 @@ public class IdentityManagerModel : Object {
         return retval;
     }
 
-    public void add_card(IdCard card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null) {
+    public void add_card(IdCard card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
         if (card.temporary) {
             logger.trace("add_card: card is temporary; returning.");
             return;
@@ -241,7 +237,7 @@ public class IdentityManagerModel : Object {
         if (force_flat_file_store)
             set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
 
-        remove_duplicates(card, out old_duplicates);
+        remove_duplicates(card, old_duplicates);
 
         if (!display_name_is_valid(card.display_name, out candidate))
         {
