@@ -102,9 +102,9 @@ typedef struct _TrustAnchorClass TrustAnchorClass;
 #define _g_list_free0(var) ((var == NULL) ? NULL : (var = (g_list_free (var), NULL)))
 
 #define TRUST_ANCHOR_TYPE_TRUST_ANCHOR_TYPE (trust_anchor_trust_anchor_type_get_type ())
-typedef struct _Block3Data Block3Data;
-typedef struct _Block5Data Block5Data;
 typedef struct _Block4Data Block4Data;
+typedef struct _Block6Data Block6Data;
+typedef struct _Block5Data Block5Data;
 #define _g_regex_unref0(var) ((var == NULL) ? NULL : (var = (g_regex_unref (var), NULL)))
 #define _g_error_free0(var) ((var == NULL) ? NULL : (var = (g_error_free (var), NULL)))
 
@@ -141,7 +141,7 @@ typedef enum  {
 	TRUST_ANCHOR_TRUST_ANCHOR_TYPE_SERVER_CERT
 } TrustAnchorTrustAnchorType;
 
-struct _Block3Data {
+struct _Block4Data {
 	int _ref_count_;
 	IdentityDialog * self;
 	gint ncolumns;
@@ -153,13 +153,13 @@ struct _Block3Data {
 	IdCard* id;
 };
 
-struct _Block5Data {
+struct _Block6Data {
 	int _ref_count_;
-	Block4Data * _data4_;
+	Block5Data * _data5_;
 	GtkLabel* label;
 };
 
-struct _Block4Data {
+struct _Block5Data {
 	int _ref_count_;
 	IdentityDialog * self;
 	GtkButton* remove_button;
@@ -226,7 +226,7 @@ void set_bg_color (GtkWidget* w);
 GType trust_anchor_get_type (void) G_GNUC_CONST;
 TrustAnchor* id_card_get_trust_anchor (IdCard* self);
 gboolean trust_anchor_is_empty (TrustAnchor* self);
-static void _lambda5_ (GtkButton* w, Block3Data* _data3_);
+static void _lambda5_ (GtkButton* w, Block4Data* _data4_);
 gboolean warning_dialog_confirm (GtkWindow* parent, const char* message, const char* dialog_name);
 static void __lambda5__gtk_button_clicked (GtkButton* _sender, gpointer self);
 const char* trust_anchor_get_datetime_added (TrustAnchor* self);
@@ -234,14 +234,14 @@ GType trust_anchor_trust_anchor_type_get_type (void) G_GNUC_CONST;
 TrustAnchorTrustAnchorType trust_anchor_get_anchor_type (TrustAnchor* self);
 GtkWidget* make_ta_fingerprint_widget (const char* server_cert, const char* label_text);
 const char* trust_anchor_get_server_cert (TrustAnchor* self);
-static void _lambda6_ (GtkButton* w, Block3Data* _data3_);
+static void _lambda6_ (GtkButton* w, Block4Data* _data4_);
 static void identity_dialog_export_certificate (IdentityDialog* self, IdCard* id);
 static void __lambda6__gtk_button_clicked (GtkButton* _sender, gpointer self);
 const char* trust_anchor_get_subject (TrustAnchor* self);
 const char* trust_anchor_get_subject_alt (TrustAnchor* self);
 char* trust_anchor_get_expiration_date (TrustAnchor* self, char** err_out);
-static Block3Data* block3_data_ref (Block3Data* _data3_);
-static void block3_data_unref (Block3Data* _data3_);
+static Block4Data* block4_data_ref (Block4Data* _data4_);
+static void block4_data_unref (Block4Data* _data4_);
 static char* identity_dialog_update_preamble (const char* preamble);
 static char* identity_dialog_update_message (const char* old_message, const char* new_item);
 static void identity_dialog_check_field (const char* field, GtkLabel* label, const char* fieldname, char** preamble, char** message);
@@ -251,14 +251,14 @@ const char* identity_dialog_get_password (IdentityDialog* self);
 const char* identity_dialog_get_display_name (IdentityDialog* self);
 const char* identity_dialog_get_username (IdentityDialog* self);
 const char* identity_dialog_get_issuer (IdentityDialog* self);
-static gboolean _lambda7_ (Block5Data* _data5_);
+static gboolean _lambda7_ (Block6Data* _data6_);
 static gboolean __lambda7__gtk_widget_button_press_event (GtkWidget* _sender, GdkEventButton* event, gpointer self);
+static Block6Data* block6_data_ref (Block6Data* _data6_);
+static void block6_data_unref (Block6Data* _data6_);
+static void _lambda8_ (GtkButton* remove_button, Block5Data* _data5_);
+static void __lambda8__gtk_button_clicked (GtkButton* _sender, gpointer self);
 static Block5Data* block5_data_ref (Block5Data* _data5_);
 static void block5_data_unref (Block5Data* _data5_);
-static void _lambda8_ (GtkButton* remove_button, Block4Data* _data4_);
-static void __lambda8__gtk_button_clicked (GtkButton* _sender, gpointer self);
-static Block4Data* block4_data_ref (Block4Data* _data4_);
-static void block4_data_unref (Block4Data* _data4_);
 const char* trust_anchor_get_ca_cert (TrustAnchor* self);
 static void identity_dialog_finalize (GObject* obj);
 static void identity_dialog_get_property (GObject * object, guint property_id, GValue * value, GParamSpec * pspec);
@@ -581,7 +581,7 @@ IdentityDialog* identity_dialog_new_with_idcard (IdCard* a_card, const char* tit
 
 
 #line 248 "moonshot-identity-dialog.vala"
-static void _lambda5_ (GtkButton* w, Block3Data* _data3_) {
+static void _lambda5_ (GtkButton* w, Block4Data* _data4_) {
 #line 586 "moonshot-identity-dialog.c"
 	IdentityDialog * self;
 	char* _tmp0_;
@@ -590,11 +590,11 @@ static void _lambda5_ (GtkButton* w, Block3Data* _data3_) {
 	char* _tmp3_;
 	gboolean _tmp4_;
 	gboolean _result_;
-	self = _data3_->self;
+	self = _data4_->self;
 #line 248 "moonshot-identity-dialog.vala"
 	g_return_if_fail (w != NULL);
 #line 249 "moonshot-identity-dialog.vala"
-	_result_ = (_tmp4_ = warning_dialog_confirm ((GtkWindow*) self, _tmp3_ = g_strconcat (_tmp2_ = g_markup_printf_escaped (_tmp1_ = g_strconcat (_tmp0_ = g_strconcat ("<span font-weight='heavy'>", _ ("You are about to clear the trust anchor fingerprint for '%s'."), NULL), "</span>", NULL), id_card_get_display_name (_data3_->id)), _ ("\n\nAre you sure you want to do this?"), NULL), "clear_trust_anchor"), _g_free0 (_tmp3_), _g_free0 (_tmp2_), _g_free0 (_tmp1_), _g_free0 (_tmp0_), _tmp4_);
+	_result_ = (_tmp4_ = warning_dialog_confirm ((GtkWindow*) self, _tmp3_ = g_strconcat (_tmp2_ = g_markup_printf_escaped (_tmp1_ = g_strconcat (_tmp0_ = g_strconcat ("<span font-weight='heavy'>", _ ("You are about to clear the trust anchor fingerprint for '%s'."), NULL), "</span>", NULL), id_card_get_display_name (_data4_->id)), _ ("\n\nAre you sure you want to do this?"), NULL), "clear_trust_anchor"), _g_free0 (_tmp3_), _g_free0 (_tmp2_), _g_free0 (_tmp1_), _g_free0 (_tmp0_), _tmp4_);
 #line 258 "moonshot-identity-dialog.vala"
 	if (_result_) {
 #line 601 "moonshot-identity-dialog.c"
@@ -603,7 +603,7 @@ static void _lambda5_ (GtkButton* w, Block3Data* _data3_) {
 #line 260 "moonshot-identity-dialog.vala"
 		self->clear_trust_anchor = TRUE;
 #line 265 "moonshot-identity-dialog.vala"
-		children = gtk_container_get_children ((GtkContainer*) _data3_->ta_table);
+		children = gtk_container_get_children ((GtkContainer*) _data4_->ta_table);
 #line 608 "moonshot-identity-dialog.c"
 		{
 			GList* child_collection;
@@ -618,19 +618,19 @@ static void _lambda5_ (GtkButton* w, Block3Data* _data3_) {
 #line 619 "moonshot-identity-dialog.c"
 				{
 #line 267 "moonshot-identity-dialog.vala"
-					gtk_container_remove ((GtkContainer*) _data3_->ta_table, child);
+					gtk_container_remove ((GtkContainer*) _data4_->ta_table, child);
 #line 623 "moonshot-identity-dialog.c"
 				}
 			}
 		}
 #line 270 "moonshot-identity-dialog.vala"
-		gtk_table_resize (_data3_->ta_table, (guint) 1, (guint) _data3_->ncolumns);
+		gtk_table_resize (_data4_->ta_table, (guint) 1, (guint) _data4_->ncolumns);
 #line 271 "moonshot-identity-dialog.vala"
-		gtk_label_set_text (_data3_->ta_label, _tmp5_ = g_strconcat (_data3_->ta_label_prefix, _data3_->none, NULL));
+		gtk_label_set_text (_data4_->ta_label, _tmp5_ = g_strconcat (_data4_->ta_label_prefix, _data4_->none, NULL));
 #line 631 "moonshot-identity-dialog.c"
 		_g_free0 (_tmp5_);
 #line 272 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, (GtkWidget*) _data3_->ta_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1, _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 0, (guint) 0);
+		gtk_table_attach (_data4_->ta_table, (GtkWidget*) _data4_->ta_label, (guint) 0, (guint) 1, (guint) 0, (guint) 1, _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 0, (guint) 0);
 #line 635 "moonshot-identity-dialog.c"
 		_g_list_free0 (children);
 	}
@@ -645,14 +645,14 @@ static void __lambda5__gtk_button_clicked (GtkButton* _sender, gpointer self) {
 
 
 #line 296 "moonshot-identity-dialog.vala"
-static void _lambda6_ (GtkButton* w, Block3Data* _data3_) {
+static void _lambda6_ (GtkButton* w, Block4Data* _data4_) {
 #line 650 "moonshot-identity-dialog.c"
 	IdentityDialog * self;
-	self = _data3_->self;
+	self = _data4_->self;
 #line 296 "moonshot-identity-dialog.vala"
 	g_return_if_fail (w != NULL);
 #line 296 "moonshot-identity-dialog.vala"
-	identity_dialog_export_certificate (self, _data3_->id);
+	identity_dialog_export_certificate (self, _data4_->id);
 #line 657 "moonshot-identity-dialog.c"
 }
 
@@ -664,21 +664,21 @@ static void __lambda6__gtk_button_clicked (GtkButton* _sender, gpointer self) {
 }
 
 
-static Block3Data* block3_data_ref (Block3Data* _data3_) {
-	g_atomic_int_inc (&_data3_->_ref_count_);
-	return _data3_;
+static Block4Data* block4_data_ref (Block4Data* _data4_) {
+	g_atomic_int_inc (&_data4_->_ref_count_);
+	return _data4_;
 }
 
 
-static void block3_data_unref (Block3Data* _data3_) {
-	if (g_atomic_int_dec_and_test (&_data3_->_ref_count_)) {
-		_g_object_unref0 (_data3_->self);
-		_g_object_unref0 (_data3_->ta_table);
-		_g_object_unref0 (_data3_->ta_label);
-		_g_free0 (_data3_->none);
-		_g_free0 (_data3_->ta_label_prefix);
-		_g_object_unref0 (_data3_->id);
-		g_slice_free (Block3Data, _data3_);
+static void block4_data_unref (Block4Data* _data4_) {
+	if (g_atomic_int_dec_and_test (&_data4_->_ref_count_)) {
+		_g_object_unref0 (_data4_->self);
+		_g_object_unref0 (_data4_->ta_table);
+		_g_object_unref0 (_data4_->ta_label);
+		_g_free0 (_data4_->none);
+		_g_free0 (_data4_->ta_label_prefix);
+		_g_object_unref0 (_data4_->id);
+		g_slice_free (Block4Data, _data4_);
 	}
 }
 
@@ -687,7 +687,7 @@ static void block3_data_unref (Block3Data* _data3_) {
 static GtkWidget* identity_dialog_make_trust_anchor_box (IdentityDialog* self, IdCard* id) {
 #line 689 "moonshot-identity-dialog.c"
 	GtkWidget* result = NULL;
-	Block3Data* _data3_;
+	Block4Data* _data4_;
 	gint nrows;
 	GtkHBox* trust_anchor_box;
 	const char* _tmp0_;
@@ -704,77 +704,77 @@ static GtkWidget* identity_dialog_make_trust_anchor_box (IdentityDialog* self, I
 #line 221 "moonshot-identity-dialog.vala"
 	g_return_val_if_fail (id != NULL, NULL);
 #line 707 "moonshot-identity-dialog.c"
-	_data3_ = g_slice_new0 (Block3Data);
-	_data3_->_ref_count_ = 1;
-	_data3_->self = g_object_ref (self);
-	_data3_->id = _g_object_ref0 (id);
+	_data4_ = g_slice_new0 (Block4Data);
+	_data4_->_ref_count_ = 1;
+	_data4_->self = g_object_ref (self);
+	_data4_->id = _g_object_ref0 (id);
 #line 224 "moonshot-identity-dialog.vala"
 	nrows = 7;
 #line 714 "moonshot-identity-dialog.c"
-	_data3_->ncolumns = 2;
-	_data3_->ta_label_prefix = g_strdup (_ ("Trust anchor: "));
-	_data3_->none = g_strdup (_ ("None"));
+	_data4_->ncolumns = 2;
+	_data4_->ta_label_prefix = g_strdup (_ ("Trust anchor: "));
+	_data4_->none = g_strdup (_ ("None"));
 #line 229 "moonshot-identity-dialog.vala"
 	trust_anchor_box = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 0));
 #line 720 "moonshot-identity-dialog.c"
 	_tmp0_ = NULL;
 #line 232 "moonshot-identity-dialog.vala"
-	if (trust_anchor_is_empty (id_card_get_trust_anchor (_data3_->id))) {
+	if (trust_anchor_is_empty (id_card_get_trust_anchor (_data4_->id))) {
 #line 232 "moonshot-identity-dialog.vala"
-		_tmp0_ = _data3_->none;
+		_tmp0_ = _data4_->none;
 #line 726 "moonshot-identity-dialog.c"
 	} else {
 #line 232 "moonshot-identity-dialog.vala"
 		_tmp0_ = _ ("Enterprise provisioned");
 #line 730 "moonshot-identity-dialog.c"
 	}
-	_data3_->ta_label = (_tmp2_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp1_ = g_strconcat (_data3_->ta_label_prefix, _tmp0_, NULL))), _g_free0 (_tmp1_), _tmp2_);
+	_data4_->ta_label = (_tmp2_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp1_ = g_strconcat (_data4_->ta_label_prefix, _tmp0_, NULL))), _g_free0 (_tmp1_), _tmp2_);
 #line 233 "moonshot-identity-dialog.vala"
-	gtk_misc_set_alignment ((GtkMisc*) _data3_->ta_label, (float) 0, 0.5f);
+	gtk_misc_set_alignment ((GtkMisc*) _data4_->ta_label, (float) 0, 0.5f);
 #line 235 "moonshot-identity-dialog.vala"
-	if (trust_anchor_is_empty (id_card_get_trust_anchor (_data3_->id))) {
+	if (trust_anchor_is_empty (id_card_get_trust_anchor (_data4_->id))) {
 #line 236 "moonshot-identity-dialog.vala"
-		gtk_box_pack_start ((GtkBox*) trust_anchor_box, (GtkWidget*) _data3_->ta_label, FALSE, FALSE, (guint) 0);
+		gtk_box_pack_start ((GtkBox*) trust_anchor_box, (GtkWidget*) _data4_->ta_label, FALSE, FALSE, (guint) 0);
 #line 739 "moonshot-identity-dialog.c"
 		result = (GtkWidget*) trust_anchor_box;
-		block3_data_unref (_data3_);
+		block4_data_unref (_data4_);
 #line 237 "moonshot-identity-dialog.vala"
 		return result;
 #line 744 "moonshot-identity-dialog.c"
 	}
-	_data3_->fill_and_expand = GTK_EXPAND | GTK_FILL;
+	_data4_->fill_and_expand = GTK_EXPAND | GTK_FILL;
 #line 242 "moonshot-identity-dialog.vala"
 	fill = GTK_FILL;
 #line 749 "moonshot-identity-dialog.c"
-	_data3_->ta_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) nrows, (guint) _data3_->ncolumns, FALSE));
+	_data4_->ta_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) nrows, (guint) _data4_->ncolumns, FALSE));
 #line 245 "moonshot-identity-dialog.vala"
 	row = 0;
 #line 247 "moonshot-identity-dialog.vala"
 	ta_clear_button = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Clear Trust Anchor")));
 #line 248 "moonshot-identity-dialog.vala"
-	g_signal_connect_data (ta_clear_button, "clicked", (GCallback) __lambda5__gtk_button_clicked, block3_data_ref (_data3_), (GClosureNotify) block3_data_unref, 0);
+	g_signal_connect_data (ta_clear_button, "clicked", (GCallback) __lambda5__gtk_button_clicked, block4_data_ref (_data4_), (GClosureNotify) block4_data_unref, 0);
 #line 279 "moonshot-identity-dialog.vala"
-	gtk_table_attach (_data3_->ta_table, (GtkWidget*) _data3_->ta_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 0, (guint) 0);
+	gtk_table_attach (_data4_->ta_table, (GtkWidget*) _data4_->ta_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 0, (guint) 0);
 #line 280 "moonshot-identity-dialog.vala"
-	gtk_table_attach (_data3_->ta_table, (GtkWidget*) ta_clear_button, (guint) 1, (guint) 2, (guint) row, (guint) (row + 1), fill, fill, (guint) 0, (guint) 0);
+	gtk_table_attach (_data4_->ta_table, (GtkWidget*) ta_clear_button, (guint) 1, (guint) 2, (guint) row, (guint) (row + 1), fill, fill, (guint) 0, (guint) 0);
 #line 281 "moonshot-identity-dialog.vala"
 	row++;
 #line 283 "moonshot-identity-dialog.vala"
-	added_label = (_tmp4_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ (_tmp3_ = g_strconcat ("Added: ", trust_anchor_get_datetime_added (id_card_get_trust_anchor (_data3_->id)), NULL)))), _g_free0 (_tmp3_), _tmp4_);
+	added_label = (_tmp4_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_ (_tmp3_ = g_strconcat ("Added: ", trust_anchor_get_datetime_added (id_card_get_trust_anchor (_data4_->id)), NULL)))), _g_free0 (_tmp3_), _tmp4_);
 #line 284 "moonshot-identity-dialog.vala"
 	gtk_misc_set_alignment ((GtkMisc*) added_label, (float) 0, 0.5f);
 #line 285 "moonshot-identity-dialog.vala"
-	gtk_table_attach (_data3_->ta_table, (GtkWidget*) added_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 20, (guint) 5);
+	gtk_table_attach (_data4_->ta_table, (GtkWidget*) added_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 20, (guint) 5);
 #line 286 "moonshot-identity-dialog.vala"
 	row++;
 #line 288 "moonshot-identity-dialog.vala"
-	if (trust_anchor_get_anchor_type (id_card_get_trust_anchor (_data3_->id)) == TRUST_ANCHOR_TRUST_ANCHOR_TYPE_SERVER_CERT) {
+	if (trust_anchor_get_anchor_type (id_card_get_trust_anchor (_data4_->id)) == TRUST_ANCHOR_TRUST_ANCHOR_TYPE_SERVER_CERT) {
 #line 773 "moonshot-identity-dialog.c"
 		GtkWidget* fingerprint;
 #line 289 "moonshot-identity-dialog.vala"
-		fingerprint = make_ta_fingerprint_widget (trust_anchor_get_server_cert (id_card_get_trust_anchor (_data3_->id)), NULL);
+		fingerprint = make_ta_fingerprint_widget (trust_anchor_get_server_cert (id_card_get_trust_anchor (_data4_->id)), NULL);
 #line 290 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, fingerprint, (guint) 0, (guint) 2, (guint) row, (guint) (row + 2), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 5, (guint) 5);
+		gtk_table_attach (_data4_->ta_table, fingerprint, (guint) 0, (guint) 2, (guint) row, (guint) (row + 2), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 5, (guint) 5);
 #line 779 "moonshot-identity-dialog.c"
 		_g_object_unref0 (fingerprint);
 	} else {
@@ -792,53 +792,53 @@ static GtkWidget* identity_dialog_make_trust_anchor_box (IdentityDialog* self, I
 #line 295 "moonshot-identity-dialog.vala"
 		export_button = g_object_ref_sink ((GtkButton*) gtk_button_new_with_label (_ ("Export Certificate")));
 #line 296 "moonshot-identity-dialog.vala"
-		g_signal_connect_data (export_button, "clicked", (GCallback) __lambda6__gtk_button_clicked, block3_data_ref (_data3_), (GClosureNotify) block3_data_unref, 0);
+		g_signal_connect_data (export_button, "clicked", (GCallback) __lambda6__gtk_button_clicked, block4_data_ref (_data4_), (GClosureNotify) block4_data_unref, 0);
 #line 298 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, (GtkWidget*) ca_cert_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 20, (guint) 0);
+		gtk_table_attach (_data4_->ta_table, (GtkWidget*) ca_cert_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 20, (guint) 0);
 #line 299 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, (GtkWidget*) export_button, (guint) 1, (guint) 2, (guint) row, (guint) (row + 1), fill, fill, (guint) 0, (guint) 0);
+		gtk_table_attach (_data4_->ta_table, (GtkWidget*) export_button, (guint) 1, (guint) 2, (guint) row, (guint) (row + 1), fill, fill, (guint) 0, (guint) 0);
 #line 300 "moonshot-identity-dialog.vala"
 		row++;
 #line 302 "moonshot-identity-dialog.vala"
-		if (_vala_strcmp0 (trust_anchor_get_subject (id_card_get_trust_anchor (_data3_->id)), "") != 0) {
+		if (_vala_strcmp0 (trust_anchor_get_subject (id_card_get_trust_anchor (_data4_->id)), "") != 0) {
 #line 805 "moonshot-identity-dialog.c"
 			char* _tmp5_;
 			GtkLabel* _tmp6_;
 			GtkLabel* subject_label;
 #line 303 "moonshot-identity-dialog.vala"
-			subject_label = (_tmp6_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp5_ = g_strconcat (_ ("Subject: "), trust_anchor_get_subject (id_card_get_trust_anchor (_data3_->id)), NULL))), _g_free0 (_tmp5_), _tmp6_);
+			subject_label = (_tmp6_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp5_ = g_strconcat (_ ("Subject: "), trust_anchor_get_subject (id_card_get_trust_anchor (_data4_->id)), NULL))), _g_free0 (_tmp5_), _tmp6_);
 #line 304 "moonshot-identity-dialog.vala"
 			gtk_misc_set_alignment ((GtkMisc*) subject_label, (float) 0, 0.5f);
 #line 305 "moonshot-identity-dialog.vala"
-			gtk_table_attach (_data3_->ta_table, (GtkWidget*) subject_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 40, (guint) 5);
+			gtk_table_attach (_data4_->ta_table, (GtkWidget*) subject_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 40, (guint) 5);
 #line 306 "moonshot-identity-dialog.vala"
 			row++;
 #line 817 "moonshot-identity-dialog.c"
 			_g_object_unref0 (subject_label);
 		}
 #line 309 "moonshot-identity-dialog.vala"
-		if (_vala_strcmp0 (trust_anchor_get_subject_alt (id_card_get_trust_anchor (_data3_->id)), "") != 0) {
+		if (_vala_strcmp0 (trust_anchor_get_subject_alt (id_card_get_trust_anchor (_data4_->id)), "") != 0) {
 #line 822 "moonshot-identity-dialog.c"
 			char* _tmp7_;
 			GtkLabel* _tmp8_;
 			GtkLabel* subject_alt_label;
 #line 310 "moonshot-identity-dialog.vala"
-			subject_alt_label = (_tmp8_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp7_ = g_strconcat (_ ("Subject-Alt: "), trust_anchor_get_subject_alt (id_card_get_trust_anchor (_data3_->id)), NULL))), _g_free0 (_tmp7_), _tmp8_);
+			subject_alt_label = (_tmp8_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp7_ = g_strconcat (_ ("Subject-Alt: "), trust_anchor_get_subject_alt (id_card_get_trust_anchor (_data4_->id)), NULL))), _g_free0 (_tmp7_), _tmp8_);
 #line 311 "moonshot-identity-dialog.vala"
 			gtk_misc_set_alignment ((GtkMisc*) subject_alt_label, (float) 0, 0.5f);
 #line 312 "moonshot-identity-dialog.vala"
-			gtk_table_attach (_data3_->ta_table, (GtkWidget*) subject_alt_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 40, (guint) 5);
+			gtk_table_attach (_data4_->ta_table, (GtkWidget*) subject_alt_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 40, (guint) 5);
 #line 313 "moonshot-identity-dialog.vala"
 			row++;
 #line 834 "moonshot-identity-dialog.c"
 			_g_object_unref0 (subject_alt_label);
 		}
 #line 316 "moonshot-identity-dialog.vala"
-		expiration_label = (_tmp11_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp10_ = g_strconcat (_ ("Expiration date: "), _tmp9_ = trust_anchor_get_expiration_date (id_card_get_trust_anchor (_data3_->id), NULL), NULL))), _g_free0 (_tmp10_), _g_free0 (_tmp9_), _tmp11_);
+		expiration_label = (_tmp11_ = g_object_ref_sink ((GtkLabel*) gtk_label_new (_tmp10_ = g_strconcat (_ ("Expiration date: "), _tmp9_ = trust_anchor_get_expiration_date (id_card_get_trust_anchor (_data4_->id), NULL), NULL))), _g_free0 (_tmp10_), _g_free0 (_tmp9_), _tmp11_);
 #line 317 "moonshot-identity-dialog.vala"
 		gtk_misc_set_alignment ((GtkMisc*) expiration_label, (float) 0, 0.5f);
 #line 318 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, (GtkWidget*) expiration_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 40, (guint) 5);
+		gtk_table_attach (_data4_->ta_table, (GtkWidget*) expiration_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 40, (guint) 5);
 #line 319 "moonshot-identity-dialog.vala"
 		row++;
 #line 322 "moonshot-identity-dialog.vala"
@@ -846,7 +846,7 @@ static GtkWidget* identity_dialog_make_trust_anchor_box (IdentityDialog* self, I
 #line 323 "moonshot-identity-dialog.vala"
 		gtk_misc_set_alignment ((GtkMisc*) constraint_label, (float) 0, 0.5f);
 #line 324 "moonshot-identity-dialog.vala"
-		gtk_table_attach (_data3_->ta_table, (GtkWidget*) constraint_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data3_->fill_and_expand, _data3_->fill_and_expand, (guint) 20, (guint) 0);
+		gtk_table_attach (_data4_->ta_table, (GtkWidget*) constraint_label, (guint) 0, (guint) 1, (guint) row, (guint) (row + 1), _data4_->fill_and_expand, _data4_->fill_and_expand, (guint) 20, (guint) 0);
 #line 325 "moonshot-identity-dialog.vala"
 		row++;
 #line 853 "moonshot-identity-dialog.c"
@@ -856,12 +856,12 @@ static GtkWidget* identity_dialog_make_trust_anchor_box (IdentityDialog* self, I
 		_g_object_unref0 (ca_cert_label);
 	}
 #line 328 "moonshot-identity-dialog.vala"
-	gtk_box_pack_start ((GtkBox*) trust_anchor_box, (GtkWidget*) _data3_->ta_table, FALSE, FALSE, (guint) 0);
+	gtk_box_pack_start ((GtkBox*) trust_anchor_box, (GtkWidget*) _data4_->ta_table, FALSE, FALSE, (guint) 0);
 #line 861 "moonshot-identity-dialog.c"
 	result = (GtkWidget*) trust_anchor_box;
 	_g_object_unref0 (added_label);
 	_g_object_unref0 (ta_clear_button);
-	block3_data_unref (_data3_);
+	block4_data_unref (_data4_);
 #line 329 "moonshot-identity-dialog.vala"
 	return result;
 #line 868 "moonshot-identity-dialog.c"
@@ -1089,9 +1089,9 @@ static void identity_dialog_on_response (IdentityDialog* self, GtkDialog* source
 
 
 #line 461 "moonshot-identity-dialog.vala"
-static gboolean _lambda7_ (Block5Data* _data5_) {
+static gboolean _lambda7_ (Block6Data* _data6_) {
 #line 1094 "moonshot-identity-dialog.c"
-	Block4Data* _data4_;
+	Block5Data* _data5_;
 	IdentityDialog * self;
 	gboolean result = FALSE;
 	GtkStateType state;
@@ -1100,10 +1100,10 @@ static gboolean _lambda7_ (Block5Data* _data5_) {
 	char* _tmp2_;
 	char* _tmp3_;
 	char* _tmp4_;
-	_data4_ = _data5_->_data4_;
-	self = _data4_->self;
+	_data5_ = _data6_->_data5_;
+	self = _data5_->self;
 #line 463 "moonshot-identity-dialog.vala"
-	state = gtk_widget_get_state ((GtkWidget*) _data5_->label);
+	state = gtk_widget_get_state ((GtkWidget*) _data6_->label);
 #line 464 "moonshot-identity-dialog.vala"
 	moonshot_logger_trace (identity_dialog_logger, _tmp4_ = g_strconcat (_tmp2_ = g_strconcat (_tmp1_ = g_strconcat ("button_press_callback: Label state=", (_tmp0_ = g_enum_get_value (g_type_class_ref (GTK_TYPE_STATE_TYPE), (int) state), (_tmp0_ != NULL) ? _tmp0_->value_name : NULL), NULL), " setting bg to ", NULL), _tmp3_ = gdk_color_to_string (&identity_dialog_white), NULL), NULL);
 #line 1110 "moonshot-identity-dialog.c"
@@ -1112,7 +1112,7 @@ static gboolean _lambda7_ (Block5Data* _data5_) {
 	_g_free0 (_tmp2_);
 	_g_free0 (_tmp1_);
 #line 466 "moonshot-identity-dialog.vala"
-	if (self->priv->selected_item == _data5_->label) {
+	if (self->priv->selected_item == _data6_->label) {
 #line 1117 "moonshot-identity-dialog.c"
 		GtkLabel* _tmp5_;
 #line 469 "moonshot-identity-dialog.vala"
@@ -1120,7 +1120,7 @@ static gboolean _lambda7_ (Block5Data* _data5_) {
 #line 470 "moonshot-identity-dialog.vala"
 		self->priv->selected_item = (_tmp5_ = NULL, _g_object_unref0 (self->priv->selected_item), _tmp5_);
 #line 471 "moonshot-identity-dialog.vala"
-		gtk_widget_set_sensitive ((GtkWidget*) _data4_->remove_button, FALSE);
+		gtk_widget_set_sensitive ((GtkWidget*) _data5_->remove_button, FALSE);
 #line 1125 "moonshot-identity-dialog.c"
 	} else {
 		GtkLabel* _tmp7_;
@@ -1135,11 +1135,11 @@ static gboolean _lambda7_ (Block5Data* _data5_) {
 #line 1136 "moonshot-identity-dialog.c"
 		}
 #line 483 "moonshot-identity-dialog.vala"
-		self->priv->selected_item = (_tmp7_ = _g_object_ref0 (_data5_->label), _g_object_unref0 (self->priv->selected_item), _tmp7_);
+		self->priv->selected_item = (_tmp7_ = _g_object_ref0 (_data6_->label), _g_object_unref0 (self->priv->selected_item), _tmp7_);
 #line 484 "moonshot-identity-dialog.vala"
 		gtk_widget_modify_bg ((GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self->priv->selected_item), state, &identity_dialog_selected_color);
 #line 485 "moonshot-identity-dialog.vala"
-		gtk_widget_set_sensitive ((GtkWidget*) _data4_->remove_button, TRUE);
+		gtk_widget_set_sensitive ((GtkWidget*) _data5_->remove_button, TRUE);
 #line 1144 "moonshot-identity-dialog.c"
 	}
 	result = FALSE;
@@ -1158,23 +1158,23 @@ static gboolean __lambda7__gtk_widget_button_press_event (GtkWidget* _sender, Gd
 }
 
 
-static Block5Data* block5_data_ref (Block5Data* _data5_) {
-	g_atomic_int_inc (&_data5_->_ref_count_);
-	return _data5_;
+static Block6Data* block6_data_ref (Block6Data* _data6_) {
+	g_atomic_int_inc (&_data6_->_ref_count_);
+	return _data6_;
 }
 
 
-static void block5_data_unref (Block5Data* _data5_) {
-	if (g_atomic_int_dec_and_test (&_data5_->_ref_count_)) {
-		block4_data_unref (_data5_->_data4_);
-		_g_object_unref0 (_data5_->label);
-		g_slice_free (Block5Data, _data5_);
+static void block6_data_unref (Block6Data* _data6_) {
+	if (g_atomic_int_dec_and_test (&_data6_->_ref_count_)) {
+		block5_data_unref (_data6_->_data5_);
+		_g_object_unref0 (_data6_->label);
+		g_slice_free (Block6Data, _data6_);
 	}
 }
 
 
 #line 494 "moonshot-identity-dialog.vala"
-static void _lambda8_ (GtkButton* remove_button, Block4Data* _data4_) {
+static void _lambda8_ (GtkButton* remove_button, Block5Data* _data5_) {
 #line 1179 "moonshot-identity-dialog.c"
 	IdentityDialog * self;
 	char* _tmp0_;
@@ -1183,7 +1183,7 @@ static void _lambda8_ (GtkButton* remove_button, Block4Data* _data4_) {
 	char* _tmp3_;
 	gboolean _tmp4_;
 	gboolean _result_;
-	self = _data4_->self;
+	self = _data5_->self;
 #line 494 "moonshot-identity-dialog.vala"
 	g_return_if_fail (remove_button != NULL);
 #line 496 "moonshot-identity-dialog.vala"
@@ -1197,7 +1197,7 @@ static void _lambda8_ (GtkButton* remove_button, Block4Data* _data4_) {
 #line 508 "moonshot-identity-dialog.vala"
 			gee_abstract_collection_remove ((GeeAbstractCollection*) self->priv->services, gtk_label_get_label (self->priv->selected_item));
 #line 509 "moonshot-identity-dialog.vala"
-			gtk_container_remove ((GtkContainer*) _data4_->services_table, (GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self->priv->selected_item));
+			gtk_container_remove ((GtkContainer*) _data5_->services_table, (GtkWidget*) gtk_widget_get_parent ((GtkWidget*) self->priv->selected_item));
 #line 510 "moonshot-identity-dialog.vala"
 			self->priv->selected_item = (_tmp5_ = NULL, _g_object_unref0 (self->priv->selected_item), _tmp5_);
 #line 511 "moonshot-identity-dialog.vala"
@@ -1215,18 +1215,18 @@ static void __lambda8__gtk_button_clicked (GtkButton* _sender, gpointer self) {
 }
 
 
-static Block4Data* block4_data_ref (Block4Data* _data4_) {
-	g_atomic_int_inc (&_data4_->_ref_count_);
-	return _data4_;
+static Block5Data* block5_data_ref (Block5Data* _data5_) {
+	g_atomic_int_inc (&_data5_->_ref_count_);
+	return _data5_;
 }
 
 
-static void block4_data_unref (Block4Data* _data4_) {
-	if (g_atomic_int_dec_and_test (&_data4_->_ref_count_)) {
-		_g_object_unref0 (_data4_->self);
-		_g_object_unref0 (_data4_->services_table);
-		_g_object_unref0 (_data4_->remove_button);
-		g_slice_free (Block4Data, _data4_);
+static void block5_data_unref (Block5Data* _data5_) {
+	if (g_atomic_int_dec_and_test (&_data5_->_ref_count_)) {
+		_g_object_unref0 (_data5_->self);
+		_g_object_unref0 (_data5_->services_table);
+		_g_object_unref0 (_data5_->remove_button);
+		g_slice_free (Block5Data, _data5_);
 	}
 }
 
@@ -1235,7 +1235,7 @@ static void block4_data_unref (Block4Data* _data4_) {
 static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 1237 "moonshot-identity-dialog.c"
 	GtkVBox* result = NULL;
-	Block4Data* _data4_;
+	Block5Data* _data5_;
 	GtkAlignment* services_vbox_alignment;
 	GtkScrolledWindow* services_vscroll;
 	GtkHBox* table_button_hbox;
@@ -1247,9 +1247,9 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 405 "moonshot-identity-dialog.vala"
 	g_return_val_if_fail (self != NULL, NULL);
 #line 1250 "moonshot-identity-dialog.c"
-	_data4_ = g_slice_new0 (Block4Data);
-	_data4_->_ref_count_ = 1;
-	_data4_->self = g_object_ref (self);
+	_data5_ = g_slice_new0 (Block5Data);
+	_data5_->_ref_count_ = 1;
+	_data5_->self = g_object_ref (self);
 #line 407 "moonshot-identity-dialog.vala"
 	moonshot_logger_trace (identity_dialog_logger, "make_services_vbox", NULL);
 #line 409 "moonshot-identity-dialog.vala"
@@ -1265,17 +1265,17 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 414 "moonshot-identity-dialog.vala"
 	gtk_scrolled_window_add_with_viewport (services_vscroll, (GtkWidget*) services_vbox_alignment);
 #line 1268 "moonshot-identity-dialog.c"
-	_data4_->remove_button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock (GTK_STOCK_REMOVE));
+	_data5_->remove_button = g_object_ref_sink ((GtkButton*) gtk_button_new_from_stock (GTK_STOCK_REMOVE));
 #line 421 "moonshot-identity-dialog.vala"
-	gtk_widget_set_sensitive ((GtkWidget*) _data4_->remove_button, FALSE);
+	gtk_widget_set_sensitive ((GtkWidget*) _data5_->remove_button, FALSE);
 #line 1272 "moonshot-identity-dialog.c"
-	_data4_->services_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) gee_collection_get_size ((GeeCollection*) id_card_get_services (self->priv->card)), (guint) 1, FALSE));
+	_data5_->services_table = g_object_ref_sink ((GtkTable*) gtk_table_new ((guint) gee_collection_get_size ((GeeCollection*) id_card_get_services (self->priv->card)), (guint) 1, FALSE));
 #line 425 "moonshot-identity-dialog.vala"
-	gtk_table_set_row_spacings (_data4_->services_table, (guint) 1);
+	gtk_table_set_row_spacings (_data5_->services_table, (guint) 1);
 #line 426 "moonshot-identity-dialog.vala"
-	gtk_table_set_col_spacings (_data4_->services_table, (guint) 0);
+	gtk_table_set_col_spacings (_data5_->services_table, (guint) 0);
 #line 427 "moonshot-identity-dialog.vala"
-	set_bg_color ((GtkWidget*) _data4_->services_table);
+	set_bg_color ((GtkWidget*) _data5_->services_table);
 #line 429 "moonshot-identity-dialog.vala"
 	table_button_hbox = g_object_ref_sink ((GtkHBox*) gtk_hbox_new (FALSE, 6));
 #line 430 "moonshot-identity-dialog.vala"
@@ -1283,7 +1283,7 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 433 "moonshot-identity-dialog.vala"
 	fixed_height = g_object_ref_sink ((GtkVBox*) gtk_vbox_new (FALSE, 0));
 #line 434 "moonshot-identity-dialog.vala"
-	gtk_box_pack_start ((GtkBox*) fixed_height, (GtkWidget*) _data4_->remove_button, FALSE, FALSE, (guint) 0);
+	gtk_box_pack_start ((GtkBox*) fixed_height, (GtkWidget*) _data5_->remove_button, FALSE, FALSE, (guint) 0);
 #line 435 "moonshot-identity-dialog.vala"
 	gtk_box_pack_start ((GtkBox*) table_button_hbox, (GtkWidget*) fixed_height, FALSE, FALSE, (guint) 0);
 #line 439 "moonshot-identity-dialog.vala"
@@ -1291,7 +1291,7 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 440 "moonshot-identity-dialog.vala"
 	set_bg_color ((GtkWidget*) table_bg);
 #line 441 "moonshot-identity-dialog.vala"
-	gtk_container_add ((GtkContainer*) table_bg, (GtkWidget*) _data4_->services_table);
+	gtk_container_add ((GtkContainer*) table_bg, (GtkWidget*) _data5_->services_table);
 #line 442 "moonshot-identity-dialog.vala"
 	gtk_container_add ((GtkContainer*) services_vbox_alignment, (GtkWidget*) table_bg);
 #line 444 "moonshot-identity-dialog.vala"
@@ -1314,16 +1314,16 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 452 "moonshot-identity-dialog.vala"
 		while (TRUE) {
 #line 1317 "moonshot-identity-dialog.c"
-			Block5Data* _data5_;
+			Block6Data* _data6_;
 			char* service;
 			GtkEventBox* event_box;
-			_data5_ = g_slice_new0 (Block5Data);
-			_data5_->_ref_count_ = 1;
-			_data5_->_data4_ = block4_data_ref (_data4_);
+			_data6_ = g_slice_new0 (Block6Data);
+			_data6_->_ref_count_ = 1;
+			_data6_->_data5_ = block5_data_ref (_data5_);
 #line 452 "moonshot-identity-dialog.vala"
 			if (!gee_iterator_next (_service_it)) {
 #line 1326 "moonshot-identity-dialog.c"
-				block5_data_unref (_data5_);
+				block6_data_unref (_data6_);
 #line 452 "moonshot-identity-dialog.vala"
 				break;
 #line 1330 "moonshot-identity-dialog.c"
@@ -1331,32 +1331,32 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 #line 452 "moonshot-identity-dialog.vala"
 			service = (char*) gee_iterator_get (_service_it);
 #line 1334 "moonshot-identity-dialog.c"
-			_data5_->label = g_object_ref_sink ((GtkLabel*) gtk_label_new (service));
+			_data6_->label = g_object_ref_sink ((GtkLabel*) gtk_label_new (service));
 #line 455 "moonshot-identity-dialog.vala"
-			gtk_misc_set_alignment ((GtkMisc*) _data5_->label, (float) 0, (float) 0);
+			gtk_misc_set_alignment ((GtkMisc*) _data6_->label, (float) 0, (float) 0);
 #line 456 "moonshot-identity-dialog.vala"
-			g_object_set ((GtkMisc*) _data5_->label, "xpad", 3, NULL);
+			g_object_set ((GtkMisc*) _data6_->label, "xpad", 3, NULL);
 #line 458 "moonshot-identity-dialog.vala"
 			event_box = g_object_ref_sink ((GtkEventBox*) gtk_event_box_new ());
 #line 459 "moonshot-identity-dialog.vala"
 			gtk_widget_modify_bg ((GtkWidget*) event_box, GTK_STATE_NORMAL, &identity_dialog_white);
 #line 460 "moonshot-identity-dialog.vala"
-			gtk_container_add ((GtkContainer*) event_box, (GtkWidget*) _data5_->label);
+			gtk_container_add ((GtkContainer*) event_box, (GtkWidget*) _data6_->label);
 #line 461 "moonshot-identity-dialog.vala"
-			g_signal_connect_data ((GtkWidget*) event_box, "button-press-event", (GCallback) __lambda7__gtk_widget_button_press_event, block5_data_ref (_data5_), (GClosureNotify) block5_data_unref, 0);
+			g_signal_connect_data ((GtkWidget*) event_box, "button-press-event", (GCallback) __lambda7__gtk_widget_button_press_event, block6_data_ref (_data6_), (GClosureNotify) block6_data_unref, 0);
 #line 490 "moonshot-identity-dialog.vala"
-			gtk_table_attach_defaults (_data4_->services_table, (GtkWidget*) event_box, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1));
+			gtk_table_attach_defaults (_data5_->services_table, (GtkWidget*) event_box, (guint) 0, (guint) 1, (guint) i, (guint) (i + 1));
 #line 491 "moonshot-identity-dialog.vala"
 			i++;
 #line 1352 "moonshot-identity-dialog.c"
 			_g_object_unref0 (event_box);
 			_g_free0 (service);
-			block5_data_unref (_data5_);
+			block6_data_unref (_data6_);
 		}
 		_g_object_unref0 (_service_it);
 	}
 #line 494 "moonshot-identity-dialog.vala"
-	g_signal_connect_data (_data4_->remove_button, "clicked", (GCallback) __lambda8__gtk_button_clicked, block4_data_ref (_data4_), (GClosureNotify) block4_data_unref, 0);
+	g_signal_connect_data (_data5_->remove_button, "clicked", (GCallback) __lambda8__gtk_button_clicked, block5_data_ref (_data5_), (GClosureNotify) block5_data_unref, 0);
 #line 1361 "moonshot-identity-dialog.c"
 	result = services_vbox;
 	_g_object_unref0 (services_vbox_title);
@@ -1365,7 +1365,7 @@ static GtkVBox* identity_dialog_make_services_vbox (IdentityDialog* self) {
 	_g_object_unref0 (table_button_hbox);
 	_g_object_unref0 (services_vscroll);
 	_g_object_unref0 (services_vbox_alignment);
-	block4_data_unref (_data4_);
+	block5_data_unref (_data5_);
 #line 517 "moonshot-identity-dialog.vala"
 	return result;
 #line 1372 "moonshot-identity-dialog.c"
@@ -1394,7 +1394,7 @@ static char* string_replace (const char* self, const char* old, const char* repl
 #line 1395 "moonshot-identity-dialog.c"
 		if (_inner_error_ != NULL) {
 			if (_inner_error_->domain == G_REGEX_ERROR) {
-				goto __catch9_g_regex_error;
+				goto __catch10_g_regex_error;
 			}
 			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
 			g_clear_error (&_inner_error_);
@@ -1406,7 +1406,7 @@ static char* string_replace (const char* self, const char* old, const char* repl
 		if (_inner_error_ != NULL) {
 			_g_regex_unref0 (regex);
 			if (_inner_error_->domain == G_REGEX_ERROR) {
-				goto __catch9_g_regex_error;
+				goto __catch10_g_regex_error;
 			}
 			_g_regex_unref0 (regex);
 			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
@@ -1419,8 +1419,8 @@ static char* string_replace (const char* self, const char* old, const char* repl
 		return result;
 #line 1421 "moonshot-identity-dialog.c"
 	}
-	goto __finally9;
-	__catch9_g_regex_error:
+	goto __finally10;
+	__catch10_g_regex_error:
 	{
 		GError * e;
 		e = _inner_error_;
@@ -1432,7 +1432,7 @@ static char* string_replace (const char* self, const char* old, const char* repl
 			_g_error_free0 (e);
 		}
 	}
-	__finally9:
+	__finally10:
 	if (_inner_error_ != NULL) {
 		g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
 		g_clear_error (&_inner_error_);

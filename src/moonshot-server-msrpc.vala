@@ -246,11 +246,11 @@ public class MoonshotServer : Object {
 
         mutex.lock();
 
-        ArrayList<IdCard>? old_duplicates = null;
+        ArrayList<IdCard> old_duplicates = new ArrayList<IdCard>();
         // Defer addition to the main loop thread.
         Idle.add(() => {
                 mutex.lock();
-                success = parent_app.add_identity(idcard, force_flat_file_store, out old_duplicates);
+                success = parent_app.add_identity(idcard, force_flat_file_store, old_duplicates);
                 foreach (IdCard id_card in old_duplicates) {
                     stdout.printf("removing duplicate id for '%s'\n", new_card.nai);
                 }

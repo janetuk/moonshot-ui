@@ -53,7 +53,17 @@ public bool gtk_available = false;
 
 public Gdk.Pixbuf? get_pixbuf(IdCard id)
 {
-    return find_icon("avatar-default", 48);
+    // NOTE: This is Centos 6 - specific. For other OSs, use:
+    // return find_icon("avatar-default", 48);
+
+    return null;
+
+// This might work on Centos 6 if we use the "gnome" theme instead of "default"
+//    Gdk.Pixbuf? pixbuf = find_icon("stock-person", 48);
+//    if (pixbuf != null) {
+//       return pixbuf;
+//    }
+//    return find_icon("stock-person", 32);
 }
 
 public Gdk.Pixbuf? find_icon(string name, int size)
@@ -84,6 +94,8 @@ public Gdk.Pixbuf? find_icon(string name, int size)
         return null;
     }
 }
+
+
 
 public extern unowned string GetUserName();
 public extern unowned string GetFlatStoreUsersFilePath();
@@ -143,7 +155,7 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     var fingerprint_width_constraint = new ScrolledWindow(null, null);
     fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
     fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
-    fingerprint_width_constraint.set_size_request(360, 60);
+    fingerprint_width_constraint.set_size_request(400, 60);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
     var vbox = new VBox(false, 0);
