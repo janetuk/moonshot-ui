@@ -64,6 +64,7 @@
     [self getSavedIdentities];
     [self setupView];
     [self registerForNSNotifications];
+    NSLog(@"Main View Controller Thread %@",[NSThread currentThread]);
 }
 
 - (void)setRepresentedObject:(id)representedObject {
@@ -542,9 +543,9 @@
     [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"Read_More_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Error_Parsing_XML_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Parsing_XML_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:
+                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:NSLocalizedString(@"Wiki_URL", @"")]];
                 break;
             case NSAlertSecondButtonReturn:
-                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:NSLocalizedString(@"Wiki_URL", @"")]];
                 break;
             default:
                 break;

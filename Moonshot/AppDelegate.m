@@ -14,20 +14,23 @@
 @interface AppDelegate ()
 @property (strong) IBOutlet NSWindow *window;
 @property (nonatomic, strong) IBOutlet NSViewController *viewController;
-@property (nonatomic, strong) NSString *serviceString;
+@property (nonatomic, strong) MSTGetIdentityAction *ongoingIdentitySelectAction;
+
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    BOOL serviceStringExists = !self.serviceString;
-    BOOL serviceStringEmpty = [self.serviceString isEqualToString:@""];
-    
-    if (serviceStringExists || serviceStringEmpty) {
-        [self setIdentityManagerViewController];
-    } else {
-        [self setIdentitySelectorViewController];
-    }
+//    BOOL serviceStringExists = !self.serviceString;
+//    BOOL serviceStringEmpty = [self.serviceString isEqualToString:@""];
+//    
+//    if (serviceStringExists || serviceStringEmpty) {
+//        [self setIdentityManagerViewController];
+//    } else {
+//        [self setIdentitySelectorViewController];
+//    }
+    [self setIdentityManagerViewController];
+
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
@@ -40,20 +43,20 @@
 }
 
 - (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
-    NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
-    NSString *urlParameter = [[url host] stringByRemovingPercentEncoding];
-    self.serviceString = urlParameter;
-    if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]] count] > 0) {
-        [self setIdentitySelectorViewController];
-    }
+//    NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
+//    NSString *urlParameter = [[url host] stringByRemovingPercentEncoding];
+//    self.serviceString = urlParameter;
+//    if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]] count] > 0) {
+//        [self setIdentitySelectorViewController];
+//    }
 }
 
 #pragma mark - Set Content ViewController
 
-- (void)setIdentitySelectorViewController {
+- (void)setIdentitySelectorViewController:(NSString *)serviceString {
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"MSTIdentitySelectorViewController"];
-    ((MSTIdentitySelectorViewController *)_viewController).service = self.serviceString;
+    ((MSTIdentitySelectorViewController *)_viewController).service = serviceString;
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Selector_Window_Title", @"")];
 }
@@ -81,6 +84,14 @@
 
 - (IBAction)removeIdentity:(id)sender {
     [[NSNotificationCenter defaultCenter] postNotificationName:MST_REMOVE_IDENTITY_NOTIFICATION object:nil];
+}
+
+#pragma mark - Get Identity Action
+- (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password {
+//    self.ongoingIdentitySelectAction = [[MSTGetIdentityAction alloc] init];
+//    [self.ongoingIdentitySelectAction initiateFetchIdentityFor:nai service:service password:password];
+    self.ongoingIdentitySelectAction = [[MSTGetIdentityAction alloc] init];
+    [self setIdentitySelectorViewController:service];
 }
 
 @end

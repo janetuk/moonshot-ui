@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */; };
+		2C9010591F62A0A600EF7B05 /* MSTGetIdentityAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */; };
+		2C90105C1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C90105B1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.m */; };
+		2CE4923C1F5F7C5600F294D5 /* Moonshot.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4923B1F5F7C5600F294D5 /* Moonshot.sdef */; };
+		2CE492421F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE492411F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.m */; };
+		2CE492451F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE492441F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.m */; };
 		7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF2C1DD084D600F23D89 /* MainViewController.m */; };
 		7812FF2F1DD0A39800F23D89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7812FF2E1DD0A39800F23D89 /* Localizable.strings */; };
 		7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF351DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m */; };
@@ -107,6 +112,15 @@
 /* Begin PBXFileReference section */
 		2C8E59F61DD5FCDB0014C1D6 /* MSTIdentityDataLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTIdentityDataLayer.h; sourceTree = "<group>"; };
 		2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTIdentityDataLayer.m; sourceTree = "<group>"; };
+		2C9010571F62A0A600EF7B05 /* MSTGetIdentityAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTGetIdentityAction.h; sourceTree = "<group>"; };
+		2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTGetIdentityAction.m; sourceTree = "<group>"; };
+		2C90105A1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTStatusGetIdentityScriptComment.h; sourceTree = "<group>"; };
+		2C90105B1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTStatusGetIdentityScriptComment.m; sourceTree = "<group>"; };
+		2CE4923B1F5F7C5600F294D5 /* Moonshot.sdef */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Moonshot.sdef; sourceTree = "<group>"; };
+		2CE492401F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTRequestGetIdentityScriptCommand.h; sourceTree = "<group>"; };
+		2CE492411F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTRequestGetIdentityScriptCommand.m; sourceTree = "<group>"; };
+		2CE492431F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTResultGetIdentityScriptCommant.h; sourceTree = "<group>"; };
+		2CE492441F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTResultGetIdentityScriptCommant.m; sourceTree = "<group>"; };
 		7812FF2B1DD084D600F23D89 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		7812FF2C1DD084D600F23D89 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		7812FF2E1DD0A39800F23D89 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -237,6 +251,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2CE492461F621BC800F294D5 /* AppleScript */ = {
+			isa = PBXGroup;
+			children = (
+				2CE4923B1F5F7C5600F294D5 /* Moonshot.sdef */,
+				2CE492401F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.h */,
+				2CE492411F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.m */,
+				2CE492431F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.h */,
+				2CE492441F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.m */,
+				2C90105A1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.h */,
+				2C90105B1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.m */,
+			);
+			name = AppleScript;
+			sourceTree = "<group>";
+		};
 		7812FF301DD0DDCD00F23D89 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
@@ -258,6 +286,8 @@
 				7858337D1DB9015F00DF0117 /* Models */,
 				2C8E59F61DD5FCDB0014C1D6 /* MSTIdentityDataLayer.h */,
 				2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */,
+				2C9010571F62A0A600EF7B05 /* MSTGetIdentityAction.h */,
+				2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -374,6 +404,7 @@
 		78A330B11DAF7CB500702060 /* Moonshot */ = {
 			isa = PBXGroup;
 			children = (
+				2CE492461F621BC800F294D5 /* AppleScript */,
 				78AA8C6F1E11359700718276 /* Moonshot.entitlements */,
 				78A6643B1DF6FBE6006BA1F4 /* External */,
 				7812FF301DD0DDCD00F23D89 /* Categories */,
@@ -574,6 +605,7 @@
 				788BC7591DDC97DF00885268 /* info_button_selected.png in Resources */,
 				788BC75F1DDC97DF00885268 /* selected_button.png in Resources */,
 				78A128BA1E040F360075FAF4 /* service@2x.png in Resources */,
+				2CE4923C1F5F7C5600F294D5 /* Moonshot.sdef in Resources */,
 				788BC7791DDCB24400885268 /* question_button_selected@2x.png in Resources */,
 				7899E79F1DBF517600E4542E /* AddIdentityWindow.xib in Resources */,
 				788BC7911DDCB24C00885268 /* add_button@3x.png in Resources */,
@@ -636,16 +668,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C90105C1F633A9C00EF7B05 /* MSTStatusGetIdentityScriptComment.m in Sources */,
 				78BAF4371E02F30B006928B6 /* Identity+Utilities.m in Sources */,
 				78CFA6CE1DE8579F00B9B884 /* MSTIdentitySelectorViewController.m in Sources */,
+				2C9010591F62A0A600EF7B05 /* MSTGetIdentityAction.m in Sources */,
 				78C7E4551DFEB42800F6A0F2 /* MSTKeychainHelper.m in Sources */,
 				78A330B71DAF7CB500702060 /* main.m in Sources */,
 				78FA20741DC8B59D00BA9A37 /* TrustAnchorHelpWindow.m in Sources */,
 				2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */,
 				78522F7B1DDA21B300D5C231 /* NSString+GUID.m in Sources */,
+				2CE492421F621BAA00F294D5 /* MSTRequestGetIdentityScriptCommand.m in Sources */,
 				78F6E91E1DEEE8B000095A56 /* NSWindow+Utilities.m in Sources */,
 				78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */,
 				7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */,
+				2CE492451F621BC200F294D5 /* MSTResultGetIdentityScriptCommant.m in Sources */,
 				78A330B41DAF7CB500702060 /* AppDelegate.m in Sources */,
 				785833801DB901AE00DF0117 /* Identity.m in Sources */,
 				7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */,

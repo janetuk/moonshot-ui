@@ -6,9 +6,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MSTGetIdentityAction.h"
 
 @interface AppDelegate : NSObject <NSApplicationDelegate>
-
-
+@property (nonatomic, strong, readonly) MSTGetIdentityAction *ongoingIdentitySelectAction;
+- (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password;
 @end
 

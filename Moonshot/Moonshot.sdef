@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="Moonshot">
+    <suite name="Moonshot Identity Suite" code="MSht" description="Moonshot Identity Scripts">
+        <command name="request_get_identity" code="MShtrgid" description="Request identity for given args">
+            <cocoa class="MSTRequestGetIdentityScriptCommand"/>
+            <parameter name="nai" code="cnai" type="text" optional="yes"
+                description="Name and issuer constraint for the required identity, or empty">
+                <cocoa key="nai"/>
+            </parameter>
+
+            
+            <parameter name="password" code="pswd" type="text" optional="yes"
+                description="Password for the identity, or empty">
+                <cocoa key="password"/>
+            </parameter>
+            
+            <parameter name="service" code="svce" type="text" optional="yes"
+                description="Service constraint for the required identity, or empty">
+                <cocoa key="service"/>
+            </parameter>
+        </command>
+        
+        <command name="status_get_identity" code="MShtstat" description="Check if user have choosen any identity">
+            <cocoa class="MSTStatusGetIdentityScriptComment"/>
+            <result type="boolean" description="Return no if user have not choosen any identity yet"/>
+        </command>
+        
+        <command name="result_get_identity" code="MShtrslt" description="Get the choosen identity by user">
+            <cocoa class="MSTResultGetIdentityScriptCommant"/>
+            <result type="text" description="Return selected identity JSON"/>
+        </command>
+    </suite>
+</dictionary>

@@ -240,28 +240,9 @@
 #pragma mark - 
 
 - (void)showAlertForIdentitysEditingStatusForIdentity:(Identity *)identity {
-    __weak __typeof__(self) weakSelf = self;
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
-        if (!error) {
-            self.service = @"";
-            [weakSelf.view.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Success_Identity_Connected", @"") informativeText:@"" alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-                switch (returnCode) {
-                    case NSAlertFirstButtonReturn:
-                        break;
-                    default:
-                        break;
-                }
-            }];
-        } else {
-            [weakSelf.view.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Error_Identity_Connected", @"") informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-                switch (returnCode) {
-                    case NSAlertFirstButtonReturn:
-                        break;
-                    default:
-                        break;
-                }
-            }];
-        }
+        AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+        delegate.ongoingIdentitySelectAction.selectedIdentity = identity;
     }];
 }
 @end
