@@ -10,11 +10,11 @@
 #import "MSTConstants.h"
 #import "MainViewController.h"
 #import "MSTIdentitySelectorViewController.h"
+#import "MSTDBusServer.h"
 
 @interface AppDelegate ()
 @property (strong) IBOutlet NSWindow *window;
 @property (nonatomic, strong) IBOutlet NSViewController *viewController;
-@property (nonatomic, strong) MSTGetIdentityAction *ongoingIdentitySelectAction;
 
 @end
 
@@ -30,7 +30,6 @@
 //        [self setIdentitySelectorViewController];
 //    }
     [self setIdentityManagerViewController];
-
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
@@ -53,10 +52,10 @@
 
 #pragma mark - Set Content ViewController
 
-- (void)setIdentitySelectorViewController:(NSString *)serviceString {
+- (void)setIdentitySelectorViewController:(MSTGetIdentityAction *)getIdentityAction {
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"MSTIdentitySelectorViewController"];
-    ((MSTIdentitySelectorViewController *)_viewController).service = serviceString;
+    ((MSTIdentitySelectorViewController *)_viewController).getIdentityAction = getIdentityAction;
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Selector_Window_Title", @"")];
 }
@@ -87,11 +86,16 @@
 }
 
 #pragma mark - Get Identity Action
-- (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password {
-//    self.ongoingIdentitySelectAction = [[MSTGetIdentityAction alloc] init];
-//    [self.ongoingIdentitySelectAction initiateFetchIdentityFor:nai service:service password:password];
-    self.ongoingIdentitySelectAction = [[MSTGetIdentityAction alloc] init];
-    [self setIdentitySelectorViewController:service];
+- (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
+    MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self setIdentitySelectorViewController:getIdentity];
+    });
 }
+
+- (void)startListeningForDBusConnections {
+    dbusStartListening();
+}
+
 
 @end

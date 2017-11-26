@@ -5,7 +5,7 @@
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>OSAScriptingDefinition</key>
-	<string>Moonshot.sdef</string>
+	<string>MoonshotScript.sdef</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>

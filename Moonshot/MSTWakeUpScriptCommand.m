@@ -1,0 +1,21 @@
+//
+//  MSTWakeUpScriptCommand.m
+//  Moonshot
+//
+//  Created by Ivan on 11/26/17.
+//  Copyright © 2017 Devsy. All rights reserved.
+//
+
+#import "MSTWakeUpScriptCommand.h"
+#import "AppDelegate.h"
+
+@implementation MSTWakeUpScriptCommand
+
+- (id)performDefaultImplementation {
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+        [delegate startListeningForDBusConnections];
+    });
+    return @(YES);
+}
+@end

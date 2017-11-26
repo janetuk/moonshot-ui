@@ -58,7 +58,7 @@
 - (void)setupTextFields {
     [self.identitySelectorTitleTextField setStringValue:NSLocalizedString(@"Select_Identity_Title", @"")];
     [self.identitySelectorServiceTitleTextField setStringValue:NSLocalizedString(@"Requested_Identity_Title", @"")];
-    [self.identitySelectorServiceValueTextField setStringValue:self.service];
+    [self.identitySelectorServiceValueTextField setStringValue:self.getIdentityAction.service];
 }
 
 #pragma mark - Setup Buttons
@@ -167,14 +167,14 @@
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
         if (identityObject.passwordRemembered) {
-            if (self.service) {
-                [identityObject.servicesArray addObject:self.service];
+            if (self.getIdentityAction.service) {
+                [identityObject.servicesArray addObject:self.getIdentityAction.service];
                 [self showAlertForIdentitysEditingStatusForIdentity:identityObject];
             }
         } else {
             self.connectIdentityWindow = [[ConnectIdentityWindow alloc] initWithWindowNibName:NSStringFromClass([ConnectIdentityWindow class])];
             self.connectIdentityWindow.delegate = self;
-            [identityObject.servicesArray addObject:self.service];
+            [identityObject.servicesArray addObject:self.getIdentityAction.service];
             self.connectIdentityWindow.identityObject = identityObject;
             [self.view.window beginSheet:self.connectIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
                 switch (returnCode) {
@@ -241,8 +241,7 @@
 
 - (void)showAlertForIdentitysEditingStatusForIdentity:(Identity *)identity {
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
-        AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
-        delegate.ongoingIdentitySelectAction.selectedIdentity = identity;
+        [self.getIdentityAction selectedIdentity:identity];
     }];
 }
 @end

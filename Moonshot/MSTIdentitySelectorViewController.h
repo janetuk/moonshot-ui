@@ -6,7 +6,8 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "MSTGetIdentityAction.h"
 
 @interface MSTIdentitySelectorViewController : NSViewController
-@property (nonatomic, strong) NSString *service;
+@property (nonatomic, strong) MSTGetIdentityAction *getIdentityAction;
 @end
