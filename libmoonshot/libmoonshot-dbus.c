@@ -71,6 +71,10 @@ static char *moonshot_launch_argv[] = {
   MOONSHOT_LAUNCH_SCRIPT, NULL
 };
 
+static char *moonshot_dbus_launched_argv[] = {
+  MOONSHOT_SERVER, "--dbus-launched", NULL
+};
+
 static DBusGConnection *dbus_launch_moonshot()
 {
     DBusGConnection *connection = NULL;
@@ -102,6 +106,7 @@ static DBusGConnection *dbus_launch_moonshot()
       return NULL;
     }
     dbus_address[addresslen-1] = '\0';
+
     connection = dbus_g_connection_open(dbus_address, &error);
     if (error) {
       g_error_free(error);
@@ -124,7 +129,7 @@ static int is_setid()
   return 0;
 }
 
-static DBusGProxy *dbus_connect (MoonshotError **error)
+static DBusGProxy *dbus_connect (MoonshotError **error, GPid *server_pid)
 {
     DBusConnection  *dbconnection;
     DBusError        dbus_error;
@@ -132,6 +137,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     DBusGProxy      *g_proxy;
     GError          *g_error = NULL;
     dbus_bool_t      name_has_owner;
+    int              ad_hoc_dbus_session = FALSE;
 
     g_return_val_if_fail (*error == NULL, NULL);
 
@@ -150,6 +156,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 #ifdef IPC_DBUS_GLIB
     if (getenv("DISPLAY")==NULL) {
         connection = dbus_launch_moonshot();
+        ad_hoc_dbus_session = TRUE;
         if (connection == NULL) {
             *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                          "Headless dbus launch failed");
@@ -163,6 +170,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
         if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
             /*Generally this means autolaunch failed because probably DISPLAY is unset*/
             connection = dbus_launch_moonshot();
+            ad_hoc_dbus_session = TRUE;
             if (connection != NULL) {
                 g_error_free(g_error);
                 g_error = NULL;
@@ -179,17 +187,37 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 
 
     dbconnection = dbus_g_connection_get_connection(connection);
-    name_has_owner  = dbus_bus_name_has_owner (dbconnection,
-                                               MOONSHOT_DBUS_NAME,
-                                               &dbus_error);
+    *server_pid = 0;
 
-    if (dbus_error_is_set (&dbus_error)) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                     "DBus error: %s",
-                                     dbus_error.message);
-        dbus_error_free (&dbus_error);
-        return NULL;
+    /* Spawn a CLI server if there is no display. If it couldn't be SPAWNED, just go on as usual.
+       For the CLI operation the server needs to be a child of the application using libmoonshot,
+       or it is not possible to get direct access to stdout and stdin.
+       If AD-HOC session was created, we skip this as we have no way to access DBUS env and
+       is being probably used by a TR/IDP.
+    */
+    if (getenv("DISPLAY") == NULL && !ad_hoc_dbus_session) {
+        if (!g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, NULL,
+                                      0, NULL, NULL, server_pid,
+                                      NULL, NULL, NULL, NULL)) {
+            *server_pid = 0;
+        }
     }
+
+    // Check whether there is a bus ownner.
+    // If server_pid != 0, we wait until the service has become the ownwer (it might take some milliseconds)
+    do {
+        name_has_owner  = dbus_bus_name_has_owner (dbconnection,
+                                                    MOONSHOT_DBUS_NAME,
+                                                    &dbus_error);
+
+        if (dbus_error_is_set (&dbus_error)) {
+            *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                       "DBus error: %s",
+                                       dbus_error.message);
+            dbus_error_free (&dbus_error);
+            return NULL;
+        }
+    } while (*server_pid != 0 && !name_has_owner);
 
     if (! name_has_owner) {
         dbus_bus_start_service_by_name (dbconnection,
@@ -235,9 +263,10 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     return g_proxy; 
 }
 
-static DBusGProxy *get_dbus_proxy (MoonshotError **error)
+static DBusGProxy *get_dbus_proxy (MoonshotError **error, GPid *server_pid)
 {
     static DBusGProxy    *dbus_proxy = NULL;
+    DBusGProxy           *rv = NULL;
     static GStaticMutex   init_lock = G_STATIC_MUTEX_INIT;
 
     g_static_mutex_lock (&init_lock);
@@ -247,7 +276,7 @@ static DBusGProxy *get_dbus_proxy (MoonshotError **error)
          * of GObject in the process
          */
         g_type_init ();
-        dbus_proxy = dbus_connect (error);
+        dbus_proxy = dbus_connect (error, server_pid);
     }
 
     if (dbus_proxy != NULL)
@@ -255,7 +284,24 @@ static DBusGProxy *get_dbus_proxy (MoonshotError **error)
 
     g_static_mutex_unlock (&init_lock);
 
-    return dbus_proxy;
+    rv = dbus_proxy;
+    // if a new server was created, the static dbus_proxy should not perdure
+    if (server_pid != 0) {
+        g_object_unref(dbus_proxy);
+        dbus_proxy = NULL;
+    }
+
+    return rv;
+}
+
+/* Releases the resources allocated for the proxy */
+static void release_dbus_proxy(DBusGProxy *dbus_proxy, GPid server_pid)
+{
+  g_object_unref (dbus_proxy);
+  if (server_pid > 0) {
+    kill(server_pid, SIGKILL);
+    g_spawn_close_pid (server_pid);
+  }
 }
 
 int moonshot_get_identity (const char     *nai,
@@ -272,8 +318,8 @@ int moonshot_get_identity (const char     *nai,
     GError     *g_error = NULL;
     DBusGProxy *dbus_proxy;
     int         success;
-
-    dbus_proxy = get_dbus_proxy (error);
+    GPid server_pid = 0;
+    dbus_proxy = get_dbus_proxy (error, &server_pid);
 
     if (*error != NULL)
         return FALSE;
@@ -297,7 +343,7 @@ int moonshot_get_identity (const char     *nai,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);
 
-    g_object_unref (dbus_proxy);
+    release_dbus_proxy(dbus_proxy, server_pid);
 
     if (g_error != NULL) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
@@ -327,7 +373,9 @@ int moonshot_get_default_identity (char          **nai_out,
     DBusGProxy *dbus_proxy;
     int         success = FALSE;
 
-    dbus_proxy = get_dbus_proxy (error);
+    GPid server_pid = 0;
+
+    dbus_proxy = get_dbus_proxy (error, &server_pid);
 
     if (*error != NULL)
         return FALSE;
@@ -348,7 +396,7 @@ int moonshot_get_default_identity (char          **nai_out,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);
 
-    g_object_unref (dbus_proxy);
+    release_dbus_proxy(dbus_proxy, server_pid);
 
     if (g_error != NULL) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
@@ -391,7 +439,9 @@ int moonshot_install_id_card (const char     *display_name,
                **rules_always_confirm_strv,
                **services_strv;
 
-    dbus_proxy = get_dbus_proxy (error);
+    GPid server_pid = 0;
+
+    dbus_proxy = get_dbus_proxy (error, &server_pid);
 
     if (*error != NULL)
         return FALSE;
@@ -435,7 +485,7 @@ int moonshot_install_id_card (const char     *display_name,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);
 
-    g_object_unref (dbus_proxy);
+    release_dbus_proxy(dbus_proxy, server_pid);
     g_free(rules_patterns_strv);
     g_free(rules_always_confirm_strv);
     g_free(services_strv);
@@ -459,7 +509,8 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
     int         success = 99;
     int         confirmed = 99;
     char        hash_str[65];
-    DBusGProxy *dbus_proxy = get_dbus_proxy (error);
+    GPid server_pid = 0;
+    DBusGProxy *dbus_proxy = get_dbus_proxy (error, &server_pid);
     int         out = 0;
     int         i;
 
@@ -488,7 +539,7 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
                                     G_TYPE_BOOLEAN, &success,
                                     G_TYPE_INVALID);
 
-    g_object_unref (dbus_proxy);
+    release_dbus_proxy(dbus_proxy, server_pid);
 
     if (g_error != NULL) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,

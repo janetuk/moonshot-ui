@@ -36,6 +36,8 @@ src/moonshot-idcard-widget.c
 src/moonshot-idcard-store.c
 src/moonshot-identity-dialog.c
 src/moonshot-identity-request.c
+src/moonshot-identity-management-cli.c
+src/moonshot-identity-management-interface.c
 src/moonshot-identity-management-view.c
 src/moonshot-identity-manager-app.c
 src/moonshot-identities-manager.c

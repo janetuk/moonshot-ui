@@ -270,6 +270,11 @@ public class IdentityManagerModel : Object {
             password_table.RemovePassword(card, store);
         retval = store.update_card(card);
         card_list_changed();
+
+        // need to restore password because update_card() will blank it
+        if (!retval.store_password)
+            password_table.RetrievePassword(retval, store);
+
         return retval;
     }
 
@@ -340,6 +345,15 @@ public class IdentityManagerModel : Object {
         return false;
     }
 
+    public bool is_locked()
+    {
+        return this.store.is_locked();
+    }
+
+    public bool unlock(string password)
+    {
+        return this.store.unlock(password);
+    }
 
     private IdentityManagerApp parent;
 

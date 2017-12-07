@@ -50,7 +50,7 @@ public class IdentityManagerApp {
     public IdentityManagerModel model;
     public IdCard default_id_card;
     public bool explicitly_launched;
-    public IdentityManagerView view;
+    public IdentityManagerInterface view;
     private MoonshotServer ipc_server;
     private bool name_is_owned;
     private bool show_requested;
@@ -112,8 +112,12 @@ public class IdentityManagerApp {
         if (headless && keyring_available && !use_flat_file_store && !model.HasNonTrivialIdentities())
             model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
 
+        /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
+        else if (Posix.isatty(Posix.STDOUT_FILENO))
+            view = new IdentityManagerCli(this, use_flat_file_store);
+
         LinkedList<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
@@ -232,9 +236,9 @@ public class IdentityManagerApp {
 
             if (confirm && (view != null))
             {
+                view.queue_identity_request(request);
                 if (!explicitly_launched)
                     show();
-                view.queue_identity_request(request);
                 return;
             }
         }
@@ -443,7 +447,7 @@ public static int main(string[] args) {
             stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
             return -1;
         }
-        explicitly_launched = false;
+        //explicitly_launched = false;
     } else {
         try {
             if (!Gtk.init_with_args(ref args, _(""), options, null)) {
