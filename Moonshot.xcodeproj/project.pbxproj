@@ -90,6 +90,8 @@
 		78FA20751DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78FA20731DC8B59D00BA9A37 /* TrustAnchorHelpWindow.xib */; };
 		78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FA20771DC8E90200BA9A37 /* AboutWindow.m */; };
 		78FA207A1DC8E90200BA9A37 /* AboutWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78FA20781DC8E90200BA9A37 /* AboutWindow.xib */; };
+		F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */ = {isa = PBXBuildFile; fileRef = F37FC0021FF5093A00779054 /* SelectionRules.m */; };
+		F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */ = {isa = PBXBuildFile; fileRef = F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -221,6 +223,10 @@
 		78FA20761DC8E90200BA9A37 /* AboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutWindow.h; sourceTree = "<group>"; };
 		78FA20771DC8E90200BA9A37 /* AboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutWindow.m; sourceTree = "<group>"; };
 		78FA20781DC8E90200BA9A37 /* AboutWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutWindow.xib; sourceTree = "<group>"; };
+		F37FC0011FF5093A00779054 /* SelectionRules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectionRules.h; sourceTree = "<group>"; };
+		F37FC0021FF5093A00779054 /* SelectionRules.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectionRules.m; sourceTree = "<group>"; };
+		F39FDA901FF69AA300BCDEFC /* TrustAnchor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustAnchor.h; sourceTree = "<group>"; };
+		F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrustAnchor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -302,6 +308,10 @@
 			children = (
 				7858337E1DB901AE00DF0117 /* Identity.h */,
 				7858337F1DB901AE00DF0117 /* Identity.m */,
+				F37FC0011FF5093A00779054 /* SelectionRules.h */,
+				F37FC0021FF5093A00779054 /* SelectionRules.m */,
+				F39FDA901FF69AA300BCDEFC /* TrustAnchor.h */,
+				F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -691,6 +701,8 @@
 				785833801DB901AE00DF0117 /* Identity.m in Sources */,
 				7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */,
 				78C73D921DBF8BE300D2BEFB /* EditIdentityWindow.m in Sources */,
+				F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */,
+				F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */,
 				7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */,
 				2C398A661FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m in Sources */,
 				782CA1071DE89F050021FA32 /* ConnectIdentityWindow.m in Sources */,

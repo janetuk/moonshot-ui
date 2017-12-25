@@ -127,11 +127,11 @@
 }
 
 - (IBAction)singleAction:(id)sender {
-    if (self.identitySelectorTableView.selectedRow != -1) {
-        [self reloadDetailsViewWithIdentityData:YES];
-    } else {
-        [self reloadDetailsViewWithIdentityData:NO];
-    }
+//    if (self.identitySelectorTableView.selectedRow != -1) {
+//        [self reloadDetailsViewWithIdentityData:YES];
+//    } else {
+//        [self reloadDetailsViewWithIdentityData:NO];
+//    }
 }
 
 #pragma mark - Buttons Actions
@@ -218,19 +218,7 @@
 #pragma mark - ConnectIdentity Delegate
 
 - (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    BOOL *isPasswordCorrect = NO;//added for now
-    if (isPasswordCorrect) {
-        [self showAlertForIdentitysEditingStatusForIdentity:identity];
-    } else {
-        [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@""  messageText:NSLocalizedString(@"Alert_Incorrect_User_Pass_Messsage", @"")  informativeText:NSLocalizedString(@"Alert_Incorrect_User_Pass_Info", @"")  alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-            switch (returnCode) {
-                case NSAlertFirstButtonReturn:
-                    break;
-                default:
-                    break;
-            }
-        }];
-    }
+    [self showAlertForIdentitysEditingStatusForIdentity:identity];
 }
 
 - (void)connectIdentityWindowCanceled:(NSWindow *)window {

@@ -14,8 +14,15 @@
 #import "NSWindow+Utilities.h"
 #import "Identity+Utilities.h"
 #import "NSString+GUID.h"
+#import "SelectionRules.h"
+#import "TrustAnchor.h"
 
 @interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, NSXMLParserDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
+
+//Menu
+@property (strong) IBOutlet NSMenu *optionsMenu;
+@property (weak) IBOutlet NSMenuItem *editIdentityMenuItem;
+@property (weak) IBOutlet NSMenuItem *removeIdentityMenuItem;
 
 //View
 @property (weak) IBOutlet NSSearchField *searchField;
@@ -49,8 +56,12 @@
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) EditIdentityWindow *editIdentityWindow;
 @property (nonatomic, strong) NSMutableDictionary *identityObject;
+@property (nonatomic, strong) NSMutableDictionary *ruleObject;
+@property (nonatomic, strong) NSMutableDictionary *trustAnchorObject;
 @property (nonatomic, strong) NSMutableArray *xmlArray;
 @property (nonatomic, strong) NSMutableArray *xmlServicesArray;
+@property (nonatomic, strong) NSMutableArray *xmlSelectionRulesArray;
+@property (nonatomic, strong) NSMutableArray *xmlTrustAnchorArray;
 @property (nonatomic, strong) NSMutableString *xmlString;
 
 @end
@@ -82,12 +93,23 @@
 #pragma mark - Setup Views
 
 - (void)setupView {
+    [self setupMenu];
     [self setupContentView];
     [self setupDetailsView];
     [self setupImportButton];
     [self setupTableViewHeader];
     [self setupUserImageView];
     [self setupBackgroundImageView];
+}
+
+- (void)setupMenu {
+    [self.optionsMenu setAutoenablesItems:NO];
+    [self setupMenuItems];
+}
+
+- (void)setupMenuItems {
+    [self.editIdentityMenuItem setTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Menu_Edit", @""), NSLocalizedString(@"Menu_Identity", @"")]];
+    [self.removeIdentityMenuItem setTitle: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Menu_Remove", @""), NSLocalizedString(@"Menu_Identity", @"")]];
 }
 
 - (void)setupContentView {
@@ -155,10 +177,11 @@
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
         if ([self.identitiesArray count] > 0) {
+            TrustAnchor *trustAnchorObject = [[identityObject valueForKey:@"trustAnchorArray"] firstObject];
             [self.displayNameTextField setStringValue: identityObject.displayName];
             [self.usernameValueTextField setStringValue: identityObject.username];
             [self.realmValueTextField setStringValue: identityObject.realm];
-            [self.trustAnchorValueTextField setStringValue:identityObject.trustAnchor];
+            [self.trustAnchorValueTextField setStringValue:trustAnchorObject ? NSLocalizedString(@"Enterprise_provisioned", @"") : NSLocalizedString(@"None", @"")];
             [self.servicesValueTextField setStringValue:[Identity getServicesStringForIdentity:identityObject]];
         }
     }
@@ -214,7 +237,9 @@
     self.editIdentityWindow = [[EditIdentityWindow alloc] initWithWindowNibName: NSStringFromClass([EditIdentityWindow class])];
     self.editIdentityWindow.delegate = self;
     Identity *identityToEdit = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
+    TrustAnchor *trustAnchorObject = [[identityToEdit valueForKey:@"trustAnchorArray"] firstObject];
     self.editIdentityWindow.identityToEdit = identityToEdit;
+    self.editIdentityWindow.trustAnchorObject = trustAnchorObject;
     [self.view.window beginSheet:self.editIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSModalResponseOK:
@@ -232,16 +257,16 @@
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
         BOOL isNoIdentityObjectSelected = [identityObject.identityId isEqualToString:@"NOIDENTITY"];
         if (isNoIdentityObjectSelected) {
-            [self setMenuItemsStatus:NO];
+            [self setEditMenuItemStatus:YES andRemoveMenuItemStatus:NO];
             [self.deleteIdentityButton setEnabled:NO];
             [self reloadDetailsViewWithIdentityData:NO];
         } else {
-            [self setMenuItemsStatus:YES];
+            [self setEditMenuItemStatus:YES andRemoveMenuItemStatus:YES];
             [self.deleteIdentityButton setEnabled:YES];
             [self reloadDetailsViewWithIdentityData:YES];
         }
     } else {
-        [self setMenuItemsStatus:NO];
+        [self setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
         [self.deleteIdentityButton setEnabled:NO];
         [self reloadDetailsViewWithIdentityData:NO];
     }
@@ -311,14 +336,41 @@
 - (void)convertObjectsFromXMLArrayToIdentityObjects {
     for (int i = 0; i< self.xmlArray.count; i++) {
         Identity *identityObject = [Identity new];
+        TrustAnchor *trustAnchorObject;
         NSObject *xmlObject = [self.xmlArray objectAtIndex:i];
+        NSMutableArray *selectionRulesArray = [[NSMutableArray alloc] init];
+        NSMutableArray *trustAnchorArray = [[NSMutableArray alloc] init];
+        if ([xmlObject valueForKey:@"selection-rules"] != nil) {
+            NSArray *selectionArray = [xmlObject valueForKey:@"selection-rules"];
+            for (id obj in selectionArray) {
+                SelectionRules *rulesObject = [SelectionRules new];
+                rulesObject.alwaysConfirm = [obj valueForKey:@"always-confirm"];
+                rulesObject.pattern = [obj valueForKey:@"pattern"];
+                [selectionRulesArray addObject:rulesObject];
+            }
+        }
+        if ([xmlObject valueForKey:@"trust-anchor"] != nil) {
+            NSArray *trustArray = [xmlObject valueForKey:@"trust-anchor"];
+            for (id obj in trustArray) {
+                trustAnchorObject = [TrustAnchor new];
+                trustAnchorObject.serverCertificate = [obj valueForKey:@"server-cert"] ?: @"";
+                trustAnchorObject.caCertificate = [obj valueForKey:@"ca-cert"] ?: @"";
+                trustAnchorObject.subject = [obj valueForKey:@"subject"] ?: @"";
+                trustAnchorObject.subjectAlt = [obj valueForKey:@"subject-alt"] ?: @"";
+                [trustAnchorArray addObject:trustAnchorObject];
+            }
+        }
         identityObject.identityId = [NSString getUUID];
-        identityObject.displayName = [xmlObject valueForKey:@"display-name"] ?: @"None";
-        identityObject.username = [xmlObject valueForKey:@"user"] ?: @"None";
-        identityObject.password = [xmlObject valueForKey:@"password"] ?: @"None";
-        identityObject.trustAnchor = @"None";
-        identityObject.realm = [xmlObject valueForKey:@"realm"] ?: @"None";
-        identityObject.servicesArray = [xmlObject valueForKey:@"services"] ?: [NSMutableArray arrayWithObject:@"None"];
+        identityObject.displayName = [xmlObject valueForKey:@"display-name"] ?: NSLocalizedString(@"None", @"");
+        identityObject.username = [xmlObject valueForKey:@"user"] ?: NSLocalizedString(@"None", @"");
+        identityObject.password = [xmlObject valueForKey:@"password"] ?: NSLocalizedString(@"None", @"");
+        identityObject.trustAnchorArray = trustAnchorArray ?: [NSMutableArray arrayWithCapacity:0];
+        identityObject.trustAnchor = (identityObject.trustAnchorArray && identityObject.trustAnchorArray.count > 0) ?  YES : NO;
+        identityObject.caCertificate = (trustAnchorObject.caCertificate && ![trustAnchorObject.caCertificate isEqualToString:@""]) ?  YES : NO;
+        identityObject.serverCertificate = (trustAnchorObject.serverCertificate && ![trustAnchorObject.serverCertificate isEqualToString:@""]) ?  YES : NO;
+        identityObject.realm = [xmlObject valueForKey:@"realm"] ?: NSLocalizedString(@"None", @"");
+        identityObject.selectionRulesArray = selectionRulesArray ?: [NSMutableArray arrayWithCapacity:0];
+        identityObject.servicesArray = [xmlObject valueForKey:@"services"] ?: [NSMutableArray arrayWithCapacity:0];
         identityObject.passwordRemembered = NO;
         identityObject.dateAdded = [NSDate date];
         [self.xmlArray replaceObjectAtIndex:i withObject:identityObject];
@@ -360,7 +412,7 @@
 - (void)editIdentityWindow:(NSWindow *)window wantsToEditIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
     __weak __typeof__(self) weakSelf = self;
     [self.deleteIdentityButton setEnabled:NO];
-    [self setMenuItemsStatus:NO];
+    [self setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
     [self reloadDetailsViewWithIdentityData:NO];
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
@@ -392,7 +444,7 @@
             [weakSelf getSavedIdentities];
             [weakSelf.deleteIdentityButton setEnabled:NO];
             [weakSelf reloadDetailsViewWithIdentityData:NO];
-            [weakSelf setMenuItemsStatus:NO];
+            [weakSelf setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
         } else {
             [[weakSelf.view window] addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:[NSString stringWithFormat: NSLocalizedString(@"Alert_Delete_Identity_Error_Message", @""),identity.displayName] informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
                 switch (returnCode) {
@@ -434,9 +486,17 @@
 
 #pragma mark - Menu Items Status
 
-- (void)setMenuItemsStatus:(BOOL)status {
-    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:NSLocalizedString(@"Menu_Identity", @"")] submenu] itemWithTitle:NSLocalizedString(@"Menu_Edit", @"")] setEnabled:status];
-    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:NSLocalizedString(@"Menu_Identity", @"")] submenu] itemWithTitle:NSLocalizedString(@"Menu_Remove", @"")] setEnabled:status];
+- (void)setEditMenuItemStatus:(BOOL)status {
+    
+}
+
+- (void)setRemoveMenuItemStatus:(BOOL)status {
+    
+}
+
+- (void)setEditMenuItemStatus:(BOOL)editStatus andRemoveMenuItemStatus:(BOOL)removeStatus {
+    [self.editIdentityMenuItem setEnabled:editStatus];
+    [self.removeIdentityMenuItem setEnabled:removeStatus];
 }
 
 #pragma mark - Add Identity
@@ -448,7 +508,7 @@
             [weakSelf getSavedIdentities];
             [weakSelf.deleteIdentityButton setEnabled:NO];
             [weakSelf reloadDetailsViewWithIdentityData:NO];
-            [weakSelf setMenuItemsStatus:NO];
+            [weakSelf setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
             [[weakSelf.view window] endSheet:window];
         } else {
             [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Add_Identity_Error_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
@@ -494,6 +554,18 @@
     if ([elementName isEqualToString:@"services"]) {
         self.xmlServicesArray = [[NSMutableArray alloc] init];
     }
+    if ([elementName isEqualToString:@"trust-anchor"]) {
+        self.trustAnchorObject = [[NSMutableDictionary alloc] init];
+    }
+    if([elementName isEqualToString:@"rule"]) {
+        self.ruleObject = [[NSMutableDictionary alloc] init];
+    }
+    if ([elementName isEqualToString:@"selection-rules"]) {
+        self.xmlSelectionRulesArray = [[NSMutableArray alloc] init];
+    }
+    if ([elementName isEqualToString:@"trust-anchor"]) {
+        self.xmlTrustAnchorArray = [[NSMutableArray alloc] init];
+    }
 }
 
 - (void)parser:(NSXMLParser *)parser foundCharacters:(NSString *)string {
@@ -508,8 +580,22 @@
     if (self.xmlString) {
         if ([elementName isEqualToString:@"service"]) {
             [self.xmlServicesArray addObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+        }else if ([elementName isEqualToString:@"pattern"] || [elementName isEqualToString:@"always-confirm"]) {
+            [self.ruleObject setObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:elementName];
+        }else if ([elementName isEqualToString:@"rule"]) {
+            [self.xmlSelectionRulesArray addObject:self.ruleObject];
+        }else if ([elementName isEqualToString:@"server-cert"] || [elementName isEqualToString:@"ca-cert"] || [elementName isEqualToString:@"subject"] || [elementName isEqualToString:@"subject-alt"]) {
+            [self.trustAnchorObject setObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:elementName];
+        }else if ([elementName isEqualToString:@"trust-anchor"]) {
+            [self.xmlTrustAnchorArray addObject:self.trustAnchorObject];
         }else {
             [self.identityObject setObject:[self.xmlString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] forKey:elementName];
+        }
+        if (self.xmlSelectionRulesArray) {
+            [self.identityObject setObject:self.xmlSelectionRulesArray forKey:@"selection-rules"];
+        }
+        if (self.xmlTrustAnchorArray) {
+            [self.identityObject setObject:self.xmlTrustAnchorArray forKey:@"trust-anchor"];
         }
         if (self.xmlServicesArray) {
             [self.identityObject setObject:self.xmlServicesArray forKey:@"services"];

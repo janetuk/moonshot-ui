@@ -37,18 +37,21 @@
 
 - (void)setupTextFields {
     NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Enter_Password", @""),self.identityObject.displayName];
-    [self.connectIdentityTitleTextField setStringValue:[NSString stringWithFormat:@"%@ @ %@",title,[Identity getServicesStringForIdentity:self.identityObject]]];
-    [self.connectIdentityUserTitleTextField setStringValue:NSLocalizedString(@"User_Naj", @"")];
-    [self.connectIdentityUserValueTextField setStringValue:[NSString stringWithFormat:@"%@@%@",self.identityObject.displayName,self.identityObject.servicesArray.lastObject]];
+    [self.connectIdentityTitleTextField setStringValue:title];
+    [self.connectIdentityUserTitleTextField setStringValue:NSLocalizedString(@"User_Nai", @"")];
+    [self.connectIdentityUserValueTextField setStringValue:[NSString stringWithFormat:@"%@@%@",self.identityObject.username,self.identityObject.realm]];
     [self.connectIdentityPasswordTitleTextField setStringValue:NSLocalizedString(@"Password_Add",@"")];
+    [self.connectIdentityPasswordValueTextField setStringValue:self.identityObject.password ?: @""];
 }
 
 #pragma mark - Setup Buttons
 
 - (void)setupButtons {
     [self.connectIdentityConnectButton setTitle:NSLocalizedString(@"Connect_Identity_Button", @"")];
+    [self.connectIdentityConnectButton setEnabled:[self isRequiredDataFilled]];
     [self.connectIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
     [self.connectIdentityRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
+    ([self isRequiredDataFilled]) ? [self.connectIdentityRememberPasswordButton setState:NSControlStateValueOn] : [self.connectIdentityRememberPasswordButton setState:NSControlStateValueOff];
 }
 
 #pragma mark - Button Actions
@@ -60,6 +63,7 @@
 }
 
 - (IBAction)connectIdentityConnectButtonPressed:(id)sender {
+    self.identityObject.password = self.connectIdentityPasswordValueTextField.stringValue;
     if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
         [self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
     }
@@ -72,7 +76,7 @@
 }
 
 - (BOOL)isRequiredDataFilled {
-    BOOL connectIdentityButtonDisabled = [self.connectIdentityPasswordValueTextField.stringValue isEqualToString:@""];
+    BOOL connectIdentityButtonDisabled = [self.connectIdentityPasswordValueTextField.stringValue isEqualToString:@""] || [self.identityObject.password isEqualToString:@""];
     return !connectIdentityButtonDisabled;
 }
 

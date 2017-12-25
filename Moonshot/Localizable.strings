@@ -18,7 +18,7 @@
 "Select_Identity_Title" = "Select your identity";
 "Requested_Identity_Title" = "Identity requested for service:";
 "Enter_Password" = "Enter the password for %@";
-"User_Naj" = "User (NAJ):";
+"User_Nai" = "User (NAI):";
 "Identity_Selector_Window_Title" = "Moonshot - Identity Selector";
 
 //ADD IDENTITY
@@ -39,6 +39,10 @@
 "Constraint" = "Constraint:";
 "Services_Edit" = "Services:";
 "None" = "None";
+"Selection_Rules" = "Selection Rules:";
+"Selection_Pattern" = "Pattern";
+"Selection_Confirmation" = "Always Confirm";
+"Service" = "Service";
 
 //TRUST ANCHOR
 "Trust_Anchor_Title" = "Trust Anchor";
@@ -76,6 +80,7 @@
 "Clear_Trust_Anchor_Alert_Message" = "Are you sure you want to clear %@ from identity selector?";
 "Delete_Identity_Alert_Message" = "Are you sure you want to delete %@ from identity selector?";
 "Delete_Service_Alert_Message" = "Are you sure you want to delete the service %@?";
+"Delete_Selection_Rules_Alert_Message" = "Are you sure you want to delete the selection rule %@?";
 "Alert_Info" = "This item will be deleted immediately. You can't undo this action.";
 "Alert_Error_Info" = "Try again later";
 "Alert_Suppression_Message" = "Do not show this message again";
