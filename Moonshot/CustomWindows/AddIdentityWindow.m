@@ -63,6 +63,16 @@
 
 #pragma mark - Button Actions
 
+- (IBAction)rememberPasswordButtonPressed:(id)sender {
+    if ([self isRequiredDataFilled]) {
+        if ([self isPasswordMandatory])
+            [self.addIdentityButton setEnabled:NO];
+        else
+            [self.addIdentityButton setEnabled:YES];
+    } else
+        [self.addIdentityButton setEnabled:NO];
+}
+
 - (IBAction)saveChangesButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(addIdentityWindow:wantsToAddIdentity:rememberPassword:)]) {
         Identity *identityObject = [[Identity alloc] init];
@@ -98,14 +108,26 @@
 #pragma mark - NSTextFieldDelegate
 
 - (void)controlTextDidChange:(NSNotification *)notification {
-    [self.addIdentityButton setEnabled:[self isRequiredDataFilled]];
+    if ([self isPasswordMandatory]) {
+        [self.addIdentityButton setEnabled:NO];
+    } else {
+        [self.addIdentityButton setEnabled:[self isRequiredDataFilled]];
+    }
 }
+
+#pragma mark - Required data
 
 - (BOOL)isRequiredDataFilled {
     BOOL addIdentityButtonDisabled = [self.displayNameValueTextField.stringValue isEqualToString:@""] ||
     [self.usernameValueTextField.stringValue isEqualToString:@""] ||
-    [self.realmValueTextField.stringValue isEqualToString:@""] ||
-    [self.passwordValueTextField.stringValue isEqualToString:@""];
+    [self.realmValueTextField.stringValue isEqualToString:@""];
     return !addIdentityButtonDisabled;
 }
+
+- (BOOL)isPasswordMandatory {
+    BOOL isPasswordMandatory = self.rememberPasswordButton.state == NSOnState &&
+    [self.passwordValueTextField.stringValue isEqualToString:@""];
+    return isPasswordMandatory;
+}
+
 @end

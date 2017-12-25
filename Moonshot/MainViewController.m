@@ -17,6 +17,11 @@
 
 @interface MainViewController()<NSTableViewDataSource, NSTableViewDelegate, NSXMLParserDelegate, AddIdentityWindowDelegate, EditIdentityWindowDelegate>
 
+//Menu
+@property (strong) IBOutlet NSMenu *optionsMenu;
+@property (weak) IBOutlet NSMenuItem *editIdentityMenuItem;
+@property (weak) IBOutlet NSMenuItem *removeIdentityMenuItem;
+
 //View
 @property (weak) IBOutlet NSSearchField *searchField;
 
@@ -82,12 +87,23 @@
 #pragma mark - Setup Views
 
 - (void)setupView {
+    [self setupMenu];
     [self setupContentView];
     [self setupDetailsView];
     [self setupImportButton];
     [self setupTableViewHeader];
     [self setupUserImageView];
     [self setupBackgroundImageView];
+}
+
+- (void)setupMenu {
+    [self.optionsMenu setAutoenablesItems:NO];
+    [self setupMenuItems];
+}
+
+- (void)setupMenuItems {
+    [self.editIdentityMenuItem setTitle:[NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Menu_Edit", @""), NSLocalizedString(@"Menu_Identity", @"")]];
+    [self.removeIdentityMenuItem setTitle: [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"Menu_Remove", @""), NSLocalizedString(@"Menu_Identity", @"")]];
 }
 
 - (void)setupContentView {
@@ -232,16 +248,16 @@
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
         BOOL isNoIdentityObjectSelected = [identityObject.identityId isEqualToString:@"NOIDENTITY"];
         if (isNoIdentityObjectSelected) {
-            [self setMenuItemsStatus:NO];
+            [self setEditMenuItemStatus:YES andRemoveMenuItemStatus:NO];
             [self.deleteIdentityButton setEnabled:NO];
             [self reloadDetailsViewWithIdentityData:NO];
         } else {
-            [self setMenuItemsStatus:YES];
+            [self setEditMenuItemStatus:YES andRemoveMenuItemStatus:YES];
             [self.deleteIdentityButton setEnabled:YES];
             [self reloadDetailsViewWithIdentityData:YES];
         }
     } else {
-        [self setMenuItemsStatus:NO];
+        [self setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
         [self.deleteIdentityButton setEnabled:NO];
         [self reloadDetailsViewWithIdentityData:NO];
     }
@@ -360,7 +376,7 @@
 - (void)editIdentityWindow:(NSWindow *)window wantsToEditIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
     __weak __typeof__(self) weakSelf = self;
     [self.deleteIdentityButton setEnabled:NO];
-    [self setMenuItemsStatus:NO];
+    [self setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
     [self reloadDetailsViewWithIdentityData:NO];
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
@@ -392,7 +408,7 @@
             [weakSelf getSavedIdentities];
             [weakSelf.deleteIdentityButton setEnabled:NO];
             [weakSelf reloadDetailsViewWithIdentityData:NO];
-            [weakSelf setMenuItemsStatus:NO];
+            [weakSelf setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
         } else {
             [[weakSelf.view window] addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:[NSString stringWithFormat: NSLocalizedString(@"Alert_Delete_Identity_Error_Message", @""),identity.displayName] informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
                 switch (returnCode) {
@@ -434,9 +450,17 @@
 
 #pragma mark - Menu Items Status
 
-- (void)setMenuItemsStatus:(BOOL)status {
-    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:NSLocalizedString(@"Menu_Identity", @"")] submenu] itemWithTitle:NSLocalizedString(@"Menu_Edit", @"")] setEnabled:status];
-    [[[[[[NSApplication sharedApplication] menu] itemWithTitle:NSLocalizedString(@"Menu_Identity", @"")] submenu] itemWithTitle:NSLocalizedString(@"Menu_Remove", @"")] setEnabled:status];
+- (void)setEditMenuItemStatus:(BOOL)status {
+    
+}
+
+- (void)setRemoveMenuItemStatus:(BOOL)status {
+    
+}
+
+- (void)setEditMenuItemStatus:(BOOL)editStatus andRemoveMenuItemStatus:(BOOL)removeStatus {
+    [self.editIdentityMenuItem setEnabled:editStatus];
+    [self.removeIdentityMenuItem setEnabled:removeStatus];
 }
 
 #pragma mark - Add Identity
@@ -448,7 +472,7 @@
             [weakSelf getSavedIdentities];
             [weakSelf.deleteIdentityButton setEnabled:NO];
             [weakSelf reloadDetailsViewWithIdentityData:NO];
-            [weakSelf setMenuItemsStatus:NO];
+            [weakSelf setEditMenuItemStatus:NO andRemoveMenuItemStatus:NO];
             [[weakSelf.view window] endSheet:window];
         } else {
             [window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Add_Identity_Error_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {

@@ -79,30 +79,46 @@
     [self setupTableViewHeader];
 }
 
-#pragma mark - Setup Text Fields
+#pragma mark - Load Saved Data
 
-- (void)setupTextFields {
-    [self.editUsernameTextField setStringValue:NSLocalizedString(@"Username_Add", @"")];
-    [self.editRealmTextField setStringValue:NSLocalizedString(@"Realm_Add", @"")];
-    [self.editPasswordTextField setStringValue:NSLocalizedString(@"Password_Add", @"")];
-    [self.trustAnchorTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Edit", @"")];
-    [self.dateAddedTitleTextField setStringValue:NSLocalizedString(@"Date_Added", @"")];
-
-    [self.caCertificateTextField setStringValue:NSLocalizedString(@"CA_Certificate", @"")];
-    [self.subjectTextField setStringValue:NSLocalizedString(@"Subject", @"")];
-    [self.expirationDateTextField setStringValue:NSLocalizedString(@"Expiration_Date", @"")];
-    [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
-    [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
-    [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
-    [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
+- (void)loadSavedData {
+    __weak __typeof__(self) weakSelf = self;
+    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
+        if (items) {
+            weakSelf.identitiesArray = [items mutableCopy];
+            weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
+        }
+    }];
+    
+    if ([self.identityToEdit.username isEqualToString:@"No identity"]) {
+        [self loadNoIdentityData];
+    } else {
+        [self.editUsernameValueTextField setStringValue:self.identityToEdit.username];
+        [self.editRealmValueTextField setStringValue:self.identityToEdit.realm];
+        [self.editPasswordValueTextField setStringValue:self.identityToEdit.password];
+        [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:self.identityToEdit.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
+        [self.editRememberPasswordButton setState:self.identityToEdit.passwordRemembered];
+        [self.trustAnchorValueTextField setStringValue:self.identityToEdit.trustAnchor];
+    }
 }
 
-#pragma mark - Setup Buttons
+#pragma mark - Load No Identity Data
 
-- (void)setupButtons {
-    [self.clearTrustAnchorButton setTitle:NSLocalizedString(@"Clear_Trust_Anchor_Button", @"")];
-    [self.editIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
-    [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
+- (void)loadNoIdentityData {
+    [self.editUsernameValueTextField setStringValue:@"No Identity"];
+    [self.editRealmValueTextField setStringValue:@"No Identity"];
+    [self.editPasswordValueTextField setStringValue:@"No Identity"];
+    [self.editIdentityDateAddedTextField setObjectValue:[NSDate date]];
+    [self.editRememberPasswordButton setState:NO];
+    [self.trustAnchorValueTextField setStringValue:@"None"];
+    
+    [self.editUsernameValueTextField setEnabled:NO];
+    [self.editRealmValueTextField setEnabled:NO];
+    [self.editPasswordValueTextField setEnabled:NO];
+    [self.editIdentityDateAddedTextField setEnabled:NO];
+    [self.editRememberPasswordButton setEnabled:NO];
+//    [self.trustAnchorValueTextField setHidden:YES];
+//    [self.trustAnchorTextField setHidden:YES];
 }
 
 #pragma mark - Setup Views Visibility
@@ -125,28 +141,36 @@
     }
 }
 
+#pragma mark - Setup Text Fields
+
+- (void)setupTextFields {
+    [self.editUsernameTextField setStringValue:NSLocalizedString(@"Username_Add", @"")];
+    [self.editRealmTextField setStringValue:NSLocalizedString(@"Realm_Add", @"")];
+    [self.editPasswordTextField setStringValue:NSLocalizedString(@"Password_Add", @"")];
+    [self.trustAnchorTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Edit", @"")];
+    [self.dateAddedTitleTextField setStringValue:NSLocalizedString(@"Date_Added", @"")];
+    
+    [self.caCertificateTextField setStringValue:NSLocalizedString(@"CA_Certificate", @"")];
+    [self.subjectTextField setStringValue:NSLocalizedString(@"Subject", @"")];
+    [self.expirationDateTextField setStringValue:NSLocalizedString(@"Expiration_Date", @"")];
+    [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
+    [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
+    [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
+    [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
+}
+
+#pragma mark - Setup Buttons
+
+- (void)setupButtons {
+    [self.clearTrustAnchorButton setTitle:NSLocalizedString(@"Clear_Trust_Anchor_Button", @"")];
+    [self.editIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
+    [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
+}
+
 #pragma mark - Setup TableView Header
 
 - (void)setupTableViewHeader {
     [self.editIdentityServicesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Service", @"")];
-}
-
-#pragma mark - Load Saved Data
-
-- (void)loadSavedData {
-    __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
-        if (items) {
-            weakSelf.identitiesArray = [items mutableCopy];
-            weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
-        }
-    }];
-    [self.editUsernameValueTextField setStringValue:self.identityToEdit.username];
-    [self.editRealmValueTextField setStringValue:self.identityToEdit.realm];
-    [self.editPasswordValueTextField setStringValue:self.identityToEdit.password];
-    [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:self.identityToEdit.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
-    [self.editRememberPasswordButton setState:self.identityToEdit.passwordRemembered];
-    [self.trustAnchorValueTextField setStringValue:self.identityToEdit.trustAnchor];
 }
 
 #pragma mark - Delete Services
@@ -231,7 +255,7 @@
 #pragma mark - NSTableViewDelegate & NSTableViewDataSource
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
-    return [self.servicesArray count] ?: 1;
+    return [self.servicesArray count] ?: 0;
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {

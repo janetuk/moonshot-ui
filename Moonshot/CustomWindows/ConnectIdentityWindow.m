@@ -37,9 +37,9 @@
 
 - (void)setupTextFields {
     NSString *title = [NSString stringWithFormat:NSLocalizedString(@"Enter_Password", @""),self.identityObject.displayName];
-    [self.connectIdentityTitleTextField setStringValue:[NSString stringWithFormat:@"%@ @ %@",title,[Identity getServicesStringForIdentity:self.identityObject]]];
-    [self.connectIdentityUserTitleTextField setStringValue:NSLocalizedString(@"User_Naj", @"")];
-    [self.connectIdentityUserValueTextField setStringValue:[NSString stringWithFormat:@"%@@%@",self.identityObject.displayName,self.identityObject.servicesArray.lastObject]];
+    [self.connectIdentityTitleTextField setStringValue:title];
+    [self.connectIdentityUserTitleTextField setStringValue:NSLocalizedString(@"User_Nai", @"")];
+    [self.connectIdentityUserValueTextField setStringValue:[NSString stringWithFormat:@"%@@%@",self.identityObject.username,self.identityObject.realm]];
     [self.connectIdentityPasswordTitleTextField setStringValue:NSLocalizedString(@"Password_Add",@"")];
 }
 
