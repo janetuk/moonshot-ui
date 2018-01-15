@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C398A661FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C398A651FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m */; };
+		2C77EE11200EBB6D00F4EE9D /* MSTIdentityImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C77EE10200EBB6D00F4EE9D /* MSTIdentityImporter.m */; };
 		2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */; };
 		2C9010591F62A0A600EF7B05 /* MSTGetIdentityAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */; };
 		2CDD83851FC3B12B0095A799 /* libdbus-1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDD837B1FC35CA70095A799 /* libdbus-1.3.dylib */; };
@@ -114,6 +115,8 @@
 /* Begin PBXFileReference section */
 		2C398A641FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSTWakeUpScriptCommand.h; sourceTree = "<group>"; };
 		2C398A651FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSTWakeUpScriptCommand.m; sourceTree = "<group>"; };
+		2C77EE0F200EBB6D00F4EE9D /* MSTIdentityImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSTIdentityImporter.h; sourceTree = "<group>"; };
+		2C77EE10200EBB6D00F4EE9D /* MSTIdentityImporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSTIdentityImporter.m; sourceTree = "<group>"; };
 		2C8E59F61DD5FCDB0014C1D6 /* MSTIdentityDataLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTIdentityDataLayer.h; sourceTree = "<group>"; };
 		2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSTIdentityDataLayer.m; sourceTree = "<group>"; };
 		2C9010571F62A0A600EF7B05 /* MSTGetIdentityAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSTGetIdentityAction.h; sourceTree = "<group>"; };
@@ -299,6 +302,8 @@
 				2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */,
 				2C9010571F62A0A600EF7B05 /* MSTGetIdentityAction.h */,
 				2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */,
+				2C77EE0F200EBB6D00F4EE9D /* MSTIdentityImporter.h */,
+				2C77EE10200EBB6D00F4EE9D /* MSTIdentityImporter.m */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -701,6 +706,7 @@
 				785833801DB901AE00DF0117 /* Identity.m in Sources */,
 				7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */,
 				78C73D921DBF8BE300D2BEFB /* EditIdentityWindow.m in Sources */,
+				2C77EE11200EBB6D00F4EE9D /* MSTIdentityImporter.m in Sources */,
 				F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */,
 				F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */,
 				7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */,

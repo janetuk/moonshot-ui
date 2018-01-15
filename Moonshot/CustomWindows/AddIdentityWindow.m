@@ -84,7 +84,7 @@
         identityObject.passwordRemembered = self.rememberPasswordButton.state;
         identityObject.dateAdded = [NSDate date];
         identityObject.servicesArray = [NSMutableArray array];
-        identityObject.trustAnchor = [self randomElementFromArray];
+        identityObject.trustAnchor = nil;
         [self.delegate addIdentityWindow:self.window wantsToAddIdentity:identityObject rememberPassword:self.rememberPasswordButton.state];
     }
 }
@@ -93,16 +93,6 @@
     if ([self.delegate respondsToSelector:@selector(addIdentityWindowCanceled:)]) {
         [self.delegate addIdentityWindowCanceled:self.window];
     }
-}
-
-#pragma mark - Random element from Array
-
-- (NSString *)randomElementFromArray {
-    NSMutableArray *array = [NSMutableArray arrayWithObjects:NSLocalizedString(@"Enterprise_provisioned", @""),NSLocalizedString(@"None", @""),nil];
-    uint32_t myCount = (uint32_t)[array count];
-    uint32_t rnd = arc4random_uniform(myCount);
-    NSString *randomObject = [array objectAtIndex:rnd];
-    return randomObject;
 }
 
 #pragma mark - NSTextFieldDelegate

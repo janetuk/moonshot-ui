@@ -17,39 +17,21 @@
 @interface AppDelegate ()
 @property (strong) IBOutlet NSWindow *window;
 @property (nonatomic, strong) IBOutlet NSViewController *viewController;
-
+@property (nonatomic, strong) NSOperationQueue *dbusQueue;
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-//    BOOL serviceStringExists = !self.serviceString;
-//    BOOL serviceStringEmpty = [self.serviceString isEqualToString:@""];
-//    
-//    if (serviceStringExists || serviceStringEmpty) {
-//        [self setIdentityManagerViewController];
-//    } else {
-//        [self setIdentitySelectorViewController];
-//    }
     [self setIdentityManagerViewController];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-    // Register ourselves as a URL handler for this URL
-    [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self andSelector:@selector(handleGetURLEvent:withReplyEvent:)forEventClass:kInternetEventClass andEventID:kAEGetURL];
+
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
-}
-
-- (void)handleGetURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent {
-//    NSURL *url = [NSURL URLWithString:[[event paramDescriptorForKeyword:keyDirectObject] stringValue]];
-//    NSString *urlParameter = [[url host] stringByRemovingPercentEncoding];
-//    self.serviceString = urlParameter;
-//    if ([[NSRunningApplication runningApplicationsWithBundleIdentifier:[[NSBundle mainBundle] bundleIdentifier]] count] > 0) {
-//        [self setIdentitySelectorViewController];
-//    }
 }
 
 #pragma mark - Set Content ViewController
@@ -76,7 +58,8 @@
 }
 
 - (IBAction)addNewIdentity:(id)sender {
-    [[NSNotificationCenter defaultCenter] postNotificationName:MST_ADD_IDENTITY_NOTIFICATION object:nil];
+   // [[NSNotificationCenter defaultCenter] postNotificationName:MST_ADD_IDENTITY_NOTIFICATION object:nil];
+	[self startListeningForDBusConnections];
 }
 
 - (IBAction)editIdentity:(id)sender {
@@ -92,14 +75,17 @@
 	
 	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
 	if (existingIdentitySelection) {
-		NSString *combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
+		NSString *combinedNaiOut = @"";
+		if (existingIdentitySelection.username.length && existingIdentitySelection.realm.length) {
+			combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
+		}
 		const char *nai_out = [combinedNaiOut UTF8String];
-		const char *password_out = [existingIdentitySelection.password UTF8String];
+		const char *password_out = existingIdentitySelection.password == nil ? "" : [existingIdentitySelection.password UTF8String];
 		const char *server_certificate_hash_out = [@"" UTF8String];
 		const char *ca_certificate_out = [@"" UTF8String];
 		const char *subject_name_constraint_out = [@"" UTF8String];
 		const char *subject_alt_name_constraint_out = [@"" UTF8String];
-		const int  success = 1;
+		const int  success = [existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
 		
 		dbus_message_append_args(reply,
 								 DBUS_TYPE_STRING, &nai_out,
@@ -113,6 +99,7 @@
 		
 		dbus_connection_send(connection, reply, NULL);
 		dbus_message_unref(reply);
+		[NSApp terminate:self];
 	} else {
 		MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
 		dispatch_async(dispatch_get_main_queue(), ^{
@@ -126,8 +113,16 @@
 }
 
 - (void)startListeningForDBusConnections {
-    dbusStartListening();
-}
+	if (!self.dbusQueue) {
+		self.dbusQueue = [[NSOperationQueue alloc] init];
+		self.dbusQueue.maxConcurrentOperationCount = 1;
+	}
 
+	if (self.dbusQueue.operationCount == 0) {
+		[self.dbusQueue addOperationWithBlock:^{
+			dbusStartListening();
+		}];
+	}
+}
 
 @end

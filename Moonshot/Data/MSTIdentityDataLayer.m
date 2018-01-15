@@ -27,19 +27,25 @@ static MSTIdentityDataLayer *sharedInstance;
 }
 
 - (void)getAllIdentitiesWithBlock:(void (^)(NSArray <Identity *> *items))block {
+	__weak __typeof__(self) weakSelf = self;
+
 	[self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
-		//Add the "no identity"
-		Identity *noIdentity = [[Identity alloc] init];
-		noIdentity.identityId = MST_NO_IDENTITY;
-		noIdentity.displayName = NSLocalizedString(@"No_Identity", @"");
-        noIdentity.username = NSLocalizedString(@"No_Identity", @"");
-        noIdentity.realm = NSLocalizedString(@"No_Identity", @"");
-        noIdentity.trustAnchor = NSLocalizedString(@"None", @"");
-        noIdentity.caCertificate = NO;
-        noIdentity.servicesArray = [NSMutableArray arrayWithObjects:NSLocalizedString(@"No_Identity", @""),nil];
-        NSMutableArray *itemsWithNoIdentity = [items mutableCopy];
-		[itemsWithNoIdentity addObject:noIdentity];
-		block(itemsWithNoIdentity);
+		NSMutableArray *mutableItems = [items mutableCopy];
+
+		if (items.count == 0) {
+			//Add the "no identity"
+			Identity *noIdentity = [[Identity alloc] init];
+			noIdentity.identityId = MST_NO_IDENTITY;
+			noIdentity.displayName = NSLocalizedString(@"No_Identity", @"");
+			noIdentity.username = @"";
+			noIdentity.realm = @"";
+			noIdentity.passwordRemembered = YES;
+			noIdentity.trustAnchor = nil;
+			noIdentity.servicesArray = [[NSMutableArray alloc] init];
+			[mutableItems addObject:noIdentity];
+			[weakSelf addNewIdentity:noIdentity withBlock:nil];
+		}
+		block(mutableItems);
 	}];
 }
 
@@ -58,29 +64,24 @@ static MSTIdentityDataLayer *sharedInstance;
     }];
     [newIdentityArray addObject:newIdentity];
     [self saveObject:newIdentityArray forKey:MST_IDENTITIES];
-    
-    NSError *error;
-    block(error);
+	if (block) {
+		block(nil);
+	}
 }
 
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
-	if ([newIdentity.identityId isEqualToString:MST_NO_IDENTITY]) {
-		NSError *error = [[NSError alloc] initWithDomain:NSPOSIXErrorDomain code:9999 userInfo:@{}];
-		block(error);
-		return;
-	}
     [self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         __weak __typeof__(self) weakSelf = self;
         NSMutableArray *newIdentityArray = [[NSMutableArray arrayWithArray:items] mutableCopy];
         for (int i = 0; i < [newIdentityArray count]; i++) {
-            if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
+			Identity *identity = newIdentityArray[i];
+            if ([identity.identityId isEqualToString:newIdentity.identityId]) {
                 [newIdentityArray replaceObjectAtIndex:i withObject:newIdentity];
                 [weakSelf saveObject:newIdentityArray forKey:MST_IDENTITIES];
                 break;
             }
         }
-		NSError *error;
-		block(error);
+		block(nil);
     }];
 }
 
@@ -95,7 +96,8 @@ static MSTIdentityDataLayer *sharedInstance;
         __weak __typeof__(self) weakSelf = self;
         if ([newIdentityArray count] > 0) {
             for (int i = 0; i < [newIdentityArray count]; i++) {
-                if ([[newIdentityArray[i] valueForKey:@"identityId"] isEqualToString:newIdentity.identityId]) {
+				Identity *identity = newIdentityArray[i];
+                if ([identity.identityId isEqualToString:newIdentity.identityId]) {
                     [newIdentityArray removeObjectAtIndex:i];
                     [weakSelf saveObject:newIdentityArray forKey:MST_IDENTITIES];
                     break;
@@ -107,8 +109,8 @@ static MSTIdentityDataLayer *sharedInstance;
     }];
 }
 
-- (void)saveObject:(id)object forKey:(NSString *)defaultsKey {
-    [MSTKeychainHelper archiveObject:object forKey:defaultsKey];
+- (BOOL)saveObject:(id)object forKey:(NSString *)defaultsKey {
+    return [MSTKeychainHelper archiveObject:object forKey:defaultsKey];
 }
 
 - (Identity *)getExistingIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password {

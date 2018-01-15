@@ -25,17 +25,17 @@ void dbusStartListening()
     
     DBusConnection *connection = dbus_bus_get(DBUS_BUS_SESSION, &error);
     if (!connection || dbus_error_is_set(&error)) {
-        perror("Connection error.");
-        exit(1);
+        perror("Moonshot.IdentitySelector Connection error.");
+		return;
     }
     
     const int ret = dbus_bus_request_name(connection, "org.janet.Moonshot", DBUS_NAME_FLAG_REPLACE_EXISTING, &error);
     if (ret != DBUS_REQUEST_NAME_REPLY_PRIMARY_OWNER || dbus_error_is_set(&error)) {
-        perror("Ouch.");
-        exit(1);
+        perror(" Moonshot.IdentitySelector Dbus Error.");
+		return;
     }
 
-    while (1 == 1) {
+	while (1 == 1) {
         dbus_connection_read_write(connection, 0);
         DBusMessage *const msg = dbus_connection_pop_message(connection);
         if (!msg) {
@@ -57,10 +57,10 @@ void dbusStartListening()
                                        DBUS_TYPE_STRING, &service,
                                        DBUS_TYPE_INVALID)) {
                 
-                perror("Bad Input Params");
+                perror("Moonshot.IdentitySelector Bad Input Params");
             } else {
                 if (!(reply = dbus_message_new_method_return(msg))) {
-                    perror("Bad Output Type");
+                    perror("Moonshot.IdentitySelector Bad Output Type");
                 } else {
                     NSString *strNai = [NSString stringWithUTF8String:nai];
                     NSString *strService = [NSString stringWithUTF8String:service];
@@ -68,36 +68,13 @@ void dbusStartListening()
                     AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
                     [delegate initiateIdentitySelectionFor:strNai service:strService password:strPassword connection:connection reply:reply];
                 }
-//				NSLog(@"BZZZZZZZZZ GET IDENTITY %s %s %s", nai, password, service);
-//
-//
-//				const char *nai_out = [@"testuser@test.assent.jisc.ac.uk" UTF8String];
-//				const char *password_out = [@"sa&DP2pJAiqRt9v2DZhN" UTF8String];
-//				const char *server_certificate_hash_out = [@"" UTF8String];
-//				const char *ca_certificate_out = [@"" UTF8String];
-//				const char *subject_name_constraint_out = [@"" UTF8String];
-//				const char *subject_alt_name_constraint_out = [@"" UTF8String];
-//				const int  success = 1;
-//
-//				dbus_message_append_args(reply,
-//										 DBUS_TYPE_STRING, &nai_out,
-//										 DBUS_TYPE_STRING, &password_out,
-//										 DBUS_TYPE_STRING, &server_certificate_hash_out,
-//										 DBUS_TYPE_STRING, &ca_certificate_out,
-//										 DBUS_TYPE_STRING, &subject_name_constraint_out,
-//										 DBUS_TYPE_STRING, &subject_alt_name_constraint_out,
-//										 DBUS_TYPE_BOOLEAN, &success,
-//										 DBUS_TYPE_INVALID);
-//
-//				dbus_connection_send(connection, reply, NULL);
-//				dbus_message_unref(reply);
             }
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "GetDefaultIdentity")) {
-			NSLog(@"BZZZZZZZZZ GetDefaultIdentity");
+			NSLog(@"Moonshot.IdentitySelector GetDefaultIdentity");
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "InstallIdCard")) {
-			NSLog(@"BZZZZZZZZZ InstallIdCard");
+			NSLog(@"Moonshot.IdentitySelector InstallIdCard");
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "ConfirmCaCertificate")) {
-			NSLog(@"BZZZZZZZZZ ConfirmCaCertificate");
+			NSLog(@"Moonshot.IdentitySelector ConfirmCaCertificate");
 			
 			const char *identity_name;
 			const char *realm;
@@ -112,10 +89,10 @@ void dbusStartListening()
 									   DBUS_TYPE_STRING, &hash_str,
 									   DBUS_TYPE_INVALID)) {
 				
-				perror("Bad Input Params");
+				perror("Moonshot.IdentitySelector Bad Input Params");
 			} else {
 				if (!(reply = dbus_message_new_method_return(msg))) {
-					perror("Bad Output Type");
+					perror("Moonshot.IdentitySelector Bad Output Type");
 				} else {
 				}
 				
@@ -130,7 +107,7 @@ void dbusStartListening()
 				dbus_message_unref(reply);
 			}
 		} else {
-			NSLog(@"BZZZZZZZZZ ELSE");
+			NSLog(@"Moonshot.IdentitySelector");
 		}
         dbus_message_unref(msg);
     }

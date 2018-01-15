@@ -12,6 +12,7 @@
 #import "MSTIdentityDataLayer.h"
 #import "NSWindow+Utilities.h"
 #import "SelectionRules.h"
+#import "MSTConstants.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 
@@ -114,11 +115,11 @@
         if (items) {
             weakSelf.identitiesArray = [items mutableCopy];
             weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
-            weakSelf.selectionRulesArray = weakSelf.identityToEdit.selectionRulesArray;
+            weakSelf.selectionRulesArray = weakSelf.identityToEdit.selectionRules;
         }
     }];
     
-    if ([self.identityToEdit.username isEqualToString:@"No identity"]) {
+    if ([self.identityToEdit.identityId isEqualToString:MST_NO_IDENTITY]) {
         [self loadNoIdentityData];
     } else {
         [self.editUsernameValueTextField setStringValue:self.identityToEdit.username];
@@ -134,10 +135,10 @@
 
 - (void)loadNoIdentityData {
     [self.editUsernameValueTextField setStringValue:@"No Identity"];
-    [self.editRealmValueTextField setStringValue:@"No Identity"];
-    [self.editPasswordValueTextField setStringValue:@"No Identity"];
-    [self.editIdentityDateAddedTextField setObjectValue:[NSDate date]];
-    [self.editRememberPasswordButton setState:NO];
+    [self.editRealmValueTextField setStringValue:@""];
+    [self.editPasswordValueTextField setStringValue:@""];
+    [self.editIdentityDateAddedTextField setStringValue:@""];
+    [self.editRememberPasswordButton setState:YES];
     [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"None",@"")];
     
     [self.editUsernameValueTextField setEnabled:NO];
@@ -145,18 +146,12 @@
     [self.editPasswordValueTextField setEnabled:NO];
     [self.editIdentityDateAddedTextField setEnabled:NO];
     [self.editRememberPasswordButton setEnabled:NO];
-//    [self.trustAnchorValueTextField setHidden:YES];
-//    [self.trustAnchorTextField setHidden:YES];
 }
 
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    if (self.identityToEdit.caCertificate) {
-        [self.certificateView setHidden:NO];
-        [self.shaFingerprintView setHidden:YES];
-        [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
-    } else if (self.identityToEdit.serverCertificate) {
+    if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
         NSMutableString *shaFingerprint = [[NSMutableString alloc] initWithString:self.trustAnchorObject.serverCertificate];
@@ -165,7 +160,11 @@
         }
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
         [self.shaFingerprintValueTextField setStringValue:shaFingerprint];
-    } else {
+	} else if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
+		[self.certificateView setHidden:NO];
+		[self.shaFingerprintView setHidden:YES];
+		[self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
+	} else {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:YES];
         [self.dateAddedTitleTextField setHidden:YES];
@@ -173,7 +172,7 @@
         [self.editIdentityHelpButton setHidden:YES];
         [self.clearTrustAnchorButton setHidden:YES];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"None",@"")];
-        [self.window setFrame:NSMakeRect(0, 0, self.window.frame.size.width, self.window.frame.size.height - self.certificateView.frame.size.height) display:YES];
+        [self.window setFrame:NSMakeRect(self.window.frame.origin.x, self.window.frame.origin.y, self.window.frame.size.width, self.window.frame.size.height - self.certificateView.frame.size.height) display:YES];
         [self.servicesView setFrame:NSMakeRect(self.servicesView.frame.origin.x,165,self.servicesView.frame.size.width,self.servicesView.frame.size.height)];
         [self.selectionRulesView setFrame:NSMakeRect(self.selectionRulesView.frame.origin.x,0,self.selectionRulesView.frame.size.width,self.selectionRulesView.frame.size.height)];
     }
@@ -215,13 +214,17 @@
 }
 
 #pragma mark - Delete Services
-
 - (void)deleteService {
     [self.servicesArray removeObjectAtIndex:self.editIdentityServicesTableView.selectedRow];
     [self.editIdentityServicesTableView reloadData];
     [self.editIdentityDeleteServiceButton setEnabled:NO];
 }
 
+- (void)clearTrustAnchor {
+	self.identityToEdit.trustAnchor = nil;
+	[self loadSavedData];
+	[self setupViewsVisibility];
+}
 #pragma mark - Delete Selection Rules
 
 - (void)deleteSelectionRules {
@@ -294,10 +297,11 @@
 }
 
 - (IBAction)clearTrustAnchorPressed:(id)sender {
-    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Import_Message", @"") informativeText:NSLocalizedString(@"Alert_Import_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+	__weak __typeof__(self) weakSelf = self;
+    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Message", @"") informativeText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:
-                //TODO: clear TrustAnchor
+				[weakSelf clearTrustAnchor];
                 break;
             default:
                 break;

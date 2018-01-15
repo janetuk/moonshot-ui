@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import "SelectionRules.h"
+#import "TrustAnchor.h"
+
 
 @interface Identity : NSObject
 
@@ -16,15 +18,11 @@
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *realm;
-@property (nonatomic, assign) BOOL trustAnchor;
 @property (nonatomic, assign) BOOL passwordRemembered;
-@property (nonatomic, assign) BOOL caCertificate;
-@property (nonatomic, assign) BOOL serverCertificate;
 @property (nonatomic, strong) NSDate *dateAdded;
-@property (nonatomic, retain) NSArray *trustAnchorArray;
+@property (nonatomic, strong) TrustAnchor *trustAnchor;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
-@property (nonatomic, retain) NSMutableArray *selectionRulesArray;
-@property (nonatomic, strong) SelectionRules *selectionRules;
+@property (nonatomic, strong) NSMutableArray<SelectionRules *> *selectionRules;
 
 - (id)initWithDictionaryObject:(NSDictionary *)identityDict;
 - (id)initWithCoder:(NSCoder *)decoder;

@@ -100,4 +100,8 @@
 "Alert_Success_Parsing_XML_Message" = "Importing succeed!";
 "Alert_Success_Parsing_XML_Info" = "You successfully imported %d identities.";
 "Alert_Success_Parsing_XML_Info_One" = "You successfully imported %d identity.";
+"Alert_Clear_Trust_Anchor_Message" = "Clear Trust Anchor";
+"Alert_Clear_Trust_Anchor_Info" = "Are you sure you want to clear Trust Anchor data?";
+
+
 

@@ -199,7 +199,13 @@
 		}
 	}
 	if (!isServiceAlreadySaved) {
-		[identity.servicesArray addObject:newService];
+		NSMutableArray *mutableServicesArray = [identity.servicesArray mutableCopy];
+
+		if (!mutableServicesArray) {
+			mutableServicesArray = [[NSMutableArray alloc] init];
+		}
+		[mutableServicesArray addObject:newService];
+		identity.servicesArray = mutableServicesArray;
 	}
 }
 
