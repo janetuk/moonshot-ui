@@ -111,6 +111,21 @@ static MSTIdentityDataLayer *sharedInstance;
     [MSTKeychainHelper archiveObject:object forKey:defaultsKey];
 }
 
-
+- (Identity *)getExistingIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password {
+	NSMutableArray *items = [NSMutableArray array];
+	if ([MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES]) {
+		items = [MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES];
+	}
+	
+	for (Identity *identity in items) {
+		for (NSString *itemService in identity.servicesArray) {
+			if ([itemService isEqualToString:service]) {
+				return identity;
+			}
+		}
+	}
+	
+	return nil;
+}
 
 @end

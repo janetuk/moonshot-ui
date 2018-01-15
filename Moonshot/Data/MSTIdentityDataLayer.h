@@ -18,5 +18,5 @@ static const NSString  *MSTIdentityNoIndentityID = @"MSTIdentityNoIndentityID";
 - (void)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
 - (void)removeIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
-
+- (Identity *)getExistingIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password;
 @end

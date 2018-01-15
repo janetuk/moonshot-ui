@@ -11,6 +11,8 @@
 #import "MainViewController.h"
 #import "MSTIdentitySelectorViewController.h"
 #import "MSTDBusServer.h"
+#import "Identity.h"
+#import "MSTIdentityDataLayer.h"
 
 @interface AppDelegate ()
 @property (strong) IBOutlet NSWindow *window;
@@ -87,10 +89,40 @@
 
 #pragma mark - Get Identity Action
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
-    MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self setIdentitySelectorViewController:getIdentity];
-    });
+	
+	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
+	if (existingIdentitySelection) {
+		NSString *combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
+		const char *nai_out = [combinedNaiOut UTF8String];
+		const char *password_out = [existingIdentitySelection.password UTF8String];
+		const char *server_certificate_hash_out = [@"" UTF8String];
+		const char *ca_certificate_out = [@"" UTF8String];
+		const char *subject_name_constraint_out = [@"" UTF8String];
+		const char *subject_alt_name_constraint_out = [@"" UTF8String];
+		const int  success = 1;
+		
+		dbus_message_append_args(reply,
+								 DBUS_TYPE_STRING, &nai_out,
+								 DBUS_TYPE_STRING, &password_out,
+								 DBUS_TYPE_STRING, &server_certificate_hash_out,
+								 DBUS_TYPE_STRING, &ca_certificate_out,
+								 DBUS_TYPE_STRING, &subject_name_constraint_out,
+								 DBUS_TYPE_STRING, &subject_alt_name_constraint_out,
+								 DBUS_TYPE_BOOLEAN, &success,
+								 DBUS_TYPE_INVALID);
+		
+		dbus_connection_send(connection, reply, NULL);
+		dbus_message_unref(reply);
+	} else {
+		MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self setIdentitySelectorViewController:getIdentity];
+		});
+	}
+}
+
+- (Identity *)getExistingIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password {
+	return [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:nai service:service password:password];
 }
 
 - (void)startListeningForDBusConnections {

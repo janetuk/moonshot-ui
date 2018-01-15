@@ -30,12 +30,13 @@
 }
 
 - (void)selectedIdentity:(Identity *)identity {
-    const char *nai_out = [identity.username UTF8String];
+	NSString *combinedNaiOut = [NSString stringWithFormat:@"%@@%@",identity.username,identity.realm];
+    const char *nai_out = [combinedNaiOut UTF8String];
     const char *password_out = [identity.password UTF8String];
-    const char *server_certificate_hash_out = "";
-    const char *ca_certificate_out = "";
-    const char *subject_name_constraint_out = "";
-    const char *subject_alt_name_constraint_out = "";
+    const char *server_certificate_hash_out = [@"" UTF8String];
+    const char *ca_certificate_out = [@"" UTF8String];
+    const char *subject_name_constraint_out = [@"" UTF8String];
+    const char *subject_alt_name_constraint_out = [@"" UTF8String];
     const int  success = 1;
 
     dbus_message_append_args(_reply,
@@ -50,7 +51,7 @@
     
     dbus_connection_send(_connection, _reply, NULL);
     dbus_message_unref(_reply);
-    exit(1);
+    //exit(1);
 }
 
 @end

@@ -168,13 +168,13 @@
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
         if (identityObject.passwordRemembered) {
             if (self.getIdentityAction.service) {
-                [identityObject.servicesArray addObject:self.getIdentityAction.service];
+				[self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
                 [self showAlertForIdentitysEditingStatusForIdentity:identityObject];
             }
         } else {
             self.connectIdentityWindow = [[ConnectIdentityWindow alloc] initWithWindowNibName:NSStringFromClass([ConnectIdentityWindow class])];
             self.connectIdentityWindow.delegate = self;
-            [identityObject.servicesArray addObject:self.getIdentityAction.service];
+			[self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
             self.connectIdentityWindow.identityObject = identityObject;
             [self.view.window beginSheet:self.connectIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
                 switch (returnCode) {
@@ -188,6 +188,19 @@
             }];
         }
     }
+}
+
+- (void)appendUsedService:(NSString *)newService toIdentity:(Identity *)identity {
+	BOOL isServiceAlreadySaved = NO;
+	for (NSString *existingService in identity.servicesArray) {
+		if ([existingService isEqualToString:newService]) {
+			isServiceAlreadySaved = YES;
+			break;
+		}
+	}
+	if (!isServiceAlreadySaved) {
+		[identity.servicesArray addObject:newService];
+	}
 }
 
 #pragma mark - AddIdentity Delegate

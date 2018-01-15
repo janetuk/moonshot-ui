@@ -299,7 +299,7 @@
                                             <nil key="backgroundColor"/>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Cdm-Rm-HgP">
-                                            <rect key="frame" x="1" y="7" width="0.0" height="16"/>
+                                            <rect key="frame" x="1" y="-16" width="0.0" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="i6q-GT-gwq">
@@ -588,7 +588,7 @@
                             <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l6F-Ju-Wgo">
                                 <rect key="frame" x="435" y="329" width="239" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="cpQ-Oa-byi">
+                                <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" state="on" inset="2" id="cpQ-Oa-byi">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system" size="10"/>
                                 </buttonCell>
@@ -649,7 +649,7 @@
         <image name="info_button_selected" width="17" height="17"/>
         <image name="question_button" width="19" height="19"/>
         <image name="remove_button_1" width="21" height="17"/>
-        <image name="user_info_large" width="38" height="38"/>
+        <image name="user_info_large" width="57" height="57"/>
         <image name="white_space" width="596" height="112"/>
         <image name="window_frame_" width="653" height="397"/>
     </resources>
