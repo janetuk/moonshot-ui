@@ -150,7 +150,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ag-fm-DQf">
-                                                <rect key="frame" x="181" y="65" width="92" height="21"/>
+                                                <rect key="frame" x="181" y="65" width="393" height="21"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" usesSingleLineMode="YES" id="AuF-Yx-e6m">
                                                     <font key="font" metaFont="system"/>
@@ -168,7 +168,7 @@
                                                 </textFieldCell>
                                             </textField>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KDQ-RG-xjt">
-                                                <rect key="frame" x="154" y="50" width="92" height="16"/>
+                                                <rect key="frame" x="154" y="49" width="420" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" usesSingleLineMode="YES" id="BIZ-Sz-zna">
                                                     <font key="font" metaFont="system"/>
@@ -209,7 +209,7 @@
                                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="user_info_large" id="d84-KU-8P6"/>
                                             </imageView>
                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Pea-h8-cg9">
-                                                <rect key="frame" x="192" y="31" width="141" height="16"/>
+                                                <rect key="frame" x="192" y="30" width="382" height="17"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                 <textFieldCell key="cell" controlSize="mini" sendsActionOnEndEditing="YES" usesSingleLineMode="YES" id="XIA-OQ-6SV">
                                                     <font key="font" metaFont="system"/>

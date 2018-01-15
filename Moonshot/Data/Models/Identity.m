@@ -21,8 +21,11 @@
             self.dateAdded = identityDict[@"dateAdded"];
             self.passwordRemembered = [identityDict[@"passwordRemembered"] boolValue];
             self.caCertificate = [identityDict[@"caCertificate"] boolValue];
-            self.trustAnchor = identityDict[@"trustAnchor"];
-            self.servicesArray = identityDict[@"trustAnchorArray"];
+            self.trustAnchor = [identityDict[@"trustAnchor"] boolValue];
+            self.serverCertificate = [identityDict[@"serverCertificate"] boolValue];
+            self.servicesArray = identityDict[@"servicesArray"];
+            self.selectionRulesArray = identityDict[@"selectionRulesArray"];
+            self.selectionRules = [[SelectionRules alloc] initWithDictionaryObject:identityDict[@"selectionRules"]];
             self.trustAnchorArray = identityDict[@"trustAnchorArray"];
         }
     }
@@ -39,8 +42,11 @@
     [resultDict setObject:self.dateAdded forKey:@"dateAdded"];
     [resultDict setObject:[NSNumber numberWithBool:self.passwordRemembered] forKey:@"passwordRemembered"];
     [resultDict setObject:[NSNumber numberWithBool:self.caCertificate] forKey:@"caCertificate"];
-    [resultDict setObject:self.trustAnchor forKey:@"trustAnchor"];
+    [resultDict setObject:[NSNumber numberWithBool:self.trustAnchor] forKey:@"trustAnchor"];
+    [resultDict setObject:[NSNumber numberWithBool:self.serverCertificate] forKey:@"serverCertificate"];
     [resultDict setObject:self.servicesArray forKey:@"servicesArray"];
+    [resultDict setObject:self.selectionRulesArray forKey:@"selectionRulesArray"];
+    [resultDict setObject:self.selectionRules forKey:@"selectionRules"];
     [resultDict setObject:self.trustAnchorArray forKey:@"trustAnchorArray"];
 
     return resultDict;
@@ -56,8 +62,11 @@
         self.dateAdded = [decoder decodeObjectForKey:@"dateAdded"];
         self.passwordRemembered = [decoder decodeBoolForKey:@"passwordRemembered"];
         self.caCertificate = [decoder decodeBoolForKey:@"caCertificate"];
-        self.trustAnchor = [decoder decodeObjectForKey:@"trustAnchor"];
+        self.trustAnchor = [decoder decodeBoolForKey:@"trustAnchor"];
+        self.serverCertificate = [decoder decodeBoolForKey:@"serverCertificate"];
         self.servicesArray = [decoder decodeObjectForKey:@"servicesArray"];
+        self.selectionRulesArray = [decoder decodeObjectForKey:@"selectionRulesArray"];
+        self.selectionRules = [decoder decodeObjectForKey:@"selectionRules"];
         self.trustAnchorArray = [decoder decodeObjectForKey:@"trustAnchorArray"];
     }
     return self;
@@ -72,8 +81,11 @@
     [encoder encodeObject:self.dateAdded forKey:@"dateAdded"];
     [encoder encodeBool:self.passwordRemembered forKey:@"passwordRemembered"];
     [encoder encodeBool:self.caCertificate forKey:@"caCertificate"];
-    [encoder encodeObject:self.trustAnchor forKey:@"trustAnchor"];
+    [encoder encodeBool:self.trustAnchor forKey:@"trustAnchor"];
+    [encoder encodeBool:self.serverCertificate forKey:@"serverCertificate"];
     [encoder encodeObject:self.servicesArray forKey:@"servicesArray"];
+    [encoder encodeObject:self.selectionRulesArray forKey:@"selectionRulesArray"];
+    [encoder encodeObject:self.selectionRules forKey:@"selectionRules"];
     [encoder encodeObject:self.trustAnchorArray forKey:@"trustAnchorArray"];
 }
 
