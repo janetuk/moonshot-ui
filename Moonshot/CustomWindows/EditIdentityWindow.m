@@ -38,6 +38,7 @@
 //Certificate View
 @property (weak) IBOutlet NSView *certificateView;
 @property (weak) IBOutlet NSTextField *caCertificateTextField;
+@property (weak) IBOutlet NSTextField *caCertificateValueTextField;
 @property (weak) IBOutlet NSTextField *subjectTextField;
 @property (weak) IBOutlet NSTextField *subjectValueTextField;
 @property (weak) IBOutlet NSTextField *expirationDateTextField;
@@ -46,6 +47,7 @@
 @property (weak) IBOutlet NSTextField *constraintValueTextField;
 @property (weak) IBOutlet NSView *topSeparator;
 @property (weak) IBOutlet NSView *bottomSeparator;
+@property (weak) IBOutlet NSButton *exportCertificateButton;
 
 //Fingerprint View
 @property (strong) IBOutlet NSView *shaFingerprintView;
@@ -164,6 +166,9 @@
 		[self.certificateView setHidden:NO];
 		[self.shaFingerprintView setHidden:YES];
 		[self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
+        [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
+        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
+        [self.expirationDateValueTextField setStringValue:@""];
 	} else {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:YES];
@@ -203,6 +208,7 @@
     [self.clearTrustAnchorButton setTitle:NSLocalizedString(@"Clear_Trust_Anchor_Button", @"")];
     [self.editIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
     [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
+    [self.exportCertificateButton setTitle:NSLocalizedString(@"Export_Certificate", @"")];
 }
 
 #pragma mark - Setup TableView Header
@@ -307,6 +313,9 @@
                 break;
         }
     }];
+}
+
+- (IBAction)exportCertificateButtonPressed:(id)sender {
 }
 
 #pragma mark - NSTextFieldDelegate

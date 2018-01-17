@@ -43,6 +43,8 @@
 "Selection_Pattern" = "Pattern";
 "Selection_Confirmation" = "Always Confirm";
 "Service" = "Service";
+"Yes" = "Yes";
+"Export_Certificate" = "Export Certificate";
 
 //TRUST ANCHOR
 "Trust_Anchor_Title" = "Trust Anchor";
