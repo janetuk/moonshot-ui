@@ -439,7 +439,7 @@
 }
 
 - (void)setEditMenuItemStatus:(BOOL)editStatus andRemoveMenuItemStatus:(BOOL)removeStatus {
-    [[[[[NSApp menu] itemWithTag:1] submenu] itemWithTag:1] setEnabled:removeStatus];
+    [[[[[NSApp menu] itemWithTag:1] submenu] itemWithTag:1] setEnabled:editStatus];
     [[[[[NSApp menu] itemWithTag:1] submenu] itemWithTag:2] setEnabled:removeStatus];
 }
 
