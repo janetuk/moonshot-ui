@@ -56,7 +56,6 @@
     
     dbus_connection_send(_connection, _reply, NULL);
     dbus_message_unref(_reply);
-	[NSApp terminate:self];
 }
 
 @end

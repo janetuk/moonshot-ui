@@ -81,7 +81,9 @@ static MSTIdentityDataLayer *sharedInstance;
                 break;
             }
         }
-		block(nil);
+		if (block) {
+			block(nil);
+		}
     }];
 }
 
@@ -129,5 +131,21 @@ static MSTIdentityDataLayer *sharedInstance;
 	
 	return nil;
 }
+
+- (Identity *)getExistingIdentitySelectionFor:(NSString *)nai realm:(NSString *)realm {
+	NSMutableArray *items = [NSMutableArray array];
+	if ([MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES]) {
+		items = [MSTKeychainHelper unarchiveObjectForKey:MST_IDENTITIES];
+	}
+	
+	for (Identity *identity in items) {
+		if ([identity.username isEqualToString:nai] && [identity.realm isEqualToString:realm]) {
+			return identity;
+		}
+	}
+	
+	return nil;
+}
+
 
 @end

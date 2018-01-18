@@ -65,6 +65,7 @@
 - (IBAction)connectIdentityConnectButtonPressed:(id)sender {
 	if ([self.identityObject.password isEqualToString:self.connectIdentityPasswordValueTextField.stringValue]) {
 		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
+			self.identityObject.passwordRemembered = self.connectIdentityRememberPasswordButton.state;
 			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
 		}
 	} else {

@@ -23,6 +23,7 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     [self setIdentityManagerViewController];
 }
 
@@ -99,7 +100,6 @@
 		
 		dbus_connection_send(connection, reply, NULL);
 		dbus_message_unref(reply);
-		[NSApp terminate:self];
 	} else {
 		MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
 		dispatch_async(dispatch_get_main_queue(), ^{
