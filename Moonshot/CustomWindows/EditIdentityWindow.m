@@ -316,6 +316,20 @@
 }
 
 - (IBAction)exportCertificateButtonPressed:(id)sender {
+	NSString *fileName = [NSString stringWithFormat:@"%@.cert", self.identityToEdit.displayName];
+	NSString *fileContent = self.identityToEdit.trustAnchor.caCertificate;
+
+	NSSavePanel *savePanel = [NSSavePanel savePanel];
+	[savePanel setPrompt:@"Export"];
+	[savePanel setNameFieldStringValue:fileName];
+	[savePanel beginWithCompletionHandler:^(NSInteger result) {
+		if (result == NSFileHandlingPanelOKButton) {
+			NSURL *saveURL = [savePanel URL];
+			[[NSFileManager defaultManager] createFileAtPath:[saveURL path]
+													contents:[fileContent dataUsingEncoding:NSUTF8StringEncoding]
+												  attributes:nil];
+		}
+	}];
 }
 
 #pragma mark - NSTextFieldDelegate
