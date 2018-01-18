@@ -439,8 +439,8 @@
 }
 
 - (void)setEditMenuItemStatus:(BOOL)editStatus andRemoveMenuItemStatus:(BOOL)removeStatus {
-    [self.editIdentityMenuItem setEnabled:editStatus];
-    [self.removeIdentityMenuItem setEnabled:removeStatus];
+    [[[[[NSApp menu] itemWithTag:1] submenu] itemWithTag:1] setEnabled:removeStatus];
+    [[[[[NSApp menu] itemWithTag:1] submenu] itemWithTag:2] setEnabled:removeStatus];
 }
 
 #pragma mark - Add Identity

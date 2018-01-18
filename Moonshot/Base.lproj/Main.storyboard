@@ -31,7 +31,7 @@
                                     </items>
                                 </menu>
                             </menuItem>
-                            <menuItem title="Identity" id="dMs-cI-mzQ" userLabel="Identity">
+                            <menuItem title="Identity" tag="1" id="dMs-cI-mzQ" userLabel="Identity">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <menu key="submenu" title="Identity" autoenablesItems="NO" id="bib-Uj-vzu">
                                     <items>
@@ -41,13 +41,13 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
-                                        <menuItem title="Edit" enabled="NO" keyEquivalent="o" id="IAo-SY-fd9" userLabel="Edit">
+                                        <menuItem title="Edit" tag="1" enabled="NO" keyEquivalent="o" id="IAo-SY-fd9" userLabel="Edit">
                                             <connections>
                                                 <action selector="editIdentity:" target="Voe-Tx-rLC" id="BE9-ME-KNW"/>
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="aJh-i4-bef"/>
-                                        <menuItem title="Remove" enabled="NO" keyEquivalent="w" id="DVo-aG-piG" userLabel="Remove">
+                                        <menuItem title="Remove" tag="2" enabled="NO" keyEquivalent="w" id="DVo-aG-piG" userLabel="Remove">
                                             <connections>
                                                 <action selector="removeIdentity:" target="Voe-Tx-rLC" id="Np8-9r-jhY"/>
                                             </connections>
@@ -299,7 +299,7 @@
                                             <nil key="backgroundColor"/>
                                         </clipView>
                                         <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="Cdm-Rm-HgP">
-                                            <rect key="frame" x="1" y="-16" width="0.0" height="16"/>
+                                            <rect key="frame" x="1" y="7" width="0.0" height="16"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </scroller>
                                         <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="i6q-GT-gwq">
@@ -405,14 +405,14 @@
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <menu autoenablesItems="NO" id="BUT-vw-tLz">
                     <items>
-                        <menuItem title="Edit Identity" id="gBz-Vl-ZFE" userLabel="Edit Identity">
+                        <menuItem title="Edit Identity" tag="1" id="gBz-Vl-ZFE" userLabel="Edit Identity">
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <connections>
                                 <action selector="doubleAction:" target="XfG-lQ-9wD" id="mbZ-Pv-3eA"/>
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="NBO-aP-y24"/>
-                        <menuItem title="Remove Identity" id="PeR-p5-G6R" userLabel="Remove Identity">
+                        <menuItem title="Remove Identity" tag="2" id="PeR-p5-G6R" userLabel="Remove Identity">
                             <modifierMask key="keyEquivalentModifierMask"/>
                             <connections>
                                 <action selector="deleteIdentityButtonPressed:" target="XfG-lQ-9wD" id="GNm-Kd-bNN"/>
@@ -649,7 +649,7 @@
         <image name="info_button_selected" width="17" height="17"/>
         <image name="question_button" width="19" height="19"/>
         <image name="remove_button_1" width="21" height="17"/>
-        <image name="user_info_large" width="57" height="57"/>
+        <image name="user_info_large" width="38" height="38"/>
         <image name="white_space" width="596" height="112"/>
         <image name="window_frame_" width="653" height="397"/>
     </resources>
