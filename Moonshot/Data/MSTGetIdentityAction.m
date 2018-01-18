@@ -38,10 +38,11 @@
 	}
     const char *nai_out = [combinedNaiOut UTF8String];
 	const char *password_out = identity.password == nil ? "" : [identity.password UTF8String];
-    const char *server_certificate_hash_out = [@"" UTF8String];
-    const char *ca_certificate_out = [@"" UTF8String];
-    const char *subject_name_constraint_out = [@"" UTF8String];
-    const char *subject_alt_name_constraint_out = [@"" UTF8String];
+	
+	const char *server_certificate_hash_out = identity.trustAnchor.serverCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.serverCertificate UTF8String];
+    const char *ca_certificate_out =  identity.trustAnchor.caCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.caCertificate UTF8String];
+    const char *subject_name_constraint_out =  identity.trustAnchor.subject == nil ? [@"" UTF8String] : [identity.trustAnchor.subject UTF8String];
+    const char *subject_alt_name_constraint_out =  identity.trustAnchor.subjectAlt == nil ? [@"" UTF8String] : [identity.trustAnchor.subjectAlt UTF8String];
 	const int  success = [identity.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
 
     dbus_message_append_args(_reply,
