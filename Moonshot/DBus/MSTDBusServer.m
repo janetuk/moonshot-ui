@@ -17,6 +17,7 @@
 #include <dbus/dbus-glib.h>
 #include <stdbool.h>
 #import "AppDelegate.h"
+#import "MSTIdentityDataLayer.h"
 
 void dbusStartListening()
 {
@@ -95,8 +96,24 @@ void dbusStartListening()
 					perror("Moonshot.IdentitySelector Bad Output Type");
 				} else {
 				}
-				
-				const int  success = 1;
+
+				Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm]];
+				int  success = 1;
+
+				if (identity.trustAnchor.serverCertificate.length > 0) {
+					if ([identity.trustAnchor.serverCertificate isEqualToString:[NSString stringWithUTF8String:hash_str]]) {
+						success = 1;
+					} else {
+						success = 0;
+					}
+				} else {
+					if (identity.trustAnchor == nil) {
+						identity.trustAnchor = [[TrustAnchor alloc] init];
+					}
+					identity.trustAnchor.serverCertificate = [NSString stringWithUTF8String:hash_str];
+					[[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
+					success = 1;
+				}
 				
 				dbus_message_append_args(reply,
 										 DBUS_TYPE_INT32, &success,
@@ -105,9 +122,11 @@ void dbusStartListening()
 				
 				dbus_connection_send(connection, reply, NULL);
 				dbus_message_unref(reply);
+				AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+				[NSApp terminate:delegate];
 			}
 		} else {
-			NSLog(@"Moonshot.IdentitySelector");
+			NSLog(@"Moonshot.IdentitySelector None");
 		}
         dbus_message_unref(msg);
     }
