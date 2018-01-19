@@ -63,9 +63,21 @@
 }
 
 - (IBAction)connectIdentityConnectButtonPressed:(id)sender {
-	if ([self.identityObject.password isEqualToString:self.connectIdentityPasswordValueTextField.stringValue]) {
+	
+	BOOL userAlreadyHadPassword = (self.identityObject.password.length > 0);
+	BOOL oldPasswordMatchesNew = [self.identityObject.password isEqualToString:self.connectIdentityPasswordValueTextField.stringValue];
+	
+	if (userAlreadyHadPassword && oldPasswordMatchesNew) {
 		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
 			self.identityObject.passwordRemembered = self.connectIdentityRememberPasswordButton.state;
+			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
+		}
+	} else if (!userAlreadyHadPassword) {
+		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
+			self.identityObject.passwordRemembered = self.connectIdentityRememberPasswordButton.state;
+			if (self.identityObject.passwordRemembered) {
+				self.identityObject.password = self.connectIdentityPasswordValueTextField.stringValue;
+			}
 			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
 		}
 	} else {
@@ -88,8 +100,7 @@
 }
 
 - (BOOL)isRequiredDataFilled {
-    BOOL connectIdentityButtonDisabled = [self.connectIdentityPasswordValueTextField.stringValue isEqualToString:@""] || [self.identityObject.password isEqualToString:@""];
-    return !connectIdentityButtonDisabled;
+    return self.connectIdentityPasswordValueTextField.stringValue.length > 0;
 }
 
 @end

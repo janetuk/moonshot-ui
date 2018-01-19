@@ -23,6 +23,7 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
+	[[NSApplication sharedApplication] windows][0].restorable = YES;
 	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     [self setIdentityManagerViewController];
 }
@@ -31,8 +32,12 @@
 
 }
 
+-(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender {
+	return YES;
+}
+
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
-    // Insert code here to tear down your application
+
 }
 
 #pragma mark - Set Content ViewController
@@ -75,7 +80,7 @@
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
 	
 	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
-	if (existingIdentitySelection) {
+	if (existingIdentitySelection && existingIdentitySelection.passwordRemembered && existingIdentitySelection.password.length > 0) {
 		NSString *combinedNaiOut = @"";
 		if (existingIdentitySelection.username.length && existingIdentitySelection.realm.length) {
 			combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];

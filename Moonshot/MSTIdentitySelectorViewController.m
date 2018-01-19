@@ -166,7 +166,7 @@
         }];
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
-        if (identityObject.passwordRemembered) {
+        if (identityObject.passwordRemembered && identityObject.password.length > 0) {
             if (self.getIdentityAction.service) {
 				[self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
                 [self showAlertForIdentitysEditingStatusForIdentity:identityObject];
