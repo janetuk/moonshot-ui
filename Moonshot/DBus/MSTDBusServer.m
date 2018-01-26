@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Ivan on 11/21/17.
-//  Copyright © 2017 Devsy. All rights reserved.
 //
 
 #include "MSTDBusServer.h"
@@ -107,6 +106,7 @@ void dbusStartListening()
 						success = 0;
 					}
 				} else {
+#warning todo
 					if (identity.trustAnchor == nil) {
 						identity.trustAnchor = [[TrustAnchor alloc] init];
 					}

@@ -313,7 +313,7 @@
 					for (Identity *identityObject in items) {
 						[weakSelf addIdentity:identityObject forWindow:self.view.window];
 					}
-					[weakSelf showSuccessParsingAlert:items.count];
+					[weakSelf showSuccessParsingAlert:(int)items.count];
 				} else {
 					[weakSelf showErrorParsingAlert];
 				}

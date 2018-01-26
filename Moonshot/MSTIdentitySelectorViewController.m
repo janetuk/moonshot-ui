@@ -166,26 +166,32 @@
         }];
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
-        if (identityObject.passwordRemembered && identityObject.password.length > 0) {
-            if (self.getIdentityAction.service) {
-				[self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
-                [self showAlertForIdentitysEditingStatusForIdentity:identityObject];
+        if (![identityObject.displayName isEqualToString: NSLocalizedString(@"No_Identity", @"")]) {
+            if (identityObject.passwordRemembered && identityObject.password.length > 0) {
+                if (self.getIdentityAction.service) {
+                    [self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
+                    [self applySelectedIdentity:identityObject];
+                }
+            } else {
+                self.connectIdentityWindow = [[ConnectIdentityWindow alloc] initWithWindowNibName:NSStringFromClass([ConnectIdentityWindow class])];
+                self.connectIdentityWindow.delegate = self;
+                [self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
+                self.connectIdentityWindow.identityObject = identityObject;
+                [self.view.window beginSheet:self.connectIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
+                    switch (returnCode) {
+                        case NSModalResponseOK:
+                            break;
+                        case NSModalResponseCancel:
+                            break;
+                        default:
+                            break;
+                    }
+                }];
             }
         } else {
-            self.connectIdentityWindow = [[ConnectIdentityWindow alloc] initWithWindowNibName:NSStringFromClass([ConnectIdentityWindow class])];
-            self.connectIdentityWindow.delegate = self;
-			[self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
-            self.connectIdentityWindow.identityObject = identityObject;
-            [self.view.window beginSheet:self.connectIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
-                switch (returnCode) {
-                    case NSModalResponseOK:
-                        break;
-                    case NSModalResponseCancel:
-                        break;
-                    default:
-                        break;
-                }
-            }];
+            [self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
+            [self applySelectedIdentity:identityObject];
+            [NSApp terminate:[NSApplication sharedApplication]];
         }
     }
 }
@@ -237,7 +243,8 @@
 #pragma mark - ConnectIdentity Delegate
 
 - (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    [self showAlertForIdentitysEditingStatusForIdentity:identity];
+    [self applySelectedIdentity:identity];
+    [[self.view window] endSheet:window];
 }
 
 - (void)connectIdentityWindowCanceled:(NSWindow *)window {
@@ -246,7 +253,7 @@
 
 #pragma mark - 
 
-- (void)showAlertForIdentitysEditingStatusForIdentity:(Identity *)identity {
+- (void)applySelectedIdentity:(Identity *)identity {
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:^(NSError *error) {
         [self.getIdentityAction selectedIdentity:identity];
     }];

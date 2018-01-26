@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Ivan on 1/16/18.
-//  Copyright © 2018 Devsy. All rights reserved.
 //
 
 #import "MSTIdentityImporter.h"
@@ -52,8 +51,8 @@
 			NSArray *selectionArray = [xmlObject valueForKey:@"selection-rules"];
 			for (id obj in selectionArray) {
 				SelectionRules *rulesObject = [SelectionRules new];
-				rulesObject.alwaysConfirm = [obj valueForKey:@"always-confirm"];
-				rulesObject.pattern = [obj valueForKey:@"pattern"];
+                rulesObject.alwaysConfirm = [obj valueForKey:@"always-confirm"] ?: @"";
+				rulesObject.pattern = [obj valueForKey:@"pattern"] ?: @"";
 				[selectionRulesArray addObject:rulesObject];
 			}
 		}
@@ -66,11 +65,11 @@
 			trustAnchorObject.subjectAlt = [trustDict valueForKey:@"subject-alt"] ?: @"";
 		}
 		identityObject.identityId = [NSString getUUID];
-		identityObject.displayName = [xmlObject valueForKey:@"display-name"] ?: NSLocalizedString(@"None", @"");
-		identityObject.username = [xmlObject valueForKey:@"user"] ?: NSLocalizedString(@"None", @"");
-		identityObject.password = [xmlObject valueForKey:@"password"] ?: NSLocalizedString(@"None", @"");
+		identityObject.displayName = [xmlObject valueForKey:@"display-name"] ?: @"";
+		identityObject.username = [xmlObject valueForKey:@"user"] ?: @"";
+		identityObject.password = [xmlObject valueForKey:@"password"] ?: @"";
 		identityObject.trustAnchor = trustAnchorObject;
-		identityObject.realm = [xmlObject valueForKey:@"realm"] ?: NSLocalizedString(@"None", @"");
+		identityObject.realm = [xmlObject valueForKey:@"realm"] ?: @"";
 		identityObject.selectionRules = selectionRulesArray ?: [NSMutableArray arrayWithCapacity:0];
 		identityObject.servicesArray = [xmlObject valueForKey:@"services"] ?: [NSMutableArray arrayWithCapacity:0];
 		identityObject.passwordRemembered = identityObject.password.length > 0;

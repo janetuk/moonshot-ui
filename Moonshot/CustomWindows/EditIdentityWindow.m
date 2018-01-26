@@ -276,14 +276,28 @@
     }];
 }
 
+- (IBAction)editIdentityRememberPasswordButtonPressed:(id)sender {
+    if ([self isRequiredDataFilled]) {
+        if ([self isPasswordMandatory])
+            [self.editIdentitySaveButton setEnabled:NO];
+        else
+            [self.editIdentitySaveButton setEnabled:YES];
+    } else
+        [self.editIdentitySaveButton setEnabled:NO];
+}
+
 - (IBAction)saveChangesButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(editIdentityWindow:wantsToEditIdentity:rememberPassword:)]) {
         self.identityToEdit.identityId = self.identityToEdit.identityId;
         self.identityToEdit.displayName = self.identityToEdit.displayName;
         self.identityToEdit.username = self.editUsernameValueTextField.stringValue;
         self.identityToEdit.realm = self.editRealmValueTextField.stringValue;
-        self.identityToEdit.password = self.editPasswordValueTextField.stringValue;
         self.identityToEdit.passwordRemembered = self.editRememberPasswordButton.state;
+        if (self.identityToEdit.passwordRemembered) {
+            self.identityToEdit.password = self.editPasswordValueTextField.stringValue;
+        } else {
+            self.identityToEdit.password = @"";
+        }
         self.identityToEdit.dateAdded = self.identityToEdit.dateAdded;
         self.identityToEdit.servicesArray = self.servicesArray;
         self.identityToEdit.trustAnchor = self.identityToEdit.trustAnchor;
@@ -335,14 +349,25 @@
 #pragma mark - NSTextFieldDelegate
 
 - (void)controlTextDidChange:(NSNotification *)notification {
-    [self.editIdentitySaveButton setEnabled:[self isRequiredDataFilled]];
+    if ([self isPasswordMandatory]) {
+        [self.editIdentitySaveButton setEnabled:NO];
+    } else {
+        [self.editIdentitySaveButton setEnabled:[self isRequiredDataFilled]];
+    }
 }
+
+#pragma mark - Required data
 
 - (BOOL)isRequiredDataFilled {
     BOOL editIdentityButtonDisabled = [self.editUsernameValueTextField.stringValue isEqualToString:@""] ||
-    [self.editRealmValueTextField.stringValue isEqualToString:@""] ||
-    [self.editPasswordValueTextField.stringValue isEqualToString:@""];
+    [self.editRealmValueTextField.stringValue isEqualToString:@""];
     return !editIdentityButtonDisabled;
+}
+
+- (BOOL)isPasswordMandatory {
+    BOOL isPasswordMandatory = self.editRememberPasswordButton.state == NSOnState &&
+    [self.editPasswordValueTextField.stringValue isEqualToString:@""];
+    return isPasswordMandatory;
 }
 
 #pragma mark - NSTableViewDelegate & NSTableViewDataSource
@@ -356,12 +381,14 @@
 }
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
-    NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentityIdentifier" owner:self];
     if (tableView == self.editIdentityServicesTableView) {
+        NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentityServicesIdentifier" owner:self];
         if ([self.servicesArray count] > 0) {
             cellView.textField.stringValue = [self.servicesArray objectAtIndex:row];
         }
+        return cellView;
     } else {
+        NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentitySelectionRulesIdentifier" owner:self];
         if ([self.selectionRulesArray count] > 0) {
             SelectionRules *rulesObject = [self.selectionRulesArray objectAtIndex:row];
             if (tableColumn == tableView.tableColumns[0]) {
@@ -370,8 +397,8 @@
                 cellView.textField.stringValue = rulesObject.alwaysConfirm;
             }
         }
+        return cellView;
     }
-    return cellView;
 }
 
 @end

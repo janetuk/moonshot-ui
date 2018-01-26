@@ -127,6 +127,10 @@ static MSTIdentityDataLayer *sharedInstance;
 				return identity;
 			}
 		}
+        
+        for (NSString *selectionRule in identity.selectionRules) {
+            // Check if service complies to selectionRule
+        }
 	}
 	
 	return nil;

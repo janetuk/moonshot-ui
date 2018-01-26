@@ -58,10 +58,10 @@
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="112" width="445" height="748"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
-            <value key="minSize" type="size" width="445" height="555"/>
-            <value key="maxSize" type="size" width="445" height="555"/>
-            <value key="minFullScreenContentSize" type="size" width="445" height="555"/>
-            <value key="maxFullScreenContentSize" type="size" width="445" height="555"/>
+            <value key="minSize" type="size" width="445" height="748"/>
+            <value key="maxSize" type="size" width="445" height="748"/>
+            <value key="minFullScreenContentSize" type="size" width="445" height="748"/>
+            <value key="maxFullScreenContentSize" type="size" width="445" height="748"/>
             <view key="contentView" id="bf5-OI-ugo">
                 <rect key="frame" x="0.0" y="0.0" width="445" height="748"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -337,7 +337,7 @@
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="editIdentityIdentifier" id="DXt-iT-VA5">
+                                                        <tableCellView identifier="editIdentityServicesIdentifier" id="DXt-iT-VA5">
                                                             <rect key="frame" x="1" y="1" width="400" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
@@ -425,6 +425,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="editIdentityRememberPasswordButtonPressed:" target="-2" id="cNv-wu-G6T"/>
+                        </connections>
                     </button>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tIC-zf-SuW">
                         <rect key="frame" x="0.0" y="0.0" width="445" height="165"/>
@@ -477,7 +480,7 @@ Gw
                                                     </textFieldCell>
                                                     <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                     <prototypeCellViews>
-                                                        <tableCellView identifier="editIdentityIdentifier" id="BNu-Yd-X4C">
+                                                        <tableCellView identifier="editIdentitySelectionRulesIdentifier" id="BNu-Yd-X4C">
                                                             <rect key="frame" x="1" y="1" width="268" height="17"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>

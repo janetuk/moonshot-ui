@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Elena Jakjoska on 12/29/17.
-//  Copyright © 2017 Devsy. All rights reserved.
 //
 
 #import "TrustAnchor.h"

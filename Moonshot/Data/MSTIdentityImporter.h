@@ -3,7 +3,6 @@
 //  Moonshot
 //
 //  Created by Ivan on 1/16/18.
-//  Copyright © 2018 Devsy. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
