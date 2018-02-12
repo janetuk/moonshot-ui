@@ -72,7 +72,7 @@ static char *moonshot_launch_argv[] = {
 };
 
 static char *moonshot_dbus_launched_argv[] = {
-  MOONSHOT_SERVER, "--dbus-launched", NULL
+  MOONSHOT_SERVER, "--dbus-launched", "--cli", NULL
 };
 
 static DBusGConnection *dbus_launch_moonshot()
@@ -189,13 +189,19 @@ static DBusGProxy *dbus_connect (MoonshotError **error, GPid *server_pid)
     dbconnection = dbus_g_connection_get_connection(connection);
     *server_pid = 0;
 
-    /* Spawn a CLI server if there is no display. If it couldn't be SPAWNED, just go on as usual.
-       For the CLI operation the server needs to be a child of the application using libmoonshot,
-       or it is not possible to get direct access to stdout and stdin.
-       If AD-HOC session was created, we skip this as we have no way to access DBUS env and
-       is being probably used by a TR/IDP.
+    /*
+      For the CLI operation the server needs to be a child process of the
+      application using libmoonshot, or it is not possible to get direct access
+      to stdout and stdin.
+      Spawn a CLI Moonshot server when:
+        1) There is no DISPLAY environment variable.
+        2) We are in control of stdin and stdout (ie. we are running in the
+           foreground). Otherwise the Moonshot CLI UI cannot get interactive.
+        3) There was a pre-existing DBUS session (we did not launched the
+           session above). Otherwise, we would have problems with the keyring.
     */
-    if (getenv("DISPLAY") == NULL && !ad_hoc_dbus_session) {
+    if (getenv("DISPLAY") == NULL && isatty(fileno(stdout))
+          && isatty(fileno(stdin)) && !ad_hoc_dbus_session) {
         if (!g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, NULL,
                                       0, NULL, NULL, server_pid,
                                       NULL, NULL, NULL, NULL)) {
@@ -294,7 +300,8 @@ static DBusGProxy *get_dbus_proxy (MoonshotError **error, GPid *server_pid)
     return rv;
 }
 
-/* Releases the resources allocated for the proxy */
+/* Releases the resources allocated for the proxy
+ * (including the DBUS server if it was not autostarted) */
 static void release_dbus_proxy(DBusGProxy *dbus_proxy, GPid server_pid)
 {
   g_object_unref (dbus_proxy);
