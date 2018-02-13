@@ -292,7 +292,7 @@ static DBusGProxy *get_dbus_proxy (MoonshotError **error, GPid *server_pid)
 
     rv = dbus_proxy;
     // if a new server was created, the static dbus_proxy should not perdure
-    if (server_pid != 0) {
+    if (*server_pid != 0) {
         g_object_unref(dbus_proxy);
         dbus_proxy = NULL;
     }
