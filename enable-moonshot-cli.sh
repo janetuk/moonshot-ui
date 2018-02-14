@@ -6,8 +6,10 @@
 eval $(dbus-launch --sh-syntax)
 trap "kill $DBUS_SESSION_BUS_PID" exit
 
-# We need to launch a gnome-keyring-daemon associated to the new bus.
-mkdir -p $HOME/.cache
-eval $(/usr/bin/gnome-keyring-daemon "--start")
-export $(gnome-keyring-daemon)
-
+# If gnome-keyring is installed, launch a new instance associated to the new bus
+if command -v gnome-keyring &> /dev/null;
+then
+    mkdir -p $HOME/.cache
+    eval $(/usr/bin/gnome-keyring-daemon "--start")
+    export $(gnome-keyring-daemon)
+fi

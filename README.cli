@@ -1,0 +1,21 @@
+How to use the Moonshot CLI UI
+--------------------------------------
+This UI version comes with support for text-only interface. In order to make
+use of it, some conditions need to be met to resemble the environment that
+would exist on X sessions:
+
+1) A DBUS session MUST exist, so the Moonshot UI can register to it. Besides,
+   it is RECOMMENDED that an instance of Gnome Keyring (if installed) is
+   already running, for better user experience. Both of these things can be 
+   appropriately set up by sourcing the shipped bash script in:
+   $PREFIX/share/moonshot-ui/enable-moonshot-cli.sh
+
+   A recurrent Moonshot user might want to add this to the .bashrc file so it
+   gets source automatically on login.
+
+2) If Gnome Keyring is to be used, it is RECOMMENDED to automatically unlock
+   it when the user logs in (either on the console or by SSH). Instructions
+   on how to configure PAM to achieve this can be found in:
+   https://wiki.archlinux.org/index.php/GNOME/Keyring#PAM_method
+
+   Note that this does not preclude performing step 1.
