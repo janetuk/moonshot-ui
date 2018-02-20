@@ -11,7 +11,7 @@ bin_PROGRAMS = \
          src/moonshot-webp
 pkglibexec_SCRIPTS = moonshot-dbus-launch
 
-dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli.sh
+dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli
 dist_moonshotsysconf_DATA=flatstore-users
 
 AM_CFLAGS = -g -O0 -Wall
