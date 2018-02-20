@@ -185,7 +185,6 @@ static DBusGProxy *dbus_connect (MoonshotError **error, GPid *server_pid)
         }
     }
 
-
     dbconnection = dbus_g_connection_get_connection(connection);
     *server_pid = 0;
 

@@ -1,8 +1,11 @@
-#!/usr/bin/env bash
+# If there is a display, do nothing
+[ -n "$DISPLAY" ] && return;
+
 # The Moonshot UI requires a DBUS user session to work.
 # When DISPLAY is set, libdbus automatically launches a new session,
 # but in pure CLI environment, we need to launch it ourselves.
 # The trap line would take care of killing the bus when not needed anymore.
+echo "Preparing environment for Moonshot CLI UI"
 eval $(dbus-launch --sh-syntax)
 trap "kill $DBUS_SESSION_BUS_PID" exit
 
