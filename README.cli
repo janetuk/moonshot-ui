@@ -8,10 +8,10 @@ would exist on X sessions:
    it is RECOMMENDED that an instance of Gnome Keyring (if installed) is
    already running, for better user experience. Both of these things can be 
    appropriately set up by sourcing the shipped bash script in:
-   $PREFIX/share/moonshot-ui/enable-moonshot-cli.sh
+   $PREFIX/share/moonshot-ui/enable-moonshot-cli
 
-   A recurrent Moonshot user might want to add this to the .bashrc file so it
-   gets source automatically on login.
+   A recurrent Moonshot user might want to add this to the $HOME/.bashrc file,
+   so it gets sourced automatically on login.
 
 2) If Gnome Keyring is to be used, it is RECOMMENDED to automatically unlock
    it when the user logs in (either on the console or by SSH). Instructions

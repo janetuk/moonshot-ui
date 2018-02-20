@@ -136,16 +136,22 @@ public class MoonshotLogger : Object {
             stream = FileStream.open(filename, "a");
     }
 
+    private void dump_message(string type, string message, Error? e = null) {
+        if (stream != null) {
+            var now = new DateTime.now_local();
+            stream.printf("%s\t%s\t%s\t%s\n", now.to_string(), type, message, 
+                                              e != null? e.message : "");
+            stream.flush();
+        }
+    }
+
     /**
      * Log a trace message.
      * @param message log message
      * @param e optional Error to be logged
      */
     public void trace(string message, Error? e = null) {
-        if (stream != null) {
-            stream.printf(message + "\n");
-            stream.flush();
-        }
+        dump_message("TRACE", message, e);
     }
 
 
@@ -155,7 +161,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void debug(string message, Error? e = null) {
-        trace(message, e);
+        dump_message("DEBUG", message, e);
     }
 
 
@@ -164,7 +170,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void info(string message, Error? e = null) {
-        trace(message, e);
+        dump_message("INFO", message, e);
     }
 
     /**
@@ -173,7 +179,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void warn(string message, Error? e = null) {
-        trace(message, e);
+        dump_message("WARN", message, e);
     }
 
     /**
@@ -182,7 +188,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void error(string message, Error? e = null) {
-        trace(message, e);
+        dump_message("ERROR", message, e);
     }
 
     /**
@@ -191,7 +197,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void fatal(string message, Error? e = null) {
-        trace(message, e);
+        dump_message("FATAL", message, e);
     }
 }
 
