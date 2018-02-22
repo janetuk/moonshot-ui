@@ -115,7 +115,7 @@ public class IdentityManagerApp {
         /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
-        else if (cli_enabled)
+        else if (cli_enabled && !UserForcesFlatFileStore())
             view = new IdentityManagerCli(this, use_flat_file_store);
 
         LinkedList<IdCard> card_list = model.get_card_list();
