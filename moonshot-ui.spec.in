@@ -64,6 +64,7 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
 %{_datadir}/moonshot-ui
+%{_datadir}/doc/moonshot-ui
 %{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
