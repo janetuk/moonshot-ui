@@ -60,6 +60,7 @@ Requires: moonshot-ui  = %{version}-%{release}
 %defattr(-,root,root,-)
 %{_bindir}/moonshot
 %{_bindir}/moonshot-webp
+%{_bindir}/create_keyring
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
