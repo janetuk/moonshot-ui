@@ -6,16 +6,21 @@ would exist on X sessions:
 
 1) A DBUS session MUST exist, so the Moonshot UI can register to it. Besides,
    it is RECOMMENDED that an instance of Gnome Keyring (if installed) is
-   already running, for better user experience. Both of these things can be 
+   already running, for better user experience. Both of these things can be
    appropriately set up by sourcing the shipped bash script in:
    $PREFIX/share/moonshot-ui/enable-moonshot-cli
 
-   A recurrent Moonshot user might want to add this to the $HOME/.bashrc file,
+   A recurrent Moonshot user will want to add this to the $HOME/.bashrc file,
    so it gets sourced automatically on login.
 
-2) If Gnome Keyring is to be used, it is RECOMMENDED to automatically unlock
-   it when the user logs in (either on the console or by SSH). Instructions
-   on how to configure PAM to achieve this can be found in:
+2) If GNOME Keyring is to be used, a default keyring MUST exist. The shipped
+   moonshot-keyring-tool can be used to check that it exists and to create a
+   new one if it does not.
+
+   It is RECOMMENDED to automatically unlock the keyring when the user logs in
+   (either on the console or by SSH). Instructions on how to configure PAM
+   to achieve this can be found in:
    https://wiki.archlinux.org/index.php/GNOME/Keyring#PAM_method
 
-   Note that this does not preclude performing step 1.
+   In this case, it is mandatory that the default keyring is called "login"
+   and that the user and keyring passwords are the same.
