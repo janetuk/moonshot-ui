@@ -34,7 +34,20 @@ public interface IIdentityCardStore : Object {
     // Methods
     public enum StoreType {
         FLAT_FILE,
-        KEYRING
+        KEYRING;
+
+        public string to_string() {
+            switch (this) {
+                case FLAT_FILE:
+                    return "FLAT_FILE";
+
+                case KEYRING:
+                    return "KEYRING";
+
+                default:
+                    return "UNKNOWN";
+            }
+        }
     }
 
     public abstract void add_card(IdCard card);

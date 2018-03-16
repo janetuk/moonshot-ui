@@ -215,7 +215,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     {
         newtInit();
         newtCls();
-        newtDrawRootText(0, 0, "The Moonshot CLI ID selector");
+        newtDrawRootText(0, 0, "The Moonshot CLI ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
         newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
     }
 
