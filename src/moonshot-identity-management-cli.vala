@@ -490,8 +490,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
     {
         init_newt();
-        string msg = """
-You are using your identity <%s> for the first time with the following trust anchor:
+        string msg = """You are using your identity <%s> for the first time with the following trust anchor:
 
 %s
 
@@ -506,9 +505,7 @@ If it matches the above fingerprint, confirm the change. If not, then cancel."""
     {
         string copyright = "Copyright (c) 2017, JISC";
 
-        string license =
-        """
-Copyright (c) 2017, JISC JANET(UK)
+        string license = """Copyright (c) 2017, JISC JANET(UK)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -536,8 +533,7 @@ OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
 HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
 LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-""";
+SUCH DAMAGE.""";
         info_dialog("Moonshot project CLI UI", license, 78, 20, true);
     }
 
