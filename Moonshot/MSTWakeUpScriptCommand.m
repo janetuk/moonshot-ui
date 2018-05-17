@@ -13,6 +13,7 @@
 - (id)performDefaultImplementation {
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+        delegate.isLaunchedForIdentitySelection = YES;
         [delegate startListeningForDBusConnections];
     });
     return @(YES);

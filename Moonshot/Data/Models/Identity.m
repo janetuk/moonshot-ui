@@ -22,7 +22,7 @@
             self.passwordRemembered = [identityDict[@"passwordRemembered"] boolValue];
             self.trustAnchor = identityDict[@"trustAnchor"];
             self.servicesArray = identityDict[@"servicesArray"];
-            self.selectionRules = identityDict[@"selectionRulesArray"];
+            self.selectionRules = identityDict[@"selectionRules"];
         }
     }
     return self;

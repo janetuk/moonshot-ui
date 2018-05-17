@@ -127,9 +127,15 @@ static MSTIdentityDataLayer *sharedInstance;
 				return identity;
 			}
 		}
-        
-        for (NSString *selectionRule in identity.selectionRules) {
+        for (SelectionRules *selectionRule in identity.selectionRules) {
             // Check if service complies to selectionRule
+            if ([selectionRule.alwaysConfirm isEqualToString:@"true"]) {
+                if (![identity.servicesArray containsObject:selectionRule.pattern]) {
+                    [identity.servicesArray addObject:selectionRule.pattern];
+                    [self editIdentity:identity withBlock:^(NSError *error) {
+                    }];
+                }
+            }
         }
 	}
 	

@@ -6,13 +6,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "Identity.h"
 
 @protocol TrustAnchorWindowDelegate <NSObject>
-- (void)trustAnchorWindowCanceled:(NSWindow *)window;
+- (void)didSaveWithSuccess:(int)success andCertificate:(NSString *)certificate;
 @end
 
-@interface TrustAnchorWindow : NSWindowController
-+ (instancetype)defaultController;
+@interface TrustAnchorWindow : NSViewController
 @property (nonatomic, weak) id <TrustAnchorWindowDelegate>delegate;
-+ (void)showWindow;
+@property (nonatomic, strong) Identity *identity;
 @end

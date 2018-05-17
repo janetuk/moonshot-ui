@@ -106,24 +106,27 @@ void dbusStartListening()
 						success = 0;
 					}
 				} else {
-#warning todo
 					if (identity.trustAnchor == nil) {
 						identity.trustAnchor = [[TrustAnchor alloc] init];
 					}
-					identity.trustAnchor.serverCertificate = [NSString stringWithUTF8String:hash_str];
-					[[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
-					success = 1;
+                    
+                    AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+                    [delegate confirmCaCertForIdentityWithName:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm] hash:[NSString stringWithUTF8String:hash_str] connection:connection reply:reply];
+                                        
+//                    identity.trustAnchor.serverCertificate = [NSString stringWithUTF8String:hash_str];
+//                    [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
+//                    success = 1;
 				}
-				
-				dbus_message_append_args(reply,
-										 DBUS_TYPE_INT32, &success,
-										 DBUS_TYPE_BOOLEAN, &success,
-										 DBUS_TYPE_INVALID);
-				
-				dbus_connection_send(connection, reply, NULL);
-				dbus_message_unref(reply);
-				AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
-				[NSApp terminate:delegate];
+//                
+//                dbus_message_append_args(reply,
+//                                         DBUS_TYPE_INT32, &success,
+//                                         DBUS_TYPE_BOOLEAN, &success,
+//                                         DBUS_TYPE_INVALID);
+//                
+//                dbus_connection_send(connection, reply, NULL);
+//                dbus_message_unref(reply);
+//                AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+//                [NSApp terminate:delegate];
 			}
 		} else {
 			NSLog(@"Moonshot.IdentitySelector None");

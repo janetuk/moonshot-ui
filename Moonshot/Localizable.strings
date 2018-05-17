@@ -49,6 +49,11 @@
 //TRUST ANCHOR
 "Trust_Anchor_Title" = "Trust Anchor";
 "Trust_Anchor_Info" = "A trust anchor is specific information that is unique to your organisation's authentication server such as a fingerprint of the server certificate, or the CA certificate itself. This allows your credentials to be guaranteed and sent only to your organisation's authentication server and not a server claiming to be it by name.";
+"Trust_Anchor_Info_Text" = "You are using this identity for the first time with the following trust anchor:";
+"Trust_Anchor_Username" = "Username:";
+"Trust_Anchor_Realm" = "Realm:";
+"Trust_Anchor_Sha_Fingerprint_Title" = "Server's trust anchor certificate (SHA - 256 fingerprint):";
+"Trust_Anchor_Check_Info" = "Please check with your realm administrator for the correct fingerprint for your authentication server. if it matches the above fingerprint, confirm the change. If not, then cancel.";
 
 //ABOUT
 "Overview" = "Overview";

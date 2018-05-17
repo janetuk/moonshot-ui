@@ -7,41 +7,26 @@
 
 #import "TrustAnchorWindow.h"
 #import "MSTIdentityDataLayer.h"
+#import "AppDelegate.h"
 
 @interface TrustAnchorWindow ()
-@property (weak) IBOutlet NSTextField *trustAnchorShaFingerprint;
+@property (weak) IBOutlet NSTextField *trustAnchorShaFingerprintTextField;
 @property (weak) IBOutlet NSButton *trustAnchorCancelButton;
 @property (weak) IBOutlet NSButton *trustAnchorConfirmButton;
+@property (weak) IBOutlet NSTextField *trustAnchorInfoTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorUsernameTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorRealmTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorShaFingerprintTitleTextField;
+@property (weak) IBOutlet NSTextField *trustAnchorCheckInfoTextField;
 
 @end
 
 @implementation TrustAnchorWindow
 
-#pragma mark - Init
-
-+ (instancetype)defaultController
-{
-    static id staticInstance = nil;
-    
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        staticInstance = [[self alloc] init];
-    });
-    return staticInstance;
-}
-
-- (instancetype)init
-{
-    if (self = [super initWithWindowNibName: NSStringFromClass([TrustAnchorWindow class]) owner:self]) {
-        // (nothing yet...)
-    }
-    return self;
-}
-
 #pragma mark - Window Lifecycle
 
-- (void)windowDidLoad {
-    [super windowDidLoad];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     [self setupWindow];
 }
 
@@ -49,6 +34,42 @@
 
 - (void)setupWindow {
     [self setupButtons];
+    [self setupTextFields];
+}
+
+#pragma mark - Setup TextFields
+
+- (void)setupTextFields {
+    [self setupInfoTextField];
+    [self setupUsernameTextFieldWithUsername:self.identity.username];
+    [self setupRealmTextFieldWithRealm:self.identity.realm];
+    [self setupShaTitleTextField];
+    [self setupShaTextFieldWithShaFingerprint:self.identity.trustAnchor.serverCertificate];
+    [self setupCheckInfoTextField];
+}
+
+- (void)setupInfoTextField {
+    [self.trustAnchorInfoTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Info_Text", @"")];
+}
+
+- (void)setupUsernameTextFieldWithUsername:(NSString *)username {
+    [self.trustAnchorUsernameTextField setStringValue:[NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"Trust_Anchor_Username", @""), username]];
+}
+
+- (void)setupRealmTextFieldWithRealm:(NSString *)realm {
+    [self.trustAnchorRealmTextField setStringValue:[NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"Trust_Anchor_Realm", @""),realm]];
+}
+
+- (void)setupShaTitleTextField {
+    [self.trustAnchorShaFingerprintTitleTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Sha_Fingerprint_Title", @"")];
+}
+
+- (void)setupShaTextFieldWithShaFingerprint:(NSString *)fingerprint {
+    [self.trustAnchorShaFingerprintTextField setStringValue:fingerprint];
+}
+
+- (void)setupCheckInfoTextField {
+    [self.trustAnchorCheckInfoTextField setStringValue:NSLocalizedString(@"Trust_Anchor_Check_Info", @"")];
 }
 
 #pragma mark - Setup Buttons
@@ -69,16 +90,22 @@
 #pragma mark - Button Actions
 
 - (IBAction)trustAnchorCancelButtonPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(trustAnchorWindowCanceled:)]) {
-        [self.delegate trustAnchorWindowCanceled:self.window];
+    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:andCertificate:)]) {
+        [self.delegate didSaveWithSuccess:0 andCertificate:self.trustAnchorShaFingerprintTextField.stringValue];
     }
 }
 
 - (IBAction)trustAnchorConfirmButtonPressed:(id)sender {
+    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:andCertificate:)]) {
+        [self.delegate didSaveWithSuccess:1 andCertificate:self.trustAnchorShaFingerprintTextField.stringValue];
+    }
 }
 
-+ (void)showWindow {
-    [[TrustAnchorWindow defaultController] showWindow:self];
+#pragma mark - Terminate Application
+
+- (void)terminateApplication {
+    AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+    [NSApp terminate:delegate];
 }
 
 @end

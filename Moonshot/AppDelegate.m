@@ -13,8 +13,10 @@
 #import "MSTDBusServer.h"
 #import "Identity.h"
 #import "MSTIdentityDataLayer.h"
+#import "TrustAnchorWindow.h"
 
-@interface AppDelegate ()
+@interface AppDelegate ()<TrustAnchorWindowDelegate>
+
 @property (strong) IBOutlet NSWindow *window;
 @property (nonatomic, strong) IBOutlet NSViewController *viewController;
 @property (nonatomic, strong) NSOperationQueue *dbusQueue;
@@ -22,17 +24,31 @@
 
 @implementation AppDelegate
 
+int  _success;
+DBusConnection *_connection;
+DBusMessage *_reply;
+Identity *_identity;
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	[[NSApplication sharedApplication] windows][0].restorable = YES;
-	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
-    [self setIdentityManagerViewController];
+    [[NSApplication sharedApplication] windows][0].restorable = YES;
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
-
 }
 
--(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender {
+- (void)applicationWillBecomeActive:(NSNotification *)aNotification {
+    if (!self.isLaunchedForIdentitySelection) {
+        if (!self.isIdentityManagerLaunched) {
+            [self setIdentityManagerViewController];
+        }
+    }
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)aNotification {
+}
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
 	return YES;
 }
 
@@ -55,6 +71,42 @@
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"MainViewController"];
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Manager_Window_Title", @"")];
+    self.isIdentityManagerLaunched = YES;
+}
+
+- (void)setTrustAnchorControllerForIdentity:(Identity *)identity {
+    NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
+    _viewController = [storyBoard instantiateControllerWithIdentifier:@"TrustAnchor"];
+    ((TrustAnchorWindow *)_viewController).delegate = self;
+    ((TrustAnchorWindow *)_viewController).identity = identity;
+    [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
+    [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Trust Anchor", @"")];
+}
+
+#pragma mark - Set Trust Anchor
+
+- (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
+    _reply = reply;
+    _connection = connection;
+    _identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
+
+    if (_identity) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self setTrustAnchorControllerForIdentity:_identity];
+        });
+    }
+}
+
+- (void)didSaveWithSuccess:(int)success andCertificate:(NSString *)certificate {
+    _identity.trustAnchor.serverCertificate = certificate;
+    [[MSTIdentityDataLayer sharedInstance] editIdentity:_identity withBlock:nil];
+    dbus_message_append_args(_reply,
+                             DBUS_TYPE_INT32, &success,
+                             DBUS_TYPE_BOOLEAN, &success,
+                             DBUS_TYPE_INVALID);
+    dbus_connection_send(_connection, _reply, NULL);
+    dbus_message_unref(_reply);
+    [NSApp terminate:self];
 }
 
 #pragma mark - Button Actions
