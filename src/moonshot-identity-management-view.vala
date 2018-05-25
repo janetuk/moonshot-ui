@@ -277,11 +277,11 @@ public class IdentityManagerView : Window {
                        Columns.PASSWORD_COL, id_card.password);
     }
 
-    private IdCardWidget add_id_card_widget(IdCard id_card)
+    private void add_id_card_widget(IdCard id_card)
     {
         if (id_card == null) {
             logger.trace("add_id_card_widget: id_card == null; returning.");
-            return null;
+            return;
         }
 
         logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
@@ -308,7 +308,6 @@ public class IdentityManagerView : Window {
             // at preventing duplicate NAIs.
             this.selected_card = id_card;
         }
-        return id_card_widget;
     }
 
     private void widget_selected_cb(IdCardWidget id_card_widget)

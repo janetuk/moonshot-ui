@@ -175,7 +175,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         cert.chomp();
 
         uchar[] binary = Base64.decode(cert);
-        IdCard.logger.trace("get_expiration_date: encoded length=%d; decoded length=%d".printf(cert.length, binary.length));
+        IdCard.logger.trace("get_expiration_date: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
 
         char buf[64];
         string err = (string) get_cert_valid_before(binary, binary.length, buf, 64);

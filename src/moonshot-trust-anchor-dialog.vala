@@ -57,11 +57,11 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 
     public void set_callback(owned TrustAnchorConfirmationCallback cb)
     {
-//        #if VALA_0_12
+#if VALA_0_12
             this.callback = ((owned) cb);
-//        #else
-//            this.callback = ((IdCard) => cb(IdCard));
-//        #endif
+#else
+           this.callback = ((IdCard) => cb(IdCard));
+#endif
     }
 
     public bool execute() {
