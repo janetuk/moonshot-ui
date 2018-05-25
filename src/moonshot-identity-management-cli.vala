@@ -76,7 +76,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         identities_manager.find_duplicate_nai_sets(out duplicates);
         foreach (ArrayList<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify") 
+                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
 
             foreach (var card in list) {
@@ -138,7 +138,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
     }
 
-    /* Queues an identity request. Since the CLI version can only handle one request, instead of a QUEUE object, 
+    /* Queues an identity request. Since the CLI version can only handle one request, instead of a QUEUE object,
      * we store just the request object. */
     public void queue_identity_request(IdentityRequest request)
     {
@@ -305,7 +305,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private void edit_id_card_dialog(IdCard id_card) {
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
-                listbox, cert_btn, chosen, storepwd_chk;
+                listbox, cert_btn, chosen, storepwd_chk, show_btn;
         weak newtComponent focus;
         bool exit = false;
         ArrayList<string> services = new ArrayList<string>();
@@ -320,17 +320,22 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         realm_label = newtLabel(1, 3, "Realm:");
         realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, 0);
         passwd_label = newtLabel(1, 4, "Password:");
-        passwd_entry = newtEntry(15, 4, id_card.password, 36, null, Flag.PASSWORD);
-        passwd_btn = newtCompactButton(66, 4, "Reveal");
-        storepwd_chk = newtCheckbox(53, 4, "Remember?", ' ', " *", null);
+        passwd_entry = newtEntry(15, 4, id_card.password, 38, null, Flag.PASSWORD);
+        passwd_btn = newtCompactButton(68, 4, "Show");
+        storepwd_chk = newtCheckbox(55, 4, "Remember?", ' ', " *", null);
         if (id_card.store_password)
             newtCheckboxSetValue(storepwd_chk, '*');
         cert_label = newtLabel(1, 5, "Trust anchor:");
-        cert_entry = newtEntry(15, 5, id_card.trust_anchor.server_cert, 60, null, 0);
+        var ta_type = id_card.trust_anchor.get_anchor_type();
+        string ta_type_name = (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT ? "Server certificate"
+                               : (ta_type == TrustAnchor.TrustAnchorType.CA_CERT ? "CA certificate" : "None"));
+        cert_entry = newtTextbox(15, 5, 36, 1, 0);
+        newtTextboxSetText(cert_entry, ta_type_name);
         newtComponentTakesFocus(cert_entry, false);
-        cert_btn = newtCompactButton(14, 6, "Clear Trust Anchor");
-        services_label = newtLabel(1, 7, "FILL ME");
-        listbox = newtListbox(1, 8, 8, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+        cert_btn = newtCompactButton(60, 5, "Clear");
+        show_btn = newtCompactButton(68, 5, "Show");
+        services_label = newtLabel(1, 6, "FILL ME");
+        listbox = newtListbox(1, 7, 9, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 64);
         remove_btn = newtCompactButton(66, 9, "Remove");
         edit_btn = newtCompactButton(20, 17, "Update");
@@ -349,6 +354,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, cert_label);
         newtFormAddComponent(form, cert_entry);
         newtFormAddComponent(form, cert_btn);
+        newtFormAddComponent(form, show_btn);
         newtFormAddComponent(form, services_label);
         newtFormAddComponent(form, listbox);
         newtFormAddComponent(form, remove_btn);
@@ -381,14 +387,25 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
                 focus = listbox;
             }
+            else if (chosen == show_btn) {
+                if (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT) {
+                    string msg = "Fingerprint:\n%s".printf(id_card.trust_anchor.server_cert);
+                    info_dialog("Trust anchor details", msg, 70, 5, false);
+                }
+                else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
+                    string msg = "Subject:\n%s\n\n".printf(id_card.trust_anchor.subject)
+                                 + "CA certificate (PEM format):\n%s".printf(id_card.trust_anchor.ca_cert);
+                    info_dialog("Trust anchor details", msg, 75, 20, true);
+                }
+            }
             else if (chosen == cert_btn) {
-                newtEntrySet(cert_entry, "", 0);
+                newtTextboxSetText(cert_entry, "None");
+                ta_type = TrustAnchor.TrustAnchorType.EMPTY;
                 focus = cert_btn;
             }
             else if (chosen == passwd_btn) {
                 info_dialog("Cleartext password",
-                            "Your cleartext password is: <%s>".printf(newtEntryGetValue(passwd_entry)),
-                            70, 3);
+                            "Your cleartext password is: <%s>".printf(newtEntryGetValue(passwd_entry)), 70, 3);
                 focus = passwd_btn;
             }
             else
@@ -400,9 +417,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.issuer = newtEntryGetValue(realm_entry);
                 id_card.password = newtEntryGetValue(passwd_entry);
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
-                if (newtEntryGetValue(cert_entry) == "")
-                    id_card.clear_trust_anchor();
                 id_card.update_services_from_list(services);
+                if (ta_type == TrustAnchor.TrustAnchorType.EMPTY)
+                    id_card.clear_trust_anchor();
                 this.identities_manager.update_card(id_card);
             }
         } while (!exit);
