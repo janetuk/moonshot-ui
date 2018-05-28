@@ -105,6 +105,16 @@ void dbusStartListening()
 					} else {
 						success = 0;
 					}
+					dbus_message_append_args(reply,
+											 DBUS_TYPE_INT32, &success,
+											 DBUS_TYPE_BOOLEAN, &success,
+											 DBUS_TYPE_INVALID);
+
+					dbus_connection_send(connection, reply, NULL);
+					dbus_message_unref(reply);
+					AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+					[NSApp terminate:delegate];
+
 				} else {
 					if (identity.trustAnchor == nil) {
 						identity.trustAnchor = [[TrustAnchor alloc] init];
@@ -118,15 +128,7 @@ void dbusStartListening()
 //                    success = 1;
 				}
 //                
-//                dbus_message_append_args(reply,
-//                                         DBUS_TYPE_INT32, &success,
-//                                         DBUS_TYPE_BOOLEAN, &success,
-//                                         DBUS_TYPE_INVALID);
-//                
-//                dbus_connection_send(connection, reply, NULL);
-//                dbus_message_unref(reply);
-//                AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
-//                [NSApp terminate:delegate];
+
 			}
 		} else {
 			NSLog(@"Moonshot.IdentitySelector None");
