@@ -44,7 +44,7 @@
     [self setupUsernameTextFieldWithUsername:self.identity.username];
     [self setupRealmTextFieldWithRealm:self.identity.realm];
     [self setupShaTitleTextField];
-    [self setupShaTextFieldWithShaFingerprint:self.identity.trustAnchor.serverCertificate];
+    [self setupShaTextFieldWithShaFingerprint:self.identity.trustAnchor.serverCertificate ? self.identity.trustAnchor.serverCertificate : @""];
     [self setupCheckInfoTextField];
 }
 
@@ -90,14 +90,14 @@
 #pragma mark - Button Actions
 
 - (IBAction)trustAnchorCancelButtonPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:andCertificate:)]) {
-        [self.delegate didSaveWithSuccess:0 andCertificate:self.trustAnchorShaFingerprintTextField.stringValue];
+    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:reply:connection:andCertificate:forIdentity:)]) {
+        [self.delegate didSaveWithSuccess:0 reply:self.reply connection:self.connection andCertificate:self.trustAnchorShaFingerprintTextField.stringValue forIdentity:self.identity];
     }
 }
 
 - (IBAction)trustAnchorConfirmButtonPressed:(id)sender {
-    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:andCertificate:)]) {
-        [self.delegate didSaveWithSuccess:1 andCertificate:self.trustAnchorShaFingerprintTextField.stringValue];
+    if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:reply:connection:andCertificate:forIdentity:)]) {
+        [self.delegate didSaveWithSuccess:1 reply:self.reply connection:self.connection andCertificate:self.trustAnchorShaFingerprintTextField.stringValue forIdentity:self.identity];
     }
 }
 

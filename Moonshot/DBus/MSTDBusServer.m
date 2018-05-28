@@ -122,13 +122,7 @@ void dbusStartListening()
                     
                     AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
                     [delegate confirmCaCertForIdentityWithName:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm] hash:[NSString stringWithUTF8String:hash_str] connection:connection reply:reply];
-                                        
-//                    identity.trustAnchor.serverCertificate = [NSString stringWithUTF8String:hash_str];
-//                    [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
-//                    success = 1;
 				}
-//                
-
 			}
 		} else {
 			NSLog(@"Moonshot.IdentitySelector None");

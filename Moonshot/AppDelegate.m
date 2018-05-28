@@ -24,11 +24,6 @@
 
 @implementation AppDelegate
 
-int  _success;
-DBusConnection *_connection;
-DBusMessage *_reply;
-Identity *_identity;
-
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [[NSApplication sharedApplication] windows][0].restorable = YES;
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
@@ -74,11 +69,13 @@ Identity *_identity;
     self.isIdentityManagerLaunched = YES;
 }
 
-- (void)setTrustAnchorControllerForIdentity:(Identity *)identity {
+- (void)setTrustAnchorControllerForIdentity:(Identity *)identity withReply:(DBusMessage *)reply andConnection:(DBusConnection *)connection {
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"TrustAnchor"];
     ((TrustAnchorWindow *)_viewController).delegate = self;
     ((TrustAnchorWindow *)_viewController).identity = identity;
+    ((TrustAnchorWindow *)_viewController).reply = reply;
+    ((TrustAnchorWindow *)_viewController).connection = connection;
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Trust Anchor", @"")];
 }
@@ -86,26 +83,23 @@ Identity *_identity;
 #pragma mark - Set Trust Anchor
 
 - (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
-    _reply = reply;
-    _connection = connection;
-    _identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
-
-    if (_identity) {
+    Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
+    if (identity) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self setTrustAnchorControllerForIdentity:_identity];
+            [self setTrustAnchorControllerForIdentity:identity withReply:reply andConnection:connection];
         });
     }
 }
 
-- (void)didSaveWithSuccess:(int)success andCertificate:(NSString *)certificate {
-    _identity.trustAnchor.serverCertificate = certificate;
-    [[MSTIdentityDataLayer sharedInstance] editIdentity:_identity withBlock:nil];
-    dbus_message_append_args(_reply,
+- (void)didSaveWithSuccess:(int)success reply:(DBusMessage *)reply connection:(DBusConnection *)connection andCertificate:(NSString *)certificate forIdentity:(Identity *)identity {
+    identity.trustAnchor.serverCertificate = certificate;
+    [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
+    dbus_message_append_args(reply,
                              DBUS_TYPE_INT32, &success,
                              DBUS_TYPE_BOOLEAN, &success,
                              DBUS_TYPE_INVALID);
-    dbus_connection_send(_connection, _reply, NULL);
-    dbus_message_unref(_reply);
+    dbus_connection_send(connection, reply, NULL);
+    dbus_message_unref(reply);
     [NSApp terminate:self];
 }
 
