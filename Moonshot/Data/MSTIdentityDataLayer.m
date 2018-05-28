@@ -129,7 +129,7 @@ static MSTIdentityDataLayer *sharedInstance;
 		}
         for (SelectionRules *selectionRule in identity.selectionRules) {
             // Check if service complies to selectionRule
-            if ([selectionRule.alwaysConfirm isEqualToString:@"true"]) {
+            if ([selectionRule.alwaysConfirm isEqualToString:@"false"]) {
                 if (![identity.servicesArray containsObject:selectionRule.pattern]) {
                     [identity.servicesArray addObject:selectionRule.pattern];
                     [self editIdentity:identity withBlock:^(NSError *error) {
