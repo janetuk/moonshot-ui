@@ -346,7 +346,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
     {
-	old_duplicates.clear();
+        old_duplicates.clear();
         #if OS_MACOS
         /* 
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS

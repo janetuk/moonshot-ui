@@ -90,10 +90,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
+        old_duplicates.clear();
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
                      .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
@@ -102,10 +103,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             int flags = prev_id.Compare(id_card);
             logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
-                if (&old_duplicates != null) {
-                    old_duplicates = new ArrayList<IdCard>();
-                }
-
                 return false; // no changes, no need to update
             } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
                 dialog = yesno_dialog(
@@ -127,13 +124,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
         newtFinished();
         if (dialog) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, out old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
             return true;
         }
         else {
-            if (&old_duplicates != null) {
-                old_duplicates = new ArrayList<IdCard>();
-            }
             return false;
         }
     }
@@ -293,8 +287,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     repeat = true;
                     newtFormSetCurrent(form, disp_entry);
                 }
-                else
-                    this.identities_manager.add_card(id_card, false);
+                else {
+                    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
+                    this.identities_manager.add_card(id_card, false, tmp_old_dups);
+                }
             }
         } while (repeat);
         newtFormDestroy(form);
