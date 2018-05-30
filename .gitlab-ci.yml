@@ -1,0 +1,81 @@
+# When using dind, it's wise to use the overlayfs driver for improved performance.
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+- build_c6
+- build_c7
+- build_d8
+- build_d9
+
+build_d8:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian8:latest
+  stage: build_d8
+  script:
+    - rm -fr build SOURCES RPMS
+    - apt-get update
+    - apt-get -y dist-upgrade
+    - autoreconf -fi
+    - ./configure
+    - make dist
+    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
+    - debuild -us -uc
+    - mkdir build
+    - cp ../*.deb build
+  artifacts:
+    paths:
+        - build/*.deb
+
+build_d9:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
+  stage: build_d9
+  script:
+    - rm -fr build SOURCES RPMS
+    - apt-get update
+    - apt-get -y dist-upgrade
+    - autoreconf -fi
+    - ./configure
+    - make dist
+    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
+    - debuild -us -uc
+    - mkdir build
+    - cp ../*.deb build
+  artifacts:
+    paths:
+        - build/*.deb
+
+build_c6:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
+  stage: build_c6
+  script:
+    - rm -fr build SOURCES RPMS
+    - yum -y update
+    - sh autogen.sh
+    - make
+    - make dist
+    - xz -d moonshot-ui-*.tar.xz
+    - gzip moonshot-ui-*.tar
+    - mkdir -p SOURCES
+    - mv -f moonshot-ui-*tar.gz SOURCES
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
+  artifacts:
+    paths:
+        - RPMS
+
+build_c7:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos7:latest
+  stage: build_c7
+  script:
+    - rm -fr build SOURCES RPMS
+    - yum -y update
+    - sh autogen.sh
+    - make
+    - make dist
+    - xz -d moonshot-ui-*.tar.xz
+    - gzip moonshot-ui-*.tar
+    - mkdir -p SOURCES
+    - mv -f moonshot-ui-*tar.gz SOURCES
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
+  artifacts:
+    paths:
+        - RPMS
