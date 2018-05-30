@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C26F89F20BE2ED000A60A67 /* libdbus-1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C26F89E20BE2ED000A60A67 /* libdbus-1.dylib */; };
 		2C398A661FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C398A651FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m */; };
 		2C77EE11200EBB6D00F4EE9D /* MSTIdentityImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C77EE10200EBB6D00F4EE9D /* MSTIdentityImporter.m */; };
 		2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */; };
 		2C9010591F62A0A600EF7B05 /* MSTGetIdentityAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */; };
-		2CDD83851FC3B12B0095A799 /* libdbus-1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CDD837B1FC35CA70095A799 /* libdbus-1.3.dylib */; };
 		2CDD83891FC3B51A0095A799 /* MSTDBusServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD83871FC3B51A0095A799 /* MSTDBusServer.m */; };
 		2CE4923C1F5F7C5600F294D5 /* MoonshotScript.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4923B1F5F7C5600F294D5 /* MoonshotScript.sdef */; };
 		7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF2C1DD084D600F23D89 /* MainViewController.m */; };
@@ -115,6 +115,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C022BEF20BD961400F5059D /* libdbus-1.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libdbus-1.3.dylib"; path = "../../../../usr/local/moonshot/lib/libdbus-1.3.dylib"; sourceTree = "<group>"; };
+		2C26F89E20BE2ED000A60A67 /* libdbus-1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libdbus-1.dylib"; path = "../../../../usr/local/moonshot/lib/libdbus-1.dylib"; sourceTree = "<group>"; };
 		2C398A641FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSTWakeUpScriptCommand.h; sourceTree = "<group>"; };
 		2C398A651FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MSTWakeUpScriptCommand.m; sourceTree = "<group>"; };
 		2C77EE0F200EBB6D00F4EE9D /* MSTIdentityImporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MSTIdentityImporter.h; sourceTree = "<group>"; };
@@ -242,7 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2CDD83851FC3B12B0095A799 /* libdbus-1.3.dylib in Frameworks */,
+				2C26F89F20BE2ED000A60A67 /* libdbus-1.dylib in Frameworks */,
 				78A6643A1DF6F945006BA1F4 /* Security.framework in Frameworks */,
 				78A664381DF6F93F006BA1F4 /* Cocoa.framework in Frameworks */,
 			);
@@ -485,7 +487,9 @@
 		78A664361DF6F93F006BA1F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2C26F89E20BE2ED000A60A67 /* libdbus-1.dylib */,
 				2CDD837B1FC35CA70095A799 /* libdbus-1.3.dylib */,
+				2C022BEF20BD961400F5059D /* libdbus-1.3.dylib */,
 				78C7E4561DFEB4E800F6A0F2 /* AVFoundation.framework */,
 				78C7E4571DFEB4E800F6A0F2 /* Foundation.framework */,
 				78A664391DF6F945006BA1F4 /* Security.framework */,
@@ -883,17 +887,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/include/dbus-1.0",
-					"/usr/local/lib/dbus-1.0/include",
-					"/usr/local/Cellar/dbus-glib/0.108/include/dbus-1.0/dbus",
-					"/usr/local/Cellar/glib/2.54.2/include/glib-2.0/**",
-					"/usr/local/Cellar/glib/2.54.2/lib/glib-2.0/include/",
+					/usr/local/moonshot/include,
+					"/usr/local/moonshot/include/dbus-1.0",
+					"/usr/local/moonshot/lib/dbus-1.0/include/",
+					"/usr/local/moonshot/**",
 				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/dbus/1.12.2/lib,
+					"/usr/local/moonshot/lib/**",
+					/usr/local/moonshot/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = Moonshot;
@@ -914,17 +918,17 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
-					"/usr/local/include/dbus-1.0",
-					"/usr/local/lib/dbus-1.0/include",
-					"/usr/local/Cellar/dbus-glib/0.108/include/dbus-1.0/dbus",
-					"/usr/local/Cellar/glib/2.54.2/include/glib-2.0/**",
-					"/usr/local/Cellar/glib/2.54.2/lib/glib-2.0/include/",
+					/usr/local/moonshot/include,
+					"/usr/local/moonshot/include/dbus-1.0",
+					"/usr/local/moonshot/lib/dbus-1.0/include/",
+					"/usr/local/moonshot/**",
 				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					/usr/local/Cellar/dbus/1.12.2/lib,
+					"/usr/local/moonshot/lib/**",
+					/usr/local/moonshot/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = Moonshot;

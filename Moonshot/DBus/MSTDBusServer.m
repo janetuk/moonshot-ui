@@ -11,9 +11,9 @@
 #include <string.h>
 #include <unistd.h>
 #include <dbus/dbus.h>
-#include <dbus/dbus-glib-lowlevel.h>
-#include <glib/gspawn.h>
-#include <dbus/dbus-glib.h>
+//#include <dbus/dbus-glib-lowlevel.h>
+//#include <glib/gspawn.h>
+//#include <dbus/dbus-glib.h>
 #include <stdbool.h>
 #import "AppDelegate.h"
 #import "MSTIdentityDataLayer.h"
