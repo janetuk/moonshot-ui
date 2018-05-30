@@ -91,7 +91,11 @@ private void save_keyfile(KeyFile key_file)
         // var ds = new DataOutputStream(s);
         // ds.put_string(data);
         string new_etag;
+#if VALA_0_12
         dest.replace_contents(data.data, null, false, FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE, out new_etag);
+#else
+	dest.replace_contents(data, data.length, null, false, FileCreateFlags.REPLACE_DESTINATION | FileCreateFlags.PRIVATE, out new_etag);
+#endif
     }
     catch(Error e) {
         logger().error("save_keyfile: error when writing to file: " + e.message);
