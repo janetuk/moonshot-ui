@@ -1,16 +1,12 @@
-# When using dind, it's wise to use the overlayfs driver for improved performance.
 variables:
   DOCKER_DRIVER: overlay2
 
 stages:
-- build_c6
-- build_c7
-- build_d8
-- build_d9
+- build
 
-build_d8:
+debian8:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian8:latest
-  stage: build_d8
+  stage: build
   script:
     - rm -fr build SOURCES RPMS
     - apt-get update
@@ -26,9 +22,9 @@ build_d8:
     paths:
         - build/*.deb
 
-build_d9:
+debian9:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
-  stage: build_d9
+  stage: build
   script:
     - rm -fr build SOURCES RPMS
     - apt-get update
@@ -44,9 +40,9 @@ build_d9:
     paths:
         - build/*.deb
 
-build_c6:
+centos6:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
-  stage: build_c6
+  stage: build
   script:
     - rm -fr build SOURCES RPMS
     - yum -y update
@@ -62,9 +58,9 @@ build_c6:
     paths:
         - RPMS
 
-build_c7:
+centos7:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/centos7:latest
-  stage: build_c7
+  stage: build
   script:
     - rm -fr build SOURCES RPMS
     - yum -y update
