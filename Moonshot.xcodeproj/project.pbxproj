@@ -880,23 +880,18 @@
 		78A330DA1DAF7CB500702060 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/local/moonshot/include,
-					"/usr/local/moonshot/include/dbus-1.0",
-					"/usr/local/moonshot/lib/dbus-1.0/include/",
-					"/usr/local/moonshot/**",
-				);
+				HEADER_SEARCH_PATHS = "/usr/local/moonshot/include/dbus-1.0";
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/moonshot/lib/**",
 					/usr/local/moonshot/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -911,23 +906,18 @@
 		78A330DB1DAF7CB500702060 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				HEADER_SEARCH_PATHS = (
-					/usr/local/moonshot/include,
-					"/usr/local/moonshot/include/dbus-1.0",
-					"/usr/local/moonshot/lib/dbus-1.0/include/",
-					"/usr/local/moonshot/**",
-				);
+				HEADER_SEARCH_PATHS = "/usr/local/moonshot/include/dbus-1.0";
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"/usr/local/moonshot/lib/**",
 					/usr/local/moonshot/lib,
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
