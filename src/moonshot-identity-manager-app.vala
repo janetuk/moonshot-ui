@@ -50,7 +50,7 @@ public class IdentityManagerApp {
     public IdentityManagerModel model;
     public IdCard default_id_card;
     public bool explicitly_launched;
-    public IdentityManagerView view;
+    public IdentityManagerInterface view;
     private MoonshotServer ipc_server;
     private bool name_is_owned;
     private bool show_requested;
@@ -88,7 +88,7 @@ public class IdentityManagerApp {
     internal IdentityManagerApp.dummy() {}
 #endif
 
-    public IdentityManagerApp(bool headless, bool use_flat_file_store) {
+    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) {
         this.headless = headless;
 
         use_flat_file_store |= UserForcesFlatFileStore();
@@ -112,8 +112,12 @@ public class IdentityManagerApp {
         if (headless && keyring_available && !use_flat_file_store && !model.HasNonTrivialIdentities())
             model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
 
+        /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
+        else if (cli_enabled && !UserForcesFlatFileStore())
+            view = new IdentityManagerCli(this, use_flat_file_store);
+
         LinkedList<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
@@ -232,9 +236,9 @@ public class IdentityManagerApp {
 
             if (confirm && (view != null))
             {
+                view.queue_identity_request(request);
                 if (!explicitly_launched)
                     show();
-                view.queue_identity_request(request);
                 return;
             }
         }
@@ -410,9 +414,13 @@ public class IdentityManagerApp {
 
 static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
+static bool cli_enabled = false;
+
 const GLib.OptionEntry[] options = {
     {"dbus-launched", 0, GLib.OptionFlags.REVERSE, GLib.OptionArg.NONE,
      ref explicitly_launched, "launch for dbus rpc use", null},
+    {"cli", 0, 0, GLib.OptionArg.NONE,
+     ref cli_enabled, "enable the CLI", null},
     {"flat-file-store", 0, 0, GLib.OptionArg.NONE,
      ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
     {null}
@@ -443,7 +451,7 @@ public static int main(string[] args) {
             stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
             return -1;
         }
-        explicitly_launched = false;
+        //explicitly_launched = false;
     } else {
         try {
             if (!Gtk.init_with_args(ref args, _(""), options, null)) {
@@ -470,8 +478,11 @@ public static int main(string[] args) {
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);
        
+    // When explicitly launched, cli is automatically enabled
+    if (explicitly_launched)
+        cli_enabled = true;
        
-    var app = new IdentityManagerApp(headless, use_flat_file_store);
+    var app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
         

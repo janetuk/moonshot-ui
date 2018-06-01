@@ -87,17 +87,13 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        if (parent_app.headless) {
+        if (parent_app.view == null) {
             logger.trace(@"execute: Running in headless mode; returning false.");
             return_confirmation(false);
             return false;
         }
 
-        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
-        var response = dialog.run();
-        dialog.destroy();
-        bool is_confirmed = (response == ResponseType.OK);
-
+        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, userid, realm, fingerprint);
         if (is_confirmed) {
             logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
 

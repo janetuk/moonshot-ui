@@ -114,6 +114,10 @@ PKG_CHECK_MODULES([LIB_GEE],
 )
 AC_SUBST(GEE_VERSION)
 
+# For all platforms: Use libnewt
+PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
+
+
 #enable the optional use of Log4Vala (Must have the package installed!)
 AC_ARG_ENABLE([log4vala],
 [  --enable-log4vala    Enable use of log4vala for logging],

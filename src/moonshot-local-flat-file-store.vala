@@ -82,7 +82,8 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             key_file.load_from_file(filename, KeyFileFlags.NONE);
         }
         catch (Error e) {
-            stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
+            logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
+            // stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
             return;
         }
 
@@ -131,7 +132,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             }
             catch (Error e) {
                 logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
-                stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
+                //stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
             }
         }
     }
@@ -222,6 +223,14 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
     public LocalFlatFileStore() {
         id_card_list = new LinkedList<IdCard>();
         load_id_cards();
+    }
+
+    public bool is_locked() {
+        return false;
+    }
+
+    public bool unlock(string password) {
+        return true;
     }
 }
 

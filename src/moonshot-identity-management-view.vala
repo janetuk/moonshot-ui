@@ -33,7 +33,7 @@ using Gee;
 using Gtk;
 using WebProvisioning;
 
-public class IdentityManagerView : Window {
+public class IdentityManagerView : Window, IdentityManagerInterface {
     static MoonshotLogger logger = get_logger("IdentityManagerView");
 
     bool use_flat_file_store = false;
@@ -134,7 +134,15 @@ public class IdentityManagerView : Window {
         logger.trace("on_card_list_changed");
         load_id_cards();
     }
-    
+
+    public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
+    {
+        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
+        var response = dialog.run();
+        dialog.destroy();
+        return (response == ResponseType.OK);
+    }
+
     private bool visible_func(TreeModel model, TreeIter iter)
     {
         IdCard id_card;
@@ -338,7 +346,7 @@ public class IdentityManagerView : Window {
 
     public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
     {
-	old_duplicates.clear();
+        old_duplicates.clear();
         #if OS_MACOS
         /* 
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS

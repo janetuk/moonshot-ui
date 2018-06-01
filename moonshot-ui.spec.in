@@ -60,10 +60,12 @@ Requires: moonshot-ui  = %{version}-%{release}
 %defattr(-,root,root,-)
 %{_bindir}/moonshot
 %{_bindir}/moonshot-webp
+%{_bindir}/moonshot-keyring-tool
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
 %{_datadir}/moonshot-ui
+%{_datadir}/doc/moonshot-ui
 %{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
