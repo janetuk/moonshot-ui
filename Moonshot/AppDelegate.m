@@ -69,13 +69,15 @@
     self.isIdentityManagerLaunched = YES;
 }
 
-- (void)setTrustAnchorControllerForIdentity:(Identity *)identity withReply:(DBusMessage *)reply andConnection:(DBusConnection *)connection {
+- (void)setTrustAnchorControllerForIdentity:(Identity *)identity hashStr:(NSString *)hashStr withReply:(DBusMessage *)reply andConnection:(DBusConnection *)connection {
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"TrustAnchor"];
     ((TrustAnchorWindow *)_viewController).delegate = self;
     ((TrustAnchorWindow *)_viewController).identity = identity;
     ((TrustAnchorWindow *)_viewController).reply = reply;
     ((TrustAnchorWindow *)_viewController).connection = connection;
+	((TrustAnchorWindow *)_viewController).hashStr = hashStr;
+
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Trust Anchor", @"")];
 }
@@ -86,9 +88,11 @@
     Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
     if (identity) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self setTrustAnchorControllerForIdentity:identity withReply:reply andConnection:connection];
+			[self setTrustAnchorControllerForIdentity:identity hashStr:hash withReply:reply andConnection:connection];
         });
-    }
+	} else {
+		[NSApp terminate:self];
+	}
 }
 
 - (void)didSaveWithSuccess:(int)success reply:(DBusMessage *)reply connection:(DBusConnection *)connection andCertificate:(NSString *)certificate forIdentity:(Identity *)identity {
@@ -110,8 +114,7 @@
 }
 
 - (IBAction)addNewIdentity:(id)sender {
-   // [[NSNotificationCenter defaultCenter] postNotificationName:MST_ADD_IDENTITY_NOTIFICATION object:nil];
-	[self startListeningForDBusConnections];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MST_ADD_IDENTITY_NOTIFICATION object:nil];
 }
 
 - (IBAction)editIdentity:(id)sender {

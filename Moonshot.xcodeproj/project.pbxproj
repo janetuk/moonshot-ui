@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C26F89F20BE2ED000A60A67 /* libdbus-1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C26F89E20BE2ED000A60A67 /* libdbus-1.dylib */; };
 		2C398A661FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C398A651FCB10E700BFB7F9 /* MSTWakeUpScriptCommand.m */; };
 		2C77EE11200EBB6D00F4EE9D /* MSTIdentityImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C77EE10200EBB6D00F4EE9D /* MSTIdentityImporter.m */; };
 		2C8E59F81DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C8E59F71DD5FCDB0014C1D6 /* MSTIdentityDataLayer.m */; };
 		2C9010591F62A0A600EF7B05 /* MSTGetIdentityAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C9010581F62A0A600EF7B05 /* MSTGetIdentityAction.m */; };
 		2CDD83891FC3B51A0095A799 /* MSTDBusServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CDD83871FC3B51A0095A799 /* MSTDBusServer.m */; };
+		2CE02DC020C03C5E003AEF64 /* libdbus-1.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C022BEF20BD961400F5059D /* libdbus-1.3.dylib */; };
 		2CE4923C1F5F7C5600F294D5 /* MoonshotScript.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 2CE4923B1F5F7C5600F294D5 /* MoonshotScript.sdef */; };
 		7812FF2D1DD084D600F23D89 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7812FF2C1DD084D600F23D89 /* MainViewController.m */; };
 		7812FF2F1DD0A39800F23D89 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7812FF2E1DD0A39800F23D89 /* Localizable.strings */; };
@@ -244,7 +244,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C26F89F20BE2ED000A60A67 /* libdbus-1.dylib in Frameworks */,
+				2CE02DC020C03C5E003AEF64 /* libdbus-1.3.dylib in Frameworks */,
 				78A6643A1DF6F945006BA1F4 /* Security.framework in Frameworks */,
 				78A664381DF6F93F006BA1F4 /* Cocoa.framework in Frameworks */,
 			);

@@ -96,8 +96,24 @@ void dbusStartListening()
 				Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm]];
 				int  success = 1;
 
+				if (identity == nil) {
+					success = 0;
+					dbus_message_append_args(reply,
+											 DBUS_TYPE_INT32, &success,
+											 DBUS_TYPE_BOOLEAN, &success,
+											 DBUS_TYPE_INVALID);
+
+					dbus_connection_send(connection, reply, NULL);
+					dbus_message_unref(reply);
+					AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+					[NSApp terminate:delegate];
+					return;
+				}
+
 				if (identity.trustAnchor.serverCertificate.length > 0) {
-					if ([identity.trustAnchor.serverCertificate isEqualToString:[NSString stringWithUTF8String:hash_str]]) {
+					NSString *trimmedOldHash = [identity.trustAnchor.serverCertificate stringByReplacingOccurrencesOfString:@":" withString:@""];
+					NSString *trimmedNewHash = [[NSString stringWithUTF8String:hash_str]  stringByReplacingOccurrencesOfString:@":" withString:@""];
+					if ([trimmedOldHash isEqualToString:trimmedNewHash]) {
 						success = 1;
 					} else {
 						success = 0;

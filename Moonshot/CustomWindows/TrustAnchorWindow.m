@@ -44,7 +44,7 @@
     [self setupUsernameTextFieldWithUsername:self.identity.username];
     [self setupRealmTextFieldWithRealm:self.identity.realm];
     [self setupShaTitleTextField];
-    [self setupShaTextFieldWithShaFingerprint:self.identity.trustAnchor.serverCertificate ? self.identity.trustAnchor.serverCertificate : @""];
+    [self setupShaTextFieldWithShaFingerprint:self.hashStr];
     [self setupCheckInfoTextField];
 }
 
@@ -65,7 +65,10 @@
 }
 
 - (void)setupShaTextFieldWithShaFingerprint:(NSString *)fingerprint {
-    [self.trustAnchorShaFingerprintTextField setStringValue:fingerprint];
+	if (fingerprint.length > 0) {
+		[self.trustAnchorShaFingerprintTextField setStringValue:fingerprint];
+		[self.trustAnchorShaFingerprintTextField setEnabled:NO];
+	}
 }
 
 - (void)setupCheckInfoTextField {

@@ -10,5 +10,5 @@
 
 #include <stdio.h>
 
-void dbusStartListening ();
+void dbusStartListening();
 #endif /* MSTDBusServer_h */

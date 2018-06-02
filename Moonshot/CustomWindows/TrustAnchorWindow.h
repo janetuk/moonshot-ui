@@ -16,6 +16,7 @@
 @interface TrustAnchorWindow : NSViewController
 @property (nonatomic, weak) id <TrustAnchorWindowDelegate>delegate;
 @property (nonatomic, strong) Identity *identity;
+@property (nonatomic, strong) NSString *hashStr;
 @property (nonatomic, assign) int success;
 @property (nonatomic, assign) DBusConnection *connection;
 @property (nonatomic, assign) DBusMessage *reply;
