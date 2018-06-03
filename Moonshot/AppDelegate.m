@@ -85,6 +85,8 @@
 
 #pragma mark - Set Trust Anchor
 - (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
+	NSLog(@"confirmCaCertForIdentityWithName %@", name);
+
     Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
 
 	// -----------
@@ -144,7 +146,15 @@
                              DBUS_TYPE_INVALID);
     dbus_connection_send(connection, reply, NULL);
     dbus_message_unref(reply);
-    [NSApp terminate:self];
+	[NSTimer scheduledTimerWithTimeInterval:2.0
+									 target:self
+								   selector:@selector(terminateApp:)
+								   userInfo:nil
+									repeats:NO];
+}
+
+- (void)terminateApp:(id)sender {
+	[NSApp terminate:self];
 }
 
 #pragma mark - Button Actions
@@ -169,7 +179,7 @@
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
 	
 	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
-	if (existingIdentitySelection && existingIdentitySelection.passwordRemembered && existingIdentitySelection.password.length > 0) {
+	if (([existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY]) || (existingIdentitySelection && existingIdentitySelection.passwordRemembered && existingIdentitySelection.password.length > 0)) {
 		NSString *combinedNaiOut = @"";
 		if (existingIdentitySelection.username.length && existingIdentitySelection.realm.length) {
 			combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
@@ -194,6 +204,9 @@
 		
 		dbus_connection_send(connection, reply, NULL);
 		dbus_message_unref(reply);
+		if (success == 0) {
+			[NSApp terminate:self];
+		}
 	} else {
 		MSTGetIdentityAction *getIdentity = [[MSTGetIdentityAction alloc] initFetchIdentityFor:nai service:service password:password connection:connection reply:reply];
 		dispatch_async(dispatch_get_main_queue(), ^{
