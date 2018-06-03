@@ -68,6 +68,40 @@ void dbusStartListening()
             }
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "GetDefaultIdentity")) {
 			NSLog(@"Moonshot.IdentitySelector GetDefaultIdentity");
+			const char *nai;
+			const char *password;
+			const char *service;
+
+			DBusError err;
+			dbus_error_init(&err);
+			DBusMessage *reply = NULL;
+			if (!dbus_message_get_args(msg, &err,
+									   DBUS_TYPE_STRING, &nai,
+									   DBUS_TYPE_STRING, &password,
+									   DBUS_TYPE_STRING, &service,
+									   DBUS_TYPE_INVALID)) {
+
+				perror("Moonshot.DefaultIdentitySelector  Bad Input Params");
+			} else {
+				if (!(reply = dbus_message_new_method_return(msg))) {
+					perror("Moonshot.DefaultIdentitySelector Bad Output Type");
+				} else {
+					const char *empty = [@"" UTF8String];
+					const int  success = 0;
+					dbus_message_append_args(reply,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_STRING, &empty,
+											 DBUS_TYPE_BOOLEAN, &success,
+											 DBUS_TYPE_INVALID);
+
+					dbus_connection_send(connection, reply, NULL);
+					dbus_message_unref(reply);
+				}
+			}
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "InstallIdCard")) {
 			NSLog(@"Moonshot.IdentitySelector InstallIdCard");
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "ConfirmCaCertificate")) {
