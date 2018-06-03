@@ -793,7 +793,7 @@
         <image name="info_button_selected" width="17" height="17"/>
         <image name="question_button" width="19" height="19"/>
         <image name="remove_button_1" width="21" height="17"/>
-        <image name="user_info_large" width="38" height="38"/>
+        <image name="user_info_large" width="57" height="57"/>
         <image name="white_space" width="596" height="112"/>
         <image name="window_frame_" width="653" height="397"/>
     </resources>

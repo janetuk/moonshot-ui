@@ -14,4 +14,7 @@
 @property (nonatomic, strong) NSString *subject;
 @property (nonatomic, strong) NSString *subjectAlt;
 
++ (NSString *)stringBySanitazingDots:(NSString *)inputStr;
++ (NSString *)stringByAddingDots:(NSString *)inputStr;
+
 @end

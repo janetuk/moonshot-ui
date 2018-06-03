@@ -894,7 +894,7 @@
 					"$(inherited)",
 					/usr/local/moonshot/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = Moonshot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Moonshot/External/Moonshot-Bridging-Header.h";
@@ -920,7 +920,7 @@
 					"$(inherited)",
 					/usr/local/moonshot/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = Moonshot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Moonshot/External/Moonshot-Bridging-Header.h";

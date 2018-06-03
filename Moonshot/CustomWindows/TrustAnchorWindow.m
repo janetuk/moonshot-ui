@@ -66,7 +66,7 @@
 
 - (void)setupShaTextFieldWithShaFingerprint:(NSString *)fingerprint {
 	if (fingerprint.length > 0) {
-		[self.trustAnchorShaFingerprintTextField setStringValue:fingerprint];
+		[self.trustAnchorShaFingerprintTextField setStringValue:[TrustAnchor stringByAddingDots:fingerprint]];
 		[self.trustAnchorShaFingerprintTextField setEnabled:NO];
 	}
 }
@@ -94,13 +94,13 @@
 
 - (IBAction)trustAnchorCancelButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:reply:connection:andCertificate:forIdentity:)]) {
-        [self.delegate didSaveWithSuccess:0 reply:self.reply connection:self.connection andCertificate:self.trustAnchorShaFingerprintTextField.stringValue forIdentity:self.identity];
+        [self.delegate didSaveWithSuccess:0 reply:self.reply connection:self.connection andCertificate:[TrustAnchor stringBySanitazingDots:self.trustAnchorShaFingerprintTextField.stringValue] forIdentity:self.identity];
     }
 }
 
 - (IBAction)trustAnchorConfirmButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:reply:connection:andCertificate:forIdentity:)]) {
-        [self.delegate didSaveWithSuccess:1 reply:self.reply connection:self.connection andCertificate:self.trustAnchorShaFingerprintTextField.stringValue forIdentity:self.identity];
+        [self.delegate didSaveWithSuccess:1 reply:self.reply connection:self.connection andCertificate:[TrustAnchor stringBySanitazingDots:self.trustAnchorShaFingerprintTextField.stringValue] forIdentity:self.identity];
     }
 }
 

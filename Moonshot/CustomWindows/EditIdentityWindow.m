@@ -156,12 +156,8 @@
     if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
-        NSMutableString *shaFingerprint = [[NSMutableString alloc] initWithString:self.trustAnchorObject.serverCertificate];
-        for (int i = 2; i < shaFingerprint.length; i=i+3) {
-            [shaFingerprint insertString:@":" atIndex:i];
-        }
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
-        [self.shaFingerprintValueTextField setStringValue:shaFingerprint];
+		[self.shaFingerprintValueTextField setStringValue:[TrustAnchor stringByAddingDots:self.trustAnchorObject.serverCertificate]];
 	} else if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
 		[self.certificateView setHidden:NO];
 		[self.shaFingerprintView setHidden:YES];

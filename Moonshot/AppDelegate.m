@@ -30,6 +30,7 @@
 }
 
 - (void)applicationWillFinishLaunching:(NSNotification *)aNotification {
+
 }
 
 - (void)applicationWillBecomeActive:(NSNotification *)aNotification {
@@ -83,20 +84,59 @@
 }
 
 #pragma mark - Set Trust Anchor
-
 - (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
     Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
-    if (identity) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-			[self setTrustAnchorControllerForIdentity:identity hashStr:hash withReply:reply andConnection:connection];
-        });
+
+	// -----------
+	int  success = 1;
+
+	if (identity == nil) {
+		success = 0;
+		dbus_message_append_args(reply,
+								 DBUS_TYPE_INT32, &success,
+								 DBUS_TYPE_BOOLEAN, &success,
+								 DBUS_TYPE_INVALID);
+
+		dbus_connection_send(connection, reply, NULL);
+		dbus_message_unref(reply);
+		AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+		[NSApp terminate:delegate];
+		return;
+	}
+
+	if (identity.trustAnchor.serverCertificate.length > 0) {
+		NSString *trimmedOldHash = [TrustAnchor stringBySanitazingDots:identity.trustAnchor.serverCertificate];
+		NSString *trimmedNewHash = [TrustAnchor stringBySanitazingDots:hash];
+		if ([trimmedOldHash isEqualToString:trimmedNewHash]) {
+			success = 1;
+		} else {
+			success = 0;
+		}
+		dbus_message_append_args(reply,
+								 DBUS_TYPE_INT32, &success,
+								 DBUS_TYPE_BOOLEAN, &success,
+								 DBUS_TYPE_INVALID);
+
+		dbus_connection_send(connection, reply, NULL);
+		dbus_message_unref(reply);
+		AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+		[NSApp terminate:delegate];
+
 	} else {
-		[NSApp terminate:self];
+		if (identity.trustAnchor == nil) {
+			identity.trustAnchor = [[TrustAnchor alloc] init];
+		}
+
+		dispatch_async(dispatch_get_main_queue(), ^{
+			[self setTrustAnchorControllerForIdentity:identity hashStr:hash withReply:reply andConnection:connection];
+		});
 	}
 }
 
 - (void)didSaveWithSuccess:(int)success reply:(DBusMessage *)reply connection:(DBusConnection *)connection andCertificate:(NSString *)certificate forIdentity:(Identity *)identity {
-    identity.trustAnchor.serverCertificate = certificate;
+	if (success) {
+		identity.trustAnchor.serverCertificate = certificate;
+	}
     [[MSTIdentityDataLayer sharedInstance] editIdentity:identity withBlock:nil];
     dbus_message_append_args(reply,
                              DBUS_TYPE_INT32, &success,

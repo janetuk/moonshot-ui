@@ -48,4 +48,16 @@
     [encoder encodeObject:self.subjectAlt forKey:@"subject-alt"];
 }
 
++ (NSString *)stringBySanitazingDots:(NSString *)inputStr {
+	NSString *trimmedOldHash = [inputStr stringByReplacingOccurrencesOfString:@":" withString:@""];
+	return trimmedOldHash;
+}
+
++ (NSString *)stringByAddingDots:(NSString *)inputStr {
+	NSMutableString *resultString = [[NSMutableString alloc] initWithString:inputStr];
+	for (int i = 2; i < resultString.length; i=i+3) {
+		[resultString insertString:@":" atIndex:i];
+	}	return resultString;
+}
+
 @end
