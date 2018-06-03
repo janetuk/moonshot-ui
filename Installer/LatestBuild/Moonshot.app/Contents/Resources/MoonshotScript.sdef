@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+
+<dictionary title="Moonshot">
+    <suite name="Moonshot Identity Suite" code="MSht" description="Moonshot Identity Scripts">
+        <command name="wake_up" code="MShtwake" description="Wake up the application and start the DBus server">
+            <cocoa class="MSTWakeUpScriptCommand"/>
+            <result type="boolean" description="Resturn succesful"/>
+        </command>
+    </suite>
+</dictionary>
