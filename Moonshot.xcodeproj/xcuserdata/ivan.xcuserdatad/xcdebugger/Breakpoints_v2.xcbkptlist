@@ -9,13 +9,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Moonshot/CustomWindows/TrustAnchorWindow.m"
-            timestampString = "549734357.721035"
+            filePath = "Moonshot/Data/MSTGetIdentityAction.m"
+            timestampString = "549736818.503314"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "-setupTextFields"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "-selectedIdentity:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -25,14 +25,46 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Moonshot/DBus/MSTDBusServer.m"
-            timestampString = "549734357.7213219"
+            filePath = "Moonshot/AppDelegate.m"
+            timestampString = "549761301.158698"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
-            landmarkName = "dbusStartListening"
-            landmarkType = "9">
+            startingLineNumber = "88"
+            endingLineNumber = "88"
+            landmarkName = "-confirmCaCertForIdentityWithName:realm:hash:connection:reply:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moonshot/AppDelegate.m"
+            timestampString = "549761301.159403"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "139"
+            endingLineNumber = "139"
+            landmarkName = "-didSaveWithSuccess:reply:connection:andCertificate:forIdentity:"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Moonshot/AppDelegate.m"
+            timestampString = "549761301.15948"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "95"
+            endingLineNumber = "95"
+            landmarkName = "-confirmCaCertForIdentityWithName:realm:hash:connection:reply:"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
