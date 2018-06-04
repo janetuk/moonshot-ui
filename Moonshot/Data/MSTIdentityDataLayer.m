@@ -127,19 +127,29 @@ static MSTIdentityDataLayer *sharedInstance;
 				return identity;
 			}
 		}
-        for (SelectionRules *selectionRule in identity.selectionRules) {
-            // Check if service complies to selectionRule
-            if ([selectionRule.alwaysConfirm isEqualToString:@"false"]) {
-                if (![identity.servicesArray containsObject:selectionRule.pattern]) {
-                    [identity.servicesArray addObject:selectionRule.pattern];
-                    [self editIdentity:identity withBlock:^(NSError *error) {
-                    }];
-                }
-            }
-        }
+	}
+
+	for (Identity *identity in items) {
+		for (SelectionRules *selectionRule in identity.selectionRules) {
+			// Check if service complies to selectionRule
+			if ([selectionRule.alwaysConfirm isEqualToString:@"false"]) {
+				if ([self serviceName:service matchesSelectionRule:selectionRule.pattern]) {
+					[identity.servicesArray addObject:service];
+					[self editIdentity:identity withBlock:^(NSError *error) {
+					}];
+					return identity;
+				}
+			}
+		}
 	}
 	
 	return nil;
+}
+
+- (BOOL)serviceName:(NSString *)serviceName matchesSelectionRule:(NSString *)selectionRule {
+	NSPredicate *pred = [NSPredicate predicateWithFormat:@"self LIKE %@", selectionRule];
+	BOOL match = [pred evaluateWithObject:serviceName];
+	return match;
 }
 
 - (Identity *)getExistingIdentitySelectionFor:(NSString *)nai realm:(NSString *)realm {
