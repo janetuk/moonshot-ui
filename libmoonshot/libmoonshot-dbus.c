@@ -81,7 +81,7 @@ static DBusGConnection *dbus_launch_moonshot()
     ssize_t addresslen;
     dbus_error_init(&dbus_error);
     char dbus_address[1024];
-  
+
     if (g_spawn_async_with_pipes( NULL /*cwd*/,
 				  moonshot_launch_argv, NULL /*environ*/,
 				  0 /*flags*/, NULL /*setup*/, NULL,
@@ -116,7 +116,7 @@ static DBusGConnection *dbus_launch_moonshot()
 static int is_setid()
 {
 #ifdef HAVE_GETEUID
-  if ((getuid() != geteuid()) || 
+  if ((getuid() != geteuid()) ||
       (getgid() != getegid())) {
     return 1;
   }
@@ -147,36 +147,24 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 	                             "Cannot use IPC while setid");
         return NULL;
     }
-#ifdef IPC_DBUS_GLIB
-    if (getenv("DISPLAY")==NULL) {
-        connection = dbus_launch_moonshot();
-        if (connection == NULL) {
-            *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                         "Headless dbus launch failed");
-            return NULL;
-        }
-    } else
-#endif
-    {
-        connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
-        if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
-            /*Generally this means autolaunch failed because probably DISPLAY is unset*/
-            connection = dbus_launch_moonshot();
-            if (connection != NULL) {
-                g_error_free(g_error);
-                g_error = NULL;
-            }
-        }
-        if (g_error != NULL) {
-            *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                         "DBus error: %s",
-                                         g_error->message);
-            g_error_free (g_error);
-            return NULL;
+    connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
+
+    if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
+        /*Generally this means autolaunch failed because probably DISPLAY is unset*/
+        connection = dbus_launch_moonshot();
+        if (connection != NULL) {
+            g_error_free(g_error);
+            g_error = NULL;
         }
     }
-
+    if (g_error != NULL) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                     "DBus error: %s",
+                                     g_error->message);
+        g_error_free (g_error);
+        return NULL;
+    }
 
     dbconnection = dbus_g_connection_get_connection(connection);
     name_has_owner  = dbus_bus_name_has_owner (dbconnection,
@@ -232,7 +220,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
         return NULL;
     }
 
-    return g_proxy; 
+    return g_proxy;
 }
 
 static DBusGProxy *get_dbus_proxy (MoonshotError **error)

@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
- 
+
 SUBDIRS = po
 
 moonshotsysconfdir=${sysconfdir}/moonshot
@@ -42,7 +42,7 @@ AM_VALAFLAGS = -g \
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS) 
+        $(AM_CPPFLAGS)
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
@@ -84,7 +84,7 @@ src_moonshot_webp_SOURCES = \
 
 
 src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION)   $(AM_VALAFLAGS)
-src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)  
+src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
@@ -98,7 +98,7 @@ if OS_WIN32
 
 src_moonshot_CFLAGS = -mwindows
 src_moonshot_webp_CFLAGS = -mconsole
-    
+
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
 
@@ -178,7 +178,7 @@ dbusservice_DATA = $(dbusservice_in_files:.service.mac=.service)
 else
 dbusservice_in_files = org.janet.Moonshot.service.in
 dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
-endif 
+endif
 
 # Rule to make the service file with bindir expanded
 $(dbusservice_DATA): $(dbusservice_in_files) Makefile
@@ -188,18 +188,10 @@ libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 CLEANFILES = $(dbusservice_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
-if IPC_DBUS_GLIB
-AM_VALAFLAGS += \
-	--pkg dbus-glib-1 \
-	--define=IPC_DBUS_GLIB \
-	--define=IPC_DBUS
-AM_CPPFLAGS += -DIPC_DBUS_GLIB
-else
 AM_VALAFLAGS += \
 	--pkg gio-2.0 \
 	--define=IPC_GDBUS \
 	--define=IPC_DBUS
-endif
 endif
 if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
@@ -271,7 +263,7 @@ endif
 if  OS_MACOS
 ## Mac-specific targets
 
-## 1. Icons. 
+## 1. Icons.
 
 icons:
 	mkdir -p share/icons
