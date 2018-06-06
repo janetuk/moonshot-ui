@@ -167,7 +167,8 @@ static DBusGProxy *dbus_connect (MoonshotError **error, GPid *server_pid)
     {
         connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
-        if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
+        if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED) ||
+            g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_SPAWN_EXEC_FAILED)) {
             /*Generally this means autolaunch failed because probably DISPLAY is unset*/
             connection = dbus_launch_moonshot();
             ad_hoc_dbus_session = TRUE;
