@@ -243,8 +243,8 @@ public class IdentityManagerApp {
                 }
                 request.return_identity(identity);
 // The following occasionally causes the app to exit without sending the dbus
-// reply, so for now we just don't exit
 //                if (!explicitly_launched)
+// reply, so for now we just don't exit
 //                    Idle.add(() => { Gtk.main_quit(); return false; } );
                 return false;
             }

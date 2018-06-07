@@ -44,12 +44,9 @@ case "$host" in
     macos=yes
     linux=no
 
-    # We require dbus-glib for the client library even if we are using GDBus
-    # in the server. The reason we can't always use dbus-glib in the server is
-    # because Vala drops support for it, but as it ships with DBus there is very
-    # little danger of it being dropped by distros any time soon.
-    CLIENT_IPC_MODULE="dbus-glib-1"
-	SERVER_IPC_MODULE="dbus-glib-1"
+    # Use gdbus for everything
+    CLIENT_IPC_MODULE="gio-2.0"
+	SERVER_IPC_MODULE="gio-2.0"
 
 	PKG_CHECK_MODULES([MAC],
 			[gtk-mac-integration >= 1.0.1]
@@ -61,16 +58,9 @@ case "$host" in
     win32=no
     linux=yes
 
-    # We require dbus-glib for the client library even if we are using GDBus
-    # in the server. The reason we can't always use dbus-glib in the server is
-    # because Vala drops support for it, but as it ships with DBus there is very
-    # little danger of it being dropped by distros any time soon.
-    CLIENT_IPC_MODULE="dbus-glib-1"
-    PKG_CHECK_MODULES([GDBUS],
-            [gio-2.0 >= 2.26],
-            [SERVER_IPC_MODULE="gio-2.0"],
-            [SERVER_IPC_MODULE="dbus-glib-1"]
-    )
+    # Now use gdbus for everything, so no test
+    CLIENT_IPC_MODULE="gio-2.0"
+    SERVER_IPC_MODULE="gio-2.0"
 
     ;;
 esac
@@ -243,6 +233,7 @@ PKG_CHECK_MODULES(moonshot,[
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
+        glib-2.0 >= 2.22
         $CLIENT_IPC_MODULE
 ])
 
