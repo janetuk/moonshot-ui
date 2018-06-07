@@ -130,6 +130,20 @@ static GDBusProxy *dbus_connect (MoonshotError **error)
   return g_proxy;
 }
 
+/**
+ * Get a handle on our D-Bus proxy, instantiating one if needed
+ *
+ * This is used to share a D-Bus proxy throughout the process.
+ * The first call instantiates a static D-Bus proxy. Subsequent
+ * calls return references to the existing proxy.
+ *
+ * The reference count of the GDBusProxy is incremented by one
+ * on each call. The caller must release its reference using
+ * g_object_unref() when it is done.
+ *
+ * @param error (out) *error will be non-null on error
+ * @return reference to a D-Bus proxy or null on error
+ */
 static GDBusProxy *get_dbus_proxy (MoonshotError **error)
 {
   static GDBusProxy    *dbus_proxy = NULL;
@@ -145,8 +159,12 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
     dbus_proxy = dbus_connect (error);
   }
 
-  /* TODO I think this should only be called if we did not just call dbus_connect()
-   * otherwise ref count will always be n_refs + 1 */
+  /* Increment the reference count for the caller.
+   *
+   * Do this even if we just instantiated the GDBusProxy - the dbus_proxy local
+   * variable is static, which we want the reference count to reflect. The
+   * GDBusProxy should not be released when the caller is done or this whole
+   * proxy sharing scheme is defeated! */
   if (dbus_proxy != NULL)
     g_object_ref (dbus_proxy);
 
