@@ -63,53 +63,6 @@ void moonshot_free (void *data)
 {
   g_free (data);
 }
-static char *moonshot_launch_argv[] = {
-    MOONSHOT_LAUNCH_SCRIPT, NULL
-};
-
-static GDBusConnection *dbus_launch_moonshot()
-{
-  GDBusConnection *connection = NULL;
-  GError *error = NULL;
-  GPid child_pid;
-  gint fd_stdin = -1, fd_stdout = -1;
-  ssize_t addresslen;
-  char dbus_address[1024];
-
-  if (g_spawn_async_with_pipes( NULL /*cwd*/,
-                                moonshot_launch_argv, NULL /*environ*/,
-                                0 /*flags*/, NULL /*setup*/, NULL,
-                                &child_pid, &fd_stdin, &fd_stdout,
-                                NULL /*stderr*/, NULL /*error*/) == 0 ) {
-    return NULL;
-  }
-
-  addresslen = read( fd_stdout, dbus_address, sizeof dbus_address);
-  close(fd_stdout);
-  /* we require at least 2 octets of address because we trim the newline*/
-  if (addresslen <= 1) {
-fail:
-    if (connection != NULL)
-      g_object_unref(connection);
-    close(fd_stdin);
-    g_spawn_close_pid(child_pid);
-    return NULL;
-  }
-  dbus_address[addresslen-1] = '\0';
-  /* TODO verify that the flags here are correct */
-  connection = g_dbus_connection_new_for_address_sync(dbus_address,
-                                                      G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT
-                                                      | G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION,
-                                                      NULL, /* observer */
-                                                      NULL, /* cancellable */
-                                                      &error);
-  if (error) {
-    g_error_free(error);
-    goto fail;
-  }
-
-  return connection;
-}
 
 static int is_setid()
 {
@@ -144,15 +97,6 @@ static GDBusProxy *dbus_connect (MoonshotError **error)
                               NULL, /* no cancellable */
                               &g_error);
 
-  if (g_error_matches(g_error, G_DBUS_ERROR, G_DBUS_ERROR_NOT_SUPPORTED) ||
-      g_error_matches(g_error, G_DBUS_ERROR, G_DBUS_ERROR_SPAWN_EXEC_FAILED)) {
-    /* Generally this means autolaunch failed because probably DISPLAY is unset*/
-    connection = dbus_launch_moonshot();
-    if (connection != NULL) {
-      g_error_free(g_error);
-      g_error = NULL;
-    }
-  }
   if (g_error != NULL) {
     *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                  "DBus error: %s",
