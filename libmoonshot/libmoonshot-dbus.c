@@ -144,7 +144,8 @@ static GDBusProxy *dbus_connect (MoonshotError **error)
                               NULL, /* no cancellable */
                               &g_error);
 
-  if (g_error_matches(g_error, G_DBUS_ERROR, G_DBUS_ERROR_NOT_SUPPORTED)) {
+  if (g_error_matches(g_error, G_DBUS_ERROR, G_DBUS_ERROR_NOT_SUPPORTED) ||
+      g_error_matches(g_error, G_DBUS_ERROR, G_DBUS_ERROR_SPAWN_EXEC_FAILED)) {
     /* Generally this means autolaunch failed because probably DISPLAY is unset*/
     connection = dbus_launch_moonshot();
     if (connection != NULL) {
