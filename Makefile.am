@@ -46,7 +46,7 @@ libmoonshot_libmoonshot_la_CPPFLAGS = \
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
-libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS) $(GLIB_LIBS)
+libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
 libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
 
 include_HEADERS = libmoonshot/libmoonshot.h
@@ -214,8 +214,8 @@ examples_service_selection_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 examples_client_SOURCES = examples/client.c
-examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS) $(GLIB_CFLAGS)
-examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(GLIB_LIBS)
+examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_client_LDADD = $(libmoonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)

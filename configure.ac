@@ -233,7 +233,6 @@ PKG_CHECK_MODULES(moonshot,[
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
-        glib-2.0 >= 2.22
         $CLIENT_IPC_MODULE
 ])
 
