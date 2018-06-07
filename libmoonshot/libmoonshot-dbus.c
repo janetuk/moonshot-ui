@@ -64,6 +64,68 @@ void moonshot_free (void *data)
   g_free (data);
 }
 
+/**
+ * Launch a private D-Bus bus
+ *
+ * Used if we cannot find a session bus and need a stand-in
+ *
+ * Limitations:
+ *   - On success, leaves the dbus-daemon process running but throws away
+ *     its PID, so there is no way to close it before our own process exits.
+ *     Currently there is no situation in which we'd want to close it early.
+ *
+ * @param address (out) address of the new bus in D-Bus format, free with moonshot_free()
+ * @param error (out) error, only set if return value is FALSE
+ * @return TRUE on success, FALSE on failure
+ */
+#define MOONSHOT_DBUS_ADDR_MAX_LEN 1024
+static gboolean dbus_launch_bus(gchar **address, MoonshotError **error)
+{
+  GPid child_pid;
+  gint child_stdout = -1;
+  GError *g_error = NULL;
+  gchar dbus_addr[MOONSHOT_DBUS_ADDR_MAX_LEN];
+  ssize_t dbus_addr_len = -1;
+  const gchar *dbus_daemon_argv[] = {
+      "/usr/bin/dbus-daemon", "--nofork", "--print-address", "--session", NULL
+  };
+
+  /* Spawn the dbus-daemon process. */
+  if (!g_spawn_async_with_pipes(NULL, /* working_directory */
+                                dbus_daemon_argv,
+                                NULL, /* envp */
+                                G_SPAWN_DEFAULT, /* flags */
+                                NULL, /* child_setup */
+                                NULL, /* user_data for child_setup */
+                                &child_pid,
+                                NULL, /* standard_input, defaults to /dev/null */
+                                &child_stdout,
+                                NULL, /* standard error, defaults to our own */
+                                &g_error)) {
+    *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                                "Error spawning dbus-daemon: %s",
+                                g_error->message);
+    g_error_free(g_error);
+    return FALSE;
+  }
+
+  /* Read the bus address from dbus-daemon. It should have a trailing '\n' */
+  dbus_addr_len = read(child_stdout, dbus_addr, sizeof(dbus_addr));
+  if ((dbus_addr_len <= 1) || (dbus_addr[dbus_addr_len-1] != '\n')) {
+    /* No \n or nothing left after the \n is removed, so we did not get an address.
+     * This will also happen if dbus_addr[] was not long enough to contain the address. */
+    *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                               "Error reading dbus-daemon bus address");
+    close(child_stdout);
+    g_spawn_close_pid(child_pid);
+    return FALSE;
+  }
+
+  dbus_addr[dbus_addr_len-1] = '\0'; /* terminate the string, this replaces the \n */
+  *address = g_strdup(dbus_addr); /* make a copy to send back to the caller */
+  return TRUE;
+}
+
 static int is_setid()
 {
 #ifdef HAVE_GETEUID
@@ -80,29 +142,47 @@ static GDBusProxy *dbus_connect (MoonshotError **error)
   GDBusConnection *connection;
   GDBusProxy      *g_proxy;
   GError          *g_error = NULL;
+  gchar           *private_bus_address;
 
   g_return_val_if_fail (*error == NULL, NULL);
 
   /* Check for moonshot server and start the service if possible. */
 
   /* TODO: is this still necessary with gdbus? */
-
   if (is_setid()) {
     *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                  "Cannot use IPC while setid");
     return NULL;
   }
 
+  /* Try to open an existing session bus. */
   connection = g_bus_get_sync(G_BUS_TYPE_SESSION,
                               NULL, /* no cancellable */
                               &g_error);
 
-  if (g_error != NULL) {
-    *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                 "DBus error: %s",
-                                 g_error->message);
-    g_error_free (g_error);
-    return NULL;
+  if (connection == NULL) {
+    /* That failed. Try to start our own session bus and connect. */
+    g_error_free(g_error); /* ignore that error */
+
+    if (!dbus_launch_bus(&private_bus_address, error)) {
+      return NULL;
+    }
+    /* Bus should be running, try to connect. */
+    connection = g_dbus_connection_new_for_address_sync(
+        private_bus_address,
+        G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT
+        | G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION,
+        NULL, /* observer */
+        NULL, /* cancellable */
+        &g_error);
+    moonshot_free(private_bus_address);
+    if (connection == NULL) {
+      *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                                  "DBus error: %s",
+                                  g_error->message);
+      g_error_free(g_error);
+      return NULL;
+    }
   }
 
   /* This will autostart the service if MOONSHOT_DBUS_NAME is a well-known name.
