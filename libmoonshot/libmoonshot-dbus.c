@@ -79,6 +79,7 @@ static gchar *dbus_read_bus_addr(gint fd, MoonshotError **error)
 {
   gchar dbus_addr[MOONSHOT_DBUS_ADDR_MAX_LEN];
   ssize_t dbus_addr_len = -1;
+  gchar *result = NULL;
 
   /* Read the bus address from the fine descriptor. It should have a trailing '\n' */
   dbus_addr_len = read(fd, dbus_addr, sizeof(dbus_addr));
@@ -101,7 +102,15 @@ static gchar *dbus_read_bus_addr(gint fd, MoonshotError **error)
     return NULL;
   }
 
-  return g_strdup(dbus_addr); /* make a copy to send back to the caller */
+  result = g_strdup(dbus_addr); /* make a copy to send back to the caller */
+  if (result == NULL) {
+    /* this is unlikely to succeed if we just failed to dup a string, but at least try */
+    *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                                "Error copying bus address");
+    return NULL;
+  }
+
+  return result;
 }
 
 /**
