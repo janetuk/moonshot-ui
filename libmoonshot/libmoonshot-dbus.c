@@ -211,6 +211,7 @@ static GDBusConnection *dbus_connect(MoonshotError **error)
   if (connection == NULL) {
     /* That failed. Try to start our own session bus and connect. */
     g_error_free(g_error); /* ignore that error */
+    g_error = NULL;
 
     private_bus_address = dbus_launch_bus(error);
     if (private_bus_address == NULL)
