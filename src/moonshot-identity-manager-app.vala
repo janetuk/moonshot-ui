@@ -331,7 +331,7 @@ public class IdentityManagerApp {
     }
 
 	private void name_lost_cb(DBusConnection? conn, string name){
-		logger.trace("init_ipc_server: name_lost_closure");
+		logger.trace("name_lost_cb");
 
 		// This callback usually means that another moonshot is already running.
 		// But it *might* mean that we lost the name for some other reason
@@ -343,7 +343,7 @@ public class IdentityManagerApp {
 		// If we fail to connect to the DBus bus, this callback is called with conn=null
 		if (conn == null) {
 			unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
-			logger.error("init_ipc_server.name_lost_closure: Failed to connect to bus");
+			logger.error("name_lost_cb: Failed to connect to bus");
 			if (dbus_address_env == null) {
 				stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
 							  "You may want to try 'dbus-run-session' to start a session bus.\n");
@@ -362,14 +362,14 @@ public class IdentityManagerApp {
 				shown = manager.show_ui();
 			}
 		} catch (IOError e) {
-			logger.error("init_ipc_server.name_lost_closure: Caught IOError: " + e.message);
+			logger.error("name_lost_cb: Caught IOError: " + e.message);
 		}
 		if (!shown) {
-			logger.error("init_ipc_server.name_lost_closure: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
+			logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
 			stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
 			GLib.Process.exit(1);
 		} else {
-			logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
+			logger.trace("name_lost_cb: Showed previously launched identity manager.");
 			stdout.printf("Showed previously launched identity manager.\n");
 			GLib.Process.exit(0);
 		}
