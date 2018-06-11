@@ -17,7 +17,7 @@ BuildRequires: 		desktop-file-utils
 BuildRequires: 		shared-mime-info
 BuildRequires:      gnome-keyring-devel
 
-Requires:        desktop-file-utils, shared-mime-info, dbus-x11
+Requires:        desktop-file-utils, shared-mime-info, dbus
 
 %description
 
