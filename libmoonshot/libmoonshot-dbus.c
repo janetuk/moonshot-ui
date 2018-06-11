@@ -37,25 +37,64 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <gio/gio.h>
 #include <glib/gspawn.h>
 
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
 
+/**
+ * The entry points to this module are the non-static functions at the end.
+ *
+ * These execute DBus commands against the org.janet.Moonshot service. This is done
+ * over the DBus session bus, if available. If the session bus is unavailable, a private
+ * stand-in for the session bus is launched so our methods can communicate with a
+ * Moonshot instance. This bus is shut down when our procedure calls complete.
+ *
+ * This code is thread-safe from its external entry points. Internally, the thread
+ * safety is ensured by the get_dbus_proxy() method. Using any of the internal functions
+ * without going through get_dbus_proxy() will very likely break thread safety.
+ *
+ * Reasonable effort is made to avoid unnecessary DBus traffic. When using the
+ * session bus, a single bus proxy is created and reused for subsequent procedure
+ * calls. If we created our own bus, the bus and our proxy will be reused for any
+ * concurrent calls, but will be shut down as soon as the last reference to the bus
+ * proxy is released.
+ *
+ */
 #define MOONSHOT_DBUS_NAME "org.janet.Moonshot"
 #define MOONSHOT_DBUS_PATH "/org/janet/moonshot"
 #define MOONSHOT_DBUS_ADDR_MAX_LEN 1024
 
-/* Original comment was:
- * Note that ideally this library would not depend on GLib. This would be
- * possible using libdbus directly and running our own message loop while
- * waiting for calls.
+/* Type for managing our own bus */
+typedef struct {
+  gchar *address; /* bus address */
+  GPid pid; /* pid of the dbus-daemon */
+  gint stdout;
+} MoonshotDBusBus;
+
+/* Struct for keeping a connection record */
+typedef struct {
+  GDBusConnection *connection;
+  MoonshotDBusBus *bus; /* non-null only if we launched our own bus */
+} MoonshotDBusConnection;
+
+/* Module-wide state
  *
- * As of June 2018, it's unclear that using libdbus directly is a good idea.
- * Its documentation strongly encourages use of higher-level bindings.
- * I don't know yet whether we're in an exceptional situation.
+ * This is a singleton structure containing the state of the module.
+ * Access this only after locking the mutex.
  */
+typedef struct {
+  GStaticMutex init_lock;
+  GDBusProxy *dbus_proxy;
+  MoonshotDBusConnection *connection;
+} MoonshotSharedProxyState;
+
+static MoonshotSharedProxyState shared_proxy_state = {
+  G_STATIC_MUTEX_INIT, NULL, NULL
+};
+
 
 void moonshot_free (void *data)
 {
@@ -114,34 +153,52 @@ static gchar *dbus_read_bus_addr(gint fd, MoonshotError **error)
 }
 
 /**
+ * Terminate a dbus-proxy process and free our record
+ *
+ * @param bus record of the bus started by dbus_launch_bus()
+ */
+static void dbus_terminate_bus(MoonshotDBusBus *bus)
+{
+  if (bus) {
+    close(bus->stdout);
+    if (bus->pid > 0)
+      kill(bus->pid, SIGTERM);
+    g_spawn_close_pid(bus->pid);
+    if (bus->address)
+      g_free(bus->address);
+    g_free(bus);
+  }
+}
+
+/**
  * Launch a private D-Bus session bus
  *
  * Used if we cannot find a session bus and need a stand-in
  *
- * Free return value with moonshot_free()
- *
- * Limitations:
- *   - On success, leaves the dbus-daemon process running but throws away
- *     its PID, so there is no way to close it before our own process exits.
- *     Unclean termination can leave it running.
+ * Terminate the bus with dbus_terminate_bus()
  *
  * @param error (out) error, only set if return value is null
  * @return address of the new bus in D-Bus format, or null on error
  */
-static gchar *dbus_launch_bus(MoonshotError **error)
+static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
 {
-  gchar *bus_addr;
-  GPid child_pid;
-  gint child_stdout = -1;
+  MoonshotDBusBus *bus;
   GError *g_error = NULL;
   gchar *dbus_daemon_argv[] = {
     "/usr/bin/dbus-daemon",
     "--nofork",
     "--print-address",
     "--nopidfile",
-    "--session",
+    "--config-file", MOONSHOT_DBUS_BUS_CONF,
     NULL
   };
+
+  bus = g_new0(MoonshotDBusBus, 1);
+  if (bus == NULL) {
+    *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                                "Error allocating bus record");
+    return NULL;
+  }
 
   /* Spawn the dbus-daemon process. */
   if (!g_spawn_async_with_pipes(NULL, /* working_directory */
@@ -150,9 +207,9 @@ static gchar *dbus_launch_bus(MoonshotError **error)
                                 G_SPAWN_DEFAULT, /* flags */
                                 NULL, /* child_setup */
                                 NULL, /* user_data for child_setup */
-                                &child_pid,
+                               &(bus->pid),
                                 NULL, /* standard_input, defaults to /dev/null */
-                                &child_stdout,
+                               &(bus->stdout),
                                 NULL, /* standard error, defaults to our own */
                                 &g_error)) {
     *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
@@ -162,14 +219,14 @@ static gchar *dbus_launch_bus(MoonshotError **error)
     return NULL;
   }
 
-  /* Read the bus address. Kill the child process if this fails. */
-  bus_addr = dbus_read_bus_addr(child_stdout, error);
-  if (bus_addr == NULL) {
-    close(child_stdout);
-    g_spawn_close_pid(child_pid);
+  /* Read the bus address. Terminate the child process if this fails. */
+  bus->address = dbus_read_bus_addr(bus->stdout, error);
+  if (bus->address == NULL) {
+    dbus_terminate_bus(bus);
+    bus = NULL;
   }
 
-  return bus_addr;
+  return bus;
 }
 
 static int is_setid()
@@ -184,16 +241,41 @@ static int is_setid()
 }
 
 /**
+ * Does this connection use the session bus?
+ *
+ * True if it does. False if it uses a bus we started ourselves.
+ */
+static gboolean dbus_connection_uses_session_bus(MoonshotDBusConnection *conn)
+{
+  return (conn && (!conn->bus)); /* bus is null for the session bus */
+}
+
+/**
+ * Disconnect and clean up a connection
+ *
+ * Terminates the connection's bus if we started it oureslves.
+ */
+static void dbus_disconnect(MoonshotDBusConnection *conn)
+{
+  if (conn)
+    g_dbus_connection_close_sync(conn->connection, NULL, NULL);
+
+  if (conn->bus) {
+    dbus_terminate_bus(conn->bus);
+  }
+  moonshot_free(conn);
+}
+
+/**
  * Open a connection to a DBus session bus, starting one if necessary
  *
  * @param error points to an error if return value is null
  * @return an open connection to the bus, or null on failure
  */
-static GDBusConnection *dbus_connect(MoonshotError **error)
+static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
 {
-  GDBusConnection *connection;
+  MoonshotDBusConnection *conn = NULL;
   GError          *g_error = NULL;
-  gchar           *private_bus_address;
 
   g_return_val_if_fail (*error == NULL, NULL);
 
@@ -203,41 +285,51 @@ static GDBusConnection *dbus_connect(MoonshotError **error)
     return NULL;
   }
 
-  /* Try to open an existing session bus. */
-  connection = g_bus_get_sync(G_BUS_TYPE_SESSION,
-                              NULL, /* no cancellable */
-                              &g_error);
+  conn = g_new0(MoonshotDBusConnection, 1);
+  if (conn == NULL) {
+    *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
+                                "Error allocating DBus connection");
+    return NULL;
+  }
 
-  if (connection == NULL) {
+  /* Try to open an existing session bus. */
+  conn->connection = g_bus_get_sync(G_BUS_TYPE_SESSION,
+                                    NULL, /* no cancellable */
+                                   &g_error);
+
+  if (conn->connection == NULL) {
     /* That failed. Try to start our own session bus and connect. */
     g_error_free(g_error); /* ignore that error */
     g_error = NULL;
 
-    private_bus_address = dbus_launch_bus(error);
-    if (private_bus_address == NULL)
+    conn->bus = dbus_launch_bus(error);
+    if (conn->bus == NULL) {
+      g_free(conn);
       return NULL;
+    }
 
     /* Bus should be running, try to connect. */
-    connection = g_dbus_connection_new_for_address_sync(
-        private_bus_address,
-        G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT
+    conn->connection = g_dbus_connection_new_for_address_sync(
+      conn->bus->address,
+      G_DBUS_CONNECTION_FLAGS_AUTHENTICATION_CLIENT
         | G_DBUS_CONNECTION_FLAGS_MESSAGE_BUS_CONNECTION,
-        NULL, /* observer */
-        NULL, /* cancellable */
-        &g_error);
-    moonshot_free(private_bus_address);
+      NULL, /* observer */
+      NULL, /* cancellable */
+     &g_error);
 
-    if (connection == NULL) {
+    if (conn->connection == NULL) {
       *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
                                   "DBus error connecting to bus: %s",
                                   g_error->message);
       g_error_free(g_error);
+      dbus_terminate_bus(conn->bus);
+      g_free(conn);
       return NULL;
     }
   }
 
   /* we now have an open connection to a bus */
-  return connection;
+  return conn;
 }
 
 /**
@@ -247,14 +339,14 @@ static GDBusConnection *dbus_connect(MoonshotError **error)
  * @param error error set when return value is null
  * @return bus proxy or null on error
  */
-static GDBusProxy *dbus_create_proxy(GDBusConnection *connection, MoonshotError **error)
+static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError **error)
 {
   GDBusProxy *g_proxy;
   GError     *g_error = NULL;
 
   /* This will autostart the service if it is not already running. */
   g_proxy = g_dbus_proxy_new_sync(
-      connection,
+      conn->connection,
       G_DBUS_PROXY_FLAGS_NONE,
       NULL, /* expected interface */
       MOONSHOT_DBUS_NAME,
@@ -275,6 +367,18 @@ static GDBusProxy *dbus_create_proxy(GDBusConnection *connection, MoonshotError 
 }
 
 /**
+ * Callback to disconnect from the DBus when our bus proxy is finalized
+ *
+ * Assumes we are working with the shared_proxy_state's proxy and connection.
+ */
+static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
+{
+  dbus_disconnect(shared_proxy_state.connection);
+  shared_proxy_state.dbus_proxy = NULL;
+  shared_proxy_state.connection = NULL;
+}
+
+/**
  * Get a handle on our D-Bus proxy, instantiating one if needed
  *
  * This is used to share a D-Bus proxy throughout the process.
@@ -292,41 +396,40 @@ static GDBusProxy *dbus_create_proxy(GDBusConnection *connection, MoonshotError 
  */
 static GDBusProxy *get_dbus_proxy (MoonshotError **error)
 {
-  static GStaticMutex   init_lock = G_STATIC_MUTEX_INIT;
-  static GDBusProxy    *dbus_proxy = NULL;
-  static GDBusConnection *connection = NULL;
+  g_static_mutex_lock (&(shared_proxy_state.init_lock));
 
-  g_static_mutex_lock (&init_lock);
+  /* do we already have a live proxy? */
+  if (shared_proxy_state.dbus_proxy != NULL) {
+    g_object_ref(shared_proxy_state.dbus_proxy);
+    goto cleanup;
+  }
 
   /* get a connection if we don't already have one */
-  if (connection == NULL) {
+  if (shared_proxy_state.connection == NULL) {
     g_type_init (); /* harmless but deprecated, may still be needed on CentOS 6 */
 
-    connection = dbus_connect(error); /* sets error if return value is null */
-    if (connection == NULL)
+    shared_proxy_state.connection = dbus_connect(error); /* sets error if return value is null */
+    if (shared_proxy_state.connection == NULL)
       goto cleanup;
   }
 
-  /* we have a connection, create a proxy if we don't already have one */
-  if (dbus_proxy == NULL) {
-    dbus_proxy = dbus_create_proxy(connection, error); /* sets error if return value is null */
-    if (dbus_proxy == NULL)
-      goto cleanup;
-  }
+  /* we have a connection, create a proxy */
+  shared_proxy_state.dbus_proxy = dbus_create_proxy(shared_proxy_state.connection, error); /* sets error if return value is null */
+  if (shared_proxy_state.dbus_proxy == NULL)
+    goto cleanup;
 
-  /* Increment the reference count for the caller.
-   *
-   * Do this even if we just instantiated the GDBusProxy - the dbus_proxy local
-   * variable is static, which we want the reference count to reflect. The
-   * GDBusProxy should not be released when the caller is done or this whole
-   * proxy sharing scheme is defeated! */
-  if (dbus_proxy != NULL)
-    g_object_ref (dbus_proxy);
+  /* set a weak ref so we get a callback when the object is freed */
+  g_object_weak_ref(G_OBJECT(shared_proxy_state.dbus_proxy),
+                    dbus_proxy_notify,
+                    NULL);
+
+  /* If we are on the session bus, hold a reference for reuse on later calls. */
+  if (dbus_connection_uses_session_bus(shared_proxy_state.connection))
+    g_object_ref(shared_proxy_state.dbus_proxy);
 
 cleanup:
-  g_static_mutex_unlock (&init_lock);
-
-  return dbus_proxy;
+  g_static_mutex_unlock (&(shared_proxy_state.init_lock));
+  return shared_proxy_state.dbus_proxy;
 }
 
 int moonshot_get_identity (const char     *nai,

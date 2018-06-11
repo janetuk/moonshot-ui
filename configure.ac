@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.0.5],
+        [1.0.6],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -24,6 +24,7 @@ AC_CHECK_FUNCS_ONCE(geteuid getpwuid)
 # Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])
 AC_PROG_CC
+AC_PROG_LN_S
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
@@ -223,8 +224,8 @@ AC_SUBST(MOONSHOT_WEBP)
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
-        glib-2.0 >= 2.22
-        gobject-2.0 >= 2.22
+        glib-2.0 >= 2.26
+        gobject-2.0 >= 2.26
         libssl
         $GTK_VERSION
         $GEE_VERSION
