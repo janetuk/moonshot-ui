@@ -9,7 +9,6 @@ lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp
-pkglibexec_SCRIPTS = moonshot-dbus-launch
 
 dist_pkgdata_DATA = webprovisioning/default-identity.msht
 dist_moonshotsysconf_DATA=flatstore-users
@@ -19,8 +18,7 @@ AM_CFLAGS = -g -O0 -Wall
 AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
-        -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
+	-DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
@@ -170,19 +168,39 @@ endif
 
 if IPC_DBUS
 
-# DBus service file
-dbusservicedir = $(datadir)/dbus-1/services
+# Script to expand makefile variables.
+# Note: @bindir[@] is does what \@bindir\@ appears to do, but \@ is
+# not POSIX-compliant
+in_substitute = sed \
+	-e 's|@bindir[@]|$(bindir)|g' \
+	-e 's|@pkgdatadir[@]|$(pkgdatadir)|g'
+
+# DBus service def file. This will be symlinked into ${datadir}/dbus-1/services by
+# the packaging scripts.
 if  OS_MACOS
-dbusservice_in_files = org.janet.Moonshot.service.mac
-dbusservice_DATA = $(dbusservice_in_files:.service.mac=.service)
+dbus_service_in_file = org.janet.Moonshot.service.mac
+dbus_service_file = $(dbusservice_in_file:.service.mac=.service)
 else
-dbusservice_in_files = org.janet.Moonshot.service.in
-dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
+dbus_service_in_file = org.janet.Moonshot.service.in
+dbus_service_file = $(dbus_service_in_file:.service.in=.service)
 endif
 
-# Rule to make the service file with bindir expanded
-$(dbusservice_DATA): $(dbusservice_in_files) Makefile
-	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+# DBus bus configuration file, used for launching our own bus when the session bus
+# is not available.
+dbus_bus_in_file = org.janet.Moonshot.conf.in
+dbus_bus_file = $(dbus_bus_in_file:.conf.in=.conf)
+
+# Rules to expand .in files into service/conf files
+$(dbus_service_file): $(dbus_service_in_file) Makefile
+	@$(in_substitute) $< > $@
+$(dbus_bus_file): $(dbus_bus_in_file) Makefile
+	@$(in_substitute) $< > $@
+
+dbuscfgdir = $(pkgdatadir)/dbus
+dist_dbuscfg_DATA = $(dbus_service_file) $(dbus_bus_file)
+
+AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"' \
+               -DMOONSHOT_DBUS_DAEMON='"@DBUS_DAEMON@"'
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
@@ -197,10 +215,10 @@ if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
 
-EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbus_service_in_file) \
+    $(dbus_bus_in_file) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \
 	README.webprovisioning README.windows \
-	moonshot-dbus-launch \
 	moonshot-ui.spec \
 	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
 
@@ -222,7 +240,6 @@ tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 ##if OS_LINUX
-##install-data-hook:
 ##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
 ##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
 ##uninstall-hook:

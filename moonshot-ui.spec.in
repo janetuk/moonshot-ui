@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
@@ -11,13 +11,13 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:		glib2-devel
 BuildRequires:  	gtk2-devel
-BuildRequires:    libgee-devel
+BuildRequires:          libgee-devel
 BuildRequires:  	dbus-devel
 BuildRequires: 		desktop-file-utils
 BuildRequires: 		shared-mime-info
-BuildRequires:    gnome-keyring-devel
+BuildRequires:          libgnome-keyring-devel
 
-Requires:        desktop-file-utils, shared-mime-info, dbus-x11
+Requires:        desktop-file-utils, shared-mime-info, dbus
 
 %description
 
@@ -34,6 +34,8 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/dbus-1/services
+ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $RPM_BUILD_ROOT%{_datadir}/dbus-1/services/org.janet.Moonshot.service
 
 
 %clean
@@ -60,10 +62,9 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_bindir}/moonshot
 %{_bindir}/moonshot-webp
 %{_datadir}/applications/*
-%{_datadir}/dbus-1/*
+%{_datadir}/dbus-1/services/*
 %{_datadir}/mime/packages/*
 %{_datadir}/moonshot-ui
-%{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
 %doc webprovisioning/default-identity.msht

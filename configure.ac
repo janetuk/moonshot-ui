@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.0.5],
+        [1.0.6],
         [moonshot-community@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -24,6 +24,7 @@ AC_CHECK_FUNCS_ONCE(geteuid getpwuid)
 # Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])
 AC_PROG_CC
+AC_PROG_LN_S
 AM_PROG_CC_C_O
 AM_PROG_VALAC([0.9])
 
@@ -121,7 +122,6 @@ AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
 vala_version=`$VALAC --version | sed 's/Vala  *//'`
 AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
@@ -207,6 +207,14 @@ if test "$linux" = "yes"; then
   fi
 fi
 
+AM_COND_IF([IPC_DBUS],
+           [AC_ARG_VAR(DBUS_DAEMON, [Location of dbus-daemon executable])
+            AC_PATH_PROG([DBUS_DAEMON], [dbus-daemon], [no])
+            if test "$DBUS_DAEMON" = "no"; then
+              AC_MSG_ERROR([
+*** Could not find the dbus-daemon executable. This is required.])
+            fi ])
+
 MOONSHOT_APP="$bindir/moonshot"
 MOONSHOT_WEBP="$bindir/moonshot-webp"
 
@@ -223,8 +231,8 @@ AC_SUBST(MOONSHOT_WEBP)
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
         atk >= 1.20
-        glib-2.0 >= 2.22
-        gobject-2.0 >= 2.22
+        glib-2.0 >= 2.26
+        gobject-2.0 >= 2.26
         libssl
         $GTK_VERSION
         $GEE_VERSION
