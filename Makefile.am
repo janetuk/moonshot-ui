@@ -199,7 +199,8 @@ $(dbus_bus_file): $(dbus_bus_in_file) Makefile
 dbuscfgdir = $(pkgdatadir)/dbus
 dist_dbuscfg_DATA = $(dbus_service_file) $(dbus_bus_file)
 
-AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"'
+AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"' \
+               -DMOONSHOT_DBUS_DAEMON='"@DBUS_DAEMON@"'
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 

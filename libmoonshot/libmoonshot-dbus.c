@@ -159,15 +159,15 @@ static gchar *dbus_read_bus_addr(gint fd, MoonshotError **error)
  */
 static void dbus_terminate_bus(MoonshotDBusBus *bus)
 {
-  if (bus) {
-    close(bus->stdout);
-    if (bus->pid > 0)
-      kill(bus->pid, SIGTERM);
-    g_spawn_close_pid(bus->pid);
-    if (bus->address)
-      g_free(bus->address);
-    g_free(bus);
-  }
+  g_return_if_fail(bus != NULL);
+
+  close(bus->stdout);
+  if (bus->pid > 0)
+    kill(bus->pid, SIGTERM);
+  g_spawn_close_pid(bus->pid);
+  if (bus->address)
+    g_free(bus->address);
+  g_free(bus);
 }
 
 /**
@@ -185,7 +185,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
   MoonshotDBusBus *bus;
   GError *g_error = NULL;
   gchar *dbus_daemon_argv[] = {
-    "/usr/bin/dbus-daemon",
+    MOONSHOT_DBUS_DAEMON,
     "--nofork",
     "--print-address",
     "--nopidfile",
@@ -257,7 +257,9 @@ static gboolean dbus_connection_uses_session_bus(MoonshotDBusConnection *conn)
  */
 static void dbus_disconnect(MoonshotDBusConnection *conn)
 {
-  if (conn)
+  g_return_if_fail(conn != NULL);
+
+  if (conn->connection)
     g_dbus_connection_close_sync(conn->connection, NULL, NULL);
 
   if (conn->bus) {

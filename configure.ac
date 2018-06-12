@@ -122,7 +122,6 @@ AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
 vala_version=`$VALAC --version | sed 's/Vala  *//'`
 AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
@@ -207,6 +206,14 @@ if test "$linux" = "yes"; then
 *** tool. Web provisioning files could not be automatically installed.])
   fi
 fi
+
+AM_COND_IF([IPC_DBUS],
+           [AC_ARG_VAR(DBUS_DAEMON, [Location of dbus-daemon executable])
+            AC_PATH_PROG([DBUS_DAEMON], [dbus-daemon], [no])
+            if test "$DBUS_DAEMON" = "no"; then
+              AC_MSG_ERROR([
+*** Could not find the dbus-daemon executable. This is required.])
+            fi ])
 
 MOONSHOT_APP="$bindir/moonshot"
 MOONSHOT_WEBP="$bindir/moonshot-webp"
