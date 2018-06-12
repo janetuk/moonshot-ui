@@ -47,6 +47,14 @@ public class MoonshotServer : Object {
         this.parent_app = app;
     }
 
+    /**
+     * DBus method "ShowUi"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (b).
+     */
     public bool show_ui()
     {
         logger.trace("MoonshotServer.show_ui");
@@ -62,6 +70,14 @@ public class MoonshotServer : Object {
         return true;
     }
 
+    /**
+     * DBus method "GetIdentity"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (ssssssb).
+     */
     public async bool get_identity(string nai,
                                    string password,
                                    string service,
@@ -127,6 +143,14 @@ public class MoonshotServer : Object {
         return false;
     }
 
+    /**
+     * DBus method "GetDefaultIdentity"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (ssssssb).
+     */
     public async bool get_default_identity(out string nai_out,
                                            out string password_out,
                                            out string server_certificate_hash,
@@ -177,6 +201,14 @@ public class MoonshotServer : Object {
         return false;
     }
 
+    /**
+     * DBus method "InstallIdCard"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (b).
+     */
     public bool install_id_card(string   display_name,
                                 string   user_name,
                                 string   ?password,
@@ -242,6 +274,14 @@ public class MoonshotServer : Object {
     }
 
 
+    /**
+     * DBus method "InstallFromFile"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (b).
+     */
     public int install_from_file(string file_name)
     {
         var webp = new WebProvisioning.Parser(file_name);
@@ -298,6 +338,14 @@ public class MoonshotServer : Object {
         return installed_cards;
     }
 
+    /**
+     * DBus method "ConfirmCaCertificate"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (ib).
+     */
     public async bool confirm_ca_certificate(string nai,
                                              string realm,
                                              string ca_hash,

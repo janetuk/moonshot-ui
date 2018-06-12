@@ -38,20 +38,17 @@ case "$host" in
     SERVER_IPC_MODULE="msrpc-glib2-1.0"
     CLIENT_IPC_MODULE="msrpc-mingw-1.0"
     ;;
-    
-  *darwin*) 
+
+  *darwin*)
     win32=no
     macos=yes
     linux=no
 
-    # We require dbus-glib for the client library even if we are using GDBus
-    # in the server. The reason we can't always use dbus-glib in the server is
-    # because Vala drops support for it, but as it ships with DBus there is very
-    # little danger of it being dropped by distros any time soon.
-    CLIENT_IPC_MODULE="dbus-glib-1"
-	SERVER_IPC_MODULE="dbus-glib-1"   
-	
-	PKG_CHECK_MODULES([MAC], 
+    # Use gdbus for everything
+    CLIENT_IPC_MODULE="gio-2.0"
+	SERVER_IPC_MODULE="gio-2.0"
+
+	PKG_CHECK_MODULES([MAC],
 			[gtk-mac-integration >= 1.0.1]
 	)
 
@@ -61,16 +58,9 @@ case "$host" in
     win32=no
     linux=yes
 
-    # We require dbus-glib for the client library even if we are using GDBus
-    # in the server. The reason we can't always use dbus-glib in the server is
-    # because Vala drops support for it, but as it ships with DBus there is very
-    # little danger of it being dropped by distros any time soon.
-    CLIENT_IPC_MODULE="dbus-glib-1"
-    PKG_CHECK_MODULES([GDBUS],
-            [gio-2.0 >= 2.26],
-            [SERVER_IPC_MODULE="gio-2.0"],
-            [SERVER_IPC_MODULE="dbus-glib-1"]
-    )
+    # Now use gdbus for everything, so no test
+    CLIENT_IPC_MODULE="gio-2.0"
+    SERVER_IPC_MODULE="gio-2.0"
 
     ;;
 esac
@@ -83,7 +73,7 @@ PKG_CHECK_MODULES([GTK],
             [PKG_CHECK_MODULES([GTK],
                         [gtk+-2.0 >= 2.18],
                         [GTK_VERSION="gtk+-2.0"]
-            )]                            
+            )]
 )
 AC_SUBST(GTK_VERSION)
 
@@ -96,7 +86,7 @@ PKG_CHECK_MODULES([LOG4VALA],
             [PKG_CHECK_MODULES([LOG4VALA],
                         [log4vala-0.1],
                         [LOG4VALA_VERSION="log4vala-0.1"]
-            )]                            
+            )]
 )
 AC_SUBST(LOG4VALA_VERSION)
 fi
@@ -110,7 +100,7 @@ PKG_CHECK_MODULES([LIB_GEE],
             [PKG_CHECK_MODULES([LIB_GEE],
                         [gee-1.0 >= 0.5],
                         [GEE_VERSION="gee-1.0"]
-            )]                            
+            )]
 )
 AC_SUBST(GEE_VERSION)
 
@@ -131,7 +121,6 @@ AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
-AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
 vala_version=`$VALAC --version | sed 's/Vala  *//'`
@@ -140,20 +129,6 @@ AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
   [gio_vapi_uses_arrays="yes"],
   [gio_vapi_uses_arrays="yes"])
 AM_CONDITIONAL([GIO_VAPI_USES_ARRAYS], [test "$gio_vapi_uses_arrays" = "yes"])
-if test "$SERVER_IPC_MODULE" = "dbus-glib-1"; then
-  AC_MSG_CHECKING([$VALAC is no greater than 0.12.1])
-  AS_VERSION_COMPARE([0.12.2], ["$vala_version"],
-    [vala_supports_dbus_glib="no"],
-    [vala_supports_dbus_glib="no"],
-    [vala_supports_dbus_glib="yes"])
-
-  AC_MSG_RESULT([$vala_supports_dbus_glib])
-  if test "$vala_supports_dbus_glib" = "no"; then
-    AC_MSG_ERROR([
-*** Vala 0.12.1 or earlier is required for dbus-glib support. Newer versions
-*** require that you have GLib 2.26 or newer (for GDBus support).])
-  fi
-fi
 
 if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   # MS RPC utilities
