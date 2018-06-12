@@ -639,7 +639,7 @@ int moonshot_install_id_card (const char     *display_name,
     return FALSE;
   }
 
-  g_variant_get(result, "b", &success);
+  g_variant_get(result, "(b)", &success);
   g_variant_unref(result);
 
   return success;
