@@ -13,11 +13,11 @@ BuildRequires:      glib2-devel
 BuildRequires:      gtk2-devel
 BuildRequires:      libgee-devel
 BuildRequires:      dbus-devel
+BuildRequires:      openssl-devel
 BuildRequires:      desktop-file-utils
 BuildRequires:      shared-mime-info
 BuildRequires:      libgnome-keyring-devel
 BuildRequires:      vala
-
 Requires:        desktop-file-utils, shared-mime-info, dbus
 
 %description
