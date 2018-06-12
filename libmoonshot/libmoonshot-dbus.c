@@ -432,6 +432,9 @@ cleanup:
   return shared_proxy_state.dbus_proxy;
 }
 
+/* Output strings are always set to non-null, even if no identity is returned.
+ * These must be freed with moonshot_free() by the caller.
+ */
 int moonshot_get_identity (const char     *nai,
                            const char     *password,
                            const char     *service,
@@ -488,16 +491,20 @@ int moonshot_get_identity (const char     *nai,
   g_variant_unref(result);
 
   if (success == FALSE) {
+    /* On failure, the output strings are non-null (pointing to "" strings). The
+     * caller will free them. */
     *error = moonshot_error_new (MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
                                  "No identity was returned by the Moonshot "
                                  "user interface.");
-    /* TODO do we need to free the strings? */
     return FALSE;
   }
 
   return TRUE;
 }
 
+/* Output strings are always set to non-null, even if no identity is returned.
+ * These must be freed with moonshot_free() by the caller.
+ */
 int moonshot_get_default_identity (char          **nai_out,
                                    char          **password_out,
                                    char          **server_certificate_hash_out,
@@ -550,7 +557,9 @@ int moonshot_get_default_identity (char          **nai_out,
     *error = moonshot_error_new (MOONSHOT_ERROR_NO_IDENTITY_SELECTED,
                                  "No identity was returned by the Moonshot "
                                  "user interface.");
-    /* TODO do we need to free the strings? */
+    g_error_free(g_error);
+    /* On failure, the output strings are non-null (pointing to "" strings). The
+     * caller will free them. */
     return FALSE;
   }
 
@@ -636,6 +645,7 @@ int moonshot_install_id_card (const char     *display_name,
   if (g_error != NULL) {
     *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                  g_error->message);
+    g_error_free(g_error);
     return FALSE;
   }
 
@@ -688,6 +698,7 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
   if (g_error != NULL) {
     *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                  g_error->message);
+    g_error_free(g_error);
     return FALSE;
   }
 
