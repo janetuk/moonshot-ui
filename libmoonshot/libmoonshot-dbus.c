@@ -80,21 +80,11 @@ typedef struct {
   MoonshotDBusBus *bus; /* non-null only if we launched our own bus */
 } MoonshotDBusConnection;
 
-/* Module-wide state
- *
- * This is a singleton structure containing the state of the module.
- * Access this only after locking the mutex.
- */
+/* Struct for keeping a DBus proxy record */
 typedef struct {
-  GStaticMutex init_lock;
   GDBusProxy *dbus_proxy;
   MoonshotDBusConnection *connection;
-} MoonshotSharedProxyState;
-
-static MoonshotSharedProxyState shared_proxy_state = {
-  G_STATIC_MUTEX_INIT, NULL, NULL
-};
-
+} MoonshotDBusProxy;
 
 void moonshot_free (void *data)
 {
@@ -371,13 +361,18 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
 /**
  * Callback to disconnect from the DBus when our bus proxy is finalized
  *
- * Assumes we are working with the shared_proxy_state's proxy and connection.
+ * @param data Pointer to MoonshotDBusProxy instance whose
  */
 static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
 {
-  dbus_disconnect(shared_proxy_state.connection);
-  shared_proxy_state.dbus_proxy = NULL;
-  shared_proxy_state.connection = NULL;
+  MoonshotDBusProxy *proxy = (MoonshotDBusProxy *) data;
+
+  /* Ensure we were called with the right object! */
+  g_return_if_fail(proxy->dbus_proxy ==  where_the_object_was);
+
+  dbus_disconnect(proxy->connection);
+  proxy->dbus_proxy = NULL;
+  proxy->connection = NULL;
 }
 
 /**
@@ -398,40 +393,44 @@ static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
  */
 static GDBusProxy *get_dbus_proxy (MoonshotError **error)
 {
-  g_static_mutex_lock (&(shared_proxy_state.init_lock));
+  static GStaticMutex init_lock = G_STATIC_MUTEX_INIT;
+  static MoonshotDBusProxy shared_proxy = {NULL, NULL};
+
+  /* Mutex protects access to shared_proxy */
+  g_static_mutex_lock (&init_lock);
 
   /* do we already have a live proxy? */
-  if (shared_proxy_state.dbus_proxy != NULL) {
-    g_object_ref(shared_proxy_state.dbus_proxy);
+  if (shared_proxy.dbus_proxy != NULL) {
+    g_object_ref(shared_proxy.dbus_proxy);
     goto cleanup;
   }
 
   /* get a connection if we don't already have one */
-  if (shared_proxy_state.connection == NULL) {
+  if (shared_proxy.connection == NULL) {
     g_type_init (); /* harmless but deprecated, may still be needed on CentOS 6 */
 
-    shared_proxy_state.connection = dbus_connect(error); /* sets error if return value is null */
-    if (shared_proxy_state.connection == NULL)
+    shared_proxy.connection = dbus_connect(error); /* sets error if return value is null */
+    if (shared_proxy.connection == NULL)
       goto cleanup;
   }
 
   /* we have a connection, create a proxy */
-  shared_proxy_state.dbus_proxy = dbus_create_proxy(shared_proxy_state.connection, error); /* sets error if return value is null */
-  if (shared_proxy_state.dbus_proxy == NULL)
+  shared_proxy.dbus_proxy = dbus_create_proxy(shared_proxy.connection, error); /* sets error if return value is null */
+  if (shared_proxy.dbus_proxy == NULL)
     goto cleanup;
 
   /* set a weak ref so we get a callback when the object is freed */
-  g_object_weak_ref(G_OBJECT(shared_proxy_state.dbus_proxy),
+  g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy),
                     dbus_proxy_notify,
-                    NULL);
+                    &shared_proxy);
 
   /* If we are on the session bus, hold a reference for reuse on later calls. */
-  if (dbus_connection_uses_session_bus(shared_proxy_state.connection))
-    g_object_ref(shared_proxy_state.dbus_proxy);
+  if (dbus_connection_uses_session_bus(shared_proxy.connection))
+    g_object_ref(shared_proxy.dbus_proxy);
 
 cleanup:
-  g_static_mutex_unlock (&(shared_proxy_state.init_lock));
-  return shared_proxy_state.dbus_proxy;
+  g_static_mutex_unlock (&init_lock);
+  return shared_proxy.dbus_proxy;
 }
 
 /* Output strings are always set to non-null, even if no identity is returned.
