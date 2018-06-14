@@ -198,13 +198,12 @@ $(dbus_bus_file): $(dbus_bus_in_file) Makefile
 
 dbuscfgdir = $(pkgdatadir)/dbus
 dist_dbuscfg_DATA = $(dbus_service_file) $(dbus_bus_file)
-
 AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"' \
                -DMOONSHOT_DBUS_DAEMON='"@DBUS_DAEMON@"'
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
-CLEANFILES = $(dbusservice_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
+CLEANFILES = $(dist_dbuscfg_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
 AM_VALAFLAGS += \
 	--pkg gio-2.0 \
@@ -236,8 +235,12 @@ examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
 examples_client_LDADD = $(libmoonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c
-tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(libmoonshot_LIBS)
+
+## Automated tests
+TESTS = tests/basic.bash
+dist_check_SCRIPTS = tests/basic.bash
 
 ##if OS_LINUX
 ##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
