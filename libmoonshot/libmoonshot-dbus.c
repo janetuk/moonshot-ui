@@ -368,7 +368,7 @@ static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
   MoonshotDBusProxy *proxy = (MoonshotDBusProxy *) data;
 
   /* Ensure we were called with the right object! */
-  g_return_if_fail(proxy->dbus_proxy ==  where_the_object_was);
+  g_return_if_fail((gpointer) proxy->dbus_proxy ==  (gpointer) where_the_object_was);
 
   dbus_disconnect(proxy->connection);
   proxy->dbus_proxy = NULL;
@@ -433,7 +433,19 @@ cleanup:
   return shared_proxy.dbus_proxy;
 }
 
-/* Output strings are always set to non-null, even if no identity is returned.
+/* Helper macro for below */
+#define EMPTY_STR_IF_NULL(x) ((x) ? (x) : "")
+
+/**
+ * Get an identity from the Moonshot service
+ *
+ * There is a mismatch between the libmoonshot API (i.e., this function) and the
+ * org.janet.Moonshot DBus API. This function uses null values for nai and
+ * password to make a request without these fields. The DBus API requires all
+ * the values be non-NULL, expecting "" to reflect an absent value. This function
+ * replaces NULL nai / password values with empty strings for the DBus method call.
+ *
+ * Output strings are always set to non-null, even if no identity is returned.
  * These must be freed with moonshot_free() by the caller.
  */
 int moonshot_get_identity (const char     *nai,
@@ -463,10 +475,15 @@ int moonshot_get_identity (const char     *nai,
    * Returns null if g_error is set. */
   result = g_dbus_proxy_call_sync(dbus_proxy,
                                   "GetIdentity",
-                                  g_variant_new("(sss)",
-                                                nai,
-                                                password,
-                                                service),
+                                  g_variant_new("("
+                                                "s"  /* nai      (string, required) */
+                                                "s"  /* password (string, required) */
+                                                "s"  /* service  (string, required) */
+                                                ")",
+                                                EMPTY_STR_IF_NULL(nai),
+                                                EMPTY_STR_IF_NULL(password),
+                                                service
+                                               ),
                                   G_DBUS_CALL_FLAGS_NONE,
                                   G_MAXINT, /* infinite timeout */
                                   NULL, /* no cancellable */
@@ -481,7 +498,15 @@ int moonshot_get_identity (const char     *nai,
 
   /* unpack results - allocates space for strings */
   g_variant_get(result,
-                "(ssssssb)",
+                "("
+                "s" /* nai */
+                "s" /* password */
+                "s" /* server cert hash */
+                "s" /* ca cert */
+                "s" /* subject name constraint */
+                "s" /* subject alt name constraint */
+                "b" /* return value */
+                ")",
                 nai_out,
                 password_out,
                 server_certificate_hash_out,
@@ -544,7 +569,15 @@ int moonshot_get_default_identity (char          **nai_out,
 
   /* unpack results - allocates space for strings */
   g_variant_get(result,
-                "(ssssssb)",
+                "("
+                "s" /* nai */
+                "s" /* password */
+                "s" /* server cert hash */
+                "s" /* ca cert */
+                "s" /* subject name constraint */
+                "s" /* subject alt name constraint */
+                "b" /* return value */
+                ")",
                 nai_out,
                 password_out,
                 server_certificate_hash_out,
@@ -567,6 +600,17 @@ int moonshot_get_default_identity (char          **nai_out,
   return TRUE;
 }
 
+/**
+ * Install an ID card through the Moonshot DBus service
+ *
+ * There is a mismatch between this libmoonshot API and the
+ * org.janet.Moonshot DBus API. The latter requires many of its inputs
+ * be non-null, whereas this API allows nulls to indicate empty
+ * arguments. Ideally this would be reconciled, probably by updating
+ * the DBus API to make these optional. Until then, null inputs are
+ * converted to empty strings for the DBus method call.
+ *
+ */
 int moonshot_install_id_card (const char     *display_name,
                               const char     *user_name,
                               const char     *password,
@@ -618,10 +662,22 @@ int moonshot_install_id_card (const char     *display_name,
   rules_always_confirm_strv[rules_patterns_length] = NULL;
   services_strv[services_length] = NULL;
 
-  /* '^as' in the variant format string corresponds to the strv type */
   result = g_dbus_proxy_call_sync(dbus_proxy,
                                   "InstallIdCard",
-                                  g_variant_new("(ssss^as^as^asssssi)",
+                                  g_variant_new("("
+                                                "s"   /* display name          (string,  required) */
+                                                "s"   /* user name             (string,  required) */
+                                                "s"   /* password              (string,  optional) */
+                                                "s"   /* realm                 (string,  optional) */
+                                                "^as" /* rules patterns        (strv,    optional) */
+                                                "^as" /* rules always confirm  (strv,    optional) */
+                                                "^as" /* services              (strv,    optional) */
+                                                "s"   /* CA cert               (string,  optional) */
+                                                "s"   /* subject               (string,  optional) */
+                                                "s"   /* subject_alt           (string,  optional) */
+                                                "s"   /* server cert           (string,  optional) */
+                                                "i"   /* force flat file store (integer, required) */
+                                                ")",
                                                 display_name,
                                                 user_name,
                                                 password,
@@ -686,7 +742,11 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
 
   result = g_dbus_proxy_call_sync(dbus_proxy,
                                   "ConfirmCaCertificate",
-                                  g_variant_new("(sss)",
+                                  g_variant_new("("
+                                                "s" /* nai     (string, required) */
+                                                "s" /* realm   (string, required) */
+                                                "s" /* CA hash (string, required) */
+                                                ")",
                                                 identity_name,
                                                 realm,
                                                 hash_str),
