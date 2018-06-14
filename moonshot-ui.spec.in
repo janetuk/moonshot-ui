@@ -38,6 +38,8 @@ make install DESTDIR=$RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT%{_datadir}/dbus-1/services
 ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $RPM_BUILD_ROOT%{_datadir}/dbus-1/services/org.janet.Moonshot.service
 
+%check
+make check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
