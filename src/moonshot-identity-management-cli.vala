@@ -103,7 +103,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             int flags = prev_id.Compare(id_card);
             logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
-                return false; // no changes, no need to update
+                info_dialog("Warning", "The ID card was already present in your keyring and does not need to be added again.");
             } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
                 dialog = yesno_dialog(
                     "Install ID Card",
