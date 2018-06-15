@@ -7,8 +7,40 @@ stages:
 before_script:
   - rm -fr build SOURCES RPMS
 
-ubuntu18:
-  image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu18:latest
+centos6:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
+  stage: build
+  script:
+    - sh autogen.sh
+    - make
+    - make dist
+    - xz -d moonshot-ui-*.tar.xz
+    - gzip moonshot-ui-*.tar
+    - mkdir -p SOURCES
+    - mv -f moonshot-ui-*tar.gz SOURCES
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
+  artifacts:
+    paths:
+        - RPMS
+
+centos7:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos7:latest
+  stage: build
+  script:
+    - sh autogen.sh
+    - make
+    - make dist
+    - xz -d moonshot-ui-*.tar.xz
+    - gzip moonshot-ui-*.tar
+    - mkdir -p SOURCES
+    - mv -f moonshot-ui-*tar.gz SOURCES
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
+  artifacts:
+    paths:
+        - RPMS
+
+debian8:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian8:latest
   stage: build
   script:
     - autoreconf -fi
@@ -52,21 +84,6 @@ ubuntu16:
     paths:
         - build/*.deb
 
-debian8:
-  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian8:latest
-  stage: build
-  script:
-    - autoreconf -fi
-    - ./configure
-    - make dist
-    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
-    - debuild -us -uc
-    - mkdir build
-    - cp ../*.deb build
-  artifacts:
-    paths:
-        - build/*.deb
-
 debian9:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
   stage: build
@@ -82,34 +99,17 @@ debian9:
     paths:
         - build/*.deb
 
-centos6:
-  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
+ubuntu18:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu18:latest
   stage: build
   script:
-    - sh autogen.sh
-    - make
+    - autoreconf -fi
+    - ./configure
     - make dist
-    - xz -d moonshot-ui-*.tar.xz
-    - gzip moonshot-ui-*.tar
-    - mkdir -p SOURCES
-    - mv -f moonshot-ui-*tar.gz SOURCES
-    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
+    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
+    - debuild -us -uc
+    - mkdir build
+    - cp ../*.deb build
   artifacts:
     paths:
-        - RPMS
-
-centos7:
-  image: registry.ci.ti.ja.net/jisc/moonshot-build/centos7:latest
-  stage: build
-  script:
-    - sh autogen.sh
-    - make
-    - make dist
-    - xz -d moonshot-ui-*.tar.xz
-    - gzip moonshot-ui-*.tar
-    - mkdir -p SOURCES
-    - mv -f moonshot-ui-*tar.gz SOURCES
-    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
-  artifacts:
-    paths:
-        - RPMS
+        - build/*.deb
