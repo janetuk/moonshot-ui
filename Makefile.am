@@ -45,7 +45,7 @@ libmoonshot_libmoonshot_la_CPPFLAGS = \
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
 libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
-libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
+libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:1:0
 
 include_HEADERS = libmoonshot/libmoonshot.h
 noinst_HEADERS = libmoonshot/libmoonshot-common.h
