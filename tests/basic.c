@@ -27,15 +27,27 @@ gpointer test_func (gpointer data)
                                              &subject_alt_name_constraint,
                                              error);
 
-    /*if (success)
-        g_print ("Got id: %s %s\n", nai, password);*/
+    if (success) {
+      success = (nai != NULL)
+                && (password != NULL)
+                && (server_certificate_hash != NULL)
+                && (ca_certificate != NULL)
+                && (subject_name_constraint != NULL)
+                && (subject_alt_name_constraint != NULL);
 
-    moonshot_free (nai);
-    moonshot_free (password);
-    moonshot_free (server_certificate_hash);
-    moonshot_free (ca_certificate);
-    moonshot_free (subject_name_constraint);
-    moonshot_free (subject_alt_name_constraint);
+      if (nai)
+        moonshot_free (nai);
+      if (password)
+        moonshot_free (password);
+      if (server_certificate_hash)
+        moonshot_free (server_certificate_hash);
+      if (ca_certificate)
+        moonshot_free (ca_certificate);
+      if (subject_name_constraint)
+        moonshot_free (subject_name_constraint);
+      if (subject_alt_name_constraint)
+        moonshot_free (subject_alt_name_constraint);
+    }
 
     return GINT_TO_POINTER (success);
 }

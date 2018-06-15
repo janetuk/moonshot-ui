@@ -35,11 +35,7 @@ using Gtk;
 #if IPC_DBUS
 [DBus (name = "org.janet.Moonshot")]
 interface IIdentityManager : GLib.Object {
-#if IPC_DBUS_GLIB
-    public abstract bool show_ui() throws DBus.Error;
-#else
-    public abstract bool show_ui() throws IOError;
-#endif
+  public abstract bool show_ui() throws IOError;
 }
 #endif
 
@@ -54,17 +50,18 @@ public class IdentityManagerApp {
     private MoonshotServer ipc_server;
     private bool name_is_owned;
     private bool show_requested;
+	  private bool shown;
     public bool use_flat_file_store {public get; private set;}
     public bool headless {public get; private set;}
 
 #if OS_MACOS
     public OSXApplication osxApp;
-  
+
     // the signal handler function.
-    // the current instance of our app class is passed in the 
-    // id_manager_app_instanceparameter 
-    public static bool on_osx_open_files(OSXApplication osx_app_instance, 
-                                         string file_name, 
+    // the current instance of our app class is passed in the
+    // id_manager_app_instanceparameter
+    public static bool on_osx_open_files(OSXApplication osx_app_instance,
+                                         string file_name,
                                          IdentityManagerApp id_manager_app_instance ) {
         int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
         return true;
@@ -82,7 +79,7 @@ public class IdentityManagerApp {
             show_requested = true;
         }
     }
-    
+
 #if USE_LOG4VALA
     // Call this from main() to ensure that the logger is initialized
     internal IdentityManagerApp.dummy() {}
@@ -130,7 +127,7 @@ public class IdentityManagerApp {
     }
 
     public bool add_identity(IdCard id, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null) {
-        if (view != null) 
+        if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
             return view.add_identity(id, force_flat_file_store, out old_duplicates);
@@ -207,7 +204,7 @@ public class IdentityManagerApp {
                     }
                 }
             }
-            
+
             if ((identity == null) && has_nai) {
                 logger.trace("select_identity: Creating temp identity");
                 // create a temp identity
@@ -225,7 +222,7 @@ public class IdentityManagerApp {
                     logger.trace("select_identity: Have %u candidates; user must make selection.".printf(request.candidates.length()));
                     confirm = true;
                 } else {
-                    identity = request.candidates.nth_data(0);                    
+                    identity = request.candidates.nth_data(0);
                 }
             }
 
@@ -259,8 +256,8 @@ public class IdentityManagerApp {
     private bool match_service_pattern(string service, string pattern) {
         var pspec = new PatternSpec(pattern);
         return pspec.match_string(service);
-    }   
-    
+    }
+
 #if IPC_MSRPC
     private void init_ipc_server() {
         // Errors will currently be sent via g_log - ie. to an
@@ -268,52 +265,6 @@ public class IdentityManagerApp {
         //
         this.ipc_server = MoonshotServer.get_instance();
         MoonshotServer.start(this);
-    }
-#elif IPC_DBUS_GLIB
-    private void init_ipc_server() {
-        try {
-            var conn = DBus.Bus.get(DBus.BusType.SESSION);
-            dynamic DBus.Object bus = conn.get_object("org.freedesktop.DBus",
-                                                      "/org/freedesktop/DBus",
-                                                      "org.freedesktop.DBus");
-
-            // try to register service in session bus
-            uint reply = bus.request_name("org.janet.Moonshot", (uint) 0);
-            if (reply == DBus.RequestNameReply.PRIMARY_OWNER)
-            {
-                this.ipc_server = new MoonshotServer(this);
-                logger.trace("init_ipc_server(IPC_DBUS_GLIB) : Constructed new MoonshotServer");
-                conn.register_object("/org/janet/moonshot", ipc_server);
-            } else {
-                logger.trace("init_ipc_server: reply != PRIMARY_OWNER");
-                bool shown = false;
-                GLib.Error e;
-                DBus.Object manager_proxy = conn.get_object("org.janet.Moonshot",
-                                                            "/org/janet/moonshot",
-                                                            "org.janet.Moonshot");
-                if (manager_proxy != null)
-                    manager_proxy.call("ShowUi", out e, GLib.Type.INVALID, typeof(bool), out shown, GLib.Type.INVALID);
-
-                if (!shown) {
-                    GLib.error("Couldn't own name org.janet.Moonshot on dbus or show previously launched identity manager.");
-                } else {
-                    stdout.printf(_("Showed previously launched identity manager.\n"));
-                    GLib.Process.exit(0);
-                }
-            }
-        }
-        catch (DBus.Error e)
-        {
-            logger.trace("bus_acquired_cb");
-            try {
-                conn.register_object ("/org/janet/moonshot", ipc_server);
-            }
-            catch (Error e)
-            {
-                stderr.printf ("%s\n", e.message);
-                logger.error("bus_acquired_cb: Caught error: " + e.message);
-            }
-        }
     }
 #else
     private void bus_acquired_cb(DBusConnection conn) {
@@ -323,38 +274,61 @@ public class IdentityManagerApp {
         }
         catch (Error e)
         {
-            this.ipc_server = new MoonshotServer (this);
-            logger.trace("init_ipc_server: Constructed new MoonshotServer");
-            GLib.Bus.own_name (GLib.BusType.SESSION,
-                               "org.janet.Moonshot",
-                               GLib.BusNameOwnerFlags.NONE,
-                               bus_acquired_cb,
-                               (conn, name) => {logger.trace("init_ipc_server: name_acquired_closure; conn=" + (conn==null?"null":"non-null"));},
-                               (conn, name) => {
-                                   logger.trace("init_ipc_server: name_lost_closure; conn=" + (conn==null?"null":"non-null"));
-                                   bool shown=false;
-                                   try {
-                                       IIdentityManager manager = Bus.get_proxy_sync (BusType.SESSION, name, "/org/janet/moonshot");
-                                       shown = manager.show_ui();
-                                   } catch (IOError e) {
-                                       logger.error("init_ipc_server.name_lost_closure: Caught error: ");
-                                   }
-                                   if (!shown) {
-                                       logger.error("init_ipc_server.name_lost_closure: Couldn't own name %s on dbus or show previously launched identity manager".printf(name));
-                                       GLib.error ("Couldn't own name %s on dbus or show previously launched identity manager.", name);
-                                   } else {
-                                       logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
-                                       stdout.printf("Showed previously launched identity manager.\n");
-                                       GLib.Process.exit(0);
-                                   }
-                               });
+            logger.error("bus_acquired_cb: Error registering object: " + e.message);
+            stderr.printf("Couldn't register /org/janet/moonshot on dbus: %s\n", e.message);
+            GLib.Process.exit(1);
         }
     }
 
+	private void name_lost_cb(DBusConnection? conn, string name){
+		logger.trace("name_lost_cb");
+
+		// This callback usually means that another moonshot is already running.
+		// But it *might* mean that we lost the name for some other reason
+		// (though it's unclear to me yet what those reasons are.)
+		// Clearing these flags seems like a good idea for that case. -- dbreslau
+		name_is_owned = false;
+		show_requested = false;
+
+		// If we fail to connect to the DBus bus, this callback is called with conn=null
+		if (conn == null) {
+			unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
+			logger.error("name_lost_cb: Failed to connect to bus");
+			if (dbus_address_env == null) {
+				stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
+							  "You may want to try 'dbus-run-session' to start a session bus.\n");
+				GLib.Process.exit(1);
+			} else {
+				stderr.printf("Could not connect to dbus session bus. (DBUS_SESSION_BUS_ADDRESS=\"%s\")\n"+
+							  "You may want to unset DBUS_SESSION_BUS_ADDRESS or try 'dbus-run-session' to start a session bus.\n",
+							  dbus_address_env);
+				GLib.Process.exit(1);
+			}
+		}
+
+		try {
+			if (!shown) {
+				IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+				shown = manager.show_ui();
+			}
+		} catch (IOError e) {
+			logger.error("name_lost_cb: Caught IOError: " + e.message);
+		}
+		if (!shown) {
+			logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
+			stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
+			GLib.Process.exit(1);
+		} else {
+			logger.trace("name_lost_cb: Showed previously launched identity manager.");
+			stdout.printf("Showed previously launched identity manager.\n");
+			GLib.Process.exit(0);
+		}
+	}
+
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);
-        bool shown = false;
-	var our_name = "org.janet.Moonshot";
+        var our_name = "org.janet.Moonshot";
+        shown = false;
         GLib.Bus.own_name(GLib.BusType.SESSION,
                           our_name,
                           GLib.BusNameOwnerFlags.NONE,
@@ -375,35 +349,9 @@ public class IdentityManagerApp {
                               shown = true;
                           },
 
-                          // Name lost callback:
-                          () => {
-                              logger.trace("init_ipc_server: name_lost_closure");
+                          name_lost_cb);
 
-                              // This callback usually means that another moonshot is already running.
-                              // But it *might* mean that we lost the name for some other reason
-                              // (though it's unclear to me yet what those reasons are.)
-                              // Clearing these flags seems like a good idea for that case. -- dbreslau
-                              name_is_owned = false;
-                              show_requested = false;
-
-                              try {
-                                  if (!shown) {
-                                      IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, our_name, "/org/janet/moonshot");
-                                      shown = manager.show_ui();
-                                  }
-                              } catch (IOError e) {
-                                  logger.error("init_ipc_server.name_lost_closure: Caught IOError: " + e.message);
-                              }
-                              if (!shown) {
-                                  logger.error("init_ipc_server.name_lost_closure: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(our_name));
-                                  GLib.error("Couldn't own name '%s' on dbus or show previously launched identity manager.", our_name);
-                              } else {
-                                  logger.trace("init_ipc_server.name_lost_closure: Showed previously launched identity manager.");
-                                  stdout.printf("Showed previously launched identity manager.\n");
-                                  GLib.Process.exit(0);
-                              }
-                          });
-    }
+	}
 #endif
 }
 
@@ -468,12 +416,12 @@ public static int main(string[] args) {
     Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);
-       
-       
+
+
     var app = new IdentityManagerApp(headless, use_flat_file_store);
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
-        
+
     if (app.explicitly_launched) {
         app.show();
     }
@@ -490,4 +438,3 @@ public static int main(string[] args) {
 
     return 0;
 }
-

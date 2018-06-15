@@ -180,6 +180,8 @@ namespace WebProvisioning
             else if (stack.nth_data(0) == "password" && password_handler(stack))
             {
                 card.password = text;
+				if ((card.password != null) && (card.password != ""))
+					card.store_password = true;
             }
             else if (stack.nth_data(0) == "realm" && realm_handler(stack))
             {
