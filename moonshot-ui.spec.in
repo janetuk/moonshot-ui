@@ -61,6 +61,7 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_bindir}/moonshot
 %{_bindir}/moonshot-webp
 %{_bindir}/moonshot-keyring-tool
+%{_bindir}/moonshot-idcard-generator
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/*
 %{_datadir}/mime/packages/*
