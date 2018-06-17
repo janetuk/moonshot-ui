@@ -283,7 +283,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.password = newtEntryGetValue(passwd_entry);
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
                 if (id_card.display_name == "" || id_card.username == "" || id_card.issuer == "") {
-                    info_dialog("Missing information", "Please, fill in the missing fields. Only password is optional");
+                    info_dialog("Missing information", "Please, fill in the missing fields. Only the password one is optional");
                     repeat = true;
                     newtFormSetCurrent(form, disp_entry);
                 }
@@ -424,6 +424,39 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtPopWindow();
     }
 
+    private bool id_card_menu(IdCard? id_card, bool include_send) {
+        bool rv = false;
+        newtComponent form, listbox, chosen;
+        int height = include_send ? 4: 3;
+        newtCenteredWindow(15, height, "Action");
+        form = newtForm(null, null, 0);
+        listbox = newtListbox(1, 0, height, Flag.RETURNEXIT);
+        newtListboxSetWidth(listbox, 13);
+        if (include_send)
+            newtListboxAppendEntry(listbox, "Send", (void *) "Send");
+        newtListboxAppendEntry(listbox, "Edit", (void *) "Edit");
+        newtListboxAppendEntry(listbox, "Remove", (void *) "Remove");
+        newtListboxAppendEntry(listbox, "Back", (void *) "Back");
+
+        newtFormAddComponent(form, listbox);
+        chosen = newtRunForm(form);
+        if (chosen == listbox){
+            string? option = (string?) newtListboxGetCurrent(listbox);
+            if (option == "Send") {
+                send_id_card_confirmation_dialog(id_card);
+                rv = true;
+            }
+            else if (option == "Edit")
+                edit_id_card_dialog(id_card);
+            else if (option == "Remove")
+                delete_id_card_dialog(id_card);
+        }
+        newtFormDestroy(form);
+        newtPopWindow();
+        return rv;
+    }
+
+
     private void select_id_card_dialog() {
         newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn;
         bool exit_loop = false;
@@ -459,9 +492,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtFormAddComponent(form, add_btn);
             newtFormAddComponent(form, edit_btn);
             newtFormAddComponent(form, del_btn);
-            if (request != null) {
+            if (request != null)
                 newtFormAddComponent(form, send_btn);
-            }
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
             chosen = newtRunForm(form);
@@ -469,7 +501,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             if (chosen == add_btn){
                 add_id_card_dialog();
             }
-            else if (chosen == edit_btn || (chosen == listbox && request == null)) {
+            else if (chosen == edit_btn) {
                 edit_id_card_dialog(id_card);
             }
             else if (chosen == del_btn) {
@@ -478,11 +510,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             else if (chosen == about_btn) {
                 about_dialog();
             }
-            else if (request != null && (chosen == send_btn  || chosen == listbox)) {
+            else if (chosen == send_btn) {
                 send_id_card_confirmation_dialog(id_card);
                 exit_loop = true;
             }
+            else if (chosen == listbox) {
+                exit_loop = id_card_menu(id_card, request != null);
+            }
             else {
+                // we need to send NULL identity to gracefully exist from the callback
                 send_id_card_confirmation_dialog(null);
                 exit_loop = true;
             }
