@@ -54,6 +54,21 @@ debian8:
     paths:
         - build/*.deb
 
+debian9:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
+  stage: build
+  script:
+    - autoreconf -fi
+    - ./configure
+    - make dist
+    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
+    - debuild -us -uc
+    - mkdir build
+    - cp ../*.deb build
+  artifacts:
+    paths:
+        - build/*.deb
+
 ubuntu14:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu14:latest
   stage: build
@@ -71,21 +86,6 @@ ubuntu14:
 
 ubuntu16:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu16:latest
-  stage: build
-  script:
-    - autoreconf -fi
-    - ./configure
-    - make dist
-    - mv moonshot-ui-1.0.6.tar.xz ../moonshot-ui_1.0.6.orig.tar.xz
-    - debuild -us -uc
-    - mkdir build
-    - cp ../*.deb build
-  artifacts:
-    paths:
-        - build/*.deb
-
-debian9:
-  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
   stage: build
   script:
     - autoreconf -fi
