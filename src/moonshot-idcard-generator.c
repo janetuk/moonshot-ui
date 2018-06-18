@@ -15,6 +15,7 @@ static gboolean is_server_cert = FALSE;
 static gchar* username = NULL;
 static gchar* password = NULL;
 static gchar* realm = NULL;
+static gboolean force = FALSE;
 
 
 static GOptionEntry options[] = {
@@ -22,8 +23,9 @@ static GOptionEntry options[] = {
     {"is-server-cert", 's', 0, G_OPTION_ARG_NONE, &is_server_cert,
      "The Trust Anchor is a server certificate (if omitted it is assumed to be a CA certificate", NULL},
     {"realm", 'r', 0, G_OPTION_ARG_STRING, &realm, "Realm of the IDP", NULL},
-    {"username", 'u', 0, G_OPTION_ARG_STRING, &username, "Username", NULL},
-    {"password", 'p', 0, G_OPTION_ARG_STRING, &password, "Password", NULL},
+    {"username", 'u', 0, G_OPTION_ARG_STRING, &username, "Username for the credential.", NULL},
+    {"password", 'p', 0, G_OPTION_ARG_STRING, &password, "Password for the credential.", NULL},
+    {"omit-expired", 'f', 0, G_OPTION_ARG_NONE, &force, "Generate the credential even if the certificate is expired", NULL},
     {NULL}
 };
 
@@ -75,11 +77,11 @@ gchar* get_cert_raw_pem(char *filename) {
 gboolean check_cert_date(X509 *cert) {
     time_t now = time(NULL);
     if (X509_cmp_time(X509_get_notAfter(cert), &now) < 0) {
-        printf("Error: the certificate is expired! Refusing to generate a credential.\n");
+        printf("Error: the certificate is expired!\n");
         return FALSE;
     }
     if (X509_cmp_time(X509_get_notBefore(cert), &now) > 0) {
-        printf("Error: the certificate is not valid yet! Refusing to generate a credential.\n");
+        printf("Error: the certificate is not valid yet!\n");
         return FALSE;
     }
     return TRUE;
@@ -116,7 +118,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    if (!check_cert_date(cert))
+    if (!check_cert_date(cert) && !force)
         return 1;
 
 
