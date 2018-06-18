@@ -238,7 +238,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Shows a delete ID dialog. If successful, the ID is removed */
     private void delete_id_card_dialog(IdCard id_card) {
-        if (yesno_dialog("Delete ID card", "Are you sure you want to delete this identity?", false, 4))
+        if (yesno_dialog("Remove ID card", "Are you sure you want to remove this identity?", false, 4))
             this.identities_manager.remove_card(id_card);
     }
 
@@ -283,7 +283,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.password = newtEntryGetValue(passwd_entry);
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
                 if (id_card.display_name == "" || id_card.username == "" || id_card.issuer == "") {
-                    info_dialog("Missing information", "Please, fill in the missing fields. Only password is optional");
+                    info_dialog("Missing information", "Please, fill in the missing fields. Only the password one is optional");
                     repeat = true;
                     newtFormSetCurrent(form, disp_entry);
                 }
@@ -424,44 +424,72 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtPopWindow();
     }
 
+    private bool id_card_menu(IdCard? id_card, bool include_send) {
+        bool rv = false;
+        newtComponent form, listbox, chosen;
+        int height = include_send ? 4: 3;
+        newtCenteredWindow(15, height, "Action");
+        form = newtForm(null, null, 0);
+        listbox = newtListbox(1, 0, height, Flag.RETURNEXIT);
+        newtListboxSetWidth(listbox, 13);
+        if (include_send)
+            newtListboxAppendEntry(listbox, "Send", (void *) "Send");
+        newtListboxAppendEntry(listbox, "Edit", (void *) "Edit");
+        newtListboxAppendEntry(listbox, "Remove", (void *) "Remove");
+        newtListboxAppendEntry(listbox, "Back", (void *) "Back");
+
+        newtFormAddComponent(form, listbox);
+        chosen = newtRunForm(form);
+        if (chosen == listbox){
+            string? option = (string?) newtListboxGetCurrent(listbox);
+            if (option == "Send") {
+                send_id_card_confirmation_dialog(id_card);
+                rv = true;
+            }
+            else if (option == "Edit")
+                edit_id_card_dialog(id_card);
+            else if (option == "Remove")
+                delete_id_card_dialog(id_card);
+        }
+        newtFormDestroy(form);
+        newtPopWindow();
+        return rv;
+    }
+
+
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn;
+        newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn, doc;
         bool exit_loop = false;
+        int offset = 0;
         // GnomeKeyringFound *id_card = NULL, *result = NULL;
         init_newt();
         do {
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (CLI)");
             form = newtForm(null, null, 0);
             if (request != null) {
-                newtComponent info = newtTextbox(1, 0, 30, 1, Flag.WRAP);
-                newtComponent serv = newtTextbox(31, 0, 46, 2, Flag.WRAP);
+                offset = 1;
+                newtComponent info = newtLabel(1, 0, "Request ID for: ");
+                newtComponent serv = newtTextbox(17, 0, 59, 1, 0);
                 newtTextboxSetColors(serv, Colorset.TITLE, Colorset.TITLE);
-                newtTextboxSetText(info, "Identity request for service: ");
                 newtTextboxSetText(serv, request.service);
                 newtFormAddComponent(form, info);
                 newtFormAddComponent(form, serv);
             }
-            listbox = newtListbox(1, 2, 18, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
-            newtListboxSetWidth(listbox, 67);
+            doc = newtLabel(1, offset, "Select an ID card to pop up more options");
+            listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            newtListboxSetWidth(listbox, 76);
             LinkedList<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
                 string text = "%s (%s)".printf(id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
             }
 
-            add_btn = newtCompactButton(68, 3, "Add");
-            edit_btn = newtCompactButton(68, 5, "Edit");
-            del_btn = newtCompactButton(68, 7, "Remove");
-            send_btn = newtCompactButton(68, 9, "Send");
-            about_btn = newtCompactButton(68, 16, "About");
-            exit_btn = newtCompactButton(68, 18, "Exit");
+            add_btn = newtCompactButton(1, 19, "Add");
+            about_btn = newtCompactButton(60, 19, "About");
+            exit_btn = newtCompactButton(69, 19, "Exit");
             newtFormAddComponent(form, listbox);
+            newtFormAddComponent(form, doc);
             newtFormAddComponent(form, add_btn);
-            newtFormAddComponent(form, edit_btn);
-            newtFormAddComponent(form, del_btn);
-            if (request != null) {
-                newtFormAddComponent(form, send_btn);
-            }
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
             chosen = newtRunForm(form);
@@ -469,20 +497,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             if (chosen == add_btn){
                 add_id_card_dialog();
             }
-            else if (chosen == edit_btn || (chosen == listbox && request == null)) {
-                edit_id_card_dialog(id_card);
-            }
-            else if (chosen == del_btn) {
-                delete_id_card_dialog(id_card);
-            }
             else if (chosen == about_btn) {
                 about_dialog();
             }
-            else if (request != null && (chosen == send_btn  || chosen == listbox)) {
-                send_id_card_confirmation_dialog(id_card);
-                exit_loop = true;
+            else if (chosen == listbox) {
+                exit_loop = id_card_menu(id_card, request != null);
             }
             else {
+                // we need to send NULL identity to gracefully exit properly from the send_identity callback
                 send_id_card_confirmation_dialog(null);
                 exit_loop = true;
             }
@@ -536,18 +558,18 @@ are met:
    may be used to endorse or promote products derived from this software
    without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.""";
-        info_dialog("Moonshot project CLI UI", license, 78, 20, true);
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.""";
+        info_dialog("Moonshot project CLI UI2", license, 78, 20, true);
     }
 
     private void send_id_card_confirmation_dialog(IdCard? id_card) {

@@ -29,6 +29,9 @@ ABOUT-NLS
 *.la
 *.lo
 libtool
+src/moonshot-idcard-generator
+src/moonshot-keyring-tool
+src/moonshot-keyring-tool.c
 src/moonshot-add-dialog.c
 src/moonshot-custom-vbox.c
 src/moonshot-id.c
