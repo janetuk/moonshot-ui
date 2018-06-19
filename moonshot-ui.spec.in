@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        2%{?dist}
+Release:        1%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
@@ -9,16 +9,16 @@ URL:            http://www.project-moonshot.org/
 Source0:	%{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires:		glib-devel
-BuildRequires:  	gtk2-devel
-BuildRequires: libgee-devel
-BuildRequires:  	dbus-devel
-BuildRequires: 		dbus-glib-devel
-BuildRequires: 		desktop-file-utils
-BuildRequires: 		shared-mime-info
-BuildRequires: gnome-keyring-devel
-
-Requires:        desktop-file-utils, shared-mime-info, dbus-x11
+BuildRequires:      glib2-devel
+BuildRequires:      gtk2-devel
+BuildRequires:      libgee-devel
+BuildRequires:      dbus-devel
+BuildRequires:      openssl-devel
+BuildRequires:      desktop-file-utils
+BuildRequires:      shared-mime-info
+BuildRequires:      libgnome-keyring-devel
+BuildRequires:      vala
+Requires:        desktop-file-utils, shared-mime-info, dbus
 
 %description
 
@@ -35,7 +35,11 @@ make %{?_smp_mflags}
 %install
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT%{_datadir}/dbus-1/services
+ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $RPM_BUILD_ROOT%{_datadir}/dbus-1/services/org.janet.Moonshot.service
 
+%check
+make check
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -63,11 +67,10 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_bindir}/moonshot-keyring-tool
 %{_bindir}/moonshot-idcard-generator
 %{_datadir}/applications/*
-%{_datadir}/dbus-1/*
+%{_datadir}/dbus-1/services/*
 %{_datadir}/mime/packages/*
 %{_datadir}/moonshot-ui
 %{_datadir}/doc/moonshot-ui
-%{_libexecdir}/moonshot-ui/moonshot-dbus-launch
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
 %doc webprovisioning/default-identity.msht

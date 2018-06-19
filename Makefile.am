@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
- 
+
 SUBDIRS = po
 
 moonshotsysconfdir=${sysconfdir}/moonshot
@@ -12,8 +12,6 @@ bin_PROGRAMS = \
          src/moonshot-keyring-tool \
          src/moonshot-idcard-generator
 
-pkglibexec_SCRIPTS = moonshot-dbus-launch
-
 dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli
 dist_doc_DATA = README.cli
 dist_moonshotsysconf_DATA=flatstore-users
@@ -23,8 +21,7 @@ AM_CFLAGS = -g -O0 -Wall
 AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
-	-DMOONSHOT_LAUNCH_SCRIPT='"$(pkglibexecdir)/moonshot-dbus-launch"' \
-        -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
+    -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
     -DMOONSHOT_SERVER='"$(bindir)/moonshot"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
@@ -47,12 +44,12 @@ AM_VALAFLAGS = -g \
 
 libmoonshot_libmoonshot_la_CPPFLAGS = \
         $(libmoonshot_CFLAGS) \
-        $(AM_CPPFLAGS) 
+        $(AM_CPPFLAGS)
 
 libmoonshot_libmoonshot_la_SOURCES = libmoonshot/libmoonshot-common.c
 
 libmoonshot_libmoonshot_la_LIBADD = $(libmoonshot_LIBS)
-libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:0:0
+libmoonshot_libmoonshot_la_LDFLAGS = -no-undefined -version-info 1:1:0
 
 include_HEADERS = libmoonshot/libmoonshot.h
 noinst_HEADERS = libmoonshot/libmoonshot-common.h
@@ -118,7 +115,7 @@ if OS_WIN32
 
 src_moonshot_CFLAGS = -mwindows
 src_moonshot_webp_CFLAGS = -mconsole
-    
+
 AM_CPPFLAGS += -DOS_WIN32
 AM_VALAFLAGS += --define=OS_WIN32
 
@@ -192,45 +189,56 @@ endif
 
 if IPC_DBUS
 
-# DBus service file
-dbusservicedir = $(datadir)/dbus-1/services
-if  OS_MACOS
-dbusservice_in_files = org.janet.Moonshot.service.mac
-dbusservice_DATA = $(dbusservice_in_files:.service.mac=.service)
-else
-dbusservice_in_files = org.janet.Moonshot.service.in
-dbusservice_DATA = $(dbusservice_in_files:.service.in=.service)
-endif 
+# Script to expand makefile variables.
+# Note: @bindir[@] is does what \@bindir\@ appears to do, but \@ is
+# not POSIX-compliant
+in_substitute = sed \
+	-e 's|@bindir[@]|$(bindir)|g' \
+	-e 's|@pkgdatadir[@]|$(pkgdatadir)|g'
 
-# Rule to make the service file with bindir expanded
-$(dbusservice_DATA): $(dbusservice_in_files) Makefile
-	@sed -e "s|\@bindir\@|$(bindir)|" $< > $@
+# DBus service def file. This will be symlinked into ${datadir}/dbus-1/services by
+# the packaging scripts.
+if  OS_MACOS
+dbus_service_in_file = org.janet.Moonshot.service.mac
+dbus_service_file = $(dbusservice_in_file:.service.mac=.service)
+else
+dbus_service_in_file = org.janet.Moonshot.service.in
+dbus_service_file = $(dbus_service_in_file:.service.in=.service)
+endif
+
+# DBus bus configuration file, used for launching our own bus when the session bus
+# is not available.
+dbus_bus_in_file = org.janet.Moonshot.conf.in
+dbus_bus_file = $(dbus_bus_in_file:.conf.in=.conf)
+
+# Rules to expand .in files into service/conf files
+$(dbus_service_file): $(dbus_service_in_file) Makefile
+	@$(in_substitute) $< > $@
+$(dbus_bus_file): $(dbus_bus_in_file) Makefile
+	@$(in_substitute) $< > $@
+
+dbuscfgdir = $(pkgdatadir)/dbus
+dist_dbuscfg_DATA = $(dbus_service_file) $(dbus_bus_file)
+AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"' \
+               -DMOONSHOT_DBUS_DAEMON='"@DBUS_DAEMON@"'
 
 libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
-CLEANFILES = $(dbusservice_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
+CLEANFILES = $(dist_dbuscfg_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
-if IPC_DBUS_GLIB
-AM_VALAFLAGS += \
-	--pkg dbus-glib-1 \
-	--define=IPC_DBUS_GLIB \
-	--define=IPC_DBUS
-AM_CPPFLAGS += -DIPC_DBUS_GLIB
-else
 AM_VALAFLAGS += \
 	--pkg gio-2.0 \
 	--define=IPC_GDBUS \
 	--define=IPC_DBUS
 endif
-endif
 if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
 
-EXTRA_DIST = webprovisioning/moonshot.xml $(dbusservice_in_files) \
+EXTRA_DIST = webprovisioning/moonshot.xml $(dbus_service_in_file) \
+    $(dbus_bus_in_file) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \
 	README.webprovisioning README.windows \
-	moonshot-dbus-launch \
 	moonshot-ui.spec \
 	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
 
@@ -245,14 +253,17 @@ examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(
 
 examples_client_SOURCES = examples/client.c
 examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
-examples_client_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la
+examples_client_LDADD = $(libmoonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 
 tests_basic_SOURCES = tests/basic.c
-tests_basic_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
-tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
+tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
+tests_basic_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(libmoonshot_LIBS)
+
+## Automated tests
+TESTS = tests/basic.bash
+dist_check_SCRIPTS = tests/basic.bash
 
 ##if OS_LINUX
-##install-data-hook:
 ##	"${UPDATE_MIME_DATABASE}" $(datadir)/mime
 ##	"${UPDATE_DESKTOP_DATABASE}" $(datadir)/applications
 ##uninstall-hook:
@@ -293,7 +304,7 @@ endif
 if  OS_MACOS
 ## Mac-specific targets
 
-## 1. Icons. 
+## 1. Icons.
 
 icons:
 	mkdir -p share/icons
