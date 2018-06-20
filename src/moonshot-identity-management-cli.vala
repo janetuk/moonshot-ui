@@ -59,7 +59,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                                    "The default keyring is LOCKED. Please, Configure PAM to auto-unlock "
                                                    + " on login if you don't trust entering your password here.");
                 if (password == null) {
-                    info_dialog("ERROR", "No keyring password provided. You are not able to use the CLI.", 70, 4);
+                    info_dialog("ERROR", "No keyring password provided. You are being switched back to flat file.", 70, 4);
+                    identities_manager.set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
                     return false;
                 }
                 success = identities_manager.unlock(password);
