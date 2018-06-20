@@ -12,12 +12,9 @@ centos6:
   stage: build
   script:
     - sh autogen.sh
-    - make
     - make dist
-    - xz -d moonshot-ui-*.tar.xz
-    - gzip moonshot-ui-*.tar
     - mkdir -p SOURCES
-    - mv -f moonshot-ui-*tar.gz SOURCES
+    - mv -f moonshot-ui-*tar.xz SOURCES
     - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
     paths:
