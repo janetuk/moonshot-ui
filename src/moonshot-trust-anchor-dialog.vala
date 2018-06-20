@@ -81,7 +81,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
         }
 
         logger.trace("execute: expected cert='%s'; fingerprint='%s'".printf(card.trust_anchor.server_cert, fingerprint));
-        if (card.trust_anchor.server_cert == fingerprint) {
+        if (card.trust_anchor.server_cert.up() == fingerprint.up()) {
             logger.trace(@"execute: Fingerprint for $nai matches stored value; returning true.");
             return_confirmation(true);
             return false;
