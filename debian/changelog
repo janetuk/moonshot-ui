@@ -1,3 +1,23 @@
+moonshot-ui (1.1.0-1) unstable; urgency=medium
+
+  * Package for release
+
+ -- Painless Security <build@painless-security.com>  Fri, 15 Jun 2018 11:43:52 -0400
+
+moonshot-ui (1.1.0~2-1) unstable; urgency=medium
+
+  * Send blank strings when moonshot_get_identity() nai/password are null
+
+ -- Painless Security <build@painless-security.com>  Thu, 14 Jun 2018 12:02:40 -0400
+
+moonshot-ui (1.1.0~1-1) unstable; urgency=medium
+
+  * Replace dbus-glib and libdbus with GDBus
+  * Use dbus-daemon instead of dbus-launch in libmoonshot
+  * Give better error messages when DBus connection fails
+
+ -- Painless Security <build@painless-security.com>  Tue, 12 Jun 2018 11:59:07 -0400
+
 moonshot-ui (1.0.6-2) unstable; urgency=medium
 
   * Version number bump

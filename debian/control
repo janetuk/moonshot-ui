@@ -2,10 +2,10 @@ Source: moonshot-ui
 Section: net
 Priority: optional
 Maintainer: Sam Hartman <hartmans@debian.org>
-Build-Depends: debhelper (>= 9), 
-    libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
-        gettext, autotools-dev, libdbus-glib-1-dev, desktop-file-utils, libgee-0.8-dev|libgee-dev, autopoint, autoconf, autotools-dev, automake, libtool,
- dh-autoreconf, valac, libgnome-keyring-dev, libssl1.0-dev|libssl-dev
+Build-Depends: debhelper (>= 9), libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
+    gettext, autotools-dev, desktop-file-utils, libgee-0.8-dev|libgee-dev,
+    autopoint, autoconf, autotools-dev, automake, libtool,
+ dh-autoreconf, valac, libgnome-keyring-dev, libssl1.0-dev|libssl-dev, dbus
 Standards-Version: 3.9.5
 Homepage: http://www.project-moonshot.org/
 Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
