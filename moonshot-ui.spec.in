@@ -1,6 +1,6 @@
 Name:           @PACKAGE@
 Version:        @VERSION@
-Release:        1%{?dist}
+Release:        1%{?ci_build:b%{ci_build}}%{?dist}
 Summary:        Moonshot Federated Identity User Interface
 
 Group:          Security Tools
