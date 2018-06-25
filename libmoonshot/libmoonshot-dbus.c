@@ -182,7 +182,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
     MOONSHOT_DBUS_DAEMON,
     "--nofork",
     "--print-address",
-    "--nopidfile",
+    // "--nopidfile",
     "--config-file", MOONSHOT_DBUS_BUS_CONF,
     NULL
   };
