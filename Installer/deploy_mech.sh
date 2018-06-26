@@ -11,3 +11,5 @@ sudo chown root:wheel ~/Library/LaunchAgents/org.freedesktop.dbus-session.plist
 /usr/local/moonshot/bin/dbus-uuidgen --ensure=/usr/local/moonshot/var/lib/dbus/machine-id
 
 sudo launchctl load -w ~/Library/LaunchAgents/org.freedesktop.dbus-session.plist
+
+sudo cp -r ./LICENSES /usr/local/moonshot/
