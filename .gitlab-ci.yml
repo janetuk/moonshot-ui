@@ -10,6 +10,8 @@ before_script:
 centos6:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -23,6 +25,8 @@ centos6:
 centos7:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/centos7:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -36,6 +40,8 @@ centos7:
 debian8:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian8:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -50,6 +56,8 @@ debian8:
 debian9:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -64,6 +72,8 @@ debian9:
 ubuntu14:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu14:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -78,6 +88,8 @@ ubuntu14:
 ubuntu16:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu16:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
@@ -92,6 +104,8 @@ ubuntu16:
 ubuntu18:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu18:latest
   stage: build
+  tags:
+    - moonshot
   script:
     - sh autogen.sh
     - make dist
