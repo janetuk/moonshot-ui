@@ -45,6 +45,7 @@ debian8:
   tags:
     - moonshot
   script:
+    - dch -l "b$CI_JOB_ID" -n "Include job ID"
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.0.tar.xz ../moonshot-ui_1.1.0.orig.tar.xz
@@ -61,6 +62,7 @@ debian9:
   tags:
     - moonshot
   script:
+    - dch -l "b$CI_JOB_ID" -n "Include job ID"
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.0.tar.xz ../moonshot-ui_1.1.0.orig.tar.xz
@@ -77,6 +79,7 @@ ubuntu14:
   tags:
     - moonshot
   script:
+    - dch -l "b$CI_JOB_ID" -n "Include job ID"
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.0.tar.xz ../moonshot-ui_1.1.0.orig.tar.xz
@@ -93,6 +96,7 @@ ubuntu16:
   tags:
     - moonshot
   script:
+    - dch -l "b$CI_JOB_ID" -n "Include job ID"
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.0.tar.xz ../moonshot-ui_1.1.0.orig.tar.xz
@@ -109,6 +113,7 @@ ubuntu18:
   tags:
     - moonshot
   script:
+    - dch -l "b$CI_JOB_ID" -n "Include job ID"
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.0.tar.xz ../moonshot-ui_1.1.0.orig.tar.xz
