@@ -17,7 +17,7 @@ centos6:
     - make dist
     - mkdir -p SOURCES
     - mv -f moonshot-ui-*tar.xz SOURCES
-    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`" --define "ci_build $CI_JOB_ID"
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
     paths:
         - RPMS
@@ -32,7 +32,7 @@ centos7:
     - make dist
     - mkdir -p SOURCES
     - mv -f moonshot-ui-*tar.xz SOURCES
-    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`" --define "ci_build $CI_JOB_ID"
+    - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
     paths:
         - RPMS
