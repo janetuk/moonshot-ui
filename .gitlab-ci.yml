@@ -13,6 +13,7 @@ centos6:
   tags:
     - moonshot
   script:
+    - sed -i "s/1%{?dist}/1b$CI_JOB_ID%{?dist}/g" moonshot-ui.spec.in
     - sh autogen.sh
     - make dist
     - mkdir -p SOURCES
@@ -28,6 +29,7 @@ centos7:
   tags:
     - moonshot
   script:
+    - sed -i "s/1%{?dist}/1b$CI_JOB_ID%{?dist}/g" moonshot-ui.spec.in
     - sh autogen.sh
     - make dist
     - mkdir -p SOURCES
