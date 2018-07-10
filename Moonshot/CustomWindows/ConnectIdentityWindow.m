@@ -68,17 +68,15 @@
 	BOOL oldPasswordMatchesNew = [self.identityObject.password isEqualToString:self.connectIdentityPasswordValueTextField.stringValue];
 	
 	if (userAlreadyHadPassword && oldPasswordMatchesNew) {
-		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
+		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:)]) {
 			self.identityObject.passwordRemembered = self.connectIdentityRememberPasswordButton.state;
-			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
+			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject];
 		}
 	} else if (!userAlreadyHadPassword) {
-		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:rememberPassword:)]) {
+		if ([self.delegate respondsToSelector:@selector(connectIdentityWindow:wantsToConnectIdentity:)]) {
 			self.identityObject.passwordRemembered = self.connectIdentityRememberPasswordButton.state;
-			if (self.identityObject.passwordRemembered) {
-				self.identityObject.password = self.connectIdentityPasswordValueTextField.stringValue;
-			}
-			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject rememberPassword:self.connectIdentityRememberPasswordButton.state];
+            self.identityObject.password = self.connectIdentityPasswordValueTextField.stringValue;
+			[self.delegate connectIdentityWindow:self.window wantsToConnectIdentity:self.identityObject];
 		}
 	} else {
 		[self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Incorrect_User_Pass_Messsage", @"") informativeText:NSLocalizedString(@"Alert_Incorrect_User_Pass_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {

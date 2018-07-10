@@ -9,7 +9,7 @@
 #import "Identity.h"
 
 @protocol ConnectIdentityWindowDelegate <NSObject>
-- (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword;
+- (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity;
 - (void)connectIdentityWindowCanceled:(NSWindow *)window;
 @end
 

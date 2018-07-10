@@ -167,7 +167,7 @@
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
         if (![identityObject.displayName isEqualToString: NSLocalizedString(@"No_Identity", @"")]) {
-            if (identityObject.passwordRemembered && identityObject.password.length > 0) {
+            if (identityObject.password.length > 0) {
                 if (self.getIdentityAction.service) {
                     [self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
                     [self applySelectedIdentity:identityObject];
@@ -242,7 +242,7 @@
 
 #pragma mark - ConnectIdentity Delegate
 
-- (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+- (void)connectIdentityWindow:(NSWindow *)window wantsToConnectIdentity:(Identity *)identity {
     [self applySelectedIdentity:identity];
     [[self.view window] endSheet:window];
 }

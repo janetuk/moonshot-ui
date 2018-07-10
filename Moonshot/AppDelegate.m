@@ -177,9 +177,9 @@
 
 #pragma mark - Get Identity Action
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
-	
+    
 	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
-	if (([existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY]) || (existingIdentitySelection && existingIdentitySelection.passwordRemembered && existingIdentitySelection.password.length > 0)) {
+	if (([existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY]) || (existingIdentitySelection && existingIdentitySelection.password.length > 0)) {
 		NSString *combinedNaiOut = @"";
 		if (existingIdentitySelection.username.length && existingIdentitySelection.realm.length) {
 			combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
@@ -204,6 +204,13 @@
 		
 		dbus_connection_send(connection, reply, NULL);
 		dbus_message_unref(reply);
+        
+        //clear cached password (needed for the second call of method "moonshot_get_identity" (http://sdlc.devsy.com/amsys/jisc/macos/issues/24)
+        if (existingIdentitySelection.passwordRemembered == NO) {
+            existingIdentitySelection.password = @"";
+            [[MSTIdentityDataLayer sharedInstance] editIdentity:existingIdentitySelection withBlock:nil];
+        }
+        
 		if (success == 0) {
 			[NSApp terminate:self];
 		}
