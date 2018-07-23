@@ -13,6 +13,7 @@ centos6:
   tags:
     - moonshot
   script:
+    - yum -y upgrade
     - sed -i "s/\(.\)%{?dist}/\1b$CI_PIPELINE_ID%{?dist}/g" moonshot-ui.spec.in
     - sh autogen.sh
     - make dist
@@ -30,6 +31,7 @@ centos7:
   tags:
     - moonshot
   script:
+    - yum -y upgrade
     - sed -i "s/\(.\)%{?dist}/\1b$CI_PIPELINE_ID%{?dist}/g" moonshot-ui.spec.in
     - sh autogen.sh
     - make dist
@@ -47,6 +49,7 @@ debian8:
   tags:
     - moonshot
   script:
+    - apt-get -y update && apt-get -y dist-upgrade
     - dch -l "b$CI_PIPELINE_ID" "Include job ID"
     - sh autogen.sh
     - make dist
@@ -64,6 +67,7 @@ debian9:
   tags:
     - moonshot
   script:
+    - apt-get -y update && apt-get -y dist-upgrade
     - dch -l "b$CI_PIPELINE_ID" "Include job ID"
     - sh autogen.sh
     - make dist
@@ -81,6 +85,7 @@ ubuntu14:
   tags:
     - moonshot
   script:
+    - apt-get -y update && apt-get -y dist-upgrade
     - dch -l "b$CI_PIPELINE_ID" "Include job ID"
     - sh autogen.sh
     - make dist
@@ -98,6 +103,7 @@ ubuntu16:
   tags:
     - moonshot
   script:
+    - apt-get -y update && apt-get -y dist-upgrade
     - dch -l "b$CI_PIPELINE_ID" "Include job ID"
     - sh autogen.sh
     - make dist
@@ -115,6 +121,7 @@ ubuntu18:
   tags:
     - moonshot
   script:
+    - apt-get -y update && apt-get -y dist-upgrade
     - dch -l "b$CI_PIPELINE_ID" "Include job ID"
     - sh autogen.sh
     - make dist
