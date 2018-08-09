@@ -74,7 +74,11 @@ namespace WebProvisioning
         }
     
         var webp = new Parser(webp_file);
-        webp.parse();
+        if (!webp.parse()) {
+            stderr.printf("Could not parse %s.\n", webp_file);
+            return -1;
+        }
+
         logger.trace(@"Have $(webp.cards.length) IdCards");
         foreach (IdCard card in webp.cards)
         {
@@ -108,20 +112,23 @@ namespace WebProvisioning
                 }
             }
 
-            logger.trace(@"Installing IdCard named '$(card.display_name)'");
-            Moonshot.install_id_card(card.display_name,
-                                     card.username,
-                                     card.password,
-                                     card.issuer,
-                                     rules_patterns,
-                                     rules_always_confirm,
-                                     svcs,
-                                     card.trust_anchor.ca_cert,
-                                     card.trust_anchor.subject,
-                                     card.trust_anchor.subject_alt,
-                                     card.trust_anchor.server_cert,
-                                     force_flat_file_store,
-                                     out error);
+            stdout.printf(@"Installing IdCard named '$(card.display_name)'\n");
+            bool ret = Moonshot.install_id_card(card.display_name,
+                                                card.username,
+                                                card.password,
+                                                card.issuer,
+                                                rules_patterns,
+                                                rules_always_confirm,
+                                                svcs,
+                                                card.trust_anchor.ca_cert,
+                                                card.trust_anchor.subject,
+                                                card.trust_anchor.subject_alt,
+                                                card.trust_anchor.server_cert,
+                                                force_flat_file_store,
+                                                out error);
+            if (!ret) {
+                stdout.printf("Card was not installed because user rejected it.\n");
+            }
 
             if (error != null)
             {
