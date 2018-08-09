@@ -224,7 +224,7 @@ public class IdCard : Object
             return _username;
         }
         public set {
-            _username = value;
+            _username = this.escape(value);
             update_nai();
         }
     }
@@ -234,7 +234,7 @@ public class IdCard : Object
             return _issuer;
         }
         public set {
-            _issuer = value;
+            _issuer = this.escape(value);
             update_nai();
         }
     }
@@ -400,6 +400,18 @@ public class IdCard : Object
             logger.trace("Compare: Two IDs with display_name '%s', but diff_flags=%0x".printf(this.display_name, diff));
         }
         return diff;
+    }
+
+    internal static string escape(string value)
+    {
+        // unscape all the scaped \@ and \/
+        string result = value.replace("\\@", "@");
+        result = result.replace("\\/", "/");
+
+        // escape all @ and /
+        result = result.replace("@", "\\@");
+        result = result.replace("/", "\\/");
+        return result;
     }
 
     public static IdCard NewNoIdentity() 
