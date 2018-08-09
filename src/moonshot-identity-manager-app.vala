@@ -39,6 +39,7 @@ interface IIdentityManager : GLib.Object {
 }
 #endif
 
+public extern unowned string GetVersion();
 
 public class IdentityManagerApp {
     public static MoonshotLogger logger = get_logger("IdentityManagerApp");
@@ -363,13 +364,16 @@ public class IdentityManagerApp {
 static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
 static bool cli_enabled = false;
+static bool version = false;
 
 const GLib.OptionEntry[] options = {
     {"dbus-launched", 0, GLib.OptionFlags.REVERSE, GLib.OptionArg.NONE,
      ref explicitly_launched, "launch for dbus rpc use", null},
+    {"version", 'v', 0, GLib.OptionArg.NONE,
+     ref version, "display version information and exit", null},
     {"cli", 0, 0, GLib.OptionArg.NONE,
-     ref cli_enabled, "enable the CLI", null},
-    {"flat-file-store", 0, 0, GLib.OptionArg.NONE,
+     ref cli_enabled, "enable the command line interface (text-based)", null},
+    {"flat-file-store", 'f', 0, GLib.OptionArg.NONE,
      ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
     {null}
 };
@@ -387,7 +391,6 @@ public static int main(string[] args) {
 #else
     bool headless = GLib.Environment.get_variable("DISPLAY") == null;
 #endif
-
     if (headless) {
         try {
             var opt_context = new OptionContext(null);
@@ -420,6 +423,11 @@ public static int main(string[] args) {
     settings.set_string_property("gtk-theme-name", "ms-windows", "moonshot");
     settings.set_long_property("gtk-menu-images", 0, "moonshot");
 #endif
+
+    if (version) {
+         stdout.printf(_("Moonshot UI version %s\n"), GetVersion());
+         return 0;
+    }
 
     //TODO?? Do we need to call Intl.setlocale(LocaleCategory.MESSAGES, "");
     Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);

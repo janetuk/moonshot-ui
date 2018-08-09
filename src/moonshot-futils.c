@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include "config.h"
 #endif
 
 const char * GetUserName()
@@ -48,4 +49,9 @@ const char * GetUserName()
 const char * GetFlatStoreUsersFilePath()
 {
    return MOONSHOT_FLATSTORE_USERS;
+}
+
+const char * GetVersion()
+{
+   return VERSION;
 }
