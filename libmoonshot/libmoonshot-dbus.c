@@ -775,7 +775,7 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
   GError     *g_error = NULL;
   gboolean    success = FALSE;
   int         confirmed = 0;
-  char        hash_str[65];
+  char        hash_str[hash_len * 2 + 1];
   GDBusProxy *dbus_proxy = get_dbus_proxy (error);
   int         out = 0;
   int         i;
