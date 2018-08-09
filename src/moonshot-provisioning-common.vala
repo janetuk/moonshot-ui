@@ -272,18 +272,20 @@ namespace WebProvisioning
             }
             catch(GLib.Error e)
             {
-                error("Could not retreive file size");
+                logger.error("Could not retreive file size");
             }
         }
 
-        public void parse() {
+        public bool parse() {
             try
             {
                 ctx.parse(text, text.length);
+                return true;
             }
             catch(GLib.Error e)
             {
-                error("Could not parse %s, invalid content", path);
+                logger.error("Could not parse %s, invalid content".printf(path));
+                return false;
             }
         }
     }

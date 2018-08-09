@@ -246,7 +246,6 @@ public class MoonshotServer : Object {
 
         logger.trace(@"Installing IdCard named '$(idcard.display_name)'; ca_cert='$(idcard.trust_anchor.ca_cert)'; server_cert='$(idcard.trust_anchor.server_cert)'");
 
-
         if (rules_patterns.length == rules_always_confirm.length)
         {
             /* workaround Centos vala array property bug: use temp array */
@@ -284,53 +283,56 @@ public class MoonshotServer : Object {
     {
         var webp = new WebProvisioning.Parser(file_name);
 
-        webp.parse();
         bool result = false;
         int installed_cards = 0;
-        foreach (IdCard card in webp.cards)
-        {
-            string[] rules_patterns = {};
-            string[] rules_always_confirm = {};
-        
-            if (card.rules.length > 0)
-            {
-                int i = 0;
-                rules_patterns = new string[card.rules.length];
-                rules_always_confirm = new string[card.rules.length];
-                foreach (Rule r in card.rules)
+
+        if (!webp.parse()) {
+            logger.error("Could not parse identities file");
+        }
+        else  {
+            foreach (IdCard card in webp.cards) {
+                string[] rules_patterns = {};
+                string[] rules_always_confirm = {};
+
+                if (card.rules.length > 0)
                 {
-                    rules_patterns[i] = r.pattern;
-                    rules_always_confirm[i] = r.always_confirm;
-                    i++;
+                    int i = 0;
+                    rules_patterns = new string[card.rules.length];
+                    rules_always_confirm = new string[card.rules.length];
+                    foreach (Rule r in card.rules)
+                    {
+                        rules_patterns[i] = r.pattern;
+                        rules_always_confirm[i] = r.always_confirm;
+                        i++;
+                    }
                 }
-            } 
 
+                // prevent a crash by holding the reference to otherwise
+                // unowned array(?)
 
-            // prevent a crash by holding the reference to otherwise
-            // unowned array(?)
+                // string[] svcs = card.services.to_array();
+                // string[] svcs = card.services.to_array()[:];
+                string[] svcs = new string[card.services.size];
+                for (int i = 0; i < card.services.size; i++) {
+                    svcs[i] = card.services[i];
+                }
 
-            // string[] svcs = card.services.to_array();
-            // string[] svcs = card.services.to_array()[:];
-            string[] svcs = new string[card.services.size];
-            for (int i = 0; i < card.services.size; i++) {
-                svcs[i] = card.services[i];
-            }
-
-            logger.trace(@"install_from_file: Adding card with display name '$(card.display_name)'");
-            result = install_id_card(card.display_name,
-                                     card.username,
-                                     card.password,
-                                     card.issuer,
-                                     rules_patterns,
-                                     rules_always_confirm,
-                                     svcs,
-                                     card.trust_anchor.ca_cert,
-                                     card.trust_anchor.subject,
-                                     card.trust_anchor.subject_alt,
-                                     card.trust_anchor.server_cert,
-                                     0);
-            if (result) {
-                installed_cards++;
+                logger.trace(@"install_from_file: Adding card with display name '$(card.display_name)'");
+                result = install_id_card(card.display_name,
+                                         card.username,
+                                         card.password,
+                                         card.issuer,
+                                         rules_patterns,
+                                         rules_always_confirm,
+                                         svcs,
+                                         card.trust_anchor.ca_cert,
+                                         card.trust_anchor.subject,
+                                         card.trust_anchor.subject_alt,
+                                         card.trust_anchor.server_cert,
+                                         0);
+                if (result) {
+                    installed_cards++;
+                }
             }
         }
         return installed_cards;
