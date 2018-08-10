@@ -21,7 +21,7 @@ static gboolean force = FALSE;
 static GOptionEntry options[] = {
     {"cert", 'c', 0, G_OPTION_ARG_FILENAME, &cert_filename, "Path to the Trust Anchor certificate", NULL},
     {"is-server-cert", 's', 0, G_OPTION_ARG_NONE, &is_server_cert,
-     "The Trust Anchor is a server certificate (if omitted it is assumed to be a CA certificate", NULL},
+     "The Trust Anchor is a server certificate (if omitted it is assumed to be a CA certificate)", NULL},
     {"realm", 'r', 0, G_OPTION_ARG_STRING, &realm, "Realm of the IDP", NULL},
     {"username", 'u', 0, G_OPTION_ARG_STRING, &username, "Username for the credential.", NULL},
     {"password", 'p', 0, G_OPTION_ARG_STRING, &password, "Password for the credential.", NULL},
@@ -77,11 +77,11 @@ gchar* get_cert_raw_pem(char *filename) {
 gboolean check_cert_date(X509 *cert) {
     time_t now = time(NULL);
     if (X509_cmp_time(X509_get_notAfter(cert), &now) < 0) {
-        printf("Error: the certificate is expired!\n");
+        g_fprintf(stderr, "Error: the certificate is expired!\n");
         return FALSE;
     }
     if (X509_cmp_time(X509_get_notBefore(cert), &now) > 0) {
-        printf("Error: the certificate is not valid yet!\n");
+        g_fprintf(stderr, "Error: the certificate is not valid yet!\n");
         return FALSE;
     }
     return TRUE;
@@ -98,15 +98,15 @@ int main(int argc, char* argv[])
     context = g_option_context_new("- Generate XML credentials for a specific IDP");
     g_option_context_add_main_entries(context, options, NULL);
     if (!g_option_context_parse (context, &argc, &argv, &error)) {
-        g_print("error: %s\n", error->message);
-        g_print("Run '%s --help' to see a full list of available arguments\n", argv[0]);
+        g_fprintf(stderr, "error: %s\n", error->message);
+        g_fprintf(stderr, "Run '%s --help' to see a full list of available arguments\n", argv[0]);
         exit (1);
     }
 
     // check if all the mandatory arguements have been provided
     if (cert_filename == NULL || username == NULL || password == NULL || realm == NULL) {
-        g_print("You MUST provide a value for all the mandatory arguments.\n");
-        g_print("%s", g_option_context_get_help(context, TRUE, NULL));
+        g_fprintf(stderr, "You MUST provide a value for all the mandatory arguments.\n");
+        g_fprintf(stderr, "%s", g_option_context_get_help(context, TRUE, NULL));
         return 1;
     }
 
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
     cert = get_pem(cert_filename);
     // check cert is indeed an X.509 PEM certificate
     if (cert == NULL) {
-        g_print("The indicated certificate is not a PEM file.\n");
+        g_fprintf(stderr, "The indicated certificate is not a PEM file.\n");
         return 1;
     }
 
