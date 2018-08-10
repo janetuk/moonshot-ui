@@ -47,6 +47,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         request = null;
         unlock_keyring();
         report_duplicate_nais();
+        report_expired_trust_anchors();
     }
 
     /* Attempts to unlock the model. This only happens if PAM is not configured to unlock the Gnome Keyring */
@@ -87,6 +88,20 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             init_newt();
             info_dialog("Duplicate NAIs", message, 70, 20, true);
             newtFinished();
+        }
+    }
+
+    private void report_expired_trust_anchors() {
+        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        foreach (IdCard id_card in card_list) {
+            if (id_card.trust_anchor.is_expired()) {
+                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
+                    + _("That means that any attempt to authenticate with that identity will fail. ")
+                    + _("Please, ask your organisation to provide you with an updated credential.");
+                init_newt();
+                info_dialog("Expired Trust Anchor", message, 70, 10);
+                newtFinished();
+            }
         }
     }
 
@@ -326,6 +341,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         var ta_type = id_card.trust_anchor.get_anchor_type();
         string ta_type_name = (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT ? "Server certificate"
                                : (ta_type == TrustAnchor.TrustAnchorType.CA_CERT ? "CA certificate" : "None"));
+        if (id_card.trust_anchor.is_expired())
+            ta_type_name += " [EXPIRED]";
+
         cert_entry = newtTextbox(15, 5, 36, 1, 0);
         newtTextboxSetText(cert_entry, ta_type_name);
         newtComponentTakesFocus(cert_entry, false);
@@ -390,7 +408,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     info_dialog("Trust anchor details", msg, 70, 5, false);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
-                    string msg = "Subject:\n%s\n\n".printf(id_card.trust_anchor.subject)
+                    string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
+                                 + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
                                  + "CA certificate (PEM format):\n%s".printf(id_card.trust_anchor.ca_cert);
                     info_dialog("Trust anchor details", msg, 75, 20, true);
                 }
@@ -481,7 +500,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtListboxSetWidth(listbox, 76);
             LinkedList<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
-                string text = "%s (%s)".printf(id_card.display_name, id_card.nai);
+                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
             }
 
