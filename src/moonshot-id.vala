@@ -33,6 +33,7 @@
 using Gee;
 
 extern char* get_cert_valid_before(uchar* inbuf, int inlen, char* outbuf, int outlen);
+extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 
 
 // A TrustAnchor object can be imported or installed via the API, but cannot
@@ -191,6 +192,19 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         IdCard.logger.trace(@"get_expiration_date: get_cert_valid_before returned '$date'");
 
         return date;
+    }
+
+    public bool is_expired()
+    {
+        if (this.ca_cert == "")
+            return false;
+
+        string cert = this.ca_cert;
+        cert.chomp();
+
+        uchar[] binary = Base64.decode(cert);
+        IdCard.logger.trace("is_expired: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
+        return get_cert_is_valid_now(binary, binary.length);
     }
 }
 
