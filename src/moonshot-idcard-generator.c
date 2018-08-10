@@ -65,12 +65,21 @@ gchar* get_cert_raw_pem(char *filename) {
     GError *error = NULL;
     gchar* ca_cert_pem = NULL;
     gchar **ca_cert_lines = NULL;
+    gchar* last_line = NULL;
 
     // Get the PEM data as split lines
     if (!g_file_get_contents(filename, &ca_cert_pem, NULL, &error))
         return NULL;
     ca_cert_lines = g_strsplit(ca_cert_pem, "\n", 0);
-    ca_cert_lines[g_strv_length(ca_cert_lines) - 3] = NULL;
+
+    // remove the trailing ---- line
+    do {
+        int n_lines = g_strv_length(ca_cert_lines);
+        last_line = ca_cert_lines[n_lines - 1];
+        ca_cert_lines[n_lines - 1] = NULL;
+    } while (last_line[0] != '-');
+
+    // return all but the first line
     return g_strjoinv("\n", &ca_cert_lines[1]);
 }
 
