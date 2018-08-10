@@ -390,7 +390,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     info_dialog("Trust anchor details", msg, 70, 5, false);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
-                    string msg = "Subject:\n%s\n\n".printf(id_card.trust_anchor.subject)
+                    string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
+                                 + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
                                  + "CA certificate (PEM format):\n%s".printf(id_card.trust_anchor.ca_cert);
                     info_dialog("Trust anchor details", msg, 75, 20, true);
                 }
