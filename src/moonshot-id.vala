@@ -224,7 +224,7 @@ public class IdCard : Object
             return _username;
         }
         public set {
-            _username = this.escape(value);
+            _username = IdCard.escape(value);
             update_nai();
         }
     }
@@ -234,7 +234,7 @@ public class IdCard : Object
             return _issuer;
         }
         public set {
-            _issuer = this.escape(value);
+            _issuer = IdCard.escape(value);
             update_nai();
         }
     }
