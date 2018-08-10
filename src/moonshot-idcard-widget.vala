@@ -154,6 +154,8 @@ class IdCardWidget : Box
             upper_details_text += "\n" + _("Realm:") + "  " + id_card.issuer;
             if (!id_card.trust_anchor.is_empty()) {
                 upper_details_text += "\n" + _("Trust anchor: Enterprise provisioned");
+                if (id_card.trust_anchor.is_expired())
+                    upper_details_text += " " + _("[EXPIRED]");
             }
             Label upper_details = new Label(upper_details_text);
             upper_details.set_alignment(0, 0);

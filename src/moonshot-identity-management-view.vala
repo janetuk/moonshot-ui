@@ -105,7 +105,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         setup_list_model(); 
         load_id_cards();
         connect_signals();
-        report_duplicate_nais(); 
+        report_duplicate_nais();
+        report_expired_trust_anchors();
     }
     
     private void report_duplicate_nais() {
@@ -127,6 +128,25 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
                                                    message);
             msg_dialog.run();
             msg_dialog.destroy();
+        }
+    }
+
+    private void report_expired_trust_anchors() {
+        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        foreach (IdCard id_card in card_list) {
+            if (id_card.trust_anchor.is_expired()) {
+                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
+                    + _("That means that any attempt to authenticate with that identity will fail. ")
+                    + _("Please, ask your organisation to provide you with an updated credential.");
+                var msg_dialog = new Gtk.MessageDialog(this,
+                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                       Gtk.MessageType.INFO,
+                                                       Gtk.ButtonsType.OK,
+                                                       "%s",
+                                                       message);
+                msg_dialog.run();
+                msg_dialog.destroy();
+            }
         }
     }
 

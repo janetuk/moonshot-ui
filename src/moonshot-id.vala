@@ -204,7 +204,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
 
         uchar[] binary = Base64.decode(cert);
         IdCard.logger.trace("is_expired: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
-        return get_cert_is_valid_now(binary, binary.length);
+        return get_cert_is_expired_now(binary, binary.length);
     }
 }
 
