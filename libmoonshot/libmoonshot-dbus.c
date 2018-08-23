@@ -198,7 +198,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
   if (!g_spawn_async_with_pipes(NULL, /* working_directory */
                                 dbus_daemon_argv,
                                 NULL, /* envp, defaults to our own environment */
-                                0, /* flags */
+                                G_SPAWN_STDERR_TO_DEV_NULL, /* flags, we don't want to get err output on screen */
                                 NULL, /* child_setup */
                                 NULL, /* user_data for child_setup */
                                &(bus->pid),
