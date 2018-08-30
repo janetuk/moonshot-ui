@@ -49,9 +49,11 @@ make check
 rm -rf $RPM_BUILD_ROOT
 %post
 	/usr/bin/update-desktop-database
+    /usr/bin/gtk-update-icon-cache -tq /usr/share/icons/hicolor 2>/dev/null ||:
 
 %postun
 	/usr/bin/update-desktop-database
+    /usr/bin/gtk-update-icon-cache -tq /usr/share/icons/hicolor 2>/dev/null ||:
 
 %package devel
 Summary: Moonshot UI Development
