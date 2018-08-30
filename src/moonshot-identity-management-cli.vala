@@ -558,31 +558,31 @@ If it matches the above fingerprint, confirm the change. If not, then cancel."""
 
     private void about_dialog()
     {
-        string logo = """              MMMMMMMMMMMMMMM
-           MMMMMMMMMMMMMMMMMMMMM
-       MMMMMMMMMMMMMMMMMMMMMMMM MMM
-     MMMMMMMMMMMMMMMMMMMMMMMM NMMMMMMM
-    MMMMMMMMMMMMMMMMMMMMMMM MMMMMMMMMMM
-  MMMMMMMMMMMMMMMMMMMMM  MMMMMMMMMMMMMMMM
- MMMMMMMMMMMMMMMMMMMMN  MMMMMMMMMMMMMMMMMN
- MMMMMMMMMMMMMMMMMMM  MMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMM  MMMMMMMMMMMMMMMMMMMMMM
-MMM  MMMMM  MMM     MMMM     MMMM  NMMM  MMM  MMMM   M   M    MMM   MMMMMM
-MMM   MMM   M   MM   MM  MMM   MM   MM   MMM MM   M  M   M  MM   MM   MM
-MMM    M    M  MMMM  M  MMMMM  MM  M  M  MMM  MM     M   M  M     M   MM
-MMM  M  MM  M  MMMM  M  MMMMM  MM  MM    MMM    MMM  MMMMM  M     M   MM
-MMM  MMMMM  M   MM   MM  MMM   MM  MMM   MMM MM   M  M   M  MM   MM   MM
-MMM  MMMMM  MM     MMMMM      MMM  MMMM  MMM  MMMM   M   M    MMM     MM
-MMMMMMMMMMMMMM   MMMMMMMMMMMMMMMMMMMMMMMMMM
- MMMMMMMMMMMM   MMMMMMMMMMMMMMMMMMMMMMMMMM
- MMMMMMMMMMMM   MMMMMMMMMMMMMMMMMMMMMMMMMN
-  MMMMMMMMMM    MMMMMMMMMMMMMMMMMMMMMMMMM
-   MMMMMMMMM   MMMMMMMMMMMMMMMMMMMMMMMMM
-    MMMMMMMM   MMMMMMMMMMMMMMMMMMMMMMMM
-       MMMMM   MMMMMMMMMMMMMMMMMMMMM
-        MMMM   MMMMMMMMMMMMMMMMMMM
-           M    MMMMMMMMMMMMMMMM
-                   MMMMMMMM""";
+        string logo = """              ███████████████
+           █████████████████████
+       ██████████████████████ ███
+     ██████████████████████ █████████
+    █████████████████████  ███████████
+  █████████████████████  ████████████████
+ ████████████████████   █████████████████
+ ███████████████████  ████████████████████
+███████████████████  ██████████████████████
+███  █████  ███     ████     ████   ███  ███  ████   █   █    ███   ██████
+███   ███   █   ██   ██  ███   ██   ███  ███ ██   █  █   █  ██   ██   ██
+███    █    █  ████  █  █████  ██  █  █  ███  ██     █   █  █     █   ██
+███  ██ ██  █  ████  █  █████  ██  ██    ███    ██   █████  █     █   ██
+███  █████  █   ██   ██  ███   ██  ███   ███ ██   █  █   █  ██   ██   ██
+███  █████  ██     █████      ███  ████  ███  ████   █   █    ███     ██
+██████████████   ██████████████████████████
+ ████████████   ██████████████████████████
+ ████████████   █████████████████████████
+  ██████████    █████████████████████████
+   █████████   █████████████████████████
+    ████████   ████████████████████████
+       █████   █████████████████████
+        ████   ███████████████████
+           █    ████████████████
+                   ████████""";
 
         string license = """Copyright (c) 2017, JISC JANET(UK)
 All rights reserved.
