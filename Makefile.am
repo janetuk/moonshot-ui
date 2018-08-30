@@ -153,6 +153,10 @@ mime_DATA = webprovisioning/moonshot.xml
 dotdesktopdir = $(datadir)/applications
 dotdesktop_DATA = moonshot.desktop moonshot-webp.desktop
 
+#the application icon
+appicondir=$(datadir)/icons/hicolor/scalable/apps
+appicon_DATA=moonshot.svg
+
 endif
 
 if IPC_MSRPC
@@ -239,7 +243,7 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbus_service_in_file) \
     $(dbus_bus_in_file) \
 	webprovisioning/complex-test.msht webprovisioning/sample.msht \
 	README.webprovisioning README.windows \
-	moonshot-ui.spec \
+	moonshot-ui.spec moonshot.svg \
 	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
 
 noinst_PROGRAMS = \

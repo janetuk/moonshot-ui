@@ -751,6 +751,11 @@ SUCH DAMAGE.
     private void build_ui()
     {
         set_bg_color(this);
+        try {
+            this.icon = IconTheme.get_default().load_icon("moonshot", 48, 0);
+        } catch (Error e) {
+            stderr.printf ("Could not load application icon: %s\n", e.message);
+        }
 
         create_ui_manager();
 

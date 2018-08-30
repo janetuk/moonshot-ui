@@ -78,16 +78,12 @@ Requires: moonshot-ui  = %{version}-%{release}
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
 %doc webprovisioning/default-identity.msht
+%{_datadir}/icons/hicolor/scalable/apps/*
 
 %files devel
 %{_includedir}/*.h
 %{_libdir}/libmoonshot.a
 %{_libdir}/libmoonshot.so
 %exclude %{_libdir}/*.la
-
-
-
-
-
 
 %changelog
