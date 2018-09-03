@@ -1,4 +1,4 @@
-moonshot-ui (1.1.1-0) unstable; urgency=medium
+moonshot-ui (1.1.1-0.DIST) unstable; urgency=medium
 
   * Package for release
 
@@ -162,7 +162,7 @@ moonshot-ui (0.5+20130510-1.1) UNRELEASED; urgency=low
 
   * New upstream version
   * Fix headless add identity cards
-  * 
+  *
 
  -- Kevin Wasserman <krwasserman@painless-security.com>  Thu, 16 May 2013 13:40:12 -0400
 
