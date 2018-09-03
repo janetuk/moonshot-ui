@@ -1,0 +1,53 @@
+Source: moonshot-ui
+Section: net
+Priority: optional
+Maintainer: Sam Hartman <hartmans@debian.org>
+Build-Depends: debhelper (>= 9), libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk2.0-dev,
+    gettext, autotools-dev, desktop-file-utils, libgee-0.8-dev|libgee-dev,
+    autopoint, autoconf, autotools-dev, automake, libtool,
+ dh-autoreconf, valac, libgnome-keyring-dev, libssl1.0-dev|libssl-dev, dbus
+Standards-Version: 3.9.5
+Homepage: http://www.project-moonshot.org/
+Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/moonshot-ui.git;a=summary
+
+Package: moonshot-ui
+Architecture: any
+Multi-Arch: foreign
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, dbus-x11, libmoonshot1 (= ${binary:Version})
+Description: Moonshot Identity Selector
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform. 
+ This package provides a service to manage the local identity store
+ and to select which identity is used with a given service.
+
+Package: moonshot-ui-dbg
+Section: debug
+Priority: extra
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, moonshot-ui|libmoonshot1
+Description: Moonshot Identity Selector Debug Symbols
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform.  This package
+ includes debugging symbols.
+
+Package: moonshot-ui-dev
+Architecture: any
+Section: libdevel
+Depends: libmoonshot1 (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Description: Moonshot Identity Development Files
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform. 
+
+Package: libmoonshot1
+Architecture: any
+Section: libs
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Multi-Arch: same
+Breaks: moonshot-ui (<< 0.7.1-1~)
+Pre-Depends: ${misc:Pre-Depends}
+Description: Moonshot Identity Shared Library
+ Project moonshot provides federated authentication using EAP, RADIUS
+ and SAML to applications beyond the web platform.  This library
+ allows other components to interact with the Moonshot identity store.

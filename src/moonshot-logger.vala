@@ -129,8 +129,20 @@ public class MoonshotLogger : Object {
 
 /** Logger that currently does nothing, but may eventually write to stdout or a file if enabled */
 public class MoonshotLogger : Object {
-
+    FileStream? stream = null;
     internal MoonshotLogger(string name) {
+        string? filename = GLib.Environment.get_variable("MOONSHOT_LOG_FILE");
+        if (filename != null)
+            stream = FileStream.open(filename, "a");
+    }
+
+    private void dump_message(string type, string message, Error? e = null) {
+        if (stream != null) {
+            var now = new DateTime.now_local();
+            stream.printf("%s\t%s\t%s\t%s\n", now.to_string(), type, message, 
+                                              e != null? e.message : "");
+            stream.flush();
+        }
     }
 
     /**
@@ -139,6 +151,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void trace(string message, Error? e = null) {
+        dump_message("TRACE", message, e);
     }
 
 
@@ -148,6 +161,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void debug(string message, Error? e = null) {
+        dump_message("DEBUG", message, e);
     }
 
 
@@ -156,6 +170,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void info(string message, Error? e = null) {
+        dump_message("INFO", message, e);
     }
 
     /**
@@ -164,6 +179,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void warn(string message, Error? e = null) {
+        dump_message("WARN", message, e);
     }
 
     /**
@@ -172,6 +188,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void error(string message, Error? e = null) {
+        dump_message("ERROR", message, e);
     }
 
     /**
@@ -180,6 +197,7 @@ public class MoonshotLogger : Object {
      * @param e optional Error to be logged
      */
     public void fatal(string message, Error? e = null) {
+        dump_message("FATAL", message, e);
     }
 }
 

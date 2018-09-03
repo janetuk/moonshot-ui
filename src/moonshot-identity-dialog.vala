@@ -228,8 +228,11 @@ class IdentityDialog : Dialog
 
         HBox trust_anchor_box = new HBox(false, 0);
 
-        Label ta_label = new Label(ta_label_prefix
-                                   + (id.trust_anchor.is_empty() ? none : _("Enterprise provisioned")));
+        string ta_label_text = ta_label_prefix + (id.trust_anchor.is_empty() ? none : _("Enterprise provisioned"));
+        if (id.trust_anchor.is_expired())
+            ta_label_text += " " + _("[EXPIRED]");
+
+        Label ta_label = new Label(ta_label_text);
         ta_label.set_alignment(0, 0.5f);
 
         if (id.trust_anchor.is_empty()) {
@@ -536,9 +539,8 @@ class IdentityDialog : Dialog
         if (dialog.run() == ResponseType.ACCEPT)
         {
             // Export the certificate in PEM format.
-
-            const string CERT_HEADER = "-----BEGIN CERTIFICATE-----\n";
-            const string CERT_FOOTER = "\n-----END CERTIFICATE-----\n";
+            string CERT_HEADER = "-----BEGIN CERTIFICATE-----\n";
+            string CERT_FOOTER = "\n-----END CERTIFICATE-----\n";
 
             // Strip any embedded newlines in the certificate...
             string cert = id.trust_anchor.ca_cert.replace("\n", "");
@@ -557,9 +559,19 @@ class IdentityDialog : Dialog
 
             string filename = dialog.get_filename();
             var file  = File.new_for_path(filename);
+#if VALA_0_12
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+	       // Not sure if this works in 12; it definitely doesn't work in 10.
             stream.write(newcert.data);
-
+#else
+            try {
+                var stream = FileStream.open(filename, "wb");
+                stream.printf(newcert);
+                stream.flush();
+	        } catch (GLib.Error ex) {
+		      // in the event of error, we do nothing here. Hope for the best.
+	        }
+#endif
             // Save the parent directory to use as default for next save
             export_directory = file.get_parent().get_path();
         }

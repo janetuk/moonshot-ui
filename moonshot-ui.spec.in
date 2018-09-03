@@ -6,7 +6,7 @@ Summary:        Moonshot Federated Identity User Interface
 Group:          Security Tools
 License:        BSD
 URL:            http://www.project-moonshot.org/
-Source0:	%{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:      glib2-devel
@@ -16,9 +16,9 @@ BuildRequires:      dbus-devel
 BuildRequires:      openssl-devel
 BuildRequires:      desktop-file-utils
 BuildRequires:      shared-mime-info
-BuildRequires:      libgnome-keyring-devel
+BuildRequires:      gnome-keyring-devel
 BuildRequires:      vala
-Requires:        desktop-file-utils, shared-mime-info, dbus
+Requires:           desktop-file-utils, shared-mime-info, dbus-x11
 
 %description
 
@@ -39,15 +39,21 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/dbus-1/services
 ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $RPM_BUILD_ROOT%{_datadir}/dbus-1/services/org.janet.Moonshot.service
 
 %check
+%if 0%{?el6}
+# make check fails in Centos 6
+%else
 make check
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 %post
 	/usr/bin/update-desktop-database
+    /usr/bin/gtk-update-icon-cache -tq /usr/share/icons/hicolor 2>/dev/null ||:
 
 %postun
 	/usr/bin/update-desktop-database
+    /usr/bin/gtk-update-icon-cache -tq /usr/share/icons/hicolor 2>/dev/null ||:
 
 %package devel
 Summary: Moonshot UI Development
@@ -64,23 +70,22 @@ Requires: moonshot-ui  = %{version}-%{release}
 %defattr(-,root,root,-)
 %{_bindir}/moonshot
 %{_bindir}/moonshot-webp
+%{_bindir}/moonshot-keyring-tool
+%{_bindir}/moonshot-idcard-generator
 %{_datadir}/applications/*
 %{_datadir}/dbus-1/services/*
 %{_datadir}/mime/packages/*
 %{_datadir}/moonshot-ui
+%{_datadir}/doc/moonshot-ui
 %{_libdir}/libmoonshot.so.*
 %config(noreplace) %{_sysconfdir}/moonshot/*
 %doc webprovisioning/default-identity.msht
+%{_datadir}/icons/hicolor/scalable/apps/*
 
 %files devel
 %{_includedir}/*.h
 %{_libdir}/libmoonshot.a
 %{_libdir}/libmoonshot.so
 %exclude %{_libdir}/*.la
-
-
-
-
-
 
 %changelog

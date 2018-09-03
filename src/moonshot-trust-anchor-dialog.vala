@@ -57,11 +57,11 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 
     public void set_callback(owned TrustAnchorConfirmationCallback cb)
     {
-//        #if VALA_0_12
+#if VALA_0_12
             this.callback = ((owned) cb);
-//        #else
-//            this.callback = ((IdCard) => cb(IdCard));
-//        #endif
+#else
+           this.callback = ((IdCard) => cb(IdCard));
+#endif
     }
 
     public bool execute() {
@@ -81,23 +81,19 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
         }
 
         logger.trace("execute: expected cert='%s'; fingerprint='%s'".printf(card.trust_anchor.server_cert, fingerprint));
-        if (card.trust_anchor.server_cert == fingerprint) {
+        if (card.trust_anchor.server_cert.up() == fingerprint.up()) {
             logger.trace(@"execute: Fingerprint for $nai matches stored value; returning true.");
             return_confirmation(true);
             return false;
         }
 
-        if (parent_app.headless) {
+        if (parent_app.view == null) {
             logger.trace(@"execute: Running in headless mode; returning false.");
             return_confirmation(false);
             return false;
         }
 
-        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
-        var response = dialog.run();
-        dialog.destroy();
-        bool is_confirmed = (response == ResponseType.OK);
-
+        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, userid, realm, fingerprint);
         if (is_confirmed) {
             logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
 

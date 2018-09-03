@@ -40,6 +40,22 @@ public class KeyringStore : Object, IIdentityCardStore {
     private const string keyring_store_version = "1.0";
     private const GnomeKeyring.ItemType item_type = GnomeKeyring.ItemType.GENERIC_SECRET;
 
+    public bool is_locked() {
+        unowned GnomeKeyring.Info info;
+        GnomeKeyring.Result rv = GnomeKeyring.get_info_sync(null, out info);
+        if (rv != GnomeKeyring.Result.OK)
+            return true;
+        return info.get_is_locked();
+    }
+
+    public bool unlock(string password) {
+        GnomeKeyring.Result rv = GnomeKeyring.unlock_sync(null, password);
+        if (rv != GnomeKeyring.Result.OK)
+            return false;
+        load_id_cards();
+        return true;
+    }
+
     public void add_card(IdCard card) {
         logger.trace("add_card: Adding card '%s' with services: '%s'"
                      .printf(card.display_name, card.get_services_string("; ")));

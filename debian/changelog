@@ -1,0 +1,269 @@
+moonshot-ui (1.1.1-0) unstable; urgency=medium
+
+  * Package for release
+
+ -- Jisc <assent@jisc.ac.uk>  Thu, 30 Aug 2018 08:43:52 +0000
+
+moonshot-ui (1.1.0-1) unstable; urgency=medium
+
+  * Package for release
+
+ -- Painless Security <build@painless-security.com>  Fri, 15 Jun 2018 11:43:52 -0400
+
+moonshot-ui (1.1.0~2-1) unstable; urgency=medium
+
+  * Send blank strings when moonshot_get_identity() nai/password are null
+
+ -- Painless Security <build@painless-security.com>  Thu, 14 Jun 2018 12:02:40 -0400
+
+moonshot-ui (1.1.0~1-1) unstable; urgency=medium
+
+  * Replace dbus-glib and libdbus with GDBus
+  * Use dbus-daemon instead of dbus-launch in libmoonshot
+  * Give better error messages when DBus connection fails
+
+ -- Painless Security <build@painless-security.com>  Tue, 12 Jun 2018 11:59:07 -0400
+
+moonshot-ui (1.0.6-2) unstable; urgency=medium
+
+  * Version number bump
+
+ -- Painless Security <build@painless-security.com>  Tue, 01 Aug 2017 12:43:00 -0500
+
+moonshot-ui (1.0.5-1) unstable; urgency=medium
+
+  * Version number bump
+
+ -- Painless Security <build@painless-security.com>  Tue, 25 Jul 2017 21:50:00 -0500
+
+moonshot-ui (1.0.3-2) experimental; urgency=medium
+
+  * Upload to debian experimental, Closes: #864957
+
+ -- Sam Hartman <hartmans@debian.org>  Sun, 09 Jul 2017 16:20:36 -0400
+
+moonshot-ui (1.0.3-1) unstable; urgency=medium
+
+  * Various stability fixes.
+
+ -- Painless Security <build@painless-security.com>  Tue, 30 May 2017 18:31:00 -0400
+
+moonshot-ui (1.0.2-2) unstable; urgency=medium
+
+  * Updated changelog
+
+ -- Painless Security <build@painless-security.com>  Sat, 11 Feb 2017 15:00:00 -0400
+
+moonshot-ui (1.0.2-1) unstable; urgency=medium
+
+  * Updated changelog
+
+ -- Dan Breslau <dbreslau@painless-security.com>  Mon, 31 Oct 2016 18:37:21 -0400
+
+moonshot-ui (1.0.0-1) unstable; urgency=medium
+
+  * UI has been redesigned
+  * moonshot now asks user to confirm the server's fingerprint if none is configured,
+    or warns if mismatch.
+
+ -- Dan Breslau <dbreslau@painless-security.com>  Mon, 31 Oct 2016 15:14:23 -0400
+
+moonshot-ui (0.7.2-1) unstable; urgency=high
+
+  * New upstream Version, Closes: #787880
+  * Force vala run and support libgee-dev and libgee-0.8-dev so we can
+    build wheezy and jessie versions from the same sources.
+  * High urgency to avoid moonshot-ui being removed from jessie.  The
+    actual code change is very simple and will either cause a build
+    failure or just work.
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 15 Jul 2015 11:30:32 -0400
+
+moonshot-ui (0.7.1-3) unstable; urgency=medium
+
+  * Depend on libgee-0.8-dev, Closes: #784651
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 21 May 2015 16:14:24 -0400
+
+moonshot-ui (0.7.1-2) unstable; urgency=medium
+
+  * Merge in upstream change to properly decode base64 certificates with
+    whitespace.
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 25 Mar 2015 01:00:11 -0400
+
+moonshot-ui (0.7.1-1) unstable; urgency=medium
+
+  * New upstream version
+  * Move dbus launch script to libmoonshot1
+  * Because the dbus interface between moonshot-ui and libmoonshot1 may
+    not be entirely stable, create versioned dependency.
+  * Initial upload to Debian, Closes: #760411
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 03 Sep 2014 15:34:52 -0400
+
+moonshot-ui (0.7-2) unstable; urgency=medium
+
+  * Depend on dbus-x11 for dbus-launch
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 23 May 2014 10:20:03 -0400
+
+moonshot-ui (0.7-1) unstable; urgency=medium
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 19 May 2014 21:23:49 -0400
+
+moonshot-ui (0.6-8) unstable; urgency=low
+
+  * Update handling of requests containing passwords and avoid duplicate
+    identity
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 13 Nov 2013 22:33:52 -0500
+
+moonshot-ui (0.6-7) unstable; urgency=low
+
+  * Merge in upstream support for flatstore-users
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 29 Oct 2013 17:59:42 -0400
+
+moonshot-ui (0.6-6) unstable; urgency=low
+
+  * Merge upstream bug fixes
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 29 Oct 2013 10:38:05 -0400
+
+moonshot-ui (0.6-5) unstable; urgency=low
+
+  * Install default identity example
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 10 Oct 2013 10:29:54 -0400
+
+moonshot-ui (0.6-4) unstable; urgency=low
+
+  * Add debug info package
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 10 Oct 2013 10:28:35 -0400
+
+moonshot-ui (0.6-3) unstable; urgency=low
+
+  * Include gnome keyring and moonshot-webp fixes
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 08 Oct 2013 09:09:38 -0400
+
+moonshot-ui (0.6-2) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Increment shlibs version for libmoonshot
+
+ -- Sam Hartman <hartmans@debian.org>  Thu, 03 Oct 2013 15:51:10 -0400
+
+moonshot-ui (0.5+20130510-1.1) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Fix headless add identity cards
+  * 
+
+ -- Kevin Wasserman <krwasserman@painless-security.com>  Thu, 16 May 2013 13:40:12 -0400
+
+moonshot-ui (0.5+20130510-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Fri, 10 May 2013 14:46:01 -0400
+
+moonshot-ui (0.5+20130429-3) unstable; urgency=low
+
+  * Fix assertion on no identities
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 30 Apr 2013 18:06:05 -0400
+
+moonshot-ui (0.5+20130429-2) unstable; urgency=low
+
+  * Updates to fix assertion failure
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 30 Apr 2013 18:05:21 -0400
+
+moonshot-ui (0.5+20130429-1) unstable; urgency=low
+
+  * New Upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 29 Apr 2013 14:58:00 -0400
+
+moonshot-ui (0.5+20130421-2) unstable; urgency=low
+
+  * New upstream version
+  * Fix service removal
+  * Fix bogus identities
+  * Upstream version
+  * Upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Sun, 21 Apr 2013 13:49:09 -0400
+
+moonshot-ui (0.5+20130326-1) UNRELEASED; urgency=low
+
+  * New upstream version
+  * Fixes headless operation
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 26 Mar 2013 12:51:47 -0400
+
+moonshot-ui (0.0.2+20130319-1) unstable; urgency=low
+
+  * Merge in upstream changes
+  * Script for auto dbus launch in headless
+
+ -- Sam Hartman <hartmans@debian.org>  Tue, 19 Mar 2013 10:45:15 -0400
+
+moonshot-ui (0.0.2+20120131-2) unstable; urgency=low
+
+  * Update from master branch
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Fri, 18 May 2012 20:49:17 -0400
+
+moonshot-ui (0.0.2+20120131-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Tue, 31 Jan 2012 16:33:48 -0500
+
+moonshot-ui (0.0.2+20120119-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Thu, 19 Jan 2012 10:46:01 -0500
+
+moonshot-ui (0.0.2+20120117-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Tue, 17 Jan 2012 18:06:50 -0500
+
+moonshot-ui (0.0.2+20110913-2) unstable; urgency=low
+
+  * Fix shared libraries
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Tue, 13 Sep 2011 10:52:47 -0400
+
+moonshot-ui (0.0.2+20110913-1) unstable; urgency=low
+
+  * New upstream version
+
+ -- Sam Hartman <hartmans@project-moonshot.org>  Tue, 13 Sep 2011 08:41:37 -0400
+
+moonshot-ui (0.0.2+20110704-1) unstable; urgency=low
+
+  * New Upstream version
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 04 Jul 2011 06:16:04 -0400
+
+moonshot-ui (0.0.2+20110621-1) unstable; urgency=low
+
+  * New Upstream release
+
+ -- Sam Hartman <hartmans@debian.org>  Mon, 13 Jun 2011 08:06:34 -0400
+
+moonshot-ui (0.0.1+20110504-1) unstable; urgency=low
+
+  * Initial release
+
+ -- Sam Hartman <hartmans@debian.org>  Wed, 04 May 2011 13:28:57 -0400

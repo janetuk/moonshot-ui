@@ -40,7 +40,6 @@
 #include <signal.h>
 #include <gio/gio.h>
 #include <glib/gspawn.h>
-
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
 
@@ -78,6 +77,7 @@ typedef struct {
 typedef struct {
   GDBusConnection *connection;
   MoonshotDBusBus *bus; /* non-null only if we launched our own bus */
+  GPid service_pid; /* non-0 only if we spawned our own moonshot server */
 } MoonshotDBusConnection;
 
 /* Struct for keeping a DBus proxy record */
@@ -90,6 +90,10 @@ void moonshot_free (void *data)
 {
   g_free (data);
 }
+
+static char *moonshot_dbus_launched_argv[] = {
+  MOONSHOT_SERVER, "--dbus-launched", "--cli", NULL
+};
 
 /**
  * Read and validate a DBus address from a file descriptor
@@ -178,7 +182,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
     MOONSHOT_DBUS_DAEMON,
     "--nofork",
     "--print-address",
-    "--nopidfile",
+    // "--nopidfile",
     "--config-file", MOONSHOT_DBUS_BUS_CONF,
     NULL
   };
@@ -194,7 +198,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
   if (!g_spawn_async_with_pipes(NULL, /* working_directory */
                                 dbus_daemon_argv,
                                 NULL, /* envp, defaults to our own environment */
-                                G_SPAWN_DEFAULT, /* flags */
+                                G_SPAWN_STDERR_TO_DEV_NULL, /* flags, we don't want to get err output on screen */
                                 NULL, /* child_setup */
                                 NULL, /* user_data for child_setup */
                                &(bus->pid),
@@ -333,28 +337,56 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
  */
 static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError **error)
 {
-  GDBusProxy *g_proxy;
+  GDBusProxy *g_proxy = NULL;
   GError     *g_error = NULL;
+  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_NONE;
+  gchar*     owner_name = NULL;
 
-  /* This will autostart the service if it is not already running. */
-  g_proxy = g_dbus_proxy_new_sync(
-      conn->connection,
-      G_DBUS_PROXY_FLAGS_NONE,
-      NULL, /* expected interface */
-      MOONSHOT_DBUS_NAME,
-      MOONSHOT_DBUS_PATH,
-      MOONSHOT_DBUS_NAME,
-      NULL, /* no cancellable */
-      &g_error);
-
-  if (g_error != NULL) {
-    *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
-                                 "DBus error creating proxy: %s",
-                                 g_error->message);
-    g_error_free (g_error);
-    return NULL;
+  /*
+    For the CLI operation the Moonshot server needs to be a child process of the application using libmoonshot,
+    or it is not possible to get direct access to stdout and stdin. Hence, we disable DBUS AUTO-START and
+    start it ourselves. Spawn a CLI Moonshot server when:
+      1) There is no DISPLAY environment variable.
+      2) We are in control of stdin and stdout (ie. we are running in the foreground).
+      3) There was a pre-existing DBUS session (we did not launched the session above).
+         Otherwise, we would have problems with the keyring.
+  */
+  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && !conn->bus) {
+      flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
+      if (!g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, NULL,  0, NULL, NULL,
+                                   &(conn->service_pid), NULL, NULL, NULL, NULL)) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
+        return NULL;
+      }
   }
 
+  /* This will autostart the service if it is not already running. */
+  do {
+    if (g_proxy)
+      g_object_unref(g_proxy);
+    g_proxy = g_dbus_proxy_new_sync(
+        conn->connection,
+        flags,
+        NULL, /* expected interface */
+        MOONSHOT_DBUS_NAME,
+        MOONSHOT_DBUS_PATH,
+        MOONSHOT_DBUS_NAME,
+        NULL, /* no cancellable */
+        &g_error);
+
+    if (g_error != NULL) {
+      *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
+                                   "DBus error creating proxy: %s",
+                                   g_error->message);
+      g_error_free (g_error);
+      return NULL;
+    }
+    owner_name = g_dbus_proxy_get_name_owner(g_proxy);
+    // if there is no owner name yet, wait a little bit and try to get a proxy again
+    if (!owner_name)
+      usleep(10000);
+  } while (!owner_name);
+  g_free(owner_name);
   return g_proxy;
 }
 
@@ -373,6 +405,23 @@ static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
   dbus_disconnect(proxy->connection);
   proxy->dbus_proxy = NULL;
   proxy->connection = NULL;
+}
+
+/**
+ * Callback to kill the Moonshot server we spawned when our bus proxy is finalized
+ *
+ * @param data Pointer to MoonshotDBusProxy instance whose
+ */
+static void dbus_kill_server(gpointer data, GObject *where_the_object_was)
+{
+  MoonshotDBusProxy *proxy = (MoonshotDBusProxy *) data;
+  /* Ensure we were called with the right object! */
+  g_return_if_fail((gpointer) proxy->dbus_proxy ==  (gpointer) where_the_object_was);
+
+  /* We do not disconnect from the DBus */
+  kill(proxy->connection->service_pid, SIGKILL);
+  g_spawn_close_pid (proxy->connection->service_pid);
+  proxy->dbus_proxy = NULL;
 }
 
 /**
@@ -419,14 +468,19 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
   if (shared_proxy.dbus_proxy == NULL)
     goto cleanup;
 
-  /* set a weak ref so we get a callback when the object is freed */
-  g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy),
-                    dbus_proxy_notify,
-                    &shared_proxy);
+  /* if we spawned the server, make sure we kill it after serving the request */
+  if (shared_proxy.connection->service_pid > 0)
+    g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy), dbus_kill_server, &shared_proxy);
 
-  /* If we are on the session bus, hold a reference for reuse on later calls. */
-  if (dbus_connection_uses_session_bus(shared_proxy.connection))
+  /* else, if we are on the session bus, hold a reference for reuse on later calls. */
+  else if (dbus_connection_uses_session_bus(shared_proxy.connection))
     g_object_ref(shared_proxy.dbus_proxy);
+
+  /* else set a weak ref so we get a callback when the object is freed and we disconnect from the DBUS */
+  else
+    g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy),
+                      dbus_proxy_notify,
+                      &shared_proxy);
 
 cleanup:
   g_static_mutex_unlock (&init_lock);
@@ -721,7 +775,7 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
   GError     *g_error = NULL;
   gboolean    success = FALSE;
   int         confirmed = 0;
-  char        hash_str[65];
+  char        hash_str[hash_len * 2 + 1];
   GDBusProxy *dbus_proxy = get_dbus_proxy (error);
   int         out = 0;
   int         i;

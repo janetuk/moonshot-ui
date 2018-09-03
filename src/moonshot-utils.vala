@@ -85,6 +85,8 @@ public Gdk.Pixbuf? find_icon(string name, int size)
     }
 }
 
+
+
 public extern unowned string GetUserName();
 public extern unowned string GetFlatStoreUsersFilePath();
 
@@ -143,7 +145,7 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     var fingerprint_width_constraint = new ScrolledWindow(null, null);
     fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
     fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
-    fingerprint_width_constraint.set_size_request(360, 60);
+    fingerprint_width_constraint.set_size_request(400, 60);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
     var vbox = new VBox(false, 0);
@@ -185,10 +187,20 @@ internal static void clear_password_entry(Entry entry) {
     random_chars[len] = 0;
     string r = (string) random_chars;
     var buf = entry.get_buffer();
+#if VALA_0_12
+    // Not sure if this works in 12; it definitely doesn't work in 10.
     buf.set_text(r.data);
 
     // Now delete the data
     buf.delete_text(0, len);
+#else
+    string[] a = new string[1];
+    a[0] = r;
+    buf.set_text(a);
+
+    // Now delete the data
+    buf.delete_text(0, (int) len);
+#endif
 }
 
 static Gdk.Color white;

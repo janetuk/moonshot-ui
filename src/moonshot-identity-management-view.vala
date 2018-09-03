@@ -33,7 +33,7 @@ using Gee;
 using Gtk;
 using WebProvisioning;
 
-public class IdentityManagerView : Window {
+public class IdentityManagerView : Window, IdentityManagerInterface {
     static MoonshotLogger logger = get_logger("IdentityManagerView");
 
     bool use_flat_file_store = false;
@@ -105,7 +105,8 @@ public class IdentityManagerView : Window {
         setup_list_model(); 
         load_id_cards();
         connect_signals();
-        report_duplicate_nais(); 
+        report_duplicate_nais();
+        report_expired_trust_anchors();
     }
     
     private void report_duplicate_nais() {
@@ -130,11 +131,38 @@ public class IdentityManagerView : Window {
         }
     }
 
+    private void report_expired_trust_anchors() {
+        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        foreach (IdCard id_card in card_list) {
+            if (id_card.trust_anchor.is_expired()) {
+                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
+                    + _("That means that any attempt to authenticate with that identity will fail. ")
+                    + _("Please, ask your organisation to provide you with an updated credential.");
+                var msg_dialog = new Gtk.MessageDialog(this,
+                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                       Gtk.MessageType.INFO,
+                                                       Gtk.ButtonsType.OK,
+                                                       "%s",
+                                                       message);
+                msg_dialog.run();
+                msg_dialog.destroy();
+            }
+        }
+    }
+
     private void on_card_list_changed() {
         logger.trace("on_card_list_changed");
         load_id_cards();
     }
-    
+
+    public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
+    {
+        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
+        var response = dialog.run();
+        dialog.destroy();
+        return (response == ResponseType.OK);
+    }
+
     private bool visible_func(TreeModel model, TreeIter iter)
     {
         IdCard id_card;
@@ -277,11 +305,11 @@ public class IdentityManagerView : Window {
                        Columns.PASSWORD_COL, id_card.password);
     }
 
-    private IdCardWidget add_id_card_widget(IdCard id_card)
+    private void add_id_card_widget(IdCard id_card)
     {
         if (id_card == null) {
             logger.trace("add_id_card_widget: id_card == null; returning.");
-            return null;
+            return;
         }
 
         logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
@@ -308,7 +336,6 @@ public class IdentityManagerView : Window {
             // at preventing duplicate NAIs.
             this.selected_card = id_card;
         }
-        return id_card_widget;
     }
 
     private void widget_selected_cb(IdCardWidget id_card_widget)
@@ -337,8 +364,9 @@ public class IdentityManagerView : Window {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, out ArrayList<IdCard>? old_duplicates=null)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
     {
+        old_duplicates.clear();
         #if OS_MACOS
         /* 
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
@@ -354,10 +382,6 @@ public class IdentityManagerView : Window {
             int flags = prev_id.Compare(id_card);
             logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
-                if (&old_duplicates != null) {
-                    old_duplicates = new ArrayList<IdCard>();
-                }
-
                 return false; // no changes, no need to update
             } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
                 dialog = new Gtk.MessageDialog(this,
@@ -390,13 +414,10 @@ public class IdentityManagerView : Window {
         #endif
 
         if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, out old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
             return true;
         }
         else {
-            if (&old_duplicates != null) {
-                old_duplicates = new ArrayList<IdCard>();
-            }
             return false;
         }
     }
@@ -410,7 +431,9 @@ public class IdentityManagerView : Window {
 
         switch (result) {
         case ResponseType.OK:
-            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false);
+	    // Work around Vala compiler bug in Centos 6 by passing in a throwaway "old_duplicates" array
+	    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
+            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false, tmp_old_dups);
             break;
         default:
             break;
@@ -728,6 +751,11 @@ SUCH DAMAGE.
     private void build_ui()
     {
         set_bg_color(this);
+        try {
+            this.icon = IconTheme.get_default().load_icon("moonshot", 48, 0);
+        } catch (Error e) {
+            stderr.printf ("Could not load application icon: %s\n", e.message);
+        }
 
         create_ui_manager();
 
@@ -928,42 +956,54 @@ SUCH DAMAGE.
 
             var webp = new Parser(filename);
             dialog.destroy();
-            webp.parse();
-            logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
-            foreach (IdCard card in webp.cards)
-            {
-
-                if (card == null) {
-                    logger.trace(@"import_identities_cb: Skipping null IdCard");
-                    continue;
-                }
-
-                if (!card.trust_anchor.is_empty()) {
-                    string ta_datetime_added = TrustAnchor.format_datetime_now();
-                    card.trust_anchor.set_datetime_added(ta_datetime_added);
-                    logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
-                                 .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
-                }
-
-
-                bool result = add_identity(card, use_flat_file_store);
-                if (result) {
-                    logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
-                    import_count++;
-                }
-                else {
-                    logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
-                }
-            }
-            if (import_count == 0) {
+            if (!webp.parse()) {
                 var msg_dialog = new Gtk.MessageDialog(this,
                                                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                                        Gtk.MessageType.INFO,
                                                        Gtk.ButtonsType.OK,
                                                        "%s",
-                                                       _("Import completed. No identities were added or updated."));
+                                                       _("Could not parse identities file."));
                 msg_dialog.run();
                 msg_dialog.destroy();
+            }
+            else {
+                logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
+                foreach (IdCard card in webp.cards)
+                {
+
+                    if (card == null) {
+                        logger.trace(@"import_identities_cb: Skipping null IdCard");
+                        continue;
+                    }
+
+                    if (!card.trust_anchor.is_empty()) {
+                        string ta_datetime_added = TrustAnchor.format_datetime_now();
+                        card.trust_anchor.set_datetime_added(ta_datetime_added);
+                        logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
+                                     .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
+                    }
+
+
+                    var old_duplicates = new ArrayList<IdCard>();
+                    bool result = add_identity(card, use_flat_file_store, old_duplicates);
+                    if (result) {
+                        logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
+                        import_count++;
+                    }
+                    else {
+                        logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
+                    }
+                }
+                if (import_count == 0) {
+                    var msg_dialog = new Gtk.MessageDialog(this,
+                                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                                           Gtk.MessageType.INFO,
+                                                           Gtk.ButtonsType.OK,
+                                                           "%s",
+                                                           _("Import completed. No identities were added or updated."));
+                    msg_dialog.run();
+                    msg_dialog.destroy();
+                }
             }
         }
         dialog.destroy();

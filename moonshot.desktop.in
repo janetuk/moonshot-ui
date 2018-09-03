@@ -5,6 +5,6 @@ Type=Application
 Terminal=false
 Exec=moonshot
 Name=Moonshot Identity Manager
-Icon=config-user
+Icon=moonshot
 Categories=System;Settings
 URL=http://www.project-moonshot.org

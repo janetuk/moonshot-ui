@@ -1,7 +1,7 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.1.0],
-        [moonshot-community@jiscmail.ac.uk],
+        [1.1.1],
+        [assent@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
 
@@ -104,6 +104,10 @@ PKG_CHECK_MODULES([LIB_GEE],
             )]
 )
 AC_SUBST(GEE_VERSION)
+
+# For all platforms: Use libnewt
+PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
+
 
 #enable the optional use of Log4Vala (Must have the package installed!)
 AC_ARG_ENABLE([log4vala],

@@ -33,6 +33,7 @@
 using Gee;
 
 extern char* get_cert_valid_before(uchar* inbuf, int inlen, char* outbuf, int outlen);
+extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 
 
 // A TrustAnchor object can be imported or installed via the API, but cannot
@@ -175,7 +176,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         cert.chomp();
 
         uchar[] binary = Base64.decode(cert);
-        IdCard.logger.trace("get_expiration_date: encoded length=%d; decoded length=%d".printf(cert.length, binary.length));
+        IdCard.logger.trace("get_expiration_date: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
 
         char buf[64];
         string err = (string) get_cert_valid_before(binary, binary.length, buf, 64);
@@ -191,6 +192,19 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         IdCard.logger.trace(@"get_expiration_date: get_cert_valid_before returned '$date'");
 
         return date;
+    }
+
+    public bool is_expired()
+    {
+        if (this.ca_cert == "")
+            return false;
+
+        string cert = this.ca_cert;
+        cert.chomp();
+
+        uchar[] binary = Base64.decode(cert);
+        IdCard.logger.trace("is_expired: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
+        return get_cert_is_expired_now(binary, binary.length);
     }
 }
 
@@ -224,7 +238,7 @@ public class IdCard : Object
             return _username;
         }
         public set {
-            _username = value;
+            _username = IdCard.escape(value);
             update_nai();
         }
     }
@@ -234,7 +248,7 @@ public class IdCard : Object
             return _issuer;
         }
         public set {
-            _issuer = value;
+            _issuer = IdCard.escape(value);
             update_nai();
         }
     }
@@ -400,6 +414,18 @@ public class IdCard : Object
             logger.trace("Compare: Two IDs with display_name '%s', but diff_flags=%0x".printf(this.display_name, diff));
         }
         return diff;
+    }
+
+    internal static string escape(string value)
+    {
+        // unscape all the scaped \@ and \/
+        string result = value.replace("\\@", "@");
+        result = result.replace("\\/", "/");
+
+        // escape all @ and /
+        result = result.replace("@", "\\@");
+        result = result.replace("/", "\\/");
+        return result;
     }
 
     public static IdCard NewNoIdentity() 
