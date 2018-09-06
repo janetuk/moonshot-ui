@@ -1,3 +1,9 @@
+moonshot-ui (1.1.2-0) unstable; urgency=medium
+
+  * Package for release
+
+ -- Jisc <assent@jisc.ac.uk>  Thu, 30 Aug 2018 08:43:52 +0000
+
 moonshot-ui (1.1.1-0) unstable; urgency=medium
 
   * Package for release
@@ -162,7 +168,7 @@ moonshot-ui (0.5+20130510-1.1) UNRELEASED; urgency=low
 
   * New upstream version
   * Fix headless add identity cards
-  * 
+  *
 
  -- Kevin Wasserman <krwasserman@painless-security.com>  Thu, 16 May 2013 13:40:12 -0400
 
