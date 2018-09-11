@@ -1,4 +1,10 @@
-moonshot-ui (1.1.2-0.DIST) unstable; urgency=medium
+moonshot-ui (1.1.3-0.DIST) unstable; urgency=medium
+
+  * Package for release
+
+ -- Jisc <assent@jisc.ac.uk>  Tue, 11 Sep 2018 00:00:00 +0000
+
+moonshot-ui (1.1.2-0) unstable; urgency=medium
 
   * Package for release
 
