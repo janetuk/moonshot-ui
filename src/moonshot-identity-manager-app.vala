@@ -133,7 +133,7 @@ public class IdentityManagerApp {
 
     public bool add_identity(IdCard id, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
     	old_duplicates.clear();
-        if (view != null) 
+        if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
             return view.add_identity(id, force_flat_file_store, old_duplicates);
@@ -391,6 +391,28 @@ public static int main(string[] args) {
 #else
     bool headless = GLib.Environment.get_variable("DISPLAY") == null;
 #endif
+
+    if (!headless) {
+        try {
+            if (!Gtk.init_with_args(ref args, _(""), options, null)) {
+                stdout.printf(_("unable to initialize window\n"));
+                return -1;
+            }
+            gtk_available = true;
+        } catch (OptionError e) {
+            stdout.printf(_("error: %s\n"), e.message);
+            if (e is OptionError.FAILED) {
+                // Couldn't open DISPLAY
+                stdout.printf(_("Trying headless mode.\n"));
+                headless = true;
+            }
+            else {
+                stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
+                return -1;
+            }
+        }
+    }
+
     if (headless) {
         try {
             var opt_context = new OptionContext(null);
@@ -403,18 +425,6 @@ public static int main(string[] args) {
             return -1;
         }
         //explicitly_launched = false;
-    } else {
-        try {
-            if (!Gtk.init_with_args(ref args, _(""), options, null)) {
-                stdout.printf(_("unable to initialize window\n"));
-                return -1;
-            }
-        } catch (GLib.Error e) {
-            stdout.printf(_("error: %s\n"),e.message);
-            stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
-            return -1;
-        }
-        gtk_available = true;
     }
 
 #if OS_WIN32
@@ -433,11 +443,11 @@ public static int main(string[] args) {
     Intl.bindtextdomain(Config.GETTEXT_PACKAGE, Config.LOCALEDIR);
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);
-       
+
     // When explicitly launched, cli is automatically enabled
     if (explicitly_launched)
         cli_enabled = true;
-       
+
     var app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
