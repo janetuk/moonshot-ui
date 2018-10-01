@@ -57,7 +57,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private Button remove_button;
 
     private Button send_button;
-    
+
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
@@ -102,19 +102,19 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.set_position(WindowPosition.CENTER);
         set_default_size(WINDOW_WIDTH, WINDOW_HEIGHT);
         build_ui();
-        setup_list_model(); 
+        setup_list_model();
         load_id_cards();
         connect_signals();
         report_duplicate_nais();
         report_expired_trust_anchors();
     }
-    
+
     private void report_duplicate_nais() {
         ArrayList<ArrayList<IdCard>> duplicates;
         identities_manager.find_duplicate_nai_sets(out duplicates);
         foreach (ArrayList<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify") 
+                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
 
             foreach (var card in list) {
@@ -172,7 +172,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         if (id_card == null)
             return false;
-        
+
         if (candidates != null)
         {
             bool is_candidate = false;
@@ -184,7 +184,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             if (!is_candidate)
                 return false;
         }
-        
+
         string entry_text = search_entry.get_text();
         if (entry_text == null || entry_text == "")
         {
@@ -195,7 +195,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         {
             if (search_text == "")
                 continue;
-         
+
 
             string search_text_casefold = search_text.casefold();
 
@@ -210,11 +210,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             if (id_card.display_name != null)
             {
                 string display_name_casefold = id_card.display_name.casefold();
-              
+
                 if (display_name_casefold.contains(search_text_casefold))
                     return true;
             }
-            
+
             if (id_card.services.size > 0)
             {
                 foreach (string service in id_card.services)
@@ -273,7 +273,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             add_id_card_widget(id_card);
         }
     }
-    
+
     private IdCard update_id_card_data(IdentityDialog dialog, IdCard id_card)
     {
         id_card.display_name = dialog.display_name;
@@ -281,6 +281,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         id_card.username = dialog.username;
         id_card.password = dialog.password;
         id_card.store_password = dialog.store_password;
+        id_card.has_2fa = dialog.has_2fa;
 
         id_card.update_services_from_list(dialog.get_services());
 
@@ -313,7 +314,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
 
         logger.trace("add_id_card_widget: id_card.nai='%s'; selected nai='%s'"
-                     .printf(id_card.nai, 
+                     .printf(id_card.nai,
                              this.selected_card == null ? "[null selection]" : this.selected_card.nai));
 
 
@@ -368,7 +369,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     {
         old_duplicates.clear();
         #if OS_MACOS
-        /* 
+        /*
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
          * so for now we will install silently
          */
@@ -496,13 +497,13 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private void remove_identity_cb(IdCard id_card)
     {
-        bool remove = WarningDialog.confirm(this, 
+        bool remove = WarningDialog.confirm(this,
                                             Markup.printf_escaped(
                                                 "<span font-weight='heavy'>" + _("You are about to remove the identity '%s'.") + "</span>",
                                                 id_card.display_name)
                                             + "\n\n" + _("Are you sure you want to do this?"),
                                             "delete_idcard");
-        if (remove) 
+        if (remove)
             remove_identity(id_card);
     }
 
@@ -560,7 +561,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     /** Makes the window visible, or at least, notifies the user that the window
      * wants to be visible.
      *
-     * This differs from show() in that show() does not guarantee that the 
+     * This differs from show() in that show() does not guarantee that the
      * window will be moved to the foreground. Actually, neither does this
      * method, because the user's settings and window manager may affect the
      * behavior significantly.
@@ -605,6 +606,27 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
                 dialog.destroy();
             }
         }
+
+        // check 2FA
+        if (retval.has_2fa) {
+            var dialog = new Add2FADialog(identity, request);
+            var result = dialog.run();
+
+            switch (result) {
+            case ResponseType.OK:
+                retval.mfa_code = dialog.password;
+                // Don't leave passwords in memory longer than necessary.
+                // (This may not actually clear the data, but it's the best we can do.)
+                dialog.clear_password();
+                break;
+            default:
+                break;
+            }
+            // Do this again, in case OK button wasn't selected.
+            dialog.clear_password();
+            dialog.destroy();
+        }
+
         return retval;
     }
 
@@ -617,7 +639,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         send_button.set_sensitive(false);
 
         candidates = null;
-      
+
         if (!this.selection_in_progress())
         {
             candidates = null;
@@ -697,7 +719,7 @@ SUCH DAMAGE.
         about.set_transient_for(this);
         about.response.connect((a, b) => {about.destroy();});
         set_bg_color(about);
-        
+
         about.run();
     }
 
@@ -861,7 +883,7 @@ SUCH DAMAGE.
         // hide the  File | Quit menu item which is now on the Mac Menu
 //        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
 //        quit_item.hide();
-        
+
         Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
 
         osxApp.set_menu_bar(menushell);
@@ -880,7 +902,7 @@ SUCH DAMAGE.
 
         if (!this.selection_in_progress())
             remember_identity_binding.hide();
-    } 
+    }
 
     internal bool selection_in_progress() {
         return !this.request_queue.is_empty();
@@ -916,7 +938,7 @@ SUCH DAMAGE.
                                                "close_moonshot_window");
             if (result) {
                 // Prevent other handlers from handling this event; this keeps the window open.
-                return true; 
+                return true;
             }
         }
 
@@ -924,7 +946,7 @@ SUCH DAMAGE.
         return false;
     }
 
-    private static Widget make_rigid(Button button) 
+    private static Widget make_rigid(Button button)
     {
         // Hack to prevent the button from growing vertically
         VBox fixed_height = new VBox(false, 0);

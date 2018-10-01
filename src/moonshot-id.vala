@@ -48,7 +48,7 @@ public class TrustAnchor : Object
         CA_CERT,
         SERVER_CERT
     }
- 
+
     private string _ca_cert = "";
     private string _subject = "";
     private string _subject_alt = "";
@@ -69,7 +69,7 @@ public class TrustAnchor : Object
         _datetime_added = "";
 
         // Work around a Portal bug that littered some credential files with this cruft.
-        string cruft = 
+        string cruft =
 """<!-- Remove the begin and end lines from the PEM output of
 openssl to produce this format.  Alternatively, base64 encode a DER format certificate -->""";
         _ca_cert = _ca_cert.replace(cruft, "");
@@ -115,7 +115,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
     }
 
     public TrustAnchorType get_anchor_type() {
-        return (server_cert != "" ? TrustAnchorType.SERVER_CERT 
+        return (server_cert != "" ? TrustAnchorType.SERVER_CERT
                 : (ca_cert != "" ? TrustAnchorType.CA_CERT : TrustAnchorType.EMPTY));
     }
 
@@ -187,7 +187,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
             }
             return null;
         }
-            
+
         string date = (string) buf;
         IdCard.logger.trace(@"get_expiration_date: get_cert_valid_before returned '$date'");
 
@@ -232,8 +232,8 @@ public class IdCard : Object
     private string _issuer = "";
 
     public string display_name { get; set; default = ""; }
-  
-    public string username { 
+
+    public string username {
         public get {
             return _username;
         }
@@ -243,7 +243,7 @@ public class IdCard : Object
         }
     }
 
-    public string issuer { 
+    public string issuer {
         public get {
             return _issuer;
         }
@@ -269,12 +269,13 @@ public class IdCard : Object
                 _password = null;
             }
             if (value != null)
-                _password = GnomeKeyring.memory_strdup(value); 
+                _password = GnomeKeyring.memory_strdup(value);
         }
     }
 #else
     public string password { get; set; default = null; }
 #endif
+    public string mfa_code { get; set; default = null; }
 
     private Rule[] _rules = new Rule[0];
     public Rule[] rules {
@@ -294,10 +295,10 @@ public class IdCard : Object
             return "";
         }
 
-        // ArrayList.to_array() seems to be unreliable -- it causes segfaults 
+        // ArrayList.to_array() seems to be unreliable -- it causes segfaults
         // semi-randomly. (Possibly because it returns an unowned ref?)
         // return string.joinv(sep, _services.to_array());
-        // 
+        //
         // This problem may be related to the one noted elsewhere as the
         // "Centos vala array property bug".
 
@@ -320,7 +321,7 @@ public class IdCard : Object
                 _services.add(s);
             }
         }
-    } 
+    }
 
     internal void update_services_from_list(ArrayList<string> services) {
         if (services == this._services) {
@@ -333,13 +334,13 @@ public class IdCard : Object
         if (services != null) {
             _services.add_all(services);
         }
-    } 
+    }
 
 
     public bool temporary {get; set; default = false; }
 
     private TrustAnchor _trust_anchor = new TrustAnchor.empty();
-    public TrustAnchor trust_anchor  { 
+    public TrustAnchor trust_anchor  {
         get {
             return _trust_anchor;
         }
@@ -353,10 +354,12 @@ public class IdCard : Object
     internal void clear_trust_anchor() {
         _trust_anchor = new TrustAnchor.empty();
     }
-  
+
     public string nai { public get; private set;}
 
     public bool store_password { get; set; default = false; }
+
+    public bool has_2fa { get; set; default = false; }
 
     // uuid is currently used only for debugging. Must be unique, even between cards with same nai and display name.
     public string uuid {
@@ -370,7 +373,7 @@ public class IdCard : Object
         return "%08X.%08X::%s".printf(rand1, rand2, TrustAnchor.format_datetime_now());
     }
 
-    public bool is_no_identity() 
+    public bool is_no_identity()
     {
         return (display_name == NO_IDENTITY);
     }
@@ -428,8 +431,8 @@ public class IdCard : Object
         return result;
     }
 
-    public static IdCard NewNoIdentity() 
-    { 
+    public static IdCard NewNoIdentity()
+    {
         IdCard card = new IdCard();
         card.display_name = NO_IDENTITY;
 	card._nai = "";
