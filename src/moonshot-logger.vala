@@ -132,6 +132,11 @@ public class MoonshotLogger : Object {
     FileStream? stream = null;
     internal MoonshotLogger(string name) {
         string? filename = GLib.Environment.get_variable("MOONSHOT_LOG_FILE");
+        if (filename == null) {
+            string alternate_log = "/tmp/moonshot-ui.log";
+            if  (FileUtils.test(alternate_log, FileTest.EXISTS))
+                filename = alternate_log;
+        }
         if (filename != null)
             stream = FileStream.open(filename, "a");
     }
@@ -139,7 +144,7 @@ public class MoonshotLogger : Object {
     private void dump_message(string type, string message, Error? e = null) {
         if (stream != null) {
             var now = new DateTime.now_local();
-            stream.printf("%s\t%s\t%s\t%s\n", now.to_string(), type, message, 
+            stream.printf("%s\t%s\t%s\t%s\n", now.to_string(), type, message,
                                               e != null? e.message : "");
             stream.flush();
         }
