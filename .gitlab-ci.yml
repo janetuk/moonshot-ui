@@ -21,6 +21,7 @@ before_script:
     - mkdir build
     - cp ../*.deb build
   artifacts:
+    expire_in: 6 months
     paths:
         - build/*.deb
 
@@ -37,6 +38,7 @@ before_script:
     - mv -f moonshot-ui-*tar.xz SOURCES
     - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
+    expire_in: 6 months
     paths:
       - RPMS
 
