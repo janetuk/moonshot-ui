@@ -260,7 +260,8 @@ AC_CONFIG_FILES([
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop
-	moonshot-ui.spec
+        moonshot-ui.spec
+        APKBUILD
 ])
 
 AC_OUTPUT

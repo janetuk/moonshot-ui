@@ -5,7 +5,7 @@ stages:
 - build
 
 before_script:
-  - rm -fr build SOURCES RPMS
+  - rm -fr build SOURCES RPMS apks
 
 .debiancommon: &debiancommon
   stage: build
@@ -69,3 +69,27 @@ ubuntu16:
 ubuntu18:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu18:latest
   <<: *debiancommon
+
+alpine38:
+  stage: build
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/alpine38:latest
+  tags:
+    - moonshot
+  script:
+    - adduser -D tmpuser
+    - adduser tmpuser abuild
+    - sh autogen.sh
+    - sed -i "s/GZIP_ENV = --best//g" Makefile.in
+    - ./configure
+    - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD
+    - make dist
+    - chown tmpuser . -R
+    - sudo -u tmpuser abuild checksum
+    - sudo -u tmpuser abuild-keygen -an
+    - sudo -u tmpuser abuild -r
+    - mkdir apks
+    - cp /home/tmpuser/packages/moonshot/x86_64/*.apk apks
+  artifacts:
+    expire_in: 6 months
+    paths:
+        - apks

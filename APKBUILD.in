@@ -1,0 +1,32 @@
+# Contributor: Alejandro Perez-Mendez <alex.perez-mendez@jisc.ac.uk>
+# Maintainer: Alejandro Perez-Mendez <alex.perez-mendez@jisc.ac.uk>
+pkgname=@PACKAGE@
+pkgver=@PACKAGE_VERSION@
+pkgrel=0
+pkgdesc="Moonshot UI"
+url="https://gitlab.ci.ti.ja.net/moonshot/ui"
+arch="all"
+license="BSD-3-Clause"
+depends=""
+makedepends="alpine-sdk automake autoconf libtool openssl-dev gettext gtk+-dev libgee-dev newt-dev vala desktop-file-utils dbus-glib-dev libgnome-keyring-dev jansson-dev dbus-x11"
+install=""
+subpackages="$pkgname-dev"
+source="${pkgname}-${pkgver}.tar.xz"
+builddir="$srcdir/${pkgname}-${pkgver}"
+
+build() {
+	cd "$builddir"
+	./configure \
+		--build=$CBUILD \
+		--host=$CHOST \
+		--prefix=/usr \
+		--sysconfdir=/etc \
+		--mandir=/usr/share/man \
+		--localstatedir=/var
+	make
+}
+
+package() {
+	cd "$builddir"
+	make DESTDIR="$pkgdir" install
+}
