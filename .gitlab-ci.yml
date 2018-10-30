@@ -54,6 +54,7 @@ before_script:
     - sed -i "s/GZIP_ENV = --best//g" Makefile.in
     - ./configure
     - make dist
+    - chown tmpuser . -R
     - sudo -u tmpuser abuild checksum
     - sudo -u tmpuser abuild-keygen -an
     - sudo -u tmpuser abuild -r
