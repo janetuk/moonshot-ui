@@ -32,12 +32,88 @@
 using Gee;
 
 #if GNOME_KEYRING || LIBSECRET_KEYRING
+
 public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected static MoonshotLogger logger = get_logger("KeyringStore");
 
     protected LinkedList<IdCard> id_card_list;
-    protected const string keyring_store_attribute = "Moonshot";
-    protected const string keyring_store_version = "1.0";
+    internal const string keyring_store_attribute = "Moonshot";
+    internal const string keyring_store_version = "1.0";
+
+    /*  
+     * This class is directly useful for the libsecret implementation.
+     * However, we convert the gnome keyring attributes into a HashTable
+     * so we can share the serialization code between the two
+     * implementations.  This ends up decreasing complexity even of the
+     * gnome keyring code
+    */
+    protected class Attributes: GLib.HashTable<string, string> {
+	public Attributes() {
+	    base.full(GLib.str_hash, GLib.str_equal, GLib.g_free, GLib.g_free);
+      }
+
+    }
+
+    protected static Attributes match_attributes;
+
+    protected IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
+    {
+	IdCard id_card = new IdCard();
+	unowned string store_password = attrs["StorePassword"];
+	unowned string ca_cert = attrs["CA-Cert"] ?? "";
+	unowned string server_cert = attrs["Server-Cert"] ?? "";
+	unowned string subject = attrs["Subject"] ?? "";
+	unowned string subject_alt = attrs["Subject-Alt"] ?? "";
+	unowned string ta_datetime_added = attrs["TA_DateTime_Added"];
+
+	id_card.issuer = attrs["Issuer"];
+	id_card.username = attrs["Username"];
+	id_card.display_name = attrs["DisplayName"];
+	unowned string services = attrs["Services"];
+	if ((services != null) && services != "") {
+	    id_card.update_services(services.split(";"));
+	}
+	var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt);
+	if (ta_datetime_added != null) {
+	    ta.set_datetime_added(ta_datetime_added);
+            }
+	id_card.set_trust_anchor_from_store(ta);
+
+	unowned string rules_pattern_all = attrs["Rules-Pattern"];
+	unowned string rules_always_confirm_all = attrs["Rules-AlwaysConfirm"];
+	if ((rules_pattern_all != null) && (rules_always_confirm_all != null)) {
+	    string[] rules_patterns = rules_pattern_all.split(";");
+	    string[] rules_always_confirm = rules_always_confirm_all.split(";");
+	    if (rules_patterns.length == rules_always_confirm.length) {
+		Rule[] rules = new Rule[rules_patterns.length];
+		for (int i = 0; i < rules_patterns.length; i++) {
+		    rules[i].pattern = (owned) rules_patterns[i];
+		    rules[i].always_confirm = (owned) rules_always_confirm[i];
+		}
+		id_card.rules = rules;
+	    }
+	}
+	
+	if (store_password != null)
+	    id_card.store_password = (store_password == "yes");
+	else
+	    id_card.store_password = ((secret != null) && (secret != ""));
+
+	if (id_card.store_password)
+	    id_card.password = secret;
+	else
+	    id_card.password = null;
+
+
+	    
+
+	return id_card;
+    }
+	
+    class construct {
+	match_attributes = new Attributes();
+	match_attributes.insert(keyring_store_attribute, keyring_store_version);
+    }
 
     public void add_card(IdCard card) {
         logger.trace("add_card: Adding card '%s' with services: '%s'"
@@ -80,14 +156,19 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     }
 
     protected abstract void clear_keyring();     
-    protected abstract void load_id_cards();
+    protected abstract void load_id_cards() throws GLib.Error;
     internal abstract void store_id_cards();
     
 
 
     public KeyringStoreBase() {
         id_card_list = new LinkedList<IdCard>();
-        load_id_cards();
+        try {
+	    load_id_cards();
+	} catch( GLib.Error e) {
+	    stdout.printf("Unable to load ID cards: %s\n", e.message);
+	}
+	
     }
 }
 
