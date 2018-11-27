@@ -66,6 +66,7 @@ class IdentityDialog : Dialog
     private Entry password_entry;
     private Label password_label;
     private CheckButton remember_checkbutton;
+    private CheckButton mfa_checkbutton;
     private Label message_label;
     public bool complete;
     private IdCard card;
@@ -94,6 +95,10 @@ class IdentityDialog : Dialog
 
     public bool store_password {
         get { return remember_checkbutton.active; }
+    }
+
+    public bool has_2fa {
+        get { return mfa_checkbutton.active; }
     }
 
     /**
@@ -154,6 +159,9 @@ class IdentityDialog : Dialog
         remember_checkbutton = new CheckButton.with_label(_("Remember password"));
         remember_checkbutton.active = card.store_password;
 
+        mfa_checkbutton = new CheckButton.with_label(_("Requires 2FA"));
+        mfa_checkbutton.active = card.has_2fa;
+
         password_entry = new Entry();
         password_entry.set_invisible_char('*');
         password_entry.set_visibility(false);
@@ -177,6 +185,7 @@ class IdentityDialog : Dialog
         var remember_hbox = new HBox(false, 40);
         remember_hbox.pack_start(new HBox(false, 0), false, false, 0);
         remember_hbox.pack_start(remember_checkbutton, false, false, 0);
+        remember_hbox.pack_start(mfa_checkbutton, false, false, 0);
         content_area.pack_start(remember_hbox, false, false, 2);
 
         this.response.connect(on_response);
@@ -204,6 +213,7 @@ class IdentityDialog : Dialog
             username_entry.set_sensitive(false);
             password_entry.set_sensitive(false);
             remember_checkbutton.set_sensitive(false);
+            mfa_checkbutton.set_sensitive(false);
         }
 
         this.destroy.connect(() => {
@@ -251,8 +261,8 @@ class IdentityDialog : Dialog
         ta_clear_button.clicked.connect((w) => {
                 var result = WarningDialog.confirm(this,
                                                    Markup.printf_escaped(
-                                                       "<span font-weight='heavy'>" 
-                                                       + _("You are about to clear the trust anchor fingerprint for '%s'.") 
+                                                       "<span font-weight='heavy'>"
+                                                       + _("You are about to clear the trust anchor fingerprint for '%s'.")
                                                        + "</span>",
                                                        id.display_name)
                                                    + _("\n\nAre you sure you want to do this?"),
@@ -272,7 +282,7 @@ class IdentityDialog : Dialog
 
                     ta_table.resize(1, ncolumns);
                     ta_label.set_text(ta_label_prefix + none);
-                    ta_table.attach(ta_label, 0, 1, 0, 1, 
+                    ta_table.attach(ta_label, 0, 1, 0, 1,
                                     fill_and_expand, fill_and_expand, 0, 0);
 
                 }
@@ -499,7 +509,7 @@ class IdentityDialog : Dialog
                 var result = WarningDialog.confirm(this,
                                                    Markup.printf_escaped(
                                                        "<span font-weight='heavy'>"
-                                                       + _("You are about to remove the service\n'%s'.") 
+                                                       + _("You are about to remove the service\n'%s'.")
                                                        + "</span>",
                                                        selected_item.label)
                                                    + _("\n\nAre you sure you want to do this?"),
@@ -520,7 +530,7 @@ class IdentityDialog : Dialog
         return services_vbox;
     }
 
-    private void export_certificate(IdCard id) 
+    private void export_certificate(IdCard id)
     {
         var dialog = new FileChooserDialog("Save File",
                                            this,
@@ -533,7 +543,7 @@ class IdentityDialog : Dialog
             dialog.set_current_folder(export_directory);
         }
         // Remove slashes from the default filename.
-        string default_filename = 
+        string default_filename =
             (id.display_name + ".pem").replace(Path.DIR_SEPARATOR_S, "_");
         dialog.set_current_name(default_filename);
         if (dialog.run() == ResponseType.ACCEPT)

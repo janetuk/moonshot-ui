@@ -113,8 +113,13 @@ public class MoonshotServer : Object {
             nai_out = id_card.nai;
             if ((request.password != null) && (request.password != ""))
                 password_out = request.password;
-            else
+            else {
                 password_out = id_card.password;
+                if (password_out != null && id_card.has_2fa && id_card.mfa_code != null) {
+                    password_out += id_card.mfa_code;
+                }
+            }
+
 
             server_certificate_hash = id_card.trust_anchor.server_cert;
             ca_certificate = id_card.trust_anchor.ca_cert;
@@ -250,9 +255,9 @@ public class MoonshotServer : Object {
         {
             /* workaround Centos vala array property bug: use temp array */
             Rule[] rules = new Rule[rules_patterns.length];
-         
+
             for (int i = 0; i < rules.length; i++)
-            { 
+            {
                 rules[i].pattern = rules_patterns[i];
                 rules[i].always_confirm = rules_always_confirm[i];
             }

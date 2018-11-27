@@ -70,7 +70,7 @@
 typedef struct {
   gchar *address; /* bus address */
   GPid pid; /* pid of the dbus-daemon */
-  gint stdout;
+  gint priv_stdout;
 } MoonshotDBusBus;
 
 /* Struct for keeping a connection record */
@@ -154,8 +154,7 @@ static gchar *dbus_read_bus_addr(gint fd, MoonshotError **error)
 static void dbus_terminate_bus(MoonshotDBusBus *bus)
 {
   g_return_if_fail(bus != NULL);
-
-  close(bus->stdout);
+  close(bus->priv_stdout);
   if (bus->pid > 0)
     kill(bus->pid, SIGTERM);
   g_spawn_close_pid(bus->pid);
@@ -203,7 +202,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
                                 NULL, /* user_data for child_setup */
                                &(bus->pid),
                                 NULL, /* standard_input, defaults to /dev/null */
-                               &(bus->stdout),
+                               &(bus->priv_stdout),
                                 NULL, /* standard error, defaults to our own */
                                 &g_error)) {
     *error = moonshot_error_new(MOONSHOT_ERROR_IPC_ERROR,
@@ -214,7 +213,7 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
   }
 
   /* Read the bus address. Terminate the child process if this fails. */
-  bus->address = dbus_read_bus_addr(bus->stdout, error);
+  bus->address = dbus_read_bus_addr(bus->priv_stdout, error);
   if (bus->address == NULL) {
     dbus_terminate_bus(bus);
     bus = NULL;

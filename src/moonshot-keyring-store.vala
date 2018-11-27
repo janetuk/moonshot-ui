@@ -109,7 +109,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             }
         }
     }
-     
+
     private void load_id_cards() {
         id_card_list.clear();
 
@@ -123,6 +123,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             int rules_patterns_index = -1;
             int rules_always_confirm_index = -1;
             string store_password = null;
+            string has_2fa = null;
             string ca_cert = "";
             string server_cert = "";
             string subject = "";
@@ -157,6 +158,8 @@ public class KeyringStore : Object, IIdentityCardStore {
                     subject_alt = value;
                 } else if (attribute.name == "StorePassword") {
                     store_password = value;
+                } else if (attribute.name == "Has2FA") {
+                    has_2fa = value;
                 } else if (attribute.name == "TA_DateTime_Added") {
                     ta_datetime_added = value;
                 }
@@ -193,6 +196,10 @@ public class KeyringStore : Object, IIdentityCardStore {
             else
                 id_card.password = null;
 
+            if (has_2fa != null)
+                id_card.has_2fa = (has_2fa == "yes");
+
+
             id_card_list.add(id_card);
         }
     }
@@ -205,7 +212,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             var rules = id_card.rules;
             string[] rules_patterns = new string[rules.length];
             string[] rules_always_conf = new string[rules.length];
-            
+
             for (int i = 0; i < rules.length; i++) {
                 rules_patterns[i] = rules[i].pattern;
                 rules_always_conf[i] = rules[i].always_confirm;
@@ -228,6 +235,7 @@ public class KeyringStore : Object, IIdentityCardStore {
             attributes.append_string("Subject-Alt", id_card.trust_anchor.subject_alt);
             attributes.append_string("TA_DateTime_Added", id_card.trust_anchor.datetime_added);
             attributes.append_string("StorePassword", id_card.store_password ? "yes" : "no");
+            attributes.append_string("Has2FA", id_card.has_2fa ? "yes" : "no");
 
             GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,
                                                                        item_type, id_card.display_name, attributes,

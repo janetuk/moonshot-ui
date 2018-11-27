@@ -5,7 +5,7 @@ stages:
 - build
 
 before_script:
-  - rm -fr build SOURCES RPMS
+  - rm -fr build SOURCES RPMS apks
 
 .debiancommon: &debiancommon
   stage: build
@@ -16,11 +16,12 @@ before_script:
     - sed -i "s/DIST/$CI_JOB_NAME/g" debian/changelog
     - sh autogen.sh
     - make dist
-    - mv moonshot-ui-1.1.2.tar.xz ../moonshot-ui_1.1.2.orig.tar.xz
+    - mv moonshot-ui-1.1.3.tar.xz ../moonshot-ui_1.1.3.orig.tar.xz
     - debuild -us -uc
     - mkdir build
     - cp ../*.deb build
   artifacts:
+    expire_in: 6 months
     paths:
         - build/*.deb
 
@@ -36,8 +37,32 @@ before_script:
     - mv -f moonshot-ui-*tar.xz SOURCES
     - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
+    expire_in: 6 months
     paths:
       - RPMS
+
+.alpinecommon: &alpinecommon
+  stage: build
+  tags:
+    - moonshot
+  script:
+    - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD.in
+    - adduser -D tmpuser -s /bin/sh
+    - adduser tmpuser abuild
+    - sh autogen.sh
+    - sed -i "s/GZIP_ENV = --best//g" Makefile.in
+    - ./configure
+    - make dist
+    - chown tmpuser . -R
+    - sudo -u tmpuser abuild checksum
+    - sudo -u tmpuser abuild-keygen -an
+    - sudo -u tmpuser abuild -r
+    - mkdir apks
+    - mv /home/tmpuser/packages/moonshot/* apks
+  artifacts:
+    expire_in: 6 months
+    paths:
+        - apks/*/*.apk
 
 centos6:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/centos6:latest
@@ -55,6 +80,14 @@ debian9:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
   <<: *debiancommon
 
+raspbian8:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/raspbian8:latest
+  <<: *debiancommon
+
+raspbian9:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/raspbian9:latest
+  <<: *debiancommon
+
 ubuntu14:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu14:latest
   <<: *debiancommon
@@ -66,3 +99,11 @@ ubuntu16:
 ubuntu18:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/ubuntu18:latest
   <<: *debiancommon
+
+alpine38:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/alpine38:latest
+  <<: *alpinecommon
+
+alpine38_armhf:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/alpine38_arm:latest
+  <<: *alpinecommon

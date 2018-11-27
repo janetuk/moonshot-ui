@@ -261,7 +261,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     /* Adds an ID card */
     private void add_id_card_dialog() {
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, disp_label, user_label, passwd_label,
-                realm_label, chosen, add_btn, cancel_btn, storepwd_chk;
+                realm_label, chosen, add_btn, cancel_btn, storepwd_chk, mfa_chk;
         bool repeat = false;
         newtCenteredWindow(78, 7, "Add Identity");
         form = newtForm(null, null, 0);
@@ -272,8 +272,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         disp_entry = newtEntry(15, 1, null, 60, null, 0);
         user_entry = newtEntry(15, 2, null, 60, null, 0);
         realm_entry = newtEntry(15, 3, null, 60, null, 0);
-        passwd_entry = newtEntry(15, 4, null, 45, null, Flag.PASSWORD);
-        storepwd_chk = newtCheckbox(62, 4, "Remember?", ' ', " *", null);
+        passwd_entry = newtEntry(15, 4, null, 37, null, Flag.PASSWORD);
+        storepwd_chk = newtCheckbox(53, 4, "Remember?", ' ', " *", null);
+        mfa_chk = newtCheckbox(67, 4, "2FA?", ' ', " *", null);
         add_btn = newtCompactButton(20, 6, "Add");
         cancel_btn = newtCompactButton(50, 6, "Cancel");
         newtFormAddComponent(form, disp_label);
@@ -285,6 +286,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, passwd_label);
         newtFormAddComponent(form, passwd_entry);
         newtFormAddComponent(form, storepwd_chk);
+        newtFormAddComponent(form, mfa_chk);
         newtFormAddComponent(form, add_btn);
         newtFormAddComponent(form, cancel_btn);
 
@@ -298,6 +300,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.issuer = newtEntryGetValue(realm_entry);
                 id_card.password = newtEntryGetValue(passwd_entry);
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
+                id_card.has_2fa = (newtCheckboxGetValue(mfa_chk) == '*');
                 if (id_card.display_name == "" || id_card.username == "" || id_card.issuer == "") {
                     info_dialog("Missing information", "Please, fill in the missing fields. Only the password one is optional");
                     repeat = true;
@@ -317,7 +320,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private void edit_id_card_dialog(IdCard id_card) {
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
-                listbox, cert_btn, chosen, storepwd_chk, show_btn;
+                listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
         weak newtComponent focus;
         bool exit = false;
         ArrayList<string> services = new ArrayList<string>();
@@ -332,11 +335,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         realm_label = newtLabel(1, 3, "Realm:");
         realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, 0);
         passwd_label = newtLabel(1, 4, "Password:");
-        passwd_entry = newtEntry(15, 4, id_card.password, 38, null, Flag.PASSWORD);
+        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD);
+        storepwd_chk = newtCheckbox(46, 4, "Remember?", ' ', " *", null);
+        mfa_chk = newtCheckbox(60, 4, "2FA?", ' ', " *", null);
         passwd_btn = newtCompactButton(68, 4, "Show");
-        storepwd_chk = newtCheckbox(55, 4, "Remember?", ' ', " *", null);
         if (id_card.store_password)
             newtCheckboxSetValue(storepwd_chk, '*');
+        if (id_card.has_2fa)
+            newtCheckboxSetValue(mfa_chk, '*');
         cert_label = newtLabel(1, 5, "Trust anchor:");
         var ta_type = id_card.trust_anchor.get_anchor_type();
         string ta_type_name = (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT ? "Server certificate"
@@ -365,6 +371,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, passwd_label);
         newtFormAddComponent(form, passwd_entry);
         newtFormAddComponent(form, storepwd_chk);
+        newtFormAddComponent(form, mfa_chk);
         newtFormAddComponent(form, passwd_btn);
         newtFormAddComponent(form, cert_label);
         newtFormAddComponent(form, cert_entry);
@@ -433,6 +440,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.issuer = newtEntryGetValue(realm_entry);
                 id_card.password = newtEntryGetValue(passwd_entry);
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
+                id_card.has_2fa = (newtCheckboxGetValue(mfa_chk) == '*');
                 id_card.update_services_from_list(services);
                 if (ta_type == TrustAnchor.TrustAnchorType.EMPTY)
                     id_card.clear_trust_anchor();
@@ -558,31 +566,31 @@ If it matches the above fingerprint, confirm the change. If not, then cancel."""
 
     private void about_dialog()
     {
-        string logo = """              ███████████████
-           █████████████████████
-       ██████████████████████ ███
-     ██████████████████████ █████████
-    █████████████████████  ███████████
-  █████████████████████  ████████████████
- ████████████████████   █████████████████
- ███████████████████  ████████████████████
-███████████████████  ██████████████████████
-███  █████  ███     ████     ████   ███  ███  ████   █   █    ███   ██████
-███   ███   █   ██   ██  ███   ██   ███  ███ ██   █  █   █  ██   ██   ██
-███    █    █  ████  █  █████  ██  █  █  ███  ██     █   █  █     █   ██
-███  ██ ██  █  ████  █  █████  ██  ██    ███    ██   █████  █     █   ██
-███  █████  █   ██   ██  ███   ██  ███   ███ ██   █  █   █  ██   ██   ██
-███  █████  ██     █████      ███  ████  ███  ████   █   █    ███     ██
-██████████████   ██████████████████████████
- ████████████   ██████████████████████████
- ████████████   █████████████████████████
-  ██████████    █████████████████████████
-   █████████   █████████████████████████
-    ████████   ████████████████████████
-       █████   █████████████████████
-        ████   ███████████████████
-           █    ████████████████
-                   ████████""";
+        string logo = """              XXXXXXXXXXXXXXX
+           XXXXXXXXXXXXXXXXXXXXX
+       XXXXXXXXXXXXXXXXXXXXXX XXXXX
+     XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXX
+    XXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXX
+  XXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXX
+XXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXXXX
+XXX  XXXXX  XXX     XXXX     XXXX   XXX  XXX  XXXX   X   X    XXX   XXXXXX
+XXX   XXX   X   XX   XX  XXX   XX   XXX  XXX XX   X  X   X  XX   XX   XX
+XXX    X    X  XXXX  X  XXXXX  XX  X  X  XXX  XX     X   X  X     X   XX
+XXX  XX XX  X  XXXX  X  XXXXX  XX  XX    XXX    XX   XXXXX  X     X   XX
+XXX  XXXXX  X   XX   XX  XXX   XX  XXX   XXX XX   X  X   X  XX   XX   XX
+XXX  XXXXX  XX     XXXXX      XXX  XXXX  XXX  XXXX   X   X    XXX     XX
+XXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXX
+  XXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXX
+    XXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXX
+       XXXXX   XXXXXXXXXXXXXXXXXXXXX
+        XXXX   XXXXXXXXXXXXXXXXXXX
+           X    XXXXXXXXXXXXXXXX
+                   XXXXXXXX""";
 
         string license = """Copyright (c) 2017, JISC JANET(UK)
 All rights reserved.
@@ -661,6 +669,15 @@ POSSIBILITY OF SUCH DAMAGE.""";
                 retval = model.update_card(identity);
             }
         }
+
+        // check 2FA
+        if (retval.has_2fa) {
+            init_newt();
+            retval.mfa_code = password_dialog(
+                "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai));
+            newtFinished();
+        }
+
         return retval;
     }
 }

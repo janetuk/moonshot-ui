@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.1.2],
+        [1.1.3],
         [assent@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -260,7 +260,8 @@ AC_CONFIG_FILES([
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop
-	moonshot-ui.spec
+        moonshot-ui.spec
+        APKBUILD
 ])
 
 AC_OUTPUT

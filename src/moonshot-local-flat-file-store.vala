@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-using Gee; 
+using Gee;
 
 public class LocalFlatFileStore : Object, IIdentityCardStore {
     static MoonshotLogger logger = get_logger("LocalFlatFileStore");
@@ -64,20 +64,20 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
     }
 
     public LinkedList<IdCard> get_card_list() {
-        return id_card_list; 
+        return id_card_list;
     }
 
     public IIdentityCardStore.StoreType get_store_type() {
         return IIdentityCardStore.StoreType.FLAT_FILE;
     }
-     
+
     private void load_id_cards() {
         id_card_list.clear();
         var key_file = new KeyFile();
         var path = get_data_dir();
         var filename = Path.build_filename(path, FILE_NAME);
         logger.trace("load_id_cards: attempting to load from " + filename);
-        
+
         try {
             key_file.load_from_file(filename, KeyFileFlags.NONE);
         }
@@ -102,12 +102,15 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 } else {
                     id_card.store_password = (id_card.password != null) && (id_card.password != "");
                 }
-                
+                if (key_file.has_key(identity, "Has2FA")) {
+                    id_card.has_2fa = (key_file.get_string(identity, "Has2FA") == "yes");
+                }
+
                 if (key_file.has_key(identity, "Rules-Patterns") &&
                     key_file.has_key(identity, "Rules-AlwaysConfirm")) {
                     string [] rules_patterns =    key_file.get_string_list(identity, "Rules-Patterns");
                     string [] rules_always_conf = key_file.get_string_list(identity, "Rules-AlwaysConfirm");
-                    
+
                     if (rules_patterns.length == rules_always_conf.length) {
                         Rule[] rules = new Rule[rules_patterns.length];
                         for (int i = 0; i < rules_patterns.length; i++) {
@@ -116,8 +119,8 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                         id_card.rules = rules;
                     }
                 }
-                
-                // Trust anchor 
+
+                // Trust anchor
                 string ca_cert = key_file.get_string(identity, "CA-Cert").strip();
                 string server_cert = key_file.get_string(identity, "ServerCert");
                 string subject = key_file.get_string(identity, "Subject");
@@ -141,13 +144,13 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         string path;
         path = Path.build_filename(Environment.get_user_data_dir(),
                                    Config.PACKAGE_TARNAME);
-                                    
+
         if (!FileUtils.test(path, FileTest.EXISTS)) {
             DirUtils.create_with_parents(path, 0700);
         }
         return path;
     }
-    
+
     internal void store_id_cards() {
         var key_file = new KeyFile();
         foreach (IdCard id_card in this.id_card_list) {
@@ -157,7 +160,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             var rules = id_card.rules;
             string[] rules_patterns = new string[rules.length];
             string[] rules_always_conf = new string[rules.length];
-            
+
             for (int i = 0; i < rules.length; i++) {
                 rules_patterns[i] = rules[i].pattern;
                 rules_always_conf[i] = rules[i].always_confirm;
@@ -185,8 +188,9 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 key_file.set_string_list(id_card.display_name, "Rules-AlwaysConfirm", rules_always_conf);
             }
             key_file.set_string(id_card.display_name, "StorePassword", id_card.store_password ? "yes" : "no");
-            
-            // Trust anchor 
+            key_file.set_string(id_card.display_name, "Has2FA", id_card.has_2fa ? "yes" : "no");
+
+            // Trust anchor
             key_file.set_string(id_card.display_name, "CA-Cert", id_card.trust_anchor.ca_cert);
             key_file.set_string(id_card.display_name, "Subject", id_card.trust_anchor.subject);
             key_file.set_string(id_card.display_name, "SubjectAlt", id_card.trust_anchor.subject_alt);
