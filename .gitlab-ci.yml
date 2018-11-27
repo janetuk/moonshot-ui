@@ -46,7 +46,6 @@ before_script:
   tags:
     - moonshot
   script:
-    - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD.in
     - adduser -D tmpuser -s /bin/sh
     - adduser tmpuser abuild
     - sh autogen.sh
