@@ -56,7 +56,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 
     protected static Attributes match_attributes;
 
-    protected IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
+    protected static IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
     {
 	IdCard id_card = new IdCard();
 	unowned string store_password = attrs["StorePassword"];
@@ -109,7 +109,38 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 
 	return id_card;
     }
-	
+
+    internal static Attributes serialize(IdCard id_card)
+    {
+	/* workaround for Centos vala array property bug: use temp array */
+	var rules = id_card.rules;
+	string[] rules_patterns = new string[rules.length];
+	string[] rules_always_conf = new string[rules.length];
+            
+	for (int i = 0; i < rules.length; i++) {
+	    rules_patterns[i] = rules[i].pattern;
+	    rules_always_conf[i] = rules[i].always_confirm;
+	}
+	string patterns = string.joinv(";", rules_patterns);
+	string always_conf = string.joinv(";", rules_always_conf);
+	string services = id_card.get_services_string(";");
+	Attributes attributes = new Attributes();
+	attributes.insert(keyring_store_attribute, keyring_store_version);
+	attributes.insert("Issuer", id_card.issuer);
+	attributes.insert("Username", id_card.username);
+	attributes.insert("DisplayName", id_card.display_name);
+	attributes.insert("Services", services);
+	attributes.insert("Rules-Pattern", patterns);
+	attributes.insert("Rules-AlwaysConfirm", always_conf);
+	attributes.insert("CA-Cert", id_card.trust_anchor.ca_cert);
+	attributes.insert("Server-Cert", id_card.trust_anchor.server_cert);
+	attributes.insert("Subject", id_card.trust_anchor.subject);
+	attributes.insert("Subject-Alt", id_card.trust_anchor.subject_alt);
+	attributes.insert("TA_DateTime_Added", id_card.trust_anchor.datetime_added);
+	attributes.insert("StorePassword", id_card.store_password ? "yes" : "no");
+	return attributes;
+    }
+
     class construct {
 	match_attributes = new Attributes();
 	match_attributes.insert(keyring_store_attribute, keyring_store_version);
@@ -158,6 +189,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected abstract void clear_keyring();     
     protected abstract void load_id_cards() throws GLib.Error;
     internal abstract void store_id_cards();
+
     
 
 

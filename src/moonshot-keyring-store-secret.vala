@@ -35,6 +35,20 @@
 
 using Secret;
 
+private Collection? find_secret_collection()
+{
+    Collection secret_collection = null;
+    stdout.printf("In find_secret_collection\n");
+    try {
+	Service service = Service.get_sync(ServiceFlags.OPEN_SESSION);
+	secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT,
+						      CollectionFlags.NONE);
+    } catch(GLib.Error e) {
+	stdout.printf("Unable to load secret service: %s\n", e.message);
+	}
+    return secret_collection;
+    }
+
 public class KeyringStore : KeyringStoreBase {
     /*
     * We choose to remain compatible with the way we stored secrets
@@ -42,8 +56,24 @@ public class KeyringStore : KeyringStoreBase {
     * identifier.  Using our own schema might get us a nice icon in
     * seahorse, but would not save much code. 
     */
-    private static Schema schema = new Schema("org.freedesktop.Secret.Generic", SchemaFlags.NONE);
-    private static Collection secret_collection;
+    private const SchemaAttributeType sstring = SchemaAttributeType.STRING;
+    private static Schema schema = new Schema("org.freedesktop.Secret.Generic", SchemaFlags.NONE,
+					      "Moonshot", sstring,
+					      "Issuer", sstring,
+					      "Username", sstring,
+					      "DisplayName", sstring,
+					      "Services", sstring,
+					      "Rules-Pattern", sstring,
+					      "Rules-AlwaysConfirm", sstring,
+					      "CA-Cert", sstring,
+					      "Server-Cert", sstring,
+					      "Subject", sstring,
+					      "Subject-Alt", sstring,
+					      "TA_DateTime_Added", sstring,
+					      "StorePassword", sstring);
+    private static Collection? secret_collection = find_secret_collection();
+
+    
     
 
     /* clear all keyring-stored ids (in preparation to store current list) */
@@ -51,7 +81,7 @@ public class KeyringStore : KeyringStoreBase {
 	GLib.List<Item> items;
 	try {
 	    items = secret_collection.search_sync(schema, match_attributes,
-						  SearchFlags.NONE);
+						  SearchFlags.ALL);
 	} catch (GLib.Error e) {
 	    stdout.printf("Failed to find items to delete: %s\n", e.message);
 	    return;
@@ -73,7 +103,7 @@ public class KeyringStore : KeyringStoreBase {
 
 	GLib.List<Item> items = secret_collection.search_sync(
 							      schema, match_attributes,
-							      SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS);
+							      SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
         foreach(unowned Item entry in items) {
 	    var secret = entry.get_secret();
 	    string secret_text = null;
@@ -89,33 +119,7 @@ public class KeyringStore : KeyringStoreBase {
         clear_keyring();
         foreach (IdCard id_card in this.id_card_list) {
 	    try {
-		/* workaround for Centos vala array property bug: use temp array */
-		var rules = id_card.rules;
-		string[] rules_patterns = new string[rules.length];
-		string[] rules_always_conf = new string[rules.length];
-            
-		for (int i = 0; i < rules.length; i++) {
-		    rules_patterns[i] = rules[i].pattern;
-		    rules_always_conf[i] = rules[i].always_confirm;
-		}
-		string patterns = string.joinv(";", rules_patterns);
-		string always_conf = string.joinv(";", rules_always_conf);
-		string services = id_card.get_services_string(";");
-		KeyringStoreBase.Attributes attributes = new KeyringStoreBase.Attributes();
-		attributes.insert(keyring_store_attribute, keyring_store_version);
-		attributes.insert("Issuer", id_card.issuer);
-		attributes.insert("Username", id_card.username);
-		attributes.insert("DisplayName", id_card.display_name);
-		attributes.insert("Services", services);
-		attributes.insert("Rules-Pattern", patterns);
-		attributes.insert("Rules-AlwaysConfirm", always_conf);
-		attributes.insert("CA-Cert", id_card.trust_anchor.ca_cert);
-		attributes.insert("Server-Cert", id_card.trust_anchor.server_cert);
-		attributes.insert("Subject", id_card.trust_anchor.subject);
-		attributes.insert("Subject-Alt", id_card.trust_anchor.subject_alt);
-		attributes.insert("TA_DateTime_Added", id_card.trust_anchor.datetime_added);
-		attributes.insert("StorePassword", id_card.store_password ? "yes" : "no");
-
+var attributes = serialize(id_card);
 		password_storev_sync(schema, attributes, null, id_card.display_name,
 				     id_card.store_password?id_card.password: "");
 	    } catch(GLib.Error e) {
@@ -129,8 +133,17 @@ public class KeyringStore : KeyringStoreBase {
 	    logger.error(@"Unable to load ID Cards: $(e.message)\n");
 	}
 	
-     }
+    }
 
+    public static bool is_available()
+    {
+	if (secret_collection == null) {
+	    secret_collection = find_secret_collection();
+	}
+	
+	return secret_collection != null;
+    }
+    
 }
 
 #endif
