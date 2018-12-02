@@ -58,6 +58,7 @@ src_moonshot_SOURCES = \
         src/moonshot-local-flat-file-store.vala \
         src/moonshot-keyring-store-base.vala \
 	src/moonshot-keyring-store-gnome.vala \
+	src/moonshot-keyring-store-secret.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-identity-dialog.vala \
@@ -122,10 +123,10 @@ endif
 
 if OS_LINUX
 
-AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
-AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
-src_moonshot_LDFLAGS += -lgnome-keyring -lcrypto
-src_moonshot_webp_LDFLAGS += -lgnome-keyring -lcrypto
+AM_CPPFLAGS += $(KEYRING_CFLAGS)
+AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
+src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto
+src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto
 
 ## Installing mime type data
 mimedir = $(datadir)/mime/packages
