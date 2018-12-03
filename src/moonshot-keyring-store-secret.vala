@@ -38,7 +38,6 @@ using Secret;
 private Collection? find_secret_collection()
 {
     Collection secret_collection = null;
-    stdout.printf("In find_secret_collection\n");
     try {
 	Service service = Service.get_sync(ServiceFlags.OPEN_SESSION);
 	secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT,
@@ -54,7 +53,7 @@ public class KeyringStore : KeyringStoreBase {
     * We choose to remain compatible with the way we stored secrets
     * using libgnomekeyring.  As a result, we cannot use our own schema
     * identifier.  Using our own schema might get us a nice icon in
-    * seahorse, but would not save much code. 
+    * seahorse, but would not save much code.
     */
     private const SchemaAttributeType sstring = SchemaAttributeType.STRING;
     private static Schema schema = new Schema("org.freedesktop.Secret.Generic", SchemaFlags.NONE,
@@ -73,8 +72,8 @@ public class KeyringStore : KeyringStoreBase {
 					      "StorePassword", sstring);
     private static Collection? secret_collection = find_secret_collection();
 
-    
-    
+
+
 
     /* clear all keyring-stored ids (in preparation to store current list) */
     protected override void clear_keyring() {
@@ -125,14 +124,14 @@ var attributes = serialize(id_card);
 	    } catch(GLib.Error e) {
 		logger.error(@"Unable to store $(id_card.display_name): $(e.message)\n");
 	}
-	
+
         }
         try {
 	    load_id_cards();
 	} catch (GLib.Error e) {
 	    logger.error(@"Unable to load ID Cards: $(e.message)\n");
 	}
-	
+
     }
 
     public static bool is_available()
@@ -140,10 +139,18 @@ var attributes = serialize(id_card);
 	if (secret_collection == null) {
 	    secret_collection = find_secret_collection();
 	}
-	
+
 	return secret_collection != null;
     }
-    
+
+    public bool is_locked() {
+        return secret_collection.get_locked();
+    }
+
+    public bool unlock(string password) {
+        return false;
+    }
+
 }
 
 #endif

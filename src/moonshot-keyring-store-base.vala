@@ -40,7 +40,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     internal const string keyring_store_attribute = "Moonshot";
     internal const string keyring_store_version = "1.0";
 
-    /*  
+    /*
      * This class is directly useful for the libsecret implementation.
      * However, we convert the gnome keyring attributes into a HashTable
      * so we can share the serialization code between the two
@@ -55,6 +55,16 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     }
 
     protected static Attributes match_attributes;
+
+    public virtual bool is_locked() {
+        logger.info("Checking locked where it does not belong\n");
+        return false;
+    }
+
+    public virtual bool unlock(string password) {
+        logger.info("Trying to unlock in the wrong place\n");
+        return false;
+    }
 
     protected static IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
     {
@@ -93,7 +103,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 		id_card.rules = rules;
 	    }
 	}
-	
+
 	if (store_password != null)
 	    id_card.store_password = (store_password == "yes");
 	else
@@ -105,7 +115,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 	    id_card.password = null;
 
 
-	    
+
 
 	return id_card;
     }
@@ -116,7 +126,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 	var rules = id_card.rules;
 	string[] rules_patterns = new string[rules.length];
 	string[] rules_always_conf = new string[rules.length];
-            
+
 	for (int i = 0; i < rules.length; i++) {
 	    rules_patterns[i] = rules[i].pattern;
 	    rules_always_conf[i] = rules[i].always_confirm;
@@ -186,11 +196,11 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         return id_card_list;
     }
 
-    protected abstract void clear_keyring();     
+    protected abstract void clear_keyring();
     protected abstract void load_id_cards() throws GLib.Error;
     internal abstract void store_id_cards();
 
-    
+
 
 
     public KeyringStoreBase() {
@@ -200,8 +210,10 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 	} catch( GLib.Error e) {
 	    stdout.printf("Unable to load ID cards: %s\n", e.message);
 	}
-	
+
     }
+
+
 }
 
 #endif

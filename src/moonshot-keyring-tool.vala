@@ -61,4 +61,9 @@ public static int main(string[] args) {
     stdout.printf(usage);
     return 1;
 }
+#else
+public static int main(string[] args) {
+    stdout.printf("The UI has been built without GNOME_KEYRING support.");
+    return 1;
+}
 #endif

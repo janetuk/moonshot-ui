@@ -59,7 +59,7 @@ public class KeyringStore : KeyringStoreBase {
         GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
         foreach(unowned GnomeKeyring.Found entry in items) {
-	    KeyringStoreBase.Attributes new_attrs = new KeyringStoreBase.Attributes();			
+	    KeyringStoreBase.Attributes new_attrs = new KeyringStoreBase.Attributes();
             for (int i = 0; i < entry.attributes.len; i++) {
                 var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
                 if (attribute.type == GnomeKeyring.AttributeType.STRING) {
@@ -67,9 +67,9 @@ public class KeyringStore : KeyringStoreBase {
 		    new_attrs.insert(attribute.name, value);
                 }
 	    }
-	    
+
 	    var id_card = deserialize(new_attrs, entry.secret);
-	    
+
             id_card_list.add(id_card);
         }
     }
@@ -84,7 +84,7 @@ public class KeyringStore : KeyringStoreBase {
 	    var hash_attrs = serialize(id_card);
 	    hash_attrs.foreach((k, v) => {
 		    attributes.append_string(k,v); });
-	    
+
             attributes.append_string(keyring_store_attribute, keyring_store_version);
 
             GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,
@@ -100,14 +100,30 @@ public class KeyringStore : KeyringStoreBase {
 	} catch(GLib.Error e) {
 	    logger.error(@"Unable to load ID cards: $(e.message)\n");
 	}
-	
+
     }
 
     public static bool is_available()
     {
 	return GnomeKeyring.is_available();
     }
-    
+
+    public override bool is_locked() {
+        unowned GnomeKeyring.Info info;
+        GnomeKeyring.Result rv = GnomeKeyring.get_info_sync(null, out info);
+        if (rv != GnomeKeyring.Result.OK)
+            return true;
+        return info.get_is_locked();
+    }
+
+    public override bool unlock(string password) {
+        GnomeKeyring.Result rv = GnomeKeyring.unlock_sync(null, password);
+        if (rv != GnomeKeyring.Result.OK)
+            return false;
+        load_id_cards();
+        return true;
+    }
+
 }
 
 #endif
