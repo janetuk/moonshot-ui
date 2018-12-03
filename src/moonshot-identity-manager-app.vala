@@ -92,8 +92,8 @@ public class IdentityManagerApp {
         use_flat_file_store |= UserForcesFlatFileStore();
         this.use_flat_file_store = use_flat_file_store;
 
-#if GNOME_KEYRING
-        bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
+#if GNOME_KEYRING || LIBSECRET_KEYRING
+        bool keyring_available = (!use_flat_file_store) && KeyringStore.is_available();
 #else
         bool keyring_available = false;
 #endif

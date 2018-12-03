@@ -12,6 +12,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_SUBST([KEYRING_VALAFLAGS],[])
 
 AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz])
 AM_SILENT_RULES([yes])
@@ -63,6 +64,15 @@ case "$host" in
     CLIENT_IPC_MODULE="gio-2.0"
     SERVER_IPC_MODULE="gio-2.0"
 
+    PKG_CHECK_MODULES([KEYRING],
+	[libsecret-1],
+	[KEYRING_VALAFLAGS=" --pkg libsecret-1 --define LIBSECRET_KEYRING"],
+	[
+		PKG_CHECK_MODULES([KEYRING], [gnome-keyring-1],
+		[KEYRING_VALAFLAGS="--pkg moonshot-gnome-keyring --define GNOME_KEYRING"],
+		[AC_ERROR(["Neither gnome-keyring not libsecret is found])
+		])
+    ])
     ;;
 esac
 
