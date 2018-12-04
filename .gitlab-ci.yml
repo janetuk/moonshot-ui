@@ -48,6 +48,7 @@ before_script:
     - moonshot
   script:
     - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD.in
+    - cp vapi/libsecret-1.vapi.dis vapi/libsecret-1.vapi
     - adduser -D tmpuser -s /bin/sh
     - adduser tmpuser abuild
     - sh autogen.sh
