@@ -50,36 +50,34 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected class Attributes: GLib.HashTable<string, string> {
 	public Attributes() {
 	    base.full(GLib.str_hash, GLib.str_equal, GLib.g_free, GLib.g_free);
-      }
+        }
 
     }
 
     protected static Attributes match_attributes;
 
     public virtual bool is_locked() {
-        logger.info("Checking locked where it does not belong\n");
         return false;
     }
 
     public virtual bool unlock(string password) {
-        logger.info("Trying to unlock in the wrong place\n");
         return false;
     }
 
     protected static IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
     {
 	IdCard id_card = new IdCard();
-	unowned string store_password = attrs["StorePassword"];
-	unowned string ca_cert = attrs["CA-Cert"] ?? "";
-	unowned string server_cert = attrs["Server-Cert"] ?? "";
-	unowned string subject = attrs["Subject"] ?? "";
-	unowned string subject_alt = attrs["Subject-Alt"] ?? "";
-	unowned string ta_datetime_added = attrs["TA_DateTime_Added"];
+	unowned string store_password = attrs.lookup("StorePassword");
+	unowned string ca_cert = attrs.lookup("CA-Cert") ?? "";
+	unowned string server_cert = attrs.lookup("Server-Cert") ?? "";
+	unowned string subject = attrs.lookup("Subject") ?? "";
+	unowned string subject_alt = attrs.lookup("Subject-Alt") ?? "";
+	unowned string ta_datetime_added = attrs.lookup("TA_DateTime_Added");
 
-	id_card.issuer = attrs["Issuer"];
-	id_card.username = attrs["Username"];
-	id_card.display_name = attrs["DisplayName"];
-	unowned string services = attrs["Services"];
+	id_card.issuer = attrs.lookup("Issuer");
+	id_card.username = attrs.lookup("Username");
+	id_card.display_name = attrs.lookup("DisplayName");
+	unowned string services = attrs.lookup("Services");
 	if ((services != null) && services != "") {
 	    id_card.update_services(services.split(";"));
 	}
@@ -89,8 +87,8 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
             }
 	id_card.set_trust_anchor_from_store(ta);
 
-	unowned string rules_pattern_all = attrs["Rules-Pattern"];
-	unowned string rules_always_confirm_all = attrs["Rules-AlwaysConfirm"];
+	unowned string rules_pattern_all = attrs.lookup("Rules-Pattern");
+	unowned string rules_always_confirm_all = attrs.lookup("Rules-AlwaysConfirm");
 	if ((rules_pattern_all != null) && (rules_always_confirm_all != null)) {
 	    string[] rules_patterns = rules_pattern_all.split(";");
 	    string[] rules_always_confirm = rules_always_confirm_all.split(";");
