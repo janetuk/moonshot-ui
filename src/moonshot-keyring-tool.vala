@@ -1,4 +1,5 @@
 #if GNOME_KEYRING
+
 using GnomeKeyring;
 using GLib;
 

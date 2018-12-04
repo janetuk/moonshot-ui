@@ -39,14 +39,14 @@ private Collection? find_secret_collection()
 {
     Collection secret_collection = null;
     try {
-	Service service = Service.get_sync(ServiceFlags.OPEN_SESSION);
-	secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT,
-						      CollectionFlags.NONE);
+        Service service = Service.get_sync(ServiceFlags.OPEN_SESSION);
+        secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT,
+                                                      CollectionFlags.NONE);
     } catch(GLib.Error e) {
-	stdout.printf("Unable to load secret service: %s\n", e.message);
-	}
-    return secret_collection;
+        stdout.printf("Unable to load secret service: %s\n", e.message);
     }
+    return secret_collection;
+}
 
 public class KeyringStore : KeyringStoreBase {
     /*
@@ -57,58 +57,53 @@ public class KeyringStore : KeyringStoreBase {
     */
     private const SchemaAttributeType sstring = SchemaAttributeType.STRING;
     private static Schema schema = new Schema("org.freedesktop.Secret.Generic", SchemaFlags.NONE,
-					      "Moonshot", sstring,
-					      "Issuer", sstring,
-					      "Username", sstring,
-					      "DisplayName", sstring,
-					      "Services", sstring,
-					      "Rules-Pattern", sstring,
-					      "Rules-AlwaysConfirm", sstring,
-					      "CA-Cert", sstring,
-					      "Server-Cert", sstring,
-					      "Subject", sstring,
-					      "Subject-Alt", sstring,
-					      "TA_DateTime_Added", sstring,
-					      "StorePassword", sstring);
+                                              "Moonshot", sstring,
+                                              "Issuer", sstring,
+                                              "Username", sstring,
+                                              "DisplayName", sstring,
+                                              "Services", sstring,
+                                              "Rules-Pattern", sstring,
+                                              "Rules-AlwaysConfirm", sstring,
+                                              "CA-Cert", sstring,
+                                              "Server-Cert", sstring,
+                                              "Subject", sstring,
+                                              "Subject-Alt", sstring,
+                                              "TA_DateTime_Added", sstring,
+                                              "StorePassword", sstring);
     private static Collection? secret_collection = find_secret_collection();
-
-
-
 
     /* clear all keyring-stored ids (in preparation to store current list) */
     protected override void clear_keyring() {
-	GLib.List<Item> items;
-	try {
-	    items = secret_collection.search_sync(schema, match_attributes,
-						  SearchFlags.ALL);
-	} catch (GLib.Error e) {
-	    stdout.printf("Failed to find items to delete: %s\n", e.message);
-	    return;
-	}
-        foreach(unowned Item  entry in items) {
-	    try {
-	        bool res = entry.delete_sync();
-		if (!res) {
-		    stdout.printf("Failed to delete item: %s\n", entry.get_label());
-		}
-	    } catch (GLib.Error e) {
-		stdout.printf("Error deleting item: %s\n", e.message);
-	    }
-	}
+        GLib.List<Item> items;
+        try {
+            items = secret_collection.search_sync(schema, match_attributes, SearchFlags.ALL);
+        } catch (GLib.Error e) {
+            stdout.printf("Failed to find items to delete: %s\n", e.message);
+            return;
+        }
+        foreach(unowned Item entry in items) {
+            try {
+                bool res = entry.delete_sync();
+                if (!res) {
+                    stdout.printf("Failed to delete item: %s\n", entry.get_label());
+                }
+            } catch (GLib.Error e) {
+                stdout.printf("Error deleting item: %s\n", e.message);
+            }
+        }
     }
 
     protected override void load_id_cards()  throws GLib.Error {
         id_card_list.clear();
 
-	GLib.List<Item> items = secret_collection.search_sync(
-							      schema, match_attributes,
-							      SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
+        GLib.List<Item> items = secret_collection.search_sync(schema, match_attributes,
+                                                              SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
         foreach(unowned Item entry in items) {
-	    var secret = entry.get_secret();
-	    string secret_text = null;
-	    if (secret != null)
-		secret_text = secret.get_text();
-	    var id_card = deserialize(entry.attributes, secret_text);
+            var secret = entry.get_secret();
+            string secret_text = null;
+            if (secret != null)
+                secret_text = secret.get_text();
+            var id_card = deserialize(entry.attributes, secret_text);
             id_card_list.add(id_card);
         }
     }
@@ -117,30 +112,29 @@ public class KeyringStore : KeyringStoreBase {
         logger.trace("store_id_cards");
         clear_keyring();
         foreach (IdCard id_card in this.id_card_list) {
-	    try {
-var attributes = serialize(id_card);
-		password_storev_sync(schema, attributes, null, id_card.display_name,
-				     id_card.store_password?id_card.password: "");
-	    } catch(GLib.Error e) {
-		logger.error(@"Unable to store $(id_card.display_name): $(e.message)\n");
-	}
-
+            try {
+                var attributes = serialize(id_card);
+                password_storev_sync(schema, attributes, null, id_card.display_name,
+                                     id_card.store_password?id_card.password: "");
+            } catch(GLib.Error e) {
+                logger.error(@"Unable to store $(id_card.display_name): $(e.message)\n");
+            }
         }
         try {
-	    load_id_cards();
-	} catch (GLib.Error e) {
-	    logger.error(@"Unable to load ID Cards: $(e.message)\n");
-	}
+            load_id_cards();
+        } catch (GLib.Error e) {
+            logger.error(@"Unable to load ID Cards: $(e.message)\n");
+        }
 
     }
 
     public static bool is_available()
     {
-	if (secret_collection == null) {
-	    secret_collection = find_secret_collection();
-	}
+        if (secret_collection == null) {
+            secret_collection = find_secret_collection();
+        }
 
-	return secret_collection != null;
+        return secret_collection != null;
     }
 
     public bool is_locked() {
