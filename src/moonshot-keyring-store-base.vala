@@ -55,13 +55,9 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 
     protected static Attributes match_attributes;
 
-    public virtual bool is_locked() {
-        return false;
-    }
+    public abstract bool is_locked();
 
-    public virtual bool unlock(string password) {
-        return false;
-    }
+    public abstract bool unlock(string password);
 
     protected static IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
     {

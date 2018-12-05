@@ -137,11 +137,11 @@ public class KeyringStore : KeyringStoreBase {
         return secret_collection != null;
     }
 
-    public bool is_locked() {
+    public override bool is_locked() {
         return secret_collection.get_locked();
     }
 
-    public bool unlock(string password) {
+    public override bool unlock(string password) {
         return false;
     }
 
