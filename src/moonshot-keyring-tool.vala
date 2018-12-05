@@ -1,4 +1,4 @@
-#if GNOME_KEYRING
+#if GNOME_KEYRING || LIBSECRET_KEYRING
 
 using GnomeKeyring;
 using GLib;
