@@ -592,7 +592,7 @@ XXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXX
            X    XXXXXXXXXXXXXXXX
                    XXXXXXXX""";
 
-        string license = """Copyright (c) 2017, JISC JANET(UK)
+        string license = """Copyright (c) 2018, JISC JANET(UK)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

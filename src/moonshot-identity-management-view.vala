@@ -39,7 +39,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     bool use_flat_file_store = false;
 
     // The latest year in which Moonshot sources were modified.
-    private static int LATEST_EDIT_YEAR = 2016;
+    private static int LATEST_EDIT_YEAR = 2019;
 
     public static Gdk.Color white = make_color(65535, 65535, 65535);
 
