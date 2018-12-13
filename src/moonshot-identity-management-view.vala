@@ -706,7 +706,7 @@ SUCH DAMAGE.
 """.printf(LATEST_EDIT_YEAR);
 
         AboutDialog about = new AboutDialog();
-
+        about.set_logo_icon_name("moonshot");
         about.set_comments(_("Moonshot project UI"));
         about.set_copyright(copyright);
         about.set_website(Config.PACKAGE_URL);
