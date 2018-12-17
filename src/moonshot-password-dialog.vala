@@ -33,8 +33,6 @@ using Gtk;
 
 class AddPasswordDialog : Dialog
 {
-    private static Gdk.Color white = make_color(65535, 65535, 65535);
-
     private Entry password_entry;
     private CheckButton remember_checkbutton;
 
@@ -133,8 +131,6 @@ class AddPasswordDialog : Dialog
 
 class Add2FADialog : Dialog
 {
-    private static Gdk.Color white = make_color(65535, 65535, 65535);
-
     private Entry password_entry;
     private CheckButton remember_checkbutton;
 

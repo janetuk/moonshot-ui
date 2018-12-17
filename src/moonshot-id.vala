@@ -283,9 +283,9 @@ public class IdCard : Object
         internal set {_rules = value ?? new Rule[0] ;}
     }
 
-    private ArrayList<string> _services = new ArrayList<string>();
+    private Gee.List<string> _services = new ArrayList<string>();
 
-    internal ArrayList<string> services {
+    internal Gee.List<string> services {
          get {return  _services;}
     }
 
@@ -323,7 +323,7 @@ public class IdCard : Object
         }
     }
 
-    internal void update_services_from_list(ArrayList<string> services) {
+    internal void update_services_from_list(Gee.List<string> services) {
         if (services == this._services) {
             // Don't try to update from self.
             return;
@@ -462,7 +462,7 @@ public int CompareRules(Rule[] a, Rule[] b)
     return 0;
 }
 
-public int CompareStringArrayList(ArrayList<string> a, ArrayList<string> b)
+public int CompareStringArrayList(Gee.List<string> a, Gee.List<string> b)
 {
     if (a.size != b.size) {
         return 1;

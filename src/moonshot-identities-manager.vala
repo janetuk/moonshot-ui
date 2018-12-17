@@ -44,7 +44,7 @@ public class Password {
                 _password = null;
             }
             if (value != null)
-                _password = GnomeKeyring.memory_strdup(value); 
+                _password = GnomeKeyring.memory_strdup(value);
         }
     }
 #else
@@ -115,8 +115,7 @@ public class IdentityManagerModel : Object {
     public signal void card_list_changed();
 
     /* This method finds a valid display name */
-    public bool display_name_is_valid(string name,
-                                      out string? candidate)
+    public bool display_name_is_valid(string name, out string? candidate=null)
     {
         if (&candidate != null)
             candidate = null;
@@ -142,7 +141,7 @@ public class IdentityManagerModel : Object {
         return true;
     }
 
-    private bool remove_duplicates(IdCard new_card, ArrayList<IdCard> old_duplicates)
+    private bool remove_duplicates(IdCard new_card, Gee.List<IdCard> old_duplicates)
     {
 	old_duplicates.clear();
         var cards = this.store.get_card_list();
@@ -219,7 +218,7 @@ public class IdentityManagerModel : Object {
             }
         }
         set_store_type(saved_store_type);
-        if (force_flat_file_store && 
+        if (force_flat_file_store &&
             (saved_store_type != IIdentityCardStore.StoreType.FLAT_FILE))
             card_list_changed();
         return retval;
@@ -263,7 +262,7 @@ public class IdentityManagerModel : Object {
             retval = card;
             return retval;
         }
-            
+
         if (!card.store_password)
             password_table.CachePassword(card, store);
         else
@@ -336,7 +335,7 @@ public class IdentityManagerModel : Object {
         foreach (IdCard card in this.store.get_card_list()) {
             // The 'NoIdentity' card is non-trivial if it has services or rules.
             // All other cards are automatically non-trivial.
-            if ((!card.is_no_identity()) || 
+            if ((!card.is_no_identity()) ||
                 (card.services.size > 0) ||
                 (card.rules.length > 0)) {
                 return true;

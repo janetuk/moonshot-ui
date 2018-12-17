@@ -486,7 +486,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn, doc;
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
         bool exit_loop = false;
         int offset = 0;
         // GnomeKeyringFound *id_card = NULL, *result = NULL;
