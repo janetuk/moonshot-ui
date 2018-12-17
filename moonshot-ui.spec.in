@@ -10,7 +10,11 @@ Source0:        %{name}-%{version}.tar.xz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:      glib2-devel
+%if 0%{?el6}
+BuildRequires:      gtk2-devel
+%else
 BuildRequires:      gtk3-devel
+%endif
 BuildRequires:      libgee-devel
 BuildRequires:      dbus-devel
 BuildRequires:      openssl-devel
