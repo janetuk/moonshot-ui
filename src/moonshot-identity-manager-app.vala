@@ -116,7 +116,7 @@ public class IdentityManagerApp {
         else if (cli_enabled)
             view = new IdentityManagerCli(this, use_flat_file_store);
 
-        LinkedList<IdCard> card_list = model.get_card_list();
+        Gee.List<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
 

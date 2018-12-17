@@ -32,7 +32,7 @@
 
 using Gtk;
 
-   
+
 private MoonshotLogger logger()
 {
     return get_logger("MoonshotSettings");
@@ -53,7 +53,7 @@ private KeyFile get_keyfile()
         if (key_file.load_from_file(path, KeyFileFlags.NONE))
             logger().trace("get_keyfile: load_from_file returned successfully");
         else
-            logger().trace("get_keyfile: load_from_file returned false");            
+            logger().trace("get_keyfile: load_from_file returned false");
     }
     catch (FileError e) {
         logger().trace("get_keyfile: FileError: " + e.message);
@@ -152,23 +152,6 @@ internal bool get_bool_setting(string group_name, string key_name, bool default=
         logger().info("get_bool_setting got KeyFileError (may be ignorable) : " + e.message);
     }
     return default;
-}
-
-
-internal void set_string_setting(string group_name, string key_name, string value, KeyFile? key_file=null)
-{
-    KeyFile tmp_key_file = null;
-    if (key_file == null) {
-        // Use tmp_key_file to hold an owned reference (since key_file is unowned)
-        tmp_key_file = get_keyfile();
-        key_file = tmp_key_file;
-    }
-
-    key_file.set_string(group_name, key_name, value);
-    if (tmp_key_file != null) {
-        // This is a "one-shot" settings update; save it now.
-        save_keyfile(key_file);
-    }
 }
 
 internal string get_string_setting(string group_name, string key_name, string default="", KeyFile? key_file=null)

@@ -574,13 +574,9 @@ class IdentityDialog : Dialog
 	       // Not sure if this works in 12; it definitely doesn't work in 10.
             stream.write(newcert.data);
 #else
-            try {
-                var stream = FileStream.open(filename, "wb");
-                stream.printf(newcert);
-                stream.flush();
-	        } catch (GLib.Error ex) {
-		      // in the event of error, we do nothing here. Hope for the best.
-	        }
+            var stream = FileStream.open(filename, "wb");
+            stream.printf(newcert);
+            stream.flush();
 #endif
             // Save the parent directory to use as default for next save
             export_directory = file.get_parent().get_path();

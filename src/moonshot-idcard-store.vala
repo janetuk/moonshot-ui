@@ -29,7 +29,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
 */
-using Gee; 
+using Gee;
 public interface IIdentityCardStore : Object {
     // Methods
     public enum StoreType {
@@ -54,11 +54,11 @@ public interface IIdentityCardStore : Object {
     public abstract bool remove_card(IdCard card);
     public abstract IdCard? update_card(IdCard card);
     public abstract StoreType get_store_type();
-    public abstract LinkedList<IdCard> get_card_list(); 
+    public abstract Gee.List<IdCard> get_card_list();
     public abstract bool is_locked();
     public abstract bool unlock(string password);
 
     // Note that (at least right now) store_id_cards() will re-load the cards after saving them.
-    internal abstract void store_id_cards(); 
+    internal abstract void store_id_cards();
 }
 

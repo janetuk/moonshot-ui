@@ -63,7 +63,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return false;
     }
 
-    public LinkedList<IdCard> get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         return id_card_list;
     }
 

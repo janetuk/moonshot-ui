@@ -74,9 +74,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     /* Reports whether there are identities with ideantical NAI */
     private void report_duplicate_nais() {
         // TODO: This could be merged with GTK version
-        ArrayList<ArrayList<IdCard>> duplicates;
+        Gee.List<Gee.List<IdCard>> duplicates;
         identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (ArrayList<IdCard> list in duplicates) {
+        foreach (Gee.List<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
                 + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
@@ -92,7 +92,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private void report_expired_trust_anchors() {
-        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         foreach (IdCard id_card in card_list) {
             if (id_card.trust_anchor.is_expired()) {
                 string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
@@ -506,7 +506,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             doc = newtLabel(1, offset, "Select an ID card to pop up more options");
             listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 76);
-            LinkedList<IdCard> card_list = identities_manager.get_card_list();
+            Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);

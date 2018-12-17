@@ -132,7 +132,6 @@ class AddPasswordDialog : Dialog
 class Add2FADialog : Dialog
 {
     private Entry password_entry;
-    private CheckButton remember_checkbutton;
 
     public string password {
         get { return password_entry.get_text(); }

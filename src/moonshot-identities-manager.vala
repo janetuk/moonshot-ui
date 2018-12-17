@@ -91,7 +91,8 @@ public class IdentityManagerModel : Object {
     private const string FILE_NAME = "identities.txt";
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
-    public LinkedList<IdCard>  get_card_list() {
+
+    public Gee.List<IdCard>  get_card_list() {
         var identities = store.get_card_list();
         identities.sort((a, b) => {
                 IdCard id_a = (IdCard )a;
@@ -112,6 +113,7 @@ public class IdentityManagerModel : Object {
         }
         return identities;
     }
+
     public signal void card_list_changed();
 
     /* This method finds a valid display name */
@@ -119,17 +121,12 @@ public class IdentityManagerModel : Object {
     {
         if (&candidate != null)
             candidate = null;
-        foreach (IdCard id_card in this.store.get_card_list())
-        {
-            if (id_card.display_name == name)
-            {
-                if (&candidate != null)
-                {
-                    for (int i = 0; i < 1000; i++)
-                    {
+        foreach (IdCard id_card in this.store.get_card_list()) {
+            if (id_card.display_name == name) {
+                if (&candidate != null) {
+                    for (int i = 0; i < 1000; i++) {
                         string tmp = "%s %d".printf(name, i);
-                        if (display_name_is_valid(tmp, null))
-                        {
+                        if (display_name_is_valid(tmp, null)) {
                             candidate = tmp;
                             break;
                         }
@@ -165,12 +162,12 @@ public class IdentityManagerModel : Object {
     }
 
 
-    public bool find_duplicate_nai_sets(out ArrayList<ArrayList<IdCard>> duplicates)
+    public bool find_duplicate_nai_sets(out Gee.List<Gee.List<IdCard>> duplicates)
     {
-        var nais = new HashMap<string, ArrayList<IdCard>>();
+        Map<string, Gee.List<IdCard>> nais = new HashMap<string, ArrayList<IdCard>>();
 
         duplicates = new ArrayList<ArrayList<IdCard>>();
-        LinkedList<IdCard> card_list = get_card_list() ;
+        Gee.List<IdCard> card_list = get_card_list();
         if (card_list == null) {
             return false;
         }
@@ -183,19 +180,18 @@ public class IdentityManagerModel : Object {
             // IDs, and/or read them from storage. However, we should never hit this.
 
             if (nais.has_key(id_card.nai)) {
-                ArrayList<IdCard> list = nais.get(id_card.nai);
+                Gee.List<IdCard> list = nais.get(id_card.nai);
                 list.add(id_card);
             }
             else {
-                ArrayList<IdCard> list = new ArrayList<IdCard>();
+                Gee.List<IdCard> list = new ArrayList<IdCard>();
                 list.add(id_card);
                 nais.set(id_card.nai, list);
             }
         }
 
-        duplicates = new ArrayList<ArrayList<IdCard>>();
-        foreach (Map.Entry<string, ArrayList<IdCard>> entry in nais.entries) {
-            var list = entry.value;
+        foreach (Map.Entry<string, Gee.List<IdCard>> entry in nais.entries) {
+            Gee.List<IdCard> list = entry.value;
             if (list.size > 1) {
                 duplicates.add(list);
                 found = true;

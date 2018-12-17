@@ -177,7 +177,7 @@ internal static string colonize(string input, int bytes_per_line) {
 }
 
 internal static void clear_password_entry(Entry entry) {
-    
+
     // Overwrite the entry with random data
     var len = entry.get_text().length;
     var random_chars = new char[len + 1];
@@ -203,11 +203,11 @@ internal static void clear_password_entry(Entry entry) {
 #endif
 }
 
-static Gdk.Color white;
 static void set_bg_color(Widget w)
 {
 #if OS_WIN32
 
+    static Gdk.Color white;
     if (white == null) {
         white = make_color(65535, 65535, 65535);
     }
