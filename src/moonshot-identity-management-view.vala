@@ -363,7 +363,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates)
     {
         old_duplicates.clear();
         #if OS_MACOS
@@ -1004,7 +1004,7 @@ SUCH DAMAGE.
                     }
 
 
-                    var old_duplicates = new ArrayList<IdCard>();
+                    Gee.List<IdCard> old_duplicates = new ArrayList<IdCard>();
                     bool result = add_identity(card, use_flat_file_store, old_duplicates);
                     if (result) {
                         logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");

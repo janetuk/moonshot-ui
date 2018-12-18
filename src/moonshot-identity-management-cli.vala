@@ -106,7 +106,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
@@ -323,7 +323,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
         weak newtComponent focus;
         bool exit = false;
-        ArrayList<string> services = new ArrayList<string>();
+        Gee.List<string> services = new ArrayList<string>();
         services.add_all(id_card.services);
 
         newtCenteredWindow(78, 18, "Edit Identity");
@@ -390,7 +390,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtListboxClear(listbox);
             newtLabelSetText(services_label, "Services (%d):".printf(services.size));
             foreach (string service in services) {
-                newtListboxAppendEntry(listbox, service, (void*) services.index_of(service));
+                newtListboxAppendEntry(listbox, service, (void*) (long) services.index_of(service));
             }
 
             // set focus

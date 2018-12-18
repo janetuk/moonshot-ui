@@ -131,7 +131,7 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity(IdCard id, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
+    public bool add_identity(IdCard id, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
     	old_duplicates.clear();
         if (view != null)
         {

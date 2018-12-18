@@ -70,7 +70,7 @@ class IdentityDialog : Dialog
     private Label message_label;
     public bool complete;
     private IdCard card;
-    private ArrayList<string> services;
+    private Gee.List<string> services;
 
     private Label selected_item = null;
 
@@ -109,7 +109,7 @@ class IdentityDialog : Dialog
         clear_password_entry(password_entry);
     }
 
-    internal ArrayList<string> get_services()
+    internal Gee.List<string> get_services()
     {
         return services;
     }

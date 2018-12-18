@@ -220,7 +220,7 @@ public class IdentityManagerModel : Object {
         return retval;
     }
 
-    public void add_card(IdCard card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
+    public void add_card(IdCard card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
         if (card.temporary) {
             logger.trace("add_card: card is temporary; returning.");
             return;
