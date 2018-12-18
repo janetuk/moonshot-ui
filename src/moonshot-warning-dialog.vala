@@ -81,8 +81,8 @@ class WarningDialog
             var message_area = dialog.get_message_area();
             ((Box)message_area).pack_start(remember_checkbutton, false, false, 12);
 #else
-            HBox hbox = new HBox(false, 0);
-            hbox.pack_start(new HBox(false, 0), true, true, 20);
+            Box hbox = new_hbox(0);
+            hbox.pack_start(new_hbox(0), true, true, 20);
             hbox.pack_start(remember_checkbutton, false, false, 12);
             ((Box)content_area).pack_start(hbox, true, true, 12);
 #endif

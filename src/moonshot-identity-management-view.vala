@@ -50,7 +50,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private CustomVBox custom_vbox;
-    private VBox service_prompt_vbox;
+    private Box service_prompt_vbox;
     private Button edit_button;
     private Button remove_button;
 
@@ -790,7 +790,7 @@ SUCH DAMAGE.
         AttachOptions fill = AttachOptions.FILL;
         int row = 0;
 
-        service_prompt_vbox = new VBox(false, 0);
+        service_prompt_vbox = new_vbox(0);
         top_table.attach(service_prompt_vbox, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 12, 0);
         row++;
 
@@ -816,7 +816,7 @@ SUCH DAMAGE.
         full_search_label.set_markup(search_label_markup);
         full_search_label.set_alignment(1, 0);
 
-        var search_vbox = new VBox(false, 0);
+        var search_vbox = new_vbox(0);
         search_vbox.pack_start(search_entry, false, false, 0);
         var search_spacer = new Alignment(0, 0, 0, 0);
         search_spacer.set_size_request(0, 2);
@@ -875,7 +875,7 @@ SUCH DAMAGE.
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
-        var main_vbox = new VBox(false, 0);
+        var main_vbox = new_vbox(0);
 
 #if OS_MACOS
         // hide the  File | Quit menu item which is now on the Mac Menu
@@ -947,7 +947,7 @@ SUCH DAMAGE.
     private static Widget make_rigid(Button button)
     {
         // Hack to prevent the button from growing vertically
-        VBox fixed_height = new VBox(false, 0);
+        Box fixed_height = new_vbox(0);
         fixed_height.pack_start(button, false, false, 0);
 
         return fixed_height;

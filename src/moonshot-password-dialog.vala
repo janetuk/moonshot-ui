@@ -94,14 +94,14 @@ class AddPasswordDialog : Dialog
 //            table.attach_defaults(service_value, 1, 2, row, row + 1);
         row++;
 
-        VBox nai_vbox = new VBox(false, 0);
+        Box nai_vbox = new_vbox(0);
         nai_vbox.pack_start(nai_label, false, false, 0);
         nai_vbox.pack_start(nai_value, false, false, 0);
         table.attach(nai_vbox, 0, 1, row, row + 1, opts, opts, 0, 12);
         row++;
 
-        VBox password_vbox = new VBox(false, 1);
-        var empty_box2 = new VBox(false, 0);
+        Box password_vbox = new_vbox(1);
+        var empty_box2 = new_vbox(0);
         empty_box2.set_size_request(0, 0);
         password_vbox.pack_start(empty_box2, false, false, 3);
         password_vbox.pack_start(password_label, false, false, 0);
@@ -112,12 +112,12 @@ class AddPasswordDialog : Dialog
         table.attach(remember_checkbutton,  0, 1, row, row + 1, opts, opts, 20, 2);
         row++;
 
-        var empty_box3 = new VBox(false, 0);
+        var empty_box3 = new_vbox(0);
         empty_box3.set_size_request(0, 0);
         table.attach(empty_box3,  0, 1, row, row + 1, opts, opts, 0, 10);
         row++;
 
-        var vbox = new VBox(false, 0);
+        var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(table, false, false, 0);
 
@@ -186,14 +186,14 @@ class Add2FADialog : Dialog
 //            table.attach_defaults(service_value, 1, 2, row, row + 1);
         row++;
 
-        VBox nai_vbox = new VBox(false, 0);
+        Box nai_vbox = new_vbox(0);
         nai_vbox.pack_start(nai_label, false, false, 0);
         nai_vbox.pack_start(nai_value, false, false, 0);
         table.attach(nai_vbox, 0, 1, row, row + 1, opts, opts, 0, 12);
         row++;
 
-        VBox password_vbox = new VBox(false, 1);
-        var empty_box2 = new VBox(false, 0);
+        Box password_vbox = new_vbox(1);
+        var empty_box2 = new_vbox(0);
         empty_box2.set_size_request(0, 0);
         password_vbox.pack_start(empty_box2, false, false, 3);
         password_vbox.pack_start(password_label, false, false, 0);
@@ -201,12 +201,12 @@ class Add2FADialog : Dialog
         table.attach(password_vbox, 0, 1, row, row + 1, opts, opts, 0, 0);
         row++;
 
-        var empty_box3 = new VBox(false, 0);
+        var empty_box3 = new_vbox(0);
         empty_box3.set_size_request(0, 0);
         table.attach(empty_box3,  0, 1, row, row + 1, opts, opts, 0, 10);
         row++;
 
-        var vbox = new VBox(false, 0);
+        var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(table, false, false, 0);
 

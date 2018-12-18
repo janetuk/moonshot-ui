@@ -192,7 +192,7 @@ class TrustAnchorDialog : Dialog
 
         var trust_anchor_display = make_ta_fingerprint_widget(fingerprint, server_ta_label_text);
 
-        var vbox = new VBox(false, 0);
+        var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(dialog_label, true, true, 12);
         vbox.pack_start(user_label, true, true, 2);
