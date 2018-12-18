@@ -323,7 +323,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         if (this.selected_card != null && this.selected_card.nai == id_card.nai) {
             logger.trace(@"add_id_card_widget: Expanding selected idcard widget");
-            id_card_widget.expand();
+            id_card_widget.show_details();
 
             // After a card is added, modified, or deleted, we reload all the cards.
             // (I'm not sure why, or if it's necessary to do this.) This means that the

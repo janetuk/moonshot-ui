@@ -45,7 +45,7 @@ class IdCardWidget : Box
     private EventBox event_box;
     private bool   is_selected = false;
     private Arrow arrow;
-    
+
     private VBox details;
 
     internal int _position = 0;
@@ -59,7 +59,7 @@ class IdCardWidget : Box
 
     internal void select()
     {
-        expand();
+        show_details();
         this.expanded();
     }
 
@@ -69,7 +69,7 @@ class IdCardWidget : Box
         this.collapsed();
     }
 
-    public void expand()
+    public void show_details()
     {
         is_selected = true;
         details.show_all();
@@ -123,7 +123,7 @@ class IdCardWidget : Box
         this.event_box.modify_bg(StateType.NORMAL, color);
         this.arrow.modify_bg(StateType.NORMAL, color);
     }
-    
+
     private void
     make_id_card_label(Label label)
     {
