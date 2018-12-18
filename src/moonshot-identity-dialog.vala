@@ -570,9 +570,14 @@ class IdentityDialog : Dialog
             string filename = dialog.get_filename();
             var file  = File.new_for_path(filename);
 #if VALA_0_12
-            var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-	       // Not sure if this works in 12; it definitely doesn't work in 10.
-            stream.write(newcert.data);
+            try {
+                var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+	           // Not sure if this works in 12; it definitely doesn't work in 10.
+                stream.write(newcert.data);
+            }
+            catch (Error e) {
+                logger.error("Error exporting certificate");
+            }
 #else
             var stream = FileStream.open(filename, "wb");
             stream.printf(newcert);

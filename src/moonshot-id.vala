@@ -159,17 +159,11 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         return 0;
     }
 
-    public string? get_expiration_date(out string? err_out=null)
+    public string? get_expiration_date()
     {
-        if (&err_out != null) {
-            err_out = null;
-        }
-
         if (this.ca_cert == "") {
-            if (&err_out != null) {
-                err_out = "Trust anchor does not have a ca_certificate";
-                return null;
-            }
+            IdCard.logger.info("Trust anchor does not have a ca_certificate");
+            return null;
         }
 
         string cert = this.ca_cert;
@@ -182,9 +176,6 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         string err = (string) get_cert_valid_before(binary, binary.length, buf, 64);
         if (err != "") {
             IdCard.logger.error(@"get_expiration_date: get_cert_valid_before returned '$err'");
-            if (&err_out != null) {
-                err_out = err;
-            }
             return null;
         }
 

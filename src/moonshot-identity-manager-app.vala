@@ -400,8 +400,8 @@ public static int main(string[] args) {
             }
             gtk_available = true;
         } catch (OptionError e) {
-            stdout.printf(_("error: %s\n"), e.message);
-            if (e is OptionError.FAILED) {
+            stdout.printf(_("error (code=%d): %s\n"), e.code, e.message);
+            if (e is  OptionError.FAILED) {
                 // Couldn't open DISPLAY
                 stdout.printf(_("Trying headless mode.\n"));
                 headless = true;
@@ -410,6 +410,9 @@ public static int main(string[] args) {
                 stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
                 return -1;
             }
+        } catch (Error e) {
+            stdout.printf(_("fatal error (%d): %s\n"), e.code, e.message);
+            return -1;
         }
     }
 
