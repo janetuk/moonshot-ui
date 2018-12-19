@@ -148,7 +148,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
     }
 
-    /* Queues an identity request. Since the CLI version can only handle one request, instead of a QUEUE object,
+    /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
      * we store just the request object. */
     public void queue_identity_request(IdentityRequest request)
     {
@@ -225,7 +225,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     {
         newtInit();
         newtCls();
-        newtDrawRootText(0, 0, "The Moonshot CLI ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
+        newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
         newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
     }
 
@@ -492,7 +492,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         // GnomeKeyringFound *id_card = NULL, *result = NULL;
         init_newt();
         do {
-            newtCenteredWindow(78, 20, "Moonshot Identity Selector (CLI)");
+            newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
             form = newtForm(null, null, 0);
             if (request != null) {
                 offset = 1;
@@ -621,7 +621,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.""";
-        info_dialog("Moonshot project CLI UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
+        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
     }
 
     private void send_id_card_confirmation_dialog(IdCard? id_card) {
