@@ -70,7 +70,7 @@ class IdentityDialog : Dialog
     private Label message_label;
     public bool complete;
     private IdCard card;
-    private ArrayList<string> services;
+    private Gee.List<string> services;
 
     private Label selected_item = null;
 
@@ -109,7 +109,7 @@ class IdentityDialog : Dialog
         clear_password_entry(password_entry);
     }
 
-    internal ArrayList<string> get_services()
+    internal Gee.List<string> get_services()
     {
         return services;
     }
@@ -182,8 +182,8 @@ class IdentityDialog : Dialog
         add_as_vbox(content_area, realm_label, realm_entry);
         add_as_vbox(content_area, password_label, password_entry);
 
-        var remember_hbox = new HBox(false, 40);
-        remember_hbox.pack_start(new HBox(false, 0), false, false, 0);
+        var remember_hbox = new_hbox(40);
+        remember_hbox.pack_start(new_hbox(0), false, false, 0);
         remember_hbox.pack_start(remember_checkbutton, false, false, 0);
         remember_hbox.pack_start(mfa_checkbutton, false, false, 0);
         content_area.pack_start(remember_hbox, false, false, 2);
@@ -236,7 +236,7 @@ class IdentityDialog : Dialog
         string ta_label_prefix = _("Trust anchor: ");
         string none = _("None");
 
-        HBox trust_anchor_box = new HBox(false, 0);
+        Box trust_anchor_box = new_hbox(0);
 
         string ta_label_text = ta_label_prefix + (id.trust_anchor.is_empty() ? none : _("Enterprise provisioned"));
         if (id.trust_anchor.is_expired())
@@ -344,13 +344,13 @@ class IdentityDialog : Dialog
 
     private static void add_as_vbox(Box content_area, Label label, Entry entry)
     {
-        VBox vbox = new VBox(false, 2);
+        Box vbox = new_vbox(2);
 
         vbox.pack_start(label, false, false, 0);
         vbox.pack_start(entry, false, false, 0);
 
         // Hack to prevent the text entries from stretching horizontally
-        HBox hbox = new HBox(false, 0);
+        Box hbox = new_hbox(0);
         hbox.pack_start(vbox, false, false, 0);
         content_area.pack_start(hbox, false, false, 6);
     }
@@ -415,7 +415,7 @@ class IdentityDialog : Dialog
         }
     }
 
-    private VBox make_services_vbox()
+    private Box make_services_vbox()
     {
         logger.trace("make_services_vbox");
 
@@ -439,11 +439,11 @@ class IdentityDialog : Dialog
         services_table.set_col_spacings(0);
         set_bg_color(services_table);
 
-        var table_button_hbox = new HBox(false, 6);
+        var table_button_hbox = new_hbox(6);
         table_button_hbox.pack_start(services_vscroll, true, true, 4);
 
         // Hack to prevent the button from growing vertically
-        VBox fixed_height = new VBox(false, 0);
+        Box fixed_height = new_vbox(0);
         fixed_height.pack_start(remove_button, false, false, 0);
         table_button_hbox.pack_start(fixed_height, false, false, 0);
 
@@ -457,7 +457,7 @@ class IdentityDialog : Dialog
         var services_vbox_title = new Label(_("Services:"));
         services_vbox_title.set_alignment(0, 0.5f);
 
-        var services_vbox = new VBox(false, 6);
+        var services_vbox = new_vbox(6);
         services_vbox.pack_start(services_vbox_title, false, false, 0);
         services_vbox.pack_start(table_button_hbox, true, true, 0);
 
@@ -570,17 +570,18 @@ class IdentityDialog : Dialog
             string filename = dialog.get_filename();
             var file  = File.new_for_path(filename);
 #if VALA_0_12
-            var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-	       // Not sure if this works in 12; it definitely doesn't work in 10.
-            stream.write(newcert.data);
-#else
             try {
-                var stream = FileStream.open(filename, "wb");
-                stream.printf(newcert);
-                stream.flush();
-	        } catch (GLib.Error ex) {
-		      // in the event of error, we do nothing here. Hope for the best.
-	        }
+                var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
+	           // Not sure if this works in 12; it definitely doesn't work in 10.
+                stream.write(newcert.data);
+            }
+            catch (Error e) {
+                logger.error("Error exporting certificate");
+            }
+#else
+            var stream = FileStream.open(filename, "wb");
+            stream.printf(newcert);
+            stream.flush();
 #endif
             // Save the parent directory to use as default for next save
             export_directory = file.get_parent().get_path();

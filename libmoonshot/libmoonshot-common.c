@@ -32,6 +32,7 @@
  * Author: Sam Thursfield <samthursfield@codethink.co.uk>
  */
 
+#define _GNU_SOURCE
 #include "libmoonshot.h"
 
 #include <stdarg.h>
@@ -43,7 +44,6 @@ MoonshotError *moonshot_error_new (MoonshotErrorCode  code,
                                    ...)
 {
     MoonshotError *error;
-    int            buffer_size;
     va_list        args;
 
     error = malloc (sizeof (MoonshotError));
@@ -51,14 +51,17 @@ MoonshotError *moonshot_error_new (MoonshotErrorCode  code,
 
     va_start (args, format);
 
-    #ifdef OS_WIN32
-    buffer_size = _vscprintf (format, args);
-    error->message = malloc (buffer_size + 1);
-    _vsnprintf (error->message, buffer_size, format, args);
-    error->message[buffer_size] = 0;
-    #else
+#ifdef OS_WIN32
+    {
+        int            buffer_size;
+        buffer_size = _vscprintf (format, args);
+        error->message = malloc (buffer_size + 1);
+        _vsnprintf (error->message, buffer_size, format, args);
+        error->message[buffer_size] = 0;
+    }
+#else
     vasprintf (&error->message, format, args);
-    #endif
+#endif
 
     return error;
 }
@@ -68,7 +71,7 @@ void moonshot_error_free (MoonshotError *error)
     if (error == NULL)
         return;
 
-    if (error->message != NULL) 
+    if (error->message != NULL)
         free (error->message);
 
     free (error);

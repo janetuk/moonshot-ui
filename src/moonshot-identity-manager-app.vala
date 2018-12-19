@@ -116,7 +116,7 @@ public class IdentityManagerApp {
         else if (cli_enabled)
             view = new IdentityManagerCli(this, use_flat_file_store);
 
-        LinkedList<IdCard> card_list = model.get_card_list();
+        Gee.List<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
 
@@ -131,7 +131,7 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity(IdCard id, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
+    public bool add_identity(IdCard id, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
     	old_duplicates.clear();
         if (view != null)
         {
@@ -400,8 +400,8 @@ public static int main(string[] args) {
             }
             gtk_available = true;
         } catch (OptionError e) {
-            stdout.printf(_("error: %s\n"), e.message);
-            if (e is OptionError.FAILED) {
+            stdout.printf(_("error (code=%d): %s\n"), e.code, e.message);
+            if (e is  OptionError.FAILED) {
                 // Couldn't open DISPLAY
                 stdout.printf(_("Trying headless mode.\n"));
                 headless = true;
@@ -410,12 +410,15 @@ public static int main(string[] args) {
                 stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
                 return -1;
             }
+        } catch (Error e) {
+            stdout.printf(_("fatal error (%d): %s\n"), e.code, e.message);
+            return -1;
         }
     }
 
     if (headless) {
         try {
-            var opt_context = new OptionContext(null);
+            var opt_context = new OptionContext("");
             opt_context.set_help_enabled(true);
             opt_context.add_main_entries(options, null);
             opt_context.parse(ref args);

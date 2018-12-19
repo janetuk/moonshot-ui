@@ -44,7 +44,7 @@ public class Password {
                 _password = null;
             }
             if (value != null)
-                _password = GnomeKeyring.memory_strdup(value); 
+                _password = GnomeKeyring.memory_strdup(value);
         }
     }
 #else
@@ -91,7 +91,8 @@ public class IdentityManagerModel : Object {
     private const string FILE_NAME = "identities.txt";
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
-    public LinkedList<IdCard>  get_card_list() {
+
+    public Gee.List<IdCard>  get_card_list() {
         var identities = store.get_card_list();
         identities.sort((a, b) => {
                 IdCard id_a = (IdCard )a;
@@ -101,7 +102,7 @@ public class IdentityManagerModel : Object {
                 } else if (id_b.is_no_identity() && !id_a.is_no_identity()) {
                     return 1;
                 }
-                return strcmp(id_a.display_name, id_b.display_name);
+                return Posix.strcmp(id_a.display_name, id_b.display_name);
             });
         if (identities.is_empty || !identities[0].is_no_identity())
             identities.insert(0, IdCard.NewNoIdentity());
@@ -112,37 +113,20 @@ public class IdentityManagerModel : Object {
         }
         return identities;
     }
+
     public signal void card_list_changed();
 
-    /* This method finds a valid display name */
-    public bool display_name_is_valid(string name,
-                                      out string? candidate)
+    /* Return a display name that is unique by appending 0 at the end */
+    public string get_unique_display_name(string name)
     {
-        if (&candidate != null)
-            candidate = null;
         foreach (IdCard id_card in this.store.get_card_list())
-        {
             if (id_card.display_name == name)
-            {
-                if (&candidate != null)
-                {
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        string tmp = "%s %d".printf(name, i);
-                        if (display_name_is_valid(tmp, null))
-                        {
-                            candidate = tmp;
-                            break;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
-        return true;
+                return get_unique_display_name("%s0".printf(name));
+        return name;
+
     }
 
-    private bool remove_duplicates(IdCard new_card, ArrayList<IdCard> old_duplicates)
+    private bool remove_duplicates(IdCard new_card, Gee.List<IdCard> old_duplicates)
     {
 	old_duplicates.clear();
         var cards = this.store.get_card_list();
@@ -166,12 +150,12 @@ public class IdentityManagerModel : Object {
     }
 
 
-    public bool find_duplicate_nai_sets(out ArrayList<ArrayList<IdCard>> duplicates)
+    public bool find_duplicate_nai_sets(out Gee.List<Gee.List<IdCard>> duplicates)
     {
-        var nais = new HashMap<string, ArrayList<IdCard>>();
+        Map<string, Gee.List<IdCard>> nais = new HashMap<string, ArrayList<IdCard>>();
 
         duplicates = new ArrayList<ArrayList<IdCard>>();
-        LinkedList<IdCard> card_list = get_card_list() ;
+        Gee.List<IdCard> card_list = get_card_list();
         if (card_list == null) {
             return false;
         }
@@ -184,19 +168,18 @@ public class IdentityManagerModel : Object {
             // IDs, and/or read them from storage. However, we should never hit this.
 
             if (nais.has_key(id_card.nai)) {
-                ArrayList<IdCard> list = nais.get(id_card.nai);
+                Gee.List<IdCard> list = nais.get(id_card.nai);
                 list.add(id_card);
             }
             else {
-                ArrayList<IdCard> list = new ArrayList<IdCard>();
+                Gee.List<IdCard> list = new ArrayList<IdCard>();
                 list.add(id_card);
                 nais.set(id_card.nai, list);
             }
         }
 
-        duplicates = new ArrayList<ArrayList<IdCard>>();
-        foreach (Map.Entry<string, ArrayList<IdCard>> entry in nais.entries) {
-            var list = entry.value;
+        foreach (Map.Entry<string, Gee.List<IdCard>> entry in nais.entries) {
+            Gee.List<IdCard> list = entry.value;
             if (list.size > 1) {
                 duplicates.add(list);
                 found = true;
@@ -219,19 +202,18 @@ public class IdentityManagerModel : Object {
             }
         }
         set_store_type(saved_store_type);
-        if (force_flat_file_store && 
+        if (force_flat_file_store &&
             (saved_store_type != IIdentityCardStore.StoreType.FLAT_FILE))
             card_list_changed();
         return retval;
     }
 
-    public void add_card(IdCard card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
+    public void add_card(IdCard card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
         if (card.temporary) {
             logger.trace("add_card: card is temporary; returning.");
             return;
         }
 
-        string candidate;
         IIdentityCardStore.StoreType saved_store_type = get_store_type();
 
         if (force_flat_file_store)
@@ -239,10 +221,7 @@ public class IdentityManagerModel : Object {
 
         remove_duplicates(card, old_duplicates);
 
-        if (!display_name_is_valid(card.display_name, out candidate))
-        {
-            card.display_name = candidate;
-        }
+        card.display_name = get_unique_display_name(card.display_name);
 
         if (!card.store_password)
             password_table.CachePassword(card, store);
@@ -263,7 +242,7 @@ public class IdentityManagerModel : Object {
             retval = card;
             return retval;
         }
-            
+
         if (!card.store_password)
             password_table.CachePassword(card, store);
         else
@@ -336,7 +315,7 @@ public class IdentityManagerModel : Object {
         foreach (IdCard card in this.store.get_card_list()) {
             // The 'NoIdentity' card is non-trivial if it has services or rules.
             // All other cards are automatically non-trivial.
-            if ((!card.is_no_identity()) || 
+            if ((!card.is_no_identity()) ||
                 (card.services.size > 0) ||
                 (card.rules.length > 0)) {
                 return true;

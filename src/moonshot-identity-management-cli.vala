@@ -74,9 +74,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     /* Reports whether there are identities with ideantical NAI */
     private void report_duplicate_nais() {
         // TODO: This could be merged with GTK version
-        ArrayList<ArrayList<IdCard>> duplicates;
+        Gee.List<Gee.List<IdCard>> duplicates;
         identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (ArrayList<IdCard> list in duplicates) {
+        foreach (Gee.List<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
                 + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
@@ -92,7 +92,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private void report_expired_trust_anchors() {
-        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         foreach (IdCard id_card in card_list) {
             if (id_card.trust_anchor.is_expired()) {
                 string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
@@ -106,7 +106,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
@@ -323,7 +323,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
         weak newtComponent focus;
         bool exit = false;
-        ArrayList<string> services = new ArrayList<string>();
+        Gee.List<string> services = new ArrayList<string>();
         services.add_all(id_card.services);
 
         newtCenteredWindow(78, 18, "Edit Identity");
@@ -390,7 +390,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtListboxClear(listbox);
             newtLabelSetText(services_label, "Services (%d):".printf(services.size));
             foreach (string service in services) {
-                newtListboxAppendEntry(listbox, service, (void*) services.index_of(service));
+                newtListboxAppendEntry(listbox, service, (void*) (long) services.index_of(service));
             }
 
             // set focus
@@ -486,7 +486,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn, doc;
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
         bool exit_loop = false;
         int offset = 0;
         // GnomeKeyringFound *id_card = NULL, *result = NULL;
@@ -506,7 +506,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             doc = newtLabel(1, offset, "Select an ID card to pop up more options");
             listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 76);
-            LinkedList<IdCard> card_list = identities_manager.get_card_list();
+            Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);

@@ -34,7 +34,7 @@ using Gee;
 public class LocalFlatFileStore : Object, IIdentityCardStore {
     static MoonshotLogger logger = get_logger("LocalFlatFileStore");
 
-    private LinkedList<IdCard> id_card_list;
+    private Gee.List<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
 
     public void add_card(IdCard card) {
@@ -63,7 +63,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return false;
     }
 
-    public LinkedList<IdCard> get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         return id_card_list;
     }
 

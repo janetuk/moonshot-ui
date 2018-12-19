@@ -264,7 +264,7 @@ public class MoonshotServer : Object {
             idcard.rules = rules;
         }
 
-        ArrayList<IdCard> old_duplicates = new ArrayList<IdCard>();
+        Gee.List<IdCard> old_duplicates = new ArrayList<IdCard>();
         var ret = parent_app.add_identity(idcard, (force_flat_file_store != 0), old_duplicates);
 
         // Printing to stdout here is ugly behavior; but it's old behavior that

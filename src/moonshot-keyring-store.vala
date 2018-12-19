@@ -35,7 +35,7 @@ using Gee;
 public class KeyringStore : Object, IIdentityCardStore {
     static MoonshotLogger logger = get_logger("KeyringStore");
 
-    private LinkedList<IdCard> id_card_list;
+    private Gee.List<IdCard> id_card_list;
     private const string keyring_store_attribute = "Moonshot";
     private const string keyring_store_version = "1.0";
     private const GnomeKeyring.ItemType item_type = GnomeKeyring.ItemType.GENERIC_SECRET;
@@ -92,7 +92,7 @@ public class KeyringStore : Object, IIdentityCardStore {
         return IIdentityCardStore.StoreType.KEYRING;
     }
 
-    public LinkedList<IdCard> get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         return id_card_list;
     }
 

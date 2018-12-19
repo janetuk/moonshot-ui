@@ -22,7 +22,7 @@ AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
     -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
-    -DMOONSHOT_SERVER='"$(bindir)/moonshot"' \
+    -DMOONSHOT_SERVER_EXEC='"$(bindir)/moonshot"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 

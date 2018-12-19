@@ -40,13 +40,13 @@ class IdCardWidget : Box
     private IdentityManagerView manager_view;
 
     public IdCard id_card { get; set; default = null; }
-    private VBox main_vbox;
-    private HBox hbox;
+    private Box main_vbox;
+    private Box hbox;
     private EventBox event_box;
     private bool   is_selected = false;
     private Arrow arrow;
-    
-    private VBox details;
+
+    private Box details;
 
     internal int _position = 0;
     internal int position {
@@ -59,7 +59,7 @@ class IdCardWidget : Box
 
     internal void select()
     {
-        expand();
+        show_details();
         this.expanded();
     }
 
@@ -69,7 +69,7 @@ class IdCardWidget : Box
         this.collapsed();
     }
 
-    public void expand()
+    public void show_details()
     {
         is_selected = true;
         details.show_all();
@@ -123,7 +123,7 @@ class IdCardWidget : Box
         this.event_box.modify_bg(StateType.NORMAL, color);
         this.arrow.modify_bg(StateType.NORMAL, color);
     }
-    
+
     private void
     make_id_card_label(Label label)
     {
@@ -144,9 +144,9 @@ class IdCardWidget : Box
         display_name_label.set_ellipsize(Pango.EllipsizeMode.END);
         make_id_card_label(display_name_label);
 
-        var details_wrapper = new VBox(false, 0);
+        var details_wrapper = new_vbox(0);
         details_wrapper.pack_start(display_name_label, false, false, 0);
-        this.details = new VBox(false, 0);
+        this.details = new_vbox(0);
         details_wrapper.pack_start(details, false, false, 0);
 
         if (!this.id_card.is_no_identity()) {
@@ -161,7 +161,7 @@ class IdCardWidget : Box
             upper_details.set_alignment(0, 0);
             details.pack_start(upper_details);
         }
-        var services_hbox = new HBox(false, 6);
+        Box services_hbox = new_hbox(6);
         Label services_label = new Label(_("Services: "));
         services_label.set_alignment(0, 0);
 
@@ -174,7 +174,7 @@ class IdCardWidget : Box
         services_hbox.pack_start(service_list, false, false, 0);
         details.pack_start(services_hbox);
 
-        hbox = new Gtk.HBox(false, 6);
+        hbox = new_hbox(6);
         var image = new Image.from_pixbuf(get_pixbuf(id_card));
         if (this.id_card.is_no_identity()) {
             image.clear();
@@ -187,7 +187,7 @@ class IdCardWidget : Box
         this.arrow.set_alignment((float) 0.5, (float) 0);
         hbox.pack_start(arrow, false, false);
 
-        this.main_vbox = new VBox(false, 12);
+        this.main_vbox = new_vbox(12);
         main_vbox.pack_start(hbox, true, true, 0);
         main_vbox.set_border_width(12);
 

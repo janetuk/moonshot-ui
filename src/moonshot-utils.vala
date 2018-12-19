@@ -148,7 +148,7 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     fingerprint_width_constraint.set_size_request(400, 60);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
-    var vbox = new VBox(false, 0);
+    var vbox = new_vbox(0);
     vbox.pack_start(fingerprint_label, true, true, 2);
     vbox.pack_start(fingerprint_width_constraint, true, true, 2);
     return vbox;
@@ -177,7 +177,7 @@ internal static string colonize(string input, int bytes_per_line) {
 }
 
 internal static void clear_password_entry(Entry entry) {
-    
+
     // Overwrite the entry with random data
     var len = entry.get_text().length;
     var random_chars = new char[len + 1];
@@ -203,11 +203,11 @@ internal static void clear_password_entry(Entry entry) {
 #endif
 }
 
-static Gdk.Color white;
 static void set_bg_color(Widget w)
 {
 #if OS_WIN32
 
+    static Gdk.Color white;
     if (white == null) {
         white = make_color(65535, 65535, 65535);
     }
@@ -215,4 +215,14 @@ static void set_bg_color(Widget w)
     w.modify_bg(StateType.NORMAL, white);
 
 #endif
+}
+
+static Box new_vbox(int spacing)
+{
+    return new VBox(false, spacing);
+}
+
+static Box new_hbox(int spacing)
+{
+    return new HBox(false, spacing);
 }
