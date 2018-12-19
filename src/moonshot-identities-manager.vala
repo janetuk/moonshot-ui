@@ -117,11 +117,11 @@ public class IdentityManagerModel : Object {
     public signal void card_list_changed();
 
     /* Return a display name that is unique by appending 0 at the end */
-    public string sanitise_display_name(string name)
+    public string get_unique_display_name(string name)
     {
         foreach (IdCard id_card in this.store.get_card_list())
             if (id_card.display_name == name)
-                return sanitise_display_name("%s0".printf(name));
+                return get_unique_display_name("%s0".printf(name));
         return name;
 
     }
@@ -221,7 +221,7 @@ public class IdentityManagerModel : Object {
 
         remove_duplicates(card, old_duplicates);
 
-        card.display_name = sanitise_display_name(card.display_name);
+        card.display_name = get_unique_display_name(card.display_name);
 
         if (!card.store_password)
             password_table.CachePassword(card, store);
