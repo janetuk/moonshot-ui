@@ -102,7 +102,7 @@ public class IdentityManagerModel : Object {
                 } else if (id_b.is_no_identity() && !id_a.is_no_identity()) {
                     return 1;
                 }
-                return strcmp(id_a.display_name, id_b.display_name);
+                return Posix.strcmp(id_a.display_name, id_b.display_name);
             });
         if (identities.is_empty || !identities[0].is_no_identity())
             identities.insert(0, IdCard.NewNoIdentity());
@@ -116,26 +116,14 @@ public class IdentityManagerModel : Object {
 
     public signal void card_list_changed();
 
-    /* This method finds a valid display name */
-    public bool display_name_is_valid(string name, out string? candidate=null)
+    /* Return a display name that is unique by appending 0 at the end */
+    public string sanitise_display_name(string name)
     {
-        if (&candidate != null)
-            candidate = null;
-        foreach (IdCard id_card in this.store.get_card_list()) {
-            if (id_card.display_name == name) {
-                if (&candidate != null) {
-                    for (int i = 0; i < 1000; i++) {
-                        string tmp = "%s %d".printf(name, i);
-                        if (display_name_is_valid(tmp, null)) {
-                            candidate = tmp;
-                            break;
-                        }
-                    }
-                }
-                return false;
-            }
-        }
-        return true;
+        foreach (IdCard id_card in this.store.get_card_list())
+            if (id_card.display_name == name)
+                return sanitise_display_name("%s0".printf(name));
+        return name;
+
     }
 
     private bool remove_duplicates(IdCard new_card, Gee.List<IdCard> old_duplicates)
@@ -226,7 +214,6 @@ public class IdentityManagerModel : Object {
             return;
         }
 
-        string candidate;
         IIdentityCardStore.StoreType saved_store_type = get_store_type();
 
         if (force_flat_file_store)
@@ -234,10 +221,7 @@ public class IdentityManagerModel : Object {
 
         remove_duplicates(card, old_duplicates);
 
-        if (!display_name_is_valid(card.display_name, out candidate))
-        {
-            card.display_name = candidate;
-        }
+        card.display_name = sanitise_display_name(card.display_name);
 
         if (!card.store_password)
             password_table.CachePassword(card, store);
