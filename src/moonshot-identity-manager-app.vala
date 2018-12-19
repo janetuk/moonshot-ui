@@ -418,7 +418,7 @@ public static int main(string[] args) {
 
     if (headless) {
         try {
-            var opt_context = new OptionContext(null);
+            var opt_context = new OptionContext("");
             opt_context.set_help_enabled(true);
             opt_context.add_main_entries(options, null);
             opt_context.parse(ref args);
