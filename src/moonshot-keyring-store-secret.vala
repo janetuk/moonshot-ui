@@ -61,6 +61,7 @@ public class KeyringStore : KeyringStoreBase {
                                               "Issuer", sstring,
                                               "Username", sstring,
                                               "DisplayName", sstring,
+                                              "Has2FA", sstring,
                                               "Services", sstring,
                                               "Rules-Pattern", sstring,
                                               "Rules-AlwaysConfirm", sstring,

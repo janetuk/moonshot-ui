@@ -79,11 +79,10 @@ public class KeyringStore : KeyringStoreBase {
         logger.trace("store_id_cards");
         clear_keyring();
         foreach (IdCard id_card in this.id_card_list) {
-            /* workaround for Centos vala array property bug: use temp array */
             GnomeKeyring.AttributeList attributes = new GnomeKeyring.AttributeList();
             uint32 item_id;
             var hash_attrs = serialize(id_card);
-                hash_attrs.foreach((k, v) => {
+            hash_attrs.foreach((k, v) => {
                 attributes.append_string((string) k, (string) v);
             });
 

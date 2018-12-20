@@ -72,6 +72,8 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         id_card.issuer = attrs.lookup("Issuer");
         id_card.username = attrs.lookup("Username");
         id_card.display_name = attrs.lookup("DisplayName");
+        id_card.has_2fa = (attrs.lookup("Has2FA") == "yes");
+
         unowned string services = attrs.lookup("Services");
         if ((services != null) && services != "") {
             id_card.update_services(services.split(";"));
@@ -129,6 +131,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         attributes.insert("Issuer", id_card.issuer);
         attributes.insert("Username", id_card.username);
         attributes.insert("DisplayName", id_card.display_name);
+        attributes.insert("Has2FA", id_card.has_2fa ? "yes" : "no");
         attributes.insert("Services", services);
         attributes.insert("Rules-Pattern", patterns);
         attributes.insert("Rules-AlwaysConfirm", always_conf);
