@@ -702,7 +702,7 @@ SUCH DAMAGE.
 
         AboutDialog about = new AboutDialog();
         about.set_logo_icon_name("moonshot");
-        about.set_comments(_("Moonshot project UI"));
+        about.set_comments(_("Moonshot project UI (GTK%d)".printf(Gtk.MAJOR_VERSION)));
         about.set_copyright(copyright);
         about.set_website(Config.PACKAGE_URL);
         about.set_website_label(_("Visit the Moonshot project web site"));
