@@ -280,7 +280,7 @@ public class IdentityManagerModel : Object {
         if ((store != null) && (store.get_store_type() == type))
             return;
         switch (type) {
-            #if GNOME_KEYRING
+            #if GNOME_KEYRING||LIBSECRET_KEYRING
         case IIdentityCardStore.StoreType.KEYRING:
             store = new KeyringStore();
             break;
