@@ -106,11 +106,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
-        old_duplicates.clear();
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
                      .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
@@ -140,7 +139,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
         newtFinished();
         if (dialog) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
         }
         else {
@@ -307,8 +306,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     newtFormSetCurrent(form, disp_entry);
                 }
                 else {
-                    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
-                    this.identities_manager.add_card(id_card, false, tmp_old_dups);
+                    this.identities_manager.add_card(id_card, false);
                 }
             }
         } while (repeat);

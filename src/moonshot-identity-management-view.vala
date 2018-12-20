@@ -363,16 +363,15 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
-        old_duplicates.clear();
-        #if OS_MACOS
+#if OS_MACOS
         /*
          * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
          * so for now we will install silently
          */
         var ret = Gtk.ResponseType.YES;
-        #else
+#else
         Gtk.MessageDialog dialog;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
@@ -410,10 +409,10 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
         var ret = dialog.run();
         dialog.destroy();
-        #endif
+#endif
 
         if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
         }
         else {
@@ -430,9 +429,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         switch (result) {
         case ResponseType.OK:
-	    // Work around Vala compiler bug in Centos 6 by passing in a throwaway "old_duplicates" array
-	    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
-            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false, tmp_old_dups);
+            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false);
             break;
         default:
             break;
@@ -1004,8 +1001,7 @@ SUCH DAMAGE.
                     }
 
 
-                    Gee.List<IdCard> old_duplicates = new ArrayList<IdCard>();
-                    bool result = add_identity(card, use_flat_file_store, old_duplicates);
+                    bool result = add_identity(card, use_flat_file_store);
                     if (result) {
                         logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                         import_count++;

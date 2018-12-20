@@ -92,7 +92,7 @@ public class IdentityManagerModel : Object {
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
 
-    public Gee.List<IdCard>  get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         var identities = store.get_card_list();
         identities.sort((a, b) => {
                 IdCard id_a = (IdCard )a;
@@ -126,9 +126,9 @@ public class IdentityManagerModel : Object {
 
     }
 
-    private bool remove_duplicates(IdCard new_card, Gee.List<IdCard> old_duplicates)
+    private bool remove_duplicates(IdCard new_card)
     {
-	old_duplicates.clear();
+        Gee.List<IdCard> old_duplicates = new ArrayList<IdCard>();
         var cards = this.store.get_card_list();
         foreach (IdCard id_card in cards) {
             if ((new_card != id_card) && (id_card.nai == new_card.nai)) {
@@ -208,7 +208,7 @@ public class IdentityManagerModel : Object {
         return retval;
     }
 
-    public void add_card(IdCard card, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
+    public void add_card(IdCard card, bool force_flat_file_store) {
         if (card.temporary) {
             logger.trace("add_card: card is temporary; returning.");
             return;
@@ -219,7 +219,7 @@ public class IdentityManagerModel : Object {
         if (force_flat_file_store)
             set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
 
-        remove_duplicates(card, old_duplicates);
+        remove_duplicates(card);
 
         card.display_name = get_unique_display_name(card.display_name);
 

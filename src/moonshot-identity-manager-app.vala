@@ -131,16 +131,15 @@ public class IdentityManagerApp {
 #endif
     }
 
-    public bool add_identity(IdCard id, bool force_flat_file_store, Gee.List<IdCard> old_duplicates) {
-    	old_duplicates.clear();
+    public bool add_identity(IdCard id, bool force_flat_file_store) {
         if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
-            return view.add_identity(id, force_flat_file_store, old_duplicates);
+            return view.add_identity(id, force_flat_file_store);
         }
         else {
             logger.trace("add_identity: calling model.add_card");
-            model.add_card(id, force_flat_file_store, old_duplicates);
+            model.add_card(id, force_flat_file_store);
             return true;
         }
     }
