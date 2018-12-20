@@ -88,7 +88,6 @@ public class PasswordHashTable : Object {
 public class IdentityManagerModel : Object {
     static MoonshotLogger logger = get_logger("IdentityManagerModel");
 
-    private const string FILE_NAME = "identities.txt";
     private PasswordHashTable password_table;
     private IIdentityCardStore store;
 

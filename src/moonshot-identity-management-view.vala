@@ -44,9 +44,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private const int WINDOW_WIDTH = 700;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
-    #if OS_MACOS
-        public OSXApplication osxApp;
-    #endif
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private CustomVBox custom_vbox;
@@ -91,9 +88,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         parent_app = app;
         this.use_flat_file_store = use_flat_file_store;
 
-        #if OS_MACOS
-            osxApp = OSXApplication.get_instance();
-        #endif
         identities_manager = parent_app.model;
         request_queue = new GLib.Queue<IdentityRequest>();
         this.title = _("Moonshot Identity Selector");
@@ -260,7 +254,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         custom_vbox.clear();
         this.listmodel->clear();
-        Gee.List<IdCard> card_list = identities_manager.get_card_list() ;
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         if (card_list == null) {
             return;
         }
@@ -365,13 +359,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     public bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
-#if OS_MACOS
-        /*
-         * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
-         * so for now we will install silently
-         */
-        var ret = Gtk.ResponseType.YES;
-#else
         Gtk.MessageDialog dialog;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
@@ -409,7 +396,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
         var ret = dialog.run();
         dialog.destroy();
-#endif
 
         if (ret == Gtk.ResponseType.YES) {
             this.identities_manager.add_card(id_card, force_flat_file_store);
@@ -874,22 +860,9 @@ SUCH DAMAGE.
 
         var main_vbox = new_vbox(0);
 
-#if OS_MACOS
-        // hide the  File | Quit menu item which is now on the Mac Menu
-//        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
-//        quit_item.hide();
-
-        Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
-
-        osxApp.set_menu_bar(menushell);
-        osxApp.set_use_quartz_accelerators(true);
-        osxApp.sync_menu_bar();
-        osxApp.ready();
-#else
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-#endif
         main_vbox.pack_start(top_table, true, true, 6);
 
         add(main_vbox);

@@ -94,12 +94,12 @@ public class KeyringStore : KeyringStoreBase {
         }
     }
 
-    protected override void load_id_cards()  throws GLib.Error {
+    protected override void load_id_cards() throws GLib.Error {
         id_card_list.clear();
 
         GLib.List<Item> items = secret_collection.search_sync(schema, match_attributes,
                                                               SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
-        foreach(unowned Item entry in items) {
+        foreach (unowned Item entry in items) {
             var secret = entry.get_secret();
             string secret_text = null;
             if (secret != null)
