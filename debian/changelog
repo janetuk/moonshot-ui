@@ -3,7 +3,7 @@ moonshot-ui (1.1.4-0.DIST) unstable; urgency=medium
   * Support building with GTK3
   * Support building with libsecret
 
- -- Jisc <assent@jisc.ac.uk>  Thu, 20 Dic 2018 00:00:00 +0000
+ -- Jisc <assent@jisc.ac.uk>  Thu, 20 Dec 2018 00:00:00 +0000
 
 moonshot-ui (1.1.3-0) unstable; urgency=medium
 
