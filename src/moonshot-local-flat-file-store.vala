@@ -209,12 +209,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             logger.trace("store_id_cards: attempting to store to " + filename);
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-            #if GIO_VAPI_USES_ARRAYS
+#if GIO_VAPI_USES_ARRAYS
             stream.write(text.data);
-            #else
+#else
             var bits = text.data;
             stream.write(&bits[0], bits.length);
-            #endif
+#endif
                 }
         catch (Error e) {
             logger.error("store_id_cards: Error while saving keyfile: %s\n".printf(e.message));

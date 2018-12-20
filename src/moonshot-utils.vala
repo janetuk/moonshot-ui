@@ -62,7 +62,7 @@ public Gdk.Pixbuf? find_icon(string name, int size)
         return null;
     try
     {
-        #if OS_WIN32
+#if OS_WIN32
         string? base_path = g_win32_get_package_installation_directory_of_module(null);
 
         // Hack to allow running within the source tree
@@ -73,10 +73,10 @@ public Gdk.Pixbuf? find_icon(string name, int size)
         string? filename = Path.build_filename(base_path, "share", "icons", "%s.png".printf(name));
         return new Gdk.Pixbuf.from_file_at_size(filename, size, size);
 
-        #else
+#else
         var icon_theme = Gtk.IconTheme.get_default();
         return icon_theme.load_icon(name, size, Gtk.IconLookupFlags.FORCE_SIZE);
-        #endif
+#endif
     }
     catch (Error e)
     {
