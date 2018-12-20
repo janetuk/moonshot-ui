@@ -103,7 +103,7 @@ src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
+src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg moonshot-gnome-keyring --define=GNOME_KEYRING $(AM_VALAFLAGS)
 src_moonshot_keyring_tool_CPPFLAGS = $(moonshot_CFLAGS) -I/usr/include/gnome-keyring-1
 src_moonshot_keyring_tool_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_keyring_tool_LDFLAGS = $(MOONSHOT_LOG_LIBS)
