@@ -36,7 +36,7 @@ using Gee;
 public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected static MoonshotLogger logger = get_logger("KeyringStore");
 
-    protected LinkedList<IdCard> id_card_list;
+    protected Gee.List<IdCard> id_card_list;
     internal const string keyring_store_attribute = "Moonshot";
     internal const string keyring_store_version = "1.0";
 
@@ -181,7 +181,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         return IIdentityCardStore.StoreType.KEYRING;
     }
 
-    public LinkedList<IdCard> get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         return id_card_list;
     }
 
