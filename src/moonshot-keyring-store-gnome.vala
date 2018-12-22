@@ -38,28 +38,16 @@ using Gee;
 public class KeyringStore : KeyringStoreBase {
     private const GnomeKeyring.ItemType item_type = GnomeKeyring.ItemType.GENERIC_SECRET;
 
-    /* clear all keyring-stored ids (in preparation to store current list) */
-    protected override void clear_keyring() {
+    /* Used to keep track of the association between IdCards and the item_id */
+    private Gee.HashMap<IdCard,uint> item_map = new Gee.HashMap<IdCard,uint>();
+
+    protected override Gee.List<IdCard> load_id_cards() {
+        Gee.List<IdCard> id_card_list = new LinkedList<IdCard>();
         GnomeKeyring.AttributeList match = new GnomeKeyring.AttributeList();
         match.append_string(keyring_store_attribute, keyring_store_version);
         GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
-        foreach(unowned GnomeKeyring.Found entry in items) {
-            GnomeKeyring.Result result = GnomeKeyring.item_delete_sync(null, entry.item_id);
-            if (result != GnomeKeyring.Result.OK) {
-                stdout.printf("GnomeKeyring.item_delete_sync() failed. result: %d", result);
-            }
-        }
-    }
-
-    protected override void load_id_cards() {
-        id_card_list.clear();
-
-        GnomeKeyring.AttributeList match = new GnomeKeyring.AttributeList();
-        match.append_string(keyring_store_attribute, keyring_store_version);
-        GLib.List<GnomeKeyring.Found> items;
-        GnomeKeyring.find_items_sync(item_type, match, out items);
-        foreach(unowned GnomeKeyring.Found entry in items) {
+        foreach (unowned GnomeKeyring.Found entry in items) {
             KeyringStoreBase.Attributes new_attrs = new KeyringStoreBase.Attributes();
             for (int i = 0; i < entry.attributes.len; i++) {
                 var attribute = ((GnomeKeyring.Attribute *) entry.attributes.data)[i];
@@ -70,42 +58,52 @@ public class KeyringStore : KeyringStoreBase {
             }
 
             var id_card = deserialize(new_attrs, entry.secret);
-
             id_card_list.add(id_card);
+            item_map.set(id_card, entry.item_id);
         }
+        return id_card_list;
     }
 
-    internal override void store_id_cards() {
-        logger.trace("store_id_cards");
-        clear_keyring();
-        foreach (IdCard id_card in this.id_card_list) {
-            GnomeKeyring.AttributeList attributes = new GnomeKeyring.AttributeList();
-            uint32 item_id;
-            var hash_attrs = serialize(id_card);
-            hash_attrs.foreach((k, v) => {
-                attributes.append_string((string) k, (string) v);
-            });
-
-            attributes.append_string(keyring_store_attribute, keyring_store_version);
-
-            GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,
-                                                                       item_type, id_card.display_name, attributes,
-                                                                       id_card.store_password ? id_card.password : "",
-                                                                       true, out item_id);
-            if (result != GnomeKeyring.Result.OK) {
-                stdout.printf("GnomeKeyring.item_create_sync() failed. result: %d", result);
-            }
-        }
-        try {
-            load_id_cards();
-        } catch(GLib.Error e) {
-            logger.error(@"Unable to load ID cards: $(e.message)\n");
-        }
-
-    }
-
-    public static bool is_available()
+    protected override bool store_id_card(IdCard id_card)
     {
+        GnomeKeyring.AttributeList attributes = new GnomeKeyring.AttributeList();
+        var hash_attrs = serialize(id_card);
+        uint item_id;
+        hash_attrs.foreach((k, v) => {
+            attributes.append_string((string) k, (string) v);
+        });
+
+        attributes.append_string(keyring_store_attribute, keyring_store_version);
+        GnomeKeyring.Result result = GnomeKeyring.item_create_sync(null,
+                                                                   item_type, id_card.display_name, attributes,
+                                                                   id_card.store_password ? id_card.password : "",
+                                                                   true, out item_id);
+        item_map.set(id_card, item_id);
+        logger.trace("Adding id_card %s: %u (size=%d)".printf(id_card.display_name, item_id, item_map.size));
+        if (result != GnomeKeyring.Result.OK) {
+            stdout.printf("GnomeKeyring.item_create_sync() failed. result: %d", result);
+            return false;
+        }
+        return true;
+    }
+
+    protected override bool remove_id_card(IdCard id_card)
+    {
+        uint item_id = 0;
+        if (!item_map.unset(id_card, out item_id)) {
+            logger.error("IdCard does not seem to have an item_map on GNOME KEYRING!!");
+            return false;
+        }
+        logger.trace("Deleting id_card %s: %u".printf(id_card.display_name, item_id));
+        GnomeKeyring.Result result = GnomeKeyring.item_delete_sync(null, item_id);
+        if (result != GnomeKeyring.Result.OK) {
+            stdout.printf("GnomeKeyring.item_delete_sync() failed. result: %d", result);
+            return false;
+        }
+        return true;
+    }
+
+    public static bool is_available() {
         return GnomeKeyring.is_available();
     }
 
@@ -121,7 +119,6 @@ public class KeyringStore : KeyringStoreBase {
         GnomeKeyring.Result rv = GnomeKeyring.unlock_sync(null, password);
         if (rv != GnomeKeyring.Result.OK)
             return false;
-        load_id_cards();
         return true;
     }
 

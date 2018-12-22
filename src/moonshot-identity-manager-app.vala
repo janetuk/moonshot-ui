@@ -127,8 +127,7 @@ public class IdentityManagerApp {
 
         IdCard identity = null;
 
-        if (request.select_default)
-        {
+        if (request.select_default) {
             identity = default_id_card;
         }
 

@@ -73,30 +73,32 @@ public class KeyringStore : KeyringStoreBase {
                                               "StorePassword", sstring);
     private static Collection? secret_collection = find_secret_collection();
 
-    /* clear all keyring-stored ids (in preparation to store current list) */
-    protected override void clear_keyring() {
-        GLib.List<Item> items;
+    /* Used to keep track of the association between IdCards and Items */
+    private Gee.HashMap<IdCard,Item> item_map = new Gee.HashMap<IdCard,Item>();
+
+    protected override bool remove_id_card(IdCard id_card) {
+        Item item;
+        if (!item_map.unset(id_card, out item)) {
+            logger.error("IdCard does not seem to have an item_map on LIBSECRET!!");
+            return false;
+        }
         try {
-            items = secret_collection.search_sync(schema, match_attributes, SearchFlags.ALL);
-        } catch (GLib.Error e) {
-            stdout.printf("Failed to find items to delete: %s\n", e.message);
-            return;
-        }
-        foreach(unowned Item entry in items) {
-            try {
-                bool res = entry.delete_sync();
-                if (!res) {
-                    stdout.printf("Failed to delete item: %s\n", entry.get_label());
-                }
-            } catch (GLib.Error e) {
-                stdout.printf("Error deleting item: %s\n", e.message);
+            bool res = item.delete_sync();
+            if (!res) {
+                stdout.printf("Failed to delete item: %s\n", item.get_label());
+                return false;
             }
+        } catch (GLib.Error e) {
+            stdout.printf("Error deleting item: %s\n", e.message);
+            return false;
         }
+        return true;
     }
 
-    protected override void load_id_cards() throws GLib.Error {
-        id_card_list.clear();
-
+    protected override Gee.List<IdCard> load_id_cards() throws GLib.Error {
+        Gee.List<IdCard> id_card_list = new Gee.LinkedList<IdCard>();
+        var match_attributes = new KeyringStoreBase.Attributes();
+        match_attributes.insert(keyring_store_attribute, keyring_store_version);
         GLib.List<Item> items = secret_collection.search_sync(schema, match_attributes,
                                                               SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
         foreach (unowned Item entry in items) {
@@ -106,27 +108,23 @@ public class KeyringStore : KeyringStoreBase {
                 secret_text = secret.get_text();
             var id_card = deserialize(entry.attributes, secret_text);
             id_card_list.add(id_card);
+            item_map.set(id_card, entry);
         }
+        return id_card_list;
     }
 
-    internal override void store_id_cards() {
-        logger.trace("store_id_cards");
-        clear_keyring();
-        foreach (IdCard id_card in this.id_card_list) {
-            try {
-                var attributes = serialize(id_card);
-                password_storev_sync(schema, attributes, null, id_card.display_name,
-                                     id_card.store_password?id_card.password: "");
-            } catch(GLib.Error e) {
-                logger.error(@"Unable to store $(id_card.display_name): $(e.message)\n");
-            }
-        }
+    protected override bool store_id_card(IdCard id_card) {
         try {
-            load_id_cards();
-        } catch (GLib.Error e) {
-            logger.error(@"Unable to load ID Cards: $(e.message)\n");
+            var attributes = serialize(id_card);
+            var secret_value = new Secret.Value(id_card.store_password ? id_card.password : "", -1, "password");
+            Item item = Item.create_sync(secret_collection, schema, attributes, id_card.display_name, secret_value,
+                                         ItemCreateFlags.REPLACE);
+            item_map.set(id_card, item);
+        } catch(GLib.Error e) {
+            logger.error(@"Unable to store $(id_card.display_name): $(e.message)\n");
+            return false;
         }
-
+        return true;
     }
 
     public static bool is_available()

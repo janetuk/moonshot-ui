@@ -57,8 +57,5 @@ public interface IIdentityCardStore : Object {
     public abstract Gee.List<IdCard> get_card_list();
     public abstract bool is_locked();
     public abstract bool unlock(string password);
-
-    // Note that (at least right now) store_id_cards() will re-load the cards after saving them.
-    internal abstract void store_id_cards();
 }
 

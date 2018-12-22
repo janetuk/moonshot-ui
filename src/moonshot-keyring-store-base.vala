@@ -36,7 +36,6 @@ using Gee;
 public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected static MoonshotLogger logger = get_logger("KeyringStore");
 
-    protected Gee.List<IdCard> id_card_list;
     internal const string keyring_store_attribute = "Moonshot";
     internal const string keyring_store_version = "1.0";
 
@@ -52,8 +51,6 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
             base.full(GLib.str_hash, GLib.str_equal, GLib.g_free, GLib.g_free);
         }
     }
-
-    protected static Attributes match_attributes;
 
     public abstract bool is_locked();
 
@@ -144,40 +141,31 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         return attributes;
     }
 
-    class construct {
-        match_attributes = new Attributes();
-        match_attributes.insert(keyring_store_attribute, keyring_store_version);
-    }
-
     public void add_card(IdCard card) {
         logger.trace("add_card: Adding card '%s' with services: '%s'"
                      .printf(card.display_name, card.get_services_string("; ")));
-        id_card_list.add(card);
-        store_id_cards();
+        if (!store_id_card(card))
+            logger.error("Could not add card %s!".printf(card.display_name));
     }
 
     public IdCard? update_card(IdCard card) {
-        logger.trace("update_card");
-
-        id_card_list.remove(card);
-        id_card_list.add(card);
-
-        store_id_cards();
-        foreach (IdCard idcard in id_card_list) {
-            if (idcard.display_name == card.display_name) {
-                return idcard;
-            }
+        logger.trace("add_card: Updating card '%s' with services: '%s'"
+                     .printf(card.display_name, card.get_services_string("; ")));
+        if (!remove_id_card(card)) {
+            logger.error("Could not update card %s!".printf(card.display_name));
+            return null;
         }
-
-        logger.error(@"update_card: card '$(card.display_name)' was not found after re-loading!");
-        return null;
+        if (!store_id_card(card)) {
+            logger.error("Could not update card %s!".printf(card.display_name));
+            return null;
+        }
+        return card;
     }
 
     public bool remove_card(IdCard card) {
-        bool retval = id_card_list.remove(card);
-        if (retval)
-            store_id_cards();
-        return retval;
+        logger.trace("remove_card: Removing card '%s' with services: '%s'"
+                     .printf(card.display_name, card.get_services_string("; ")));
+        return remove_id_card(card);
     }
 
     public IIdentityCardStore.StoreType get_store_type() {
@@ -185,21 +173,19 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     }
 
     public Gee.List<IdCard> get_card_list() {
-        return id_card_list;
-    }
-
-    protected abstract void clear_keyring();
-    protected abstract void load_id_cards() throws GLib.Error;
-    internal abstract void store_id_cards();
-
-    public KeyringStoreBase() {
-        id_card_list = new LinkedList<IdCard>();
         try {
-            load_id_cards();
-        } catch( GLib.Error e) {
-            stdout.printf("Unable to load ID cards: %s\n", e.message);
+            return load_id_cards();
+        } catch (GLib.Error e) {
+            logger.error(@"Unable to load ID Cards: $(e.message)\n");
+            return new LinkedList<IdCard>();
         }
     }
+
+    protected abstract Gee.List<IdCard> load_id_cards() throws GLib.Error;
+    protected abstract bool store_id_card(IdCard id_card);
+    protected abstract bool remove_id_card(IdCard id_card);
+
+    public KeyringStoreBase() {}
 }
 
 #endif
