@@ -101,7 +101,7 @@ public class IdentityManagerModel : Object {
                 } else if (id_b.is_no_identity() && !id_a.is_no_identity()) {
                     return 1;
                 }
-                return Posix.strcmp(id_a.display_name, id_b.display_name);
+                return strcmp(id_a.display_name, id_b.display_name);
             });
         if (identities.is_empty || !identities[0].is_no_identity())
             identities.insert(0, IdCard.NewNoIdentity());
@@ -322,11 +322,6 @@ public class IdentityManagerModel : Object {
     public bool is_locked()
     {
         return this.store.is_locked();
-    }
-
-    public bool unlock(string password)
-    {
-        return this.store.unlock(password);
     }
 
     private IdentityManagerApp parent;

@@ -72,7 +72,7 @@ public class IdentityManagerApp {
     internal IdentityManagerApp.dummy() {}
 #endif
 
-    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) {
+    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) throws IdentityManagerError {
         this.headless = headless;
 
         use_flat_file_store |= UserForcesFlatFileStore();
@@ -99,8 +99,9 @@ public class IdentityManagerApp {
         /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
-        else if (cli_enabled)
+        else if (cli_enabled) {
             view = new IdentityManagerCli(this, use_flat_file_store);
+        }
 
         Gee.List<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
@@ -427,7 +428,14 @@ public static int main(string[] args) {
     if (explicitly_launched)
         cli_enabled = true;
 
-    var app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
+    IdentityManagerApp app;
+    try{
+        app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
+    }
+    catch (IdentityManagerError ex) {
+        stdout.printf(_("Error loading the UI: %s\n"), ex.message);
+        return 1;
+    }
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
 

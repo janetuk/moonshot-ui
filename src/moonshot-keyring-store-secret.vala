@@ -140,10 +140,6 @@ public class KeyringStore : KeyringStoreBase {
         return secret_collection.get_locked();
     }
 
-    public override bool unlock(string password) {
-        return false;
-    }
-
 }
 
 #endif

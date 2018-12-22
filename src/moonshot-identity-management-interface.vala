@@ -1,5 +1,9 @@
 
 using Gee;
+public errordomain IdentityManagerError {
+    KEYRING_LOCKED
+}
+
 public interface IdentityManagerInterface : Object {
     public abstract bool add_identity(IdCard id_card, bool force_flat_file_store);
     public abstract void queue_identity_request(IdentityRequest request);

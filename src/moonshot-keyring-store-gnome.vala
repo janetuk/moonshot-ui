@@ -114,14 +114,6 @@ public class KeyringStore : KeyringStoreBase {
             return true;
         return info.get_is_locked();
     }
-
-    public override bool unlock(string password) {
-        GnomeKeyring.Result rv = GnomeKeyring.unlock_sync(null, password);
-        if (rv != GnomeKeyring.Result.OK)
-            return false;
-        return true;
-    }
-
 }
 
 #endif

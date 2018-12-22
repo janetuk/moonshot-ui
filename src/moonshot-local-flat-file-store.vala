@@ -232,9 +232,5 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
     public bool is_locked() {
         return false;
     }
-
-    public bool unlock(string password) {
-        return true;
-    }
 }
 

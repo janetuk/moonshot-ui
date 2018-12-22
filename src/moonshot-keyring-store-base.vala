@@ -54,8 +54,6 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
 
     public abstract bool is_locked();
 
-    public abstract bool unlock(string password);
-
     protected static IdCard deserialize(GLib.HashTable<string,string> attrs, string? secret)
     {
         IdCard id_card = new IdCard();

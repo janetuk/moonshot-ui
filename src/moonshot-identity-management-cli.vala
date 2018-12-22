@@ -40,35 +40,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     internal IdentityManagerModel identities_manager;
     private IdentityRequest? request;
 
-    public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) {
+    public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) throws IdentityManagerError {
         parent_app = app;
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
-        unlock_keyring();
+        if (identities_manager.is_locked())
+            throw new IdentityManagerError.KEYRING_LOCKED("The keyring is locked");
         report_duplicate_nais();
         report_expired_trust_anchors();
-    }
-
-    /* Attempts to unlock the model. This only happens if PAM is not configured to unlock the Gnome Keyring */
-    private bool unlock_keyring() {
-        if (identities_manager.is_locked()) {
-            bool success = false;
-            init_newt();
-            while (!success) {
-                string? password = password_dialog("Enter password to unlock your default keyring",
-                                                   "The default keyring is LOCKED. Please, Configure PAM to auto-unlock "
-                                                   + " on login if you don't trust entering your password here.");
-                if (password == null) {
-                    info_dialog("ERROR", "No keyring password provided. You are being switched back to flat file.", 70, 4);
-                    identities_manager.set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
-                    return false;
-                }
-                success = identities_manager.unlock(password);
-            }
-            newtFinished();
-        }
-        return true;
     }
 
     /* Reports whether there are identities with ideantical NAI */
@@ -487,7 +467,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
         bool exit_loop = false;
         int offset = 0;
-        // GnomeKeyringFound *id_card = NULL, *result = NULL;
         init_newt();
         do {
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");

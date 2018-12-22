@@ -56,6 +56,5 @@ public interface IIdentityCardStore : Object {
     public abstract StoreType get_store_type();
     public abstract Gee.List<IdCard> get_card_list();
     public abstract bool is_locked();
-    public abstract bool unlock(string password);
 }
 
