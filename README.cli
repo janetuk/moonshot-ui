@@ -25,7 +25,5 @@ use of it, some conditions need to be met:
    In this case, it is mandatory that the default keyring is called "login"
    and that the user and keyring passwords are the same.
 
-   If the keyring is not automatically unlocked with PAM, there is an
-   alternative init bash script in
-   $PREFIX/share/moonshot-ui/enable-moonshot-cli-unlock which also tries
-   to unlock the Gnome Keyring when it starts.
+   If the keyring is not automatically unlocked with PAM, you can also use
+   the shipped moonshot-keyring-tool to unlock it manually.

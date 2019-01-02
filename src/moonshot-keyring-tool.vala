@@ -11,15 +11,22 @@ int check_rv(GnomeKeyring.Result rv) {
     return 0;
 }
 
+string get_password(string prompt) {
+    stdout.printf (prompt + ": ");
+    string? name = stdin.read_line();
+    return (name != null ? name : "");
+}
+
 public static int main(string[] args) {
     string usage =
 """Usage: moonshot-keyring-tool <ACTION>
     Where <ACTION> can be any of:
         list
-        create <name> <password>
+        create <name>
         set_default <keyring_name>
         delete <keyring_name>
-        change_pwd <keyring_name> <original_pwd> <new_pwd>
+        unlock <keyring_name>
+        change_pwd <keyring_name>
 """;
     if (args.length < 2) {
         stdout.printf(usage);
@@ -31,17 +38,23 @@ public static int main(string[] args) {
         GnomeKeyring.get_default_keyring_sync(out default_keyring);
 
         List<string> keyrings;
-        GnomeKeyring.Result rv = GnomeKeyring.list_keyring_names_sync(out keyrings);
+        if (check_rv(GnomeKeyring.list_keyring_names_sync(out keyrings)) > 0)
+            return 1;
         foreach(unowned string name in keyrings) {
-            stdout.printf("%s %s\n".printf(name, name == default_keyring ? "[DEFAULT]" : "" ));
+            unowned GnomeKeyring.Info info;
+            if (check_rv(GnomeKeyring.get_info_sync(null, out info)) > 0)
+                return 1;
+            info.get_is_locked();
+            stdout.printf("%s %s %s\n".printf(name, name == default_keyring ? "[DEFAULT]" : "", info.get_is_locked() ? "[Locked]" : "[Unlocked]" ));
         }
-
-        return check_rv(rv);
+        return 0;
     }
 
     else if (args[1] == "create"){
-        if (args.length == 4)
-            return check_rv(GnomeKeyring.create_sync(args[2], args[3]));
+        if (args.length == 3) {
+            string password = get_password("Password (it will be DISPLAYED!!)");
+            return check_rv(GnomeKeyring.create_sync(args[2], password));
+        }
     }
 
     else if (args[1] == "set_default"){
@@ -55,8 +68,18 @@ public static int main(string[] args) {
     }
 
     else if (args[1] == "change_pwd"){
-        if (args.length == 5)
-            return check_rv(GnomeKeyring.change_password_sync(args[2], args[3], args[4]));
+        if (args.length == 3) {
+            string old_password = get_password("Old Password (it will be DISPLAYED!!)");
+            string new_password = get_password("New Password (it will be DISPLAYED!!)");
+            return check_rv(GnomeKeyring.change_password_sync(args[2], old_password, new_password));
+        }
+    }
+
+    else if (args[1] == "unlock"){
+        if (args.length == 3){
+            string password = get_password("Password (it will be DISPLAYED!!)");
+            return check_rv(GnomeKeyring.unlock_sync(args[2], password));
+        }
     }
 
     stdout.printf(usage);

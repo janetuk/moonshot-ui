@@ -45,8 +45,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
-        if (identities_manager.is_locked())
+        if (identities_manager.is_locked()) {
+            init_newt();
+            info_dialog("Keyring locked", "The keyring is locked. Please, make sure you unlock it before attempting to the the Text UI." , 70, 5, false);
+            newtFinished();
             throw new IdentityManagerError.KEYRING_LOCKED("The keyring is locked");
+        }
         report_duplicate_nais();
         report_expired_trust_anchors();
     }
