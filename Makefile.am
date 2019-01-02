@@ -93,7 +93,7 @@ src_moonshot_keyring_tool_SOURCES = src/moonshot-keyring-tool.vala
 src_moonshot_idcard_generator_SOURCES = src/moonshot-idcard-generator.c
 
 
-src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt  --pkg posix $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
@@ -103,7 +103,7 @@ src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg moonshot-gnome-keyring --define=GNOME_KEYRING $(AM_VALAFLAGS)
+src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg moonshot-gnome-keyring --pkg posix --define=GNOME_KEYRING $(AM_VALAFLAGS)
 src_moonshot_keyring_tool_CPPFLAGS = $(moonshot_CFLAGS) -I/usr/include/gnome-keyring-1
 src_moonshot_keyring_tool_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_keyring_tool_LDFLAGS = $(MOONSHOT_LOG_LIBS)

@@ -11,12 +11,6 @@ int check_rv(GnomeKeyring.Result rv) {
     return 0;
 }
 
-string get_password(string prompt) {
-    stdout.printf (prompt + ": ");
-    string? name = stdin.read_line();
-    return (name != null ? name : "");
-}
-
 public static int main(string[] args) {
     string usage =
 """Usage: moonshot-keyring-tool <ACTION>
@@ -52,7 +46,7 @@ public static int main(string[] args) {
 
     else if (args[1] == "create"){
         if (args.length == 3) {
-            string password = get_password("Password (it will be DISPLAYED!!)");
+            string password = Posix.getpass("Password: ");
             return check_rv(GnomeKeyring.create_sync(args[2], password));
         }
     }
@@ -69,15 +63,15 @@ public static int main(string[] args) {
 
     else if (args[1] == "change_pwd"){
         if (args.length == 3) {
-            string old_password = get_password("Old Password (it will be DISPLAYED!!)");
-            string new_password = get_password("New Password (it will be DISPLAYED!!)");
+            string old_password = Posix.getpass("Old password: ");
+            string new_password = Posix.getpass("New password: ");
             return check_rv(GnomeKeyring.change_password_sync(args[2], old_password, new_password));
         }
     }
 
     else if (args[1] == "unlock"){
         if (args.length == 3){
-            string password = get_password("Password (it will be DISPLAYED!!)");
+            string password = Posix.getpass("Password: ");
             return check_rv(GnomeKeyring.unlock_sync(args[2], password));
         }
     }

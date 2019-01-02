@@ -47,7 +47,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         request = null;
         if (identities_manager.is_locked()) {
             init_newt();
-            info_dialog("Keyring locked", "The keyring is locked. Please, make sure you unlock it before attempting to the the Text UI." , 70, 5, false);
+            info_dialog("Keyring locked", "The keyring is locked. Please, make sure you unlock it before attempting to use the Text UI." , 70, 5, false);
             newtFinished();
             throw new IdentityManagerError.KEYRING_LOCKED("The keyring is locked");
         }
