@@ -12,7 +12,7 @@ bin_PROGRAMS = \
          src/moonshot-keyring-tool \
          src/moonshot-idcard-generator
 
-dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli enable-moonshot-cli-unlock
+dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli
 dist_doc_DATA = README.cli
 dist_moonshotsysconf_DATA=flatstore-users
 
