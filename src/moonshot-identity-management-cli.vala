@@ -40,16 +40,19 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     internal IdentityManagerModel identities_manager;
     private IdentityRequest? request;
 
-    public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) throws IdentityManagerError {
+    public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) {
         parent_app = app;
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
         if (identities_manager.is_locked()) {
             init_newt();
-            info_dialog("Keyring locked", "The keyring is locked. Please, make sure you unlock it before attempting to use the Text UI." , 70, 5, false);
+            info_dialog("Keyring locked",
+                        "The keyring seems to be locked. The UI is falling back to FLAT_FILE backend.\n"
+                        + "If you meant to use the Keyring, make sure you have unlocked it before running the UI.",
+                        70, 5, false);
+            identities_manager.set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
             newtFinished();
-            throw new IdentityManagerError.KEYRING_LOCKED("The keyring is locked");
         }
         report_duplicate_nais();
         report_expired_trust_anchors();

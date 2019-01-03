@@ -72,7 +72,7 @@ public class IdentityManagerApp {
     internal IdentityManagerApp.dummy() {}
 #endif
 
-    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) throws IdentityManagerError {
+    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) {
         this.headless = headless;
 
         use_flat_file_store |= UserForcesFlatFileStore();
@@ -428,14 +428,7 @@ public static int main(string[] args) {
     if (explicitly_launched)
         cli_enabled = true;
 
-    IdentityManagerApp app;
-    try{
-        app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
-    }
-    catch (IdentityManagerError ex) {
-        stdout.printf(_("Error loading the UI: %s\n"), ex.message);
-        return 1;
-    }
+    IdentityManagerApp app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
 
