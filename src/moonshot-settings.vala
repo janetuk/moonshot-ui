@@ -38,7 +38,7 @@ private MoonshotLogger logger()
     return get_logger("MoonshotSettings");
 }
 
-static const string KEY_FILE_NAME="moonshot-ui.config";
+const string KEY_FILE_NAME="moonshot-ui.config";
 
 private KeyFile get_keyfile()
 {

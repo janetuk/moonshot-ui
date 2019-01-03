@@ -31,7 +31,7 @@
 */
 using Gtk;
 
-static const string GROUP_NAME="WarningDialogs";
+const string GROUP_NAME="WarningDialogs";
 
 // MessageDialog doesn't allow subclassing, so we merely wrap the
 // constructor for it the dialog, and then run it, returning the result.

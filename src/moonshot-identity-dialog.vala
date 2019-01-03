@@ -36,9 +36,9 @@ using Gtk;
 
 // Defined here as workaround for emacs vala-mode indentation failure.
 #if VALA_0_12
-static const string CANCEL = Stock.CANCEL;
+const string CANCEL = Stock.CANCEL;
 #else
-static const string CANCEL = STOCK_CANCEL;
+const string CANCEL = STOCK_CANCEL;
 #endif
 
 
@@ -52,10 +52,10 @@ class IdentityDialog : Dialog
 
     private static MoonshotLogger logger = get_logger("IdentityDialog");
 
-    static const string displayname_labeltext = _("Display Name");
-    static const string realm_labeltext = _("Realm");
-    static const string username_labeltext = _("Username");
-    static const string password_labeltext = _("Password");
+    const string displayname_labeltext = _("Display Name");
+    const string realm_labeltext = _("Realm");
+    const string username_labeltext = _("Username");
+    const string password_labeltext = _("Password");
 
     private Entry displayname_entry;
     private Label displayname_label;

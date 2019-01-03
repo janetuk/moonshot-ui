@@ -40,8 +40,8 @@ extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 // be modified by the user, other than being cleared. Hence the fields are read-only.
 public class TrustAnchor : Object
 {
-    private static const string CERT_HEADER = "-----BEGIN CERTIFICATE-----";
-    private static const string CERT_FOOTER = "-----END CERTIFICATE-----";
+    private const string CERT_HEADER = "-----BEGIN CERTIFICATE-----";
+    private const string CERT_FOOTER = "-----END CERTIFICATE-----";
 
     public enum TrustAnchorType {
         EMPTY,
