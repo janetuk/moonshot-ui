@@ -92,7 +92,7 @@ void moonshot_free (void *data)
 }
 
 static char *moonshot_dbus_launched_argv[] = {
-  MOONSHOT_SERVER_EXEC, "--dbus-launched", "--cli", NULL
+  MOONSHOT_APP, "--dbus-launched", "--cli", NULL
 };
 
 /**
