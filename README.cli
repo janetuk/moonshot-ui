@@ -7,7 +7,7 @@ use of it, some conditions need to be met:
    it is RECOMMENDED that an instance of Gnome Keyring (if installed) is
    already running, for better user experience. Both of these things can be
    appropriately set up by sourcing the shipped bash script in:
-   $PREFIX/share/moonshot-ui/enable-moonshot-cli.
+   $PREFIX/share/moonshot-ui/enable-moonshot-txt-ui.
 
    A recurrent Moonshot user will want to add the former to the $HOME/.bashrc
    file, so it gets sourced automatically on login, as well of using PAM
