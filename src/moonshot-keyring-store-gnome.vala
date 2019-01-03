@@ -47,6 +47,7 @@ public class KeyringStore : KeyringStoreBase {
         match.append_string(keyring_store_attribute, keyring_store_version);
         GLib.List<GnomeKeyring.Found> items;
         GnomeKeyring.find_items_sync(item_type, match, out items);
+        item_map.clear();
         foreach (unowned GnomeKeyring.Found entry in items) {
             KeyringStoreBase.Attributes new_attrs = new KeyringStoreBase.Attributes();
             for (int i = 0; i < entry.attributes.len; i++) {

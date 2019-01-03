@@ -101,6 +101,7 @@ public class KeyringStore : KeyringStoreBase {
         match_attributes.insert(keyring_store_attribute, keyring_store_version);
         GLib.List<Item> items = secret_collection.search_sync(schema, match_attributes,
                                                               SearchFlags.UNLOCK|SearchFlags.LOAD_SECRETS|SearchFlags.ALL);
+        item_map.clear();
         foreach (unowned Item entry in items) {
             var secret = entry.get_secret();
             string secret_text = null;
