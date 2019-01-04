@@ -1,4 +1,4 @@
-#if GNOME_KEYRING || LIBSECRET_KEYRING
+#if GNOME_KEYRING
 
 using GnomeKeyring;
 using GLib;
@@ -79,9 +79,14 @@ public static int main(string[] args) {
     stdout.printf(usage);
     return 1;
 }
+#elif LIBSECRET_KEYRING
+public static int main(string[] args) {
+    stdout.printf("The UI has been built with LIBSECRET support.\n");
+    return 1;
+}
 #else
 public static int main(string[] args) {
-    stdout.printf("The UI has been built without GNOME_KEYRING support.");
+    stdout.printf("The UI has been built without GNOME_KEYRING support.\n");
     return 1;
 }
 #endif
