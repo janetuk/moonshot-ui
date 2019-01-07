@@ -104,7 +104,7 @@ src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonsh
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
 src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg posix $(AM_VALAFLAGS)
-src_moonshot_keyring_tool_CPPFLAGS = $(moonshot_CFLAGS)
+src_moonshot_keyring_tool_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_keyring_tool_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_keyring_tool_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
@@ -143,6 +143,7 @@ if OS_LINUX
 AM_CPPFLAGS += $(KEYRING_CFLAGS)
 AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
 src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt
+src_moonshot_keyring_tool_LDFLAGS += $(KEYRING_LIBS)
 src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt
 src_moonshot_idcard_generator_LDFLAGS += -lcrypto
 

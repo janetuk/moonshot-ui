@@ -1,7 +1,6 @@
-#if GNOME_KEYRING
-
-using GnomeKeyring;
 using GLib;
+#if GNOME_KEYRING
+using GnomeKeyring;
 
 int check_rv(GnomeKeyring.Result rv) {
     if (rv != GnomeKeyring.Result.OK) {
@@ -79,14 +78,12 @@ public static int main(string[] args) {
     stdout.printf(usage);
     return 1;
 }
-#elif LIBSECRET_KEYRING
-public static int main(string[] args) {
-    stdout.printf("The UI has been built with LIBSECRET support.\n");
-    return 1;
-}
+
 #else
 public static int main(string[] args) {
-    stdout.printf("The UI has been built without GNOME_KEYRING support.\n");
+    stdout.printf("The UI has not been built without GNOME_KEYRING support.\n"
+                  + "Use the 'seahorse' utility instead to create keyrings. \n"
+                  + "Use the --unlock parameter of the 'gnome-keyring-server' or configure PAM to start an unlocked keyring.\n");
     return 1;
 }
 #endif

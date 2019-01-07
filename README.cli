@@ -3,19 +3,41 @@ How to use the Moonshot Text UI
 This UI version comes with support for text  interface. In order to make
 use of it, some conditions need to be met:
 
-1) A DBUS session MUST exist, so the Moonshot UI can register to it. Besides,
-   it is RECOMMENDED that an instance of Gnome Keyring (if installed) is
-   already running, for better user experience. Both of these things can be
-   appropriately set up by sourcing the shipped bash script in:
-   $PREFIX/share/moonshot-ui/enable-moonshot-txt-ui
+1) A DBUS session MUST exist, so the Moonshot UI can register to it when an
+   application asks for an identity to be used.
+2) If the GNOME Keyring backend is to be used, an instance must be running,
+   associated to the same DBUS session than Moonshot, and unlocked.
 
-2) If GNOME Keyring is to be used, a default keyring MUST exist.
-   It is RECOMMENDED to automatically unlock the keyring when the user logs in
-   (either on the console or by SSH). Instructions on how to configure PAM
-   to achieve this can be found in:
-   https://wiki.archlinux.org/index.php/GNOME/Keyring#PAM_method
+Both things can be achieved by sourcing the shipped bash script in:
+$PREFIX/share/moonshot-ui/enable-moonshot-txt-ui
 
-   When using Gnome Keyring PAM module, users must use a different init script:
-   $PREFIX/share/moonshot-ui/enable-moonshot-txt-ui-pam
+That script will create the DBUS session and, if GNOME keyring is installed,
+will prompt you for the Keyring password to start an unlocked instance.
+
+Requirements for using GNOME keyring
+-------------------------------------
+For GNOME keyring to work properly with Moonshot, a default keyring MUST exist.
+You may use the "seahorse" application to check the existance of this keyring,
+as well as to create it if it does not exist already.
 
 
+Using GNOME keyring and PAM
+---------------------------
+You may use PAM to automatically unlock the user's keyring upon console or
+SSH login. In this case, the a default keyring called "login" would
+automatically be created by PAM if it does not exist.
+
+In this case, users should source the shipped
+$PREFIX/share/moonshot-ui/enable-moonshot-txt-ui-pam script, which does not
+attempt to unlock the Keyring.
+
+Known issues with CentOS 6
+--------------------------
+In CentOS 6 the keyring will not unlock neither with the shipped script nor the
+PAM method. Instead, you should use the script:
+$PREFIX/share/moonshot-ui/enable-moonshot-txt-ui-pam
+And then use the shipped tool "moonshot-keyring-tool" to create (only the first
+time) and unlock the default keyring.
+
+This is due to a misbehaviour of GNOME keyring in CentOS 6 and has nothing
+to do with Moonshot.
