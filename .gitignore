@@ -44,7 +44,9 @@ src/moonshot-identity-management-interface.c
 src/moonshot-identity-management-view.c
 src/moonshot-identity-manager-app.c
 src/moonshot-identities-manager.c
-src/moonshot-keyring-store.c
+src/moonshot-keyring-store-base.c
+src/moonshot-keyring-store-gnome.c
+src/moonshot-keyring-store-secret.c
 src/moonshot-local-flat-file-store.c
 src/moonshot-logger.c
 src/moonshot-password-dialog.c

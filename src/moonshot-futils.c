@@ -31,6 +31,7 @@
 */
 #ifdef HAVE_GETPWUID
 #include <stdlib.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <pwd.h>
 #include "config.h"

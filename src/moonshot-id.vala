@@ -40,8 +40,8 @@ extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 // be modified by the user, other than being cleared. Hence the fields are read-only.
 public class TrustAnchor : Object
 {
-    private static const string CERT_HEADER = "-----BEGIN CERTIFICATE-----";
-    private static const string CERT_FOOTER = "-----END CERTIFICATE-----";
+    private const string CERT_HEADER = "-----BEGIN CERTIFICATE-----";
+    private const string CERT_FOOTER = "-----END CERTIFICATE-----";
 
     public enum TrustAnchorType {
         EMPTY,
@@ -115,8 +115,8 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
     }
 
     public TrustAnchorType get_anchor_type() {
-        return (server_cert != "" ? TrustAnchorType.SERVER_CERT
-                : (ca_cert != "" ? TrustAnchorType.CA_CERT : TrustAnchorType.EMPTY));
+        return (ca_cert != "" && (subject != "" || subject_alt != "") ? TrustAnchorType.CA_CERT:
+                (server_cert != "" ? TrustAnchorType.SERVER_CERT: TrustAnchorType.EMPTY));
     }
 
     internal void set_datetime_added(string datetime) {
@@ -159,17 +159,11 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         return 0;
     }
 
-    public string? get_expiration_date(out string? err_out=null)
+    public string? get_expiration_date()
     {
-        if (&err_out != null) {
-            err_out = null;
-        }
-
         if (this.ca_cert == "") {
-            if (&err_out != null) {
-                err_out = "Trust anchor does not have a ca_certificate";
-                return null;
-            }
+            IdCard.logger.info("Trust anchor does not have a ca_certificate");
+            return null;
         }
 
         string cert = this.ca_cert;
@@ -182,9 +176,6 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         string err = (string) get_cert_valid_before(binary, binary.length, buf, 64);
         if (err != "") {
             IdCard.logger.error(@"get_expiration_date: get_cert_valid_before returned '$err'");
-            if (&err_out != null) {
-                err_out = err;
-            }
             return null;
         }
 
@@ -283,9 +274,9 @@ public class IdCard : Object
         internal set {_rules = value ?? new Rule[0] ;}
     }
 
-    private ArrayList<string> _services = new ArrayList<string>();
+    private Gee.List<string> _services = new ArrayList<string>();
 
-    internal ArrayList<string> services {
+    internal Gee.List<string> services {
          get {return  _services;}
     }
 
@@ -323,7 +314,7 @@ public class IdCard : Object
         }
     }
 
-    internal void update_services_from_list(ArrayList<string> services) {
+    internal void update_services_from_list(Gee.List<string> services) {
         if (services == this._services) {
             // Don't try to update from self.
             return;
@@ -462,7 +453,7 @@ public int CompareRules(Rule[] a, Rule[] b)
     return 0;
 }
 
-public int CompareStringArrayList(ArrayList<string> a, ArrayList<string> b)
+public int CompareStringArrayList(Gee.List<string> a, Gee.List<string> b)
 {
     if (a.size != b.size) {
         return 1;

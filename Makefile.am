@@ -12,7 +12,7 @@ bin_PROGRAMS = \
          src/moonshot-keyring-tool \
          src/moonshot-idcard-generator
 
-dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-cli
+dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-txt-ui enable-moonshot-txt-ui-pam
 dist_doc_DATA = README.cli
 dist_moonshotsysconf_DATA=flatstore-users
 
@@ -22,7 +22,7 @@ AM_CPPFLAGS =  \
 	-include config.h \
 	-DLOCALEDIR=\""$(localedir)"\" \
     -DMOONSHOT_FLATSTORE_USERS='"$(moonshotsysconfdir)/flatstore-users"' \
-    -DMOONSHOT_SERVER='"$(bindir)/moonshot"' \
+    -DMOONSHOT_APP='"$(MOONSHOT_APP)"' \
 	-I$(top_srcdir)/libmoonshot \
 	-I$(top_builddir)/libmoonshot
 
@@ -60,7 +60,9 @@ src_moonshot_SOURCES = \
         src/moonshot-identity-management-interface.vala \
         src/moonshot-identity-management-cli.vala \
         src/moonshot-local-flat-file-store.vala \
-        src/moonshot-keyring-store.vala \
+        src/moonshot-keyring-store-base.vala \
+	src/moonshot-keyring-store-gnome.vala \
+	src/moonshot-keyring-store-secret.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-identity-dialog.vala \
@@ -91,7 +93,7 @@ src_moonshot_keyring_tool_SOURCES = src/moonshot-keyring-tool.vala
 src_moonshot_idcard_generator_SOURCES = src/moonshot-idcard-generator.c
 
 
-src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt  --pkg posix $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
@@ -101,7 +103,7 @@ src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) $(AM_VALAFLAGS)
+src_moonshot_keyring_tool_VALAFLAGS = --pkg $(GEE_VERSION) --pkg posix $(AM_VALAFLAGS)
 src_moonshot_keyring_tool_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_keyring_tool_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_keyring_tool_LDFLAGS = $(MOONSHOT_LOG_LIBS)
@@ -138,11 +140,11 @@ endif
 
 if OS_LINUX
 
-AM_CPPFLAGS += -I/usr/include/gnome-keyring-1
-AM_VALAFLAGS += --pkg moonshot-gnome-keyring --define=GNOME_KEYRING
-src_moonshot_LDFLAGS += -lnewt -lgnome-keyring -lcrypto
-src_moonshot_webp_LDFLAGS += -lgnome-keyring -lcrypto -lnewt
-src_moonshot_keyring_tool_LDFLAGS += -lgnome-keyring
+AM_CPPFLAGS += $(KEYRING_CFLAGS)
+AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
+src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt
+src_moonshot_keyring_tool_LDFLAGS += $(KEYRING_LIBS)
+src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt
 src_moonshot_idcard_generator_LDFLAGS += -lcrypto
 
 ## Installing mime type data

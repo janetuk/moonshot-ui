@@ -39,20 +39,15 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     bool use_flat_file_store = false;
 
     // The latest year in which Moonshot sources were modified.
-    private static int LATEST_EDIT_YEAR = 2016;
-
-    public static Gdk.Color white = make_color(65535, 65535, 65535);
+    private static int LATEST_EDIT_YEAR = 2019;
 
     private const int WINDOW_WIDTH = 700;
     private const int WINDOW_HEIGHT = 500;
     protected IdentityManagerApp parent_app;
-    #if OS_MACOS
-        public OSXApplication osxApp;
-    #endif
     private UIManager ui_manager = new UIManager();
     private Entry search_entry;
     private CustomVBox custom_vbox;
-    private VBox service_prompt_vbox;
+    private Box service_prompt_vbox;
     private Button edit_button;
     private Button remove_button;
 
@@ -93,9 +88,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         parent_app = app;
         this.use_flat_file_store = use_flat_file_store;
 
-        #if OS_MACOS
-            osxApp = OSXApplication.get_instance();
-        #endif
         identities_manager = parent_app.model;
         request_queue = new GLib.Queue<IdentityRequest>();
         this.title = _("Moonshot Identity Selector");
@@ -110,9 +102,9 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     }
 
     private void report_duplicate_nais() {
-        ArrayList<ArrayList<IdCard>> duplicates;
+        Gee.List<Gee.List<IdCard>> duplicates;
         identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (ArrayList<IdCard> list in duplicates) {
+        foreach (Gee.List<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
                 + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
@@ -132,7 +124,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     }
 
     private void report_expired_trust_anchors() {
-        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         foreach (IdCard id_card in card_list) {
             if (id_card.trust_anchor.is_expired()) {
                 string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
@@ -262,7 +254,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         custom_vbox.clear();
         this.listmodel->clear();
-        LinkedList<IdCard> card_list = identities_manager.get_card_list() ;
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         if (card_list == null) {
             return;
         }
@@ -325,7 +317,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         if (this.selected_card != null && this.selected_card.nai == id_card.nai) {
             logger.trace(@"add_id_card_widget: Expanding selected idcard widget");
-            id_card_widget.expand();
+            id_card_widget.show_details();
 
             // After a card is added, modified, or deleted, we reload all the cards.
             // (I'm not sure why, or if it's necessary to do this.) This means that the
@@ -365,16 +357,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
-        old_duplicates.clear();
-        #if OS_MACOS
-        /*
-         * TODO: We should have a confirmation dialog, but currently it will crash on Mac OS
-         * so for now we will install silently
-         */
-        var ret = Gtk.ResponseType.YES;
-        #else
         Gtk.MessageDialog dialog;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
@@ -412,10 +396,9 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
         var ret = dialog.run();
         dialog.destroy();
-        #endif
 
         if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
         }
         else {
@@ -432,9 +415,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         switch (result) {
         case ResponseType.OK:
-	    // Work around Vala compiler bug in Centos 6 by passing in a throwaway "old_duplicates" array
-	    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
-            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false, tmp_old_dups);
+            this.identities_manager.add_card(update_id_card_data(dialog, new IdCard()), false);
             break;
         default:
             break;
@@ -706,8 +687,8 @@ SUCH DAMAGE.
 """.printf(LATEST_EDIT_YEAR);
 
         AboutDialog about = new AboutDialog();
-
-        about.set_comments(_("Moonshot project UI"));
+        about.set_logo_icon_name("moonshot");
+        about.set_comments(_("Moonshot project UI (GTK%d)".printf(Gtk.MAJOR_VERSION)));
         about.set_copyright(copyright);
         about.set_website(Config.PACKAGE_URL);
         about.set_website_label(_("Visit the Moonshot project web site"));
@@ -792,7 +773,7 @@ SUCH DAMAGE.
         AttachOptions fill = AttachOptions.FILL;
         int row = 0;
 
-        service_prompt_vbox = new VBox(false, 0);
+        service_prompt_vbox = new_vbox(0);
         top_table.attach(service_prompt_vbox, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 12, 0);
         row++;
 
@@ -818,7 +799,7 @@ SUCH DAMAGE.
         full_search_label.set_markup(search_label_markup);
         full_search_label.set_alignment(1, 0);
 
-        var search_vbox = new VBox(false, 0);
+        var search_vbox = new_vbox(0);
         search_vbox.pack_start(search_entry, false, false, 0);
         var search_spacer = new Alignment(0, 0, 0, 0);
         search_spacer.set_size_request(0, 2);
@@ -877,24 +858,11 @@ SUCH DAMAGE.
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
-        var main_vbox = new VBox(false, 0);
+        var main_vbox = new_vbox(0);
 
-#if OS_MACOS
-        // hide the  File | Quit menu item which is now on the Mac Menu
-//        Gtk.Widget quit_item =  this.ui_manager.get_widget("/MenuBar/FileMenu/Quit");
-//        quit_item.hide();
-
-        Gtk.MenuShell menushell = this.ui_manager.get_widget("/MenuBar") as Gtk.MenuShell;
-
-        osxApp.set_menu_bar(menushell);
-        osxApp.set_use_quartz_accelerators(true);
-        osxApp.sync_menu_bar();
-        osxApp.ready();
-#else
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-#endif
         main_vbox.pack_start(top_table, true, true, 6);
 
         add(main_vbox);
@@ -949,7 +917,7 @@ SUCH DAMAGE.
     private static Widget make_rigid(Button button)
     {
         // Hack to prevent the button from growing vertically
-        VBox fixed_height = new VBox(false, 0);
+        Box fixed_height = new_vbox(0);
         fixed_height.pack_start(button, false, false, 0);
 
         return fixed_height;
@@ -1006,8 +974,7 @@ SUCH DAMAGE.
                     }
 
 
-                    var old_duplicates = new ArrayList<IdCard>();
-                    bool result = add_identity(card, use_flat_file_store, old_duplicates);
+                    bool result = add_identity(card, use_flat_file_store);
                     if (result) {
                         logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                         import_count++;

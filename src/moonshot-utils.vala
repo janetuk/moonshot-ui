@@ -62,7 +62,7 @@ public Gdk.Pixbuf? find_icon(string name, int size)
         return null;
     try
     {
-        #if OS_WIN32
+#if OS_WIN32
         string? base_path = g_win32_get_package_installation_directory_of_module(null);
 
         // Hack to allow running within the source tree
@@ -73,10 +73,10 @@ public Gdk.Pixbuf? find_icon(string name, int size)
         string? filename = Path.build_filename(base_path, "share", "icons", "%s.png".printf(name));
         return new Gdk.Pixbuf.from_file_at_size(filename, size, size);
 
-        #else
+#else
         var icon_theme = Gtk.IconTheme.get_default();
         return icon_theme.load_icon(name, size, Gtk.IconLookupFlags.FORCE_SIZE);
-        #endif
+#endif
     }
     catch (Error e)
     {
@@ -148,7 +148,7 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     fingerprint_width_constraint.set_size_request(400, 60);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
-    var vbox = new VBox(false, 0);
+    var vbox = new_vbox(0);
     vbox.pack_start(fingerprint_label, true, true, 2);
     vbox.pack_start(fingerprint_width_constraint, true, true, 2);
     return vbox;
@@ -177,7 +177,7 @@ internal static string colonize(string input, int bytes_per_line) {
 }
 
 internal static void clear_password_entry(Entry entry) {
-    
+
     // Overwrite the entry with random data
     var len = entry.get_text().length;
     var random_chars = new char[len + 1];
@@ -203,11 +203,11 @@ internal static void clear_password_entry(Entry entry) {
 #endif
 }
 
-static Gdk.Color white;
 static void set_bg_color(Widget w)
 {
 #if OS_WIN32
 
+    static Gdk.Color white;
     if (white == null) {
         white = make_color(65535, 65535, 65535);
     }
@@ -215,4 +215,14 @@ static void set_bg_color(Widget w)
     w.modify_bg(StateType.NORMAL, white);
 
 #endif
+}
+
+static Box new_vbox(int spacing)
+{
+    return new VBox(false, spacing);
+}
+
+static Box new_hbox(int spacing)
+{
+    return new HBox(false, spacing);
 }

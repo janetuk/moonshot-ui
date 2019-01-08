@@ -31,11 +31,11 @@
 */
 using Gtk;
 
-static const string GROUP_NAME="WarningDialogs";
+const string GROUP_NAME="WarningDialogs";
 
 // MessageDialog doesn't allow subclassing, so we merely wrap the
 // constructor for it the dialog, and then run it, returning the result.
-class WarningDialog 
+class WarningDialog
 {
     private static MoonshotLogger _logger = null;
     private static MoonshotLogger logger()
@@ -55,8 +55,6 @@ class WarningDialog
             return true;
         }
 
-        Gdk.Color white = make_color(65535, 65535, 65535);
-
         MessageDialog dialog = new Gtk.MessageDialog(parent,
                                                      Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                                      Gtk.MessageType.WARNING,
@@ -73,7 +71,6 @@ class WarningDialog
             // remember_checkbutton.set_can_focus(false);
             // remember_checkbutton.has_focus = false;
             remember_checkbutton.set_receives_default(false);
-            Container action_area = (Container) dialog.get_action_area();
 
             Button yes_button = (Button) dialog.get_widget_for_response(ResponseType.YES);
             yes_button.grab_default();
@@ -84,8 +81,8 @@ class WarningDialog
             var message_area = dialog.get_message_area();
             ((Box)message_area).pack_start(remember_checkbutton, false, false, 12);
 #else
-            HBox hbox = new HBox(false, 0);
-            hbox.pack_start(new HBox(false, 0), true, true, 20);
+            Box hbox = new_hbox(0);
+            hbox.pack_start(new_hbox(0), true, true, 20);
             hbox.pack_start(remember_checkbutton, false, false, 12);
             ((Box)content_area).pack_start(hbox, true, true, 12);
 #endif

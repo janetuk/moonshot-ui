@@ -34,9 +34,9 @@ using Gtk;
 class CustomVBox : VBox
 {
     static MoonshotLogger logger = get_logger("CustomVBox");
-    private IdentityManagerView main_window; 
+    private IdentityManagerView main_window;
     int next_pos = 0;
-    
+
     public CustomVBox(IdentityManagerView window, bool homogeneous, int spacing)
     {
         main_window = window;
@@ -52,7 +52,7 @@ class CustomVBox : VBox
             if (id_card != id_card_widget)
                 ((IdCardWidget) id_card).collapse();
         }
-        
+
         check_resize();
     }
 
@@ -91,5 +91,5 @@ class CustomVBox : VBox
 
         next_pos = 0;
    }
-    
+
 }

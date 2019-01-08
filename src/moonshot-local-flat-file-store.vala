@@ -34,7 +34,7 @@ using Gee;
 public class LocalFlatFileStore : Object, IIdentityCardStore {
     static MoonshotLogger logger = get_logger("LocalFlatFileStore");
 
-    private LinkedList<IdCard> id_card_list;
+    private Gee.List<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
 
     public void add_card(IdCard card) {
@@ -63,7 +63,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return false;
     }
 
-    public LinkedList<IdCard> get_card_list() {
+    public Gee.List<IdCard> get_card_list() {
         return id_card_list;
     }
 
@@ -209,12 +209,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
             logger.trace("store_id_cards: attempting to store to " + filename);
             var file  = File.new_for_path(filename);
             var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-            #if GIO_VAPI_USES_ARRAYS
+#if GIO_VAPI_USES_ARRAYS
             stream.write(text.data);
-            #else
+#else
             var bits = text.data;
             stream.write(&bits[0], bits.length);
-            #endif
+#endif
                 }
         catch (Error e) {
             logger.error("store_id_cards: Error while saving keyfile: %s\n".printf(e.message));
@@ -231,10 +231,6 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
 
     public bool is_locked() {
         return false;
-    }
-
-    public bool unlock(string password) {
-        return true;
     }
 }
 

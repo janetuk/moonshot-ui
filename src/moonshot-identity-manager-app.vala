@@ -51,23 +51,9 @@ public class IdentityManagerApp {
     private MoonshotServer ipc_server;
     private bool name_is_owned;
     private bool show_requested;
-	  private bool shown;
+    private bool shown;
     public bool use_flat_file_store {public get; private set;}
     public bool headless {public get; private set;}
-
-#if OS_MACOS
-    public OSXApplication osxApp;
-
-    // the signal handler function.
-    // the current instance of our app class is passed in the
-    // id_manager_app_instanceparameter
-    public static bool on_osx_open_files(OSXApplication osx_app_instance,
-                                         string file_name,
-                                         IdentityManagerApp id_manager_app_instance ) {
-        int added_cards = id_manager_app_instance.ipc_server.install_from_file(file_name);
-        return true;
-    }
-#endif
 
     /** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
     public void show() {
@@ -92,8 +78,8 @@ public class IdentityManagerApp {
         use_flat_file_store |= UserForcesFlatFileStore();
         this.use_flat_file_store = use_flat_file_store;
 
-#if GNOME_KEYRING
-        bool keyring_available = (!use_flat_file_store) && GnomeKeyring.is_available();
+#if GNOME_KEYRING || LIBSECRET_KEYRING
+        bool keyring_available = (!use_flat_file_store) && KeyringStore.is_available();
 #else
         bool keyring_available = false;
 #endif
@@ -113,34 +99,26 @@ public class IdentityManagerApp {
         /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
-        else if (cli_enabled)
+        else if (cli_enabled) {
             view = new IdentityManagerCli(this, use_flat_file_store);
+        }
 
-        LinkedList<IdCard> card_list = model.get_card_list();
+        Gee.List<IdCard> card_list = model.get_card_list();
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
 
         init_ipc_server();
-
-#if OS_MACOS
-        osxApp = OSXApplication.get_instance();
-        // The 'correct' way of connecting won't work in Mac OS with Vala 0.12; e.g.
-        //     osxApp.ns_application_open_file.connect(install_from_file);
-        // so we have to use this old way
-        Signal.connect(osxApp, "NSApplicationOpenFile", (GLib.Callback)(on_osx_open_files), this);
-#endif
     }
 
-    public bool add_identity(IdCard id, bool force_flat_file_store, ArrayList<IdCard> old_duplicates) {
-    	old_duplicates.clear();
+    public bool add_identity(IdCard id, bool force_flat_file_store) {
         if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
-            return view.add_identity(id, force_flat_file_store, old_duplicates);
+            return view.add_identity(id, force_flat_file_store);
         }
         else {
             logger.trace("add_identity: calling model.add_card");
-            model.add_card(id, force_flat_file_store, old_duplicates);
+            model.add_card(id, force_flat_file_store);
             return true;
         }
     }
@@ -150,8 +128,7 @@ public class IdentityManagerApp {
 
         IdCard identity = null;
 
-        if (request.select_default)
-        {
+        if (request.select_default) {
             identity = default_id_card;
         }
 
@@ -255,7 +232,7 @@ public class IdentityManagerApp {
 //                    Idle.add(() => { Gtk.main_quit(); return false; } );
                 return false;
             }
-            );
+        );
         return;
     }
 
@@ -286,50 +263,50 @@ public class IdentityManagerApp {
         }
     }
 
-	private void name_lost_cb(DBusConnection? conn, string name){
-		logger.trace("name_lost_cb");
+        private void name_lost_cb(DBusConnection? conn, string name){
+                logger.trace("name_lost_cb");
 
-		// This callback usually means that another moonshot is already running.
-		// But it *might* mean that we lost the name for some other reason
-		// (though it's unclear to me yet what those reasons are.)
-		// Clearing these flags seems like a good idea for that case. -- dbreslau
-		name_is_owned = false;
-		show_requested = false;
+                // This callback usually means that another moonshot is already running.
+                // But it *might* mean that we lost the name for some other reason
+                // (though it's unclear to me yet what those reasons are.)
+                // Clearing these flags seems like a good idea for that case. -- dbreslau
+                name_is_owned = false;
+                show_requested = false;
 
-		// If we fail to connect to the DBus bus, this callback is called with conn=null
-		if (conn == null) {
-			unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
-			logger.error("name_lost_cb: Failed to connect to bus");
-			if (dbus_address_env == null) {
-				stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
-							  "You may want to try 'dbus-run-session' to start a session bus.\n");
-				GLib.Process.exit(1);
-			} else {
-				stderr.printf("Could not connect to dbus session bus. (DBUS_SESSION_BUS_ADDRESS=\"%s\")\n"+
-							  "You may want to unset DBUS_SESSION_BUS_ADDRESS or try 'dbus-run-session' to start a session bus.\n",
-							  dbus_address_env);
-				GLib.Process.exit(1);
-			}
-		}
+                // If we fail to connect to the DBus bus, this callback is called with conn=null
+                if (conn == null) {
+                        unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
+                        logger.error("name_lost_cb: Failed to connect to bus");
+                        if (dbus_address_env == null) {
+                                stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
+                                                          "You may want to try 'dbus-run-session' to start a session bus.\n");
+                                GLib.Process.exit(1);
+                        } else {
+                                stderr.printf("Could not connect to dbus session bus. (DBUS_SESSION_BUS_ADDRESS=\"%s\")\n"+
+                                                          "You may want to unset DBUS_SESSION_BUS_ADDRESS or try 'dbus-run-session' to start a session bus.\n",
+                                                          dbus_address_env);
+                                GLib.Process.exit(1);
+                        }
+                }
 
-		try {
-			if (!shown) {
-				IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
-				shown = manager.show_ui();
-			}
-		} catch (IOError e) {
-			logger.error("name_lost_cb: Caught IOError: " + e.message);
-		}
-		if (!shown) {
-			logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
-			stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
-			GLib.Process.exit(1);
-		} else {
-			logger.trace("name_lost_cb: Showed previously launched identity manager.");
-			stdout.printf("Showed previously launched identity manager.\n");
-			GLib.Process.exit(0);
-		}
-	}
+                try {
+                        if (!shown) {
+                                IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+                                shown = manager.show_ui();
+                        }
+                } catch (IOError e) {
+                        logger.error("name_lost_cb: Caught IOError: " + e.message);
+                }
+                if (!shown) {
+                        logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
+                        stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
+                        GLib.Process.exit(1);
+                } else {
+                        logger.trace("name_lost_cb: Showed previously launched identity manager.");
+                        stdout.printf("Showed previously launched identity manager.\n");
+                        GLib.Process.exit(0);
+                }
+        }
 
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);
@@ -343,7 +320,7 @@ public class IdentityManagerApp {
                           // Name acquired callback:
                           (conn, name) => {
                               logger.trace(@"init_ipc_server: name_acquired_closure; show_requested=$show_requested; conn="
-			      + (conn==null?"null":"non-null; name='" + name + "'"));
+                              + (conn==null?"null":"non-null; name='" + name + "'"));
 
                               name_is_owned = true;
 
@@ -357,7 +334,7 @@ public class IdentityManagerApp {
 
                           name_lost_cb);
 
-	}
+        }
 #endif
 }
 
@@ -400,8 +377,8 @@ public static int main(string[] args) {
             }
             gtk_available = true;
         } catch (OptionError e) {
-            stdout.printf(_("error: %s\n"), e.message);
-            if (e is OptionError.FAILED) {
+            stdout.printf(_("error (code=%d): %s\n"), e.code, e.message);
+            if (e is  OptionError.FAILED) {
                 // Couldn't open DISPLAY
                 stdout.printf(_("Trying headless mode.\n"));
                 headless = true;
@@ -410,12 +387,15 @@ public static int main(string[] args) {
                 stdout.printf(_("Run '%s --help' to see a full list of available options\n"), args[0]);
                 return -1;
             }
+        } catch (Error e) {
+            stdout.printf(_("fatal error (%d): %s\n"), e.code, e.message);
+            return -1;
         }
     }
 
     if (headless) {
         try {
-            var opt_context = new OptionContext(null);
+            var opt_context = new OptionContext("");
             opt_context.set_help_enabled(true);
             opt_context.add_main_entries(options, null);
             opt_context.parse(ref args);
@@ -448,7 +428,7 @@ public static int main(string[] args) {
     if (explicitly_launched)
         cli_enabled = true;
 
-    var app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
+    IdentityManagerApp app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
     app.explicitly_launched = explicitly_launched;
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
 

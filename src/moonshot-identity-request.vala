@@ -65,11 +65,11 @@ public class IdentityRequest : Object {
 
     public void set_callback(owned ReturnIdentityCallback cb)
     {
-        #if VALA_0_12
-            this.callback = ((owned) cb);
-        #else
-            this.callback = ((IdCard) => cb(IdCard));
-        #endif
+#if VALA_0_12
+        this.callback = ((owned) cb);
+#else
+        this.callback = ((IdCard) => cb(IdCard));
+#endif
     }
 
     public bool execute() {

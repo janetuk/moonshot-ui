@@ -32,7 +32,7 @@
 using Moonshot;
 
 namespace WebProvisioning
-{ 
+{
     private MoonshotLogger logger;
 
     public static int main(string[] args)
@@ -66,13 +66,13 @@ namespace WebProvisioning
             return -1;
         }
         string webp_file = args[arg_index];
-    
+
         if (!FileUtils.test(webp_file, FileTest.EXISTS | FileTest.IS_REGULAR))
         {
             stdout.printf(_("%s does not exist\n"), webp_file);
             return -1;
         }
-    
+
         var webp = new Parser(webp_file);
         if (!webp.parse()) {
             stderr.printf("Could not parse %s.\n", webp_file);
@@ -91,7 +91,7 @@ namespace WebProvisioning
             Moonshot.Error error;
             string[] rules_patterns = {};
             string[] rules_always_confirm = {};
-        
+
             /* use temp arrays to workaround centos array property bug */
             var rules = card.rules;
             string[] svcs = new string[card.services.size];
@@ -136,7 +136,7 @@ namespace WebProvisioning
                 continue;
             }
         }
-    
+
         return 0;
     }
 }

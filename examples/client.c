@@ -34,7 +34,7 @@
 #include <stdio.h>
 
 int main (int    argc,
-          char **argv[])
+          char *argv[])
 {
     MoonshotError *error = NULL;
     int success;

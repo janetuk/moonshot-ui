@@ -16,7 +16,7 @@ before_script:
     - sed -i "s/DIST/$CI_JOB_NAME/g" debian/changelog
     - sh autogen.sh
     - make dist
-    - mv moonshot-ui-1.1.3.tar.xz ../moonshot-ui_1.1.3.orig.tar.xz
+    - mv moonshot-ui-1.1.4.tar.xz ../moonshot-ui_1.1.4.orig.tar.xz
     - debuild -us -uc
     - mkdir build
     - cp ../*.deb build
@@ -46,6 +46,7 @@ before_script:
   tags:
     - moonshot
   script:
+    - cp vapi/libsecret-1.vapi.dis vapi/libsecret-1.vapi
     - adduser -D tmpuser -s /bin/sh
     - adduser tmpuser abuild
     - sh autogen.sh
@@ -77,6 +78,10 @@ debian8:
 
 debian9:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian9:latest
+  <<: *debiancommon
+
+debian10:
+  image: registry.ci.ti.ja.net/jisc/moonshot-build/debian10:latest
   <<: *debiancommon
 
 raspbian8:

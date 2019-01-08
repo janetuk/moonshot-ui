@@ -45,38 +45,25 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
-        unlock_keyring();
-        report_duplicate_nais();
-        report_expired_trust_anchors();
-    }
-
-    /* Attempts to unlock the model. This only happens if PAM is not configured to unlock the Gnome Keyring */
-    private bool unlock_keyring() {
         if (identities_manager.is_locked()) {
-            bool success = false;
             init_newt();
-            while (!success) {
-                string? password = password_dialog("Enter password to unlock your default keyring",
-                                                   "The default keyring is LOCKED. Please, Configure PAM to auto-unlock "
-                                                   + " on login if you don't trust entering your password here.");
-                if (password == null) {
-                    info_dialog("ERROR", "No keyring password provided. You are being switched back to flat file.", 70, 4);
-                    identities_manager.set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
-                    return false;
-                }
-                success = identities_manager.unlock(password);
-            }
+            info_dialog("Keyring locked",
+                        "The keyring seems to be locked. The UI is falling back to FLAT_FILE backend.\n"
+                        + "If you meant to use the Keyring, make sure you have unlocked it before running the UI.",
+                        70, 5, false);
+            identities_manager.set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
             newtFinished();
         }
-        return true;
+        report_duplicate_nais();
+        report_expired_trust_anchors();
     }
 
     /* Reports whether there are identities with ideantical NAI */
     private void report_duplicate_nais() {
         // TODO: This could be merged with GTK version
-        ArrayList<ArrayList<IdCard>> duplicates;
+        Gee.List<Gee.List<IdCard>> duplicates;
         identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (ArrayList<IdCard> list in duplicates) {
+        foreach (Gee.List<IdCard> list in duplicates) {
             string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
                 + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
                 + _(" user ID or issuer fields so that they are no longer the same NAI.");
@@ -92,7 +79,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private void report_expired_trust_anchors() {
-        LinkedList<IdCard> card_list = identities_manager.get_card_list();
+        Gee.List<IdCard> card_list = identities_manager.get_card_list();
         foreach (IdCard id_card in card_list) {
             if (id_card.trust_anchor.is_expired()) {
                 string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
@@ -106,11 +93,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store, ArrayList<IdCard> old_duplicates)
+    public bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
-        old_duplicates.clear();
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
                      .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
@@ -140,7 +126,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
         newtFinished();
         if (dialog) {
-            this.identities_manager.add_card(id_card, force_flat_file_store, old_duplicates);
+            this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
         }
         else {
@@ -148,7 +134,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
     }
 
-    /* Queues an identity request. Since the CLI version can only handle one request, instead of a QUEUE object,
+    /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
      * we store just the request object. */
     public void queue_identity_request(IdentityRequest request)
     {
@@ -225,7 +211,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     {
         newtInit();
         newtCls();
-        newtDrawRootText(0, 0, "The Moonshot CLI ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
+        newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
         newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
     }
 
@@ -307,8 +293,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     newtFormSetCurrent(form, disp_entry);
                 }
                 else {
-                    ArrayList<IdCard> tmp_old_dups = new ArrayList<IdCard>();
-                    this.identities_manager.add_card(id_card, false, tmp_old_dups);
+                    this.identities_manager.add_card(id_card, false);
                 }
             }
         } while (repeat);
@@ -323,7 +308,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
         weak newtComponent focus;
         bool exit = false;
-        ArrayList<string> services = new ArrayList<string>();
+        Gee.List<string> services = new ArrayList<string>();
         services.add_all(id_card.services);
 
         newtCenteredWindow(78, 18, "Edit Identity");
@@ -390,7 +375,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtListboxClear(listbox);
             newtLabelSetText(services_label, "Services (%d):".printf(services.size));
             foreach (string service in services) {
-                newtListboxAppendEntry(listbox, service, (void*) services.index_of(service));
+                newtListboxAppendEntry(listbox, service, (void*) (long) services.index_of(service));
             }
 
             // set focus
@@ -486,13 +471,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, edit_btn, send_btn, del_btn, listbox, exit_btn, chosen, about_btn, doc;
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
         bool exit_loop = false;
         int offset = 0;
-        // GnomeKeyringFound *id_card = NULL, *result = NULL;
         init_newt();
         do {
-            newtCenteredWindow(78, 20, "Moonshot Identity Selector (CLI)");
+            newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
             form = newtForm(null, null, 0);
             if (request != null) {
                 offset = 1;
@@ -506,7 +490,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             doc = newtLabel(1, offset, "Select an ID card to pop up more options");
             listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 76);
-            LinkedList<IdCard> card_list = identities_manager.get_card_list();
+            Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
@@ -566,33 +550,38 @@ If it matches the above fingerprint, confirm the change. If not, then cancel."""
 
     private void about_dialog()
     {
-        string logo = """              XXXXXXXXXXXXXXX
-           XXXXXXXXXXXXXXXXXXXXX
-       XXXXXXXXXXXXXXXXXXXXXX XXXXX
-     XXXXXXXXXXXXXXXXXXXXXX XXXXXXXXX
-    XXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXX
-  XXXXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXX
- XXXXXXXXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXX
- XXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXX
-XXXXXXXXXXXXXXXXXXX  XXXXXXXXXXXXXXXXXXXXXX
-XXX  XXXXX  XXX     XXXX     XXXX   XXX  XXX  XXXX   X   X    XXX   XXXXXX
-XXX   XXX   X   XX   XX  XXX   XX   XXX  XXX XX   X  X   X  XX   XX   XX
-XXX    X    X  XXXX  X  XXXXX  XX  X  X  XXX  XX     X   X  X     X   XX
-XXX  XX XX  X  XXXX  X  XXXXX  XX  XX    XXX    XX   XXXXX  X     X   XX
-XXX  XXXXX  X   XX   XX  XXX   XX  XXX   XXX XX   X  X   X  XX   XX   XX
-XXX  XXXXX  XX     XXXXX      XXX  XXXX  XXX  XXXX   X   X    XXX     XX
-XXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXX
- XXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXX
- XXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXX
-  XXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXXXXXX
-   XXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXX
-    XXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXX
-       XXXXX   XXXXXXXXXXXXXXXXXXXXX
-        XXXX   XXXXXXXXXXXXXXXXXXX
-           X    XXXXXXXXXXXXXXXX
-                   XXXXXXXX""";
+        string logo = """                         XXXXXXXXXX
+                  XXXXXXXXXXXXXXXXXXXXXXXX
+              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+           XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  XXXXXX
+         XXXXXXXXXXXXXXXXXXXXXXXXXXXX   XXXXXXXXXXX
+       XXXXXXXXXXXXXXXXXXXXXXXXXXXX   XXXXXXXXXXXXXXX
+      XXXXXXXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXX
+    XXXXXXXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXXX
+   XXXXXXXXXXXXXXXXXXXXXXXXX    XXXXXXXXXXXXXXXXXXXXXXXXX
+  XXXXXXXXXXXXXXXXXXXXXXXXX   XXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  XX  XXXXXXX   XXXX         XXXXX        XXXX  XXXXXX  XX
+ XXX   XXXXX    XX   XXX     XXX    XXXX    XX    XXXX  XXX
+ XXX     XX     X   XX    XX  XX  XXXXXXXX  XX     XXX  XXX
+XXXX  XX    XX  X   X    XXX  X   XXXXXXXX  XX  XX  XX  XXXX
+XXXX  XXX  XXX  XX      XXX   XX   XXXXXXX  XX  XXX  X  XXXX
+XXXX  XXXXXXXX  XXX    XXX   XXXX   XXXX   XXX  XXXX    XXXX
+XXXX  XXXXXXXX  XXXXX      XXXXXXXX      XXXXX  XXXXX   XXXX
+ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+ XXXXXXXX       XXX  XXXXX  XXXX       XXX          XXXXXXX
+  XXXXXX   XXXX  XX  XXXXX  XX    XXXX   XXXXX  XXXXXXXXXX
+  XXXXXX     XXXXXX  XXXXX  X   XXXXXXXX  XXXX  XXXXXXXXXX
+   XXXXXXX       XX         X   XXXXXXXX  XXXX  XXXXXXXXX
+    XXXX  XXXXX   X  XXXXX  XX   XXXXXX   XXXX  XXXXXXXX
+      XX    X    XX  XXXXX  XXX   XXX    XXXXX  XXXXXX
+       XXXX   XXXXX  XXXXX  XXXXX     XXXXXXXX  XXXXX
+         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+           XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+              XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                  XXXXXXXXXXXXXXXXXXXXXXXX
+                         XXXXXXXXXX""";
 
-        string license = """Copyright (c) 2017, JISC JANET(UK)
+        string license = """Copyright (c) 2018, JISC JANET(UK)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -621,7 +610,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.""";
-        info_dialog("Moonshot project CLI UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
+        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
     }
 
     private void send_id_card_confirmation_dialog(IdCard? id_card) {

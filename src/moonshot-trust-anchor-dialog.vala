@@ -73,7 +73,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return_confirmation(false);
             return false;
         }
-        
+
         if (!(card.trust_anchor.is_empty() || card.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT)) {
             logger.warn(@"execute: Trust anchor type for NAI $nai is not empty or SERVER_CERT; returning true.");
             return_confirmation(true);
@@ -99,7 +99,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 
             card.trust_anchor.update_server_fingerprint(fingerprint);
             parent_app.model.update_card(card);
-        }            
+        }
 
         return_confirmation(is_confirmed);
 
@@ -131,8 +131,6 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 
 class TrustAnchorDialog : Dialog
 {
-    private static Gdk.Color white = make_color(65535, 65535, 65535);
-
     public bool complete = false;
 
     public TrustAnchorDialog(IdCard card,
@@ -161,7 +159,7 @@ class TrustAnchorDialog : Dialog
 
         string label_markup;
         if (card.trust_anchor.server_cert == "") {
-            label_markup = "<span font-weight='heavy'>" 
+            label_markup = "<span font-weight='heavy'>"
             + _("You are using this identity for the first time with the following trust anchor:") + "</span>";
         }
         else {
@@ -176,7 +174,7 @@ class TrustAnchorDialog : Dialog
         dialog_label.set_markup(label_markup);
         dialog_label.set_line_wrap(true);
         dialog_label.set_width_chars(60);
-                                                   
+
         var user_label = new Label(_("Username: ") + userid);
         user_label.set_alignment(0, 0.5f);
 
@@ -194,7 +192,7 @@ class TrustAnchorDialog : Dialog
 
         var trust_anchor_display = make_ta_fingerprint_widget(fingerprint, server_ta_label_text);
 
-        var vbox = new VBox(false, 0);
+        var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(dialog_label, true, true, 12);
         vbox.pack_start(user_label, true, true, 2);
