@@ -63,8 +63,8 @@ src_moonshot_SOURCES = \
         src/moonshot-identity-management-cli.vala \
         src/moonshot-local-flat-file-store.vala \
         src/moonshot-keyring-store-base.vala \
-	src/moonshot-keyring-store-gnome.vala \
-	src/moonshot-keyring-store-secret.vala \
+        src/moonshot-keyring-store-gnome.vala \
+        src/moonshot-keyring-store-secret.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-identity-dialog.vala \
@@ -185,7 +185,6 @@ libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
 libmoonshot_libmoonshot_la_SOURCES += \
         libmoonshot/libmoonshot-msrpc.c
 
-
 nodist_src_moonshot_SOURCES = \
         libmoonshot/moonshot-msrpc_s.c
 
@@ -238,6 +237,7 @@ AM_VALAFLAGS += \
 	--define=IPC_GDBUS \
 	--define=IPC_DBUS
 endif
+
 if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
