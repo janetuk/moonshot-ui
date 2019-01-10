@@ -46,13 +46,13 @@ case "$host" in
     macos=yes
     linux=no
 
-    # Use gdbus for everything
-    CLIENT_IPC_MODULE="gio-2.0"
-	SERVER_IPC_MODULE="gio-2.0"
-
-	PKG_CHECK_MODULES([MAC],
-			[gtk-mac-integration >= 1.0.1]
-	)
+    # On macOS, we require dbus-glib-1 for the client library for the time being.
+    CLIENT_IPC_MODULE="dbus-glib-1"
+    SERVER_IPC_MODULE="dbus-glib-1"   
+  
+#    # Use gdbus for everything
+#    CLIENT_IPC_MODULE="gio-2.0"
+#    SERVER_IPC_MODULE="gio-2.0"
 
     ;;
   *)
@@ -76,8 +76,16 @@ case "$host" in
     ;;
 esac
 
+### if not on macOS ###
+# On Windows/Linux we use ATK, GTK, LOG4VALA and LIBGEE
+if test "$macos" = "no"; then
 
-# For all platforms: Use Gtk+3.0 if available; else revert to Gtk+2.0
+  # Windows/Linux: Use ATK 1.2 or higher
+  PKG_CHECK_MODULES([ATK], 
+      [atk >= 1.20]
+  )
+
+# Windows/Linux: Use Gtk+3.0 if available; else revert to Gtk+2.0
 PKG_CHECK_MODULES([GTK],
         [gtk+-3.0 >= 3.1],
         [GTK_VERSION="gtk+-3.0"],
@@ -89,7 +97,7 @@ PKG_CHECK_MODULES([GTK],
 AC_SUBST(GTK_VERSION)
 
 
-# For all platforms: If Log4Vala is enabled, then Use Log4Vala 0.2 if available; else revert to 0.1
+# Windows/Linux: If Log4Vala is enabled, then Use Log4Vala 0.2 if available; else revert to 0.1
 if [test x$log4vala = xtrue]; then
 PKG_CHECK_MODULES([LOG4VALA],
         [log4vala-0.2],
@@ -103,7 +111,7 @@ AC_SUBST(LOG4VALA_VERSION)
 fi
 
 
-# For all platforms: Use gee-0.8 if available; else revert to gee-1.0
+# Windows/Linux: Use gee-0.8 if available; else revert to gee-1.0
 # (yes, gee-0.8 is an upgrade from gee-1.0!)
 PKG_CHECK_MODULES([LIB_GEE],
         [gee-0.8 >= 0.10.5],
@@ -115,7 +123,7 @@ PKG_CHECK_MODULES([LIB_GEE],
 )
 AC_SUBST(GEE_VERSION)
 
-# For all platforms: Use libnewt
+# Windows/Linux: Use libnewt
 PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
 
 
@@ -129,6 +137,69 @@ AC_ARG_ENABLE([log4vala],
 esac],[log4vala=false])
 AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
 
+else
+  ## On macOS, find xcodebuild! ##
+  # locate currently selected Xcode path
+  AC_MSG_CHECKING(Xcode location)
+  if test "x$XCODE_SELECT" != "x"; then
+    DEVELOPER_DIR=`$XCODE_SELECT -print-path`
+  fi
+  if test -z "$DEVELOPER_DIR" -o ! -d "$DEVELOPER_DIR" ; then
+      if test -d /Applications/Xcode.app/Contents/Developer ; then
+          DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+      else
+          DEVELOPER_DIR=/Developer
+      fi
+  fi
+  AC_MSG_RESULT([$DEVELOPER_DIR])
+  AC_SUBST(DEVELOPER_DIR)
+
+  case "$DEVELOPER_DIR" in
+    *Xcode.app/Contents/Developer)
+      XCODEPLIST_BASE=`dirname $DEVELOPER_DIR`/version
+      ;;
+    *)
+      XCODEPLIST_BASE=$DEVELOPER_DIR/Applications/Xcode.app/Contents/version
+      ;;
+  esac
+  XCODEPLIST=${XCODEPLIST_BASE}.plist
+  if test -r "$XCODEPLIST"; then
+    AC_MSG_CHECKING(Xcode version)
+    if test "x$DEFAULTS" != "x"; then
+      XCODE_VERSION=`$DEFAULTS read $XCODEPLIST_BASE CFBundleShortVersionString`
+    else
+      XCODE_VERSION=`tr -d '\r\n' < $XCODEPLIST | sed -e 's/.*<key>CFBundleShortVersionString<\/key>.<string>\([[0-9.]]*\)<\/string>.*/\1/'`
+    fi
+    AC_MSG_RESULT([$XCODE_VERSION])
+  fi
+
+  case "$XCODE_VERSION" in
+    1.*|2.[[0-1]]*)
+      AC_MSG_WARN([This version of Xcode Tools is not supported])
+      AC_MSG_WARN([Please upgrade at https://developer.apple.com/downloads/])
+      ;;
+    2.[[2-3]]*|3.[[0]]*)
+      AC_MSG_WARN([This version of Xcode Tools is out of date])
+      AC_MSG_WARN([Please consider upgrading as some ports fail compiling])
+      ;;
+    2.*|3.*|4.*|5.*|6.*|7.*|8.*|9.*|10.*)
+      dnl Supported version
+      ;;
+    *)
+      ;;
+  esac
+
+  AC_PATH_PROG(XCODEBUILD, [xcodebuild], [no])
+  if test "$XCODEBUILD" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Xcode Build binary. Please install Xcode.])
+  fi
+  AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+fi
+
+AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
+AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
+### end of macOS ###
 
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
@@ -137,6 +208,8 @@ AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
 
+
+# On Windows/Linux we use ATK, GTK, LOG4VALA and LIBGEE
 vala_version=`$VALAC --version | sed 's/Vala  *//'`
 AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
   [gio_vapi_uses_arrays="no"],
@@ -149,7 +222,6 @@ if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   AC_PATH_MSRPC_MINGW([0.1.0], :,
     AC_MSG_ERROR([
 *** msrpc-mingw 0.1.0 or better is required.]))
-
   AC_PATH_PROG([MIDL], [midl], no,
                [/c/Program\ Files/Microsoft\ SDKs/Windows/v7.0/Bin$PATH_SEPARATOR$PATH])
   if test "$MIDL" = "no"; then
@@ -162,6 +234,7 @@ if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   fi
 fi
 
+### If on Windows ###
 if test "$win32" = "yes"; then
   # Other Windows-specific tools
 
@@ -177,7 +250,6 @@ if test "$win32" = "yes"; then
 *** outside the PATH.])
   fi
 
-
   # ImageMagick for the 'make icons' target. Note that
   # c:/windows/system32/convert.exe is nothing to do with ImageMagick.
   AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], no,
@@ -189,7 +261,6 @@ if test "$win32" = "yes"; then
 *** 'make icons' target. Use the IMAGEMAGICK_CONVERT environment
 *** variable to pass its location if this is outside the PATH.])
   fi
-
 
   # Windows Installer XML tools
   AC_PATH_PROG([WIX_CANDLE], [candle], no,
@@ -205,7 +276,9 @@ if test "$win32" = "yes"; then
 *** the PATH.])
   fi
 fi
+### end of Windows ###
 
+### If on Linux ###
 if test "$linux" = "yes"; then
   AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
   if test "$UPDATE_MIME_DATABASE" = "no"; then
@@ -220,6 +293,7 @@ if test "$linux" = "yes"; then
 *** tool. Web provisioning files could not be automatically installed.])
   fi
 fi
+### end of Linux ###
 
 AM_COND_IF([IPC_DBUS],
            [AC_ARG_VAR(DBUS_DAEMON, [Location of dbus-daemon executable])
@@ -244,14 +318,14 @@ AC_SUBST(MOONSHOT_WEBP)
 
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
-        atk >= 1.20
         glib-2.0 >= 2.26
         gobject-2.0 >= 2.26
         libssl
+        $ATK
         $GTK_VERSION
         $GEE_VERSION
         $SERVER_IPC_MODULE
-		$MAC
+        $MAC
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
