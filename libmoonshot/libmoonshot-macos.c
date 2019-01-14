@@ -99,46 +99,6 @@ char * system_output(char *command) {
     return str;
 }
 
-MoonshotError *moonshot_error_new (MoonshotErrorCode  code,
-                                   const char        *format,
-                                   ...)
-{
-    syslog (LOG_NOTICE, "Libmoonshot moonshot_error_new");
-
-    MoonshotError *error;
-    int            buffer_size;
-    va_list        args;
-
-    error = malloc (sizeof (MoonshotError));
-    error->code = code;
-
-    va_start (args, format);
-
-    #ifdef OS_WIN32
-    buffer_size = _vscprintf (format, args);
-    error->message = malloc (buffer_size + 1);
-    _vsnprintf (error->message, buffer_size, format, args);
-    error->message[buffer_size] = 0;
-    #else
-    vasprintf (&error->message, format, args);
-    #endif
-
-    return error;
-}
-
-void moonshot_error_free (MoonshotError *error)
-{
-      syslog (LOG_NOTICE, "Libmoonshot moonshot_error_free");
-
-    if (error == NULL)
-        return;
-
-    if (error->message != NULL) 
-        free (error->message);
-
-    free (error);
-}
-
 void moonshot_free (void *data)
 {
       syslog (LOG_NOTICE, "Libmoonshot moonshot_free");

@@ -887,7 +887,10 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				HEADER_SEARCH_PATHS = "/usr/local/moonshot/include/dbus-1.0";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/moonshot/include/dbus-1.0",
+					"/usr/local/moonshot/lib/dbus-1.0/include",
+				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -913,7 +916,10 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = "";
-				HEADER_SEARCH_PATHS = "/usr/local/moonshot/include/dbus-1.0";
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/moonshot/include/dbus-1.0",
+					"/usr/local/moonshot/lib/dbus-1.0/include",
+				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
