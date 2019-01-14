@@ -1,0 +1,114 @@
+/* 
+  Localizable.strings
+  Moonshot
+  Created by Elena Jakjoska on 11/7/16.
+*/
+
+//MAIN
+"Username" = "User Name";
+"Realm" = "Realm";
+"Trust_Anchor" = "Trust anchor";
+"Services" = "Services";
+"Name" = "Name";
+"Identity_Manager_Window_Title" = "Moonshot - Identity Manager";
+"No_Identity" = "No identity";
+"Wiki_URL" = "https://wiki.moonshot.ja.net/display/TR/moonshot-webp+XML+Format";
+
+//IDENTITY SELECTOR
+"Select_Identity_Title" = "Select your identity";
+"Requested_Identity_Title" = "Identity requested for service:";
+"Enter_Password" = "Enter the password for %@";
+"User_Nai" = "User (NAI):";
+"Identity_Selector_Window_Title" = "Moonshot - Identity Selector";
+
+//ADD IDENTITY
+"Display_Name_Add" = "Display Name:";
+"Username_Add" = "User Name:";
+"Realm_Add" = "Realm:";
+"Password_Add" = "Password:";
+"Enterprise_provisioned" = "Enterprise provisioned";
+
+//EDIT IDENTITY
+"Remember_Password" = "Remember password";
+"Date_Added" = "Added on:";
+"Trust_Anchor_Edit" = "Trust anchor:";
+"SHA_Fingerprint" = "SHA-256 fingerprint:";
+"Subject" = "Subject:";
+"CA_Certificate" = "CA Certificate:";
+"Expiration_Date" = "Expiration date:";
+"Constraint" = "Constraint:";
+"Services_Edit" = "Services:";
+"None" = "None";
+"Selection_Rules" = "Selection Rules:";
+"Selection_Pattern" = "Pattern";
+"Selection_Confirmation" = "Always Confirm";
+"Service" = "Service";
+"Yes" = "Yes";
+"Export_Certificate" = "Export Certificate";
+
+//TRUST ANCHOR
+"Trust_Anchor_Title" = "Trust Anchor";
+"Trust_Anchor_Info" = "A trust anchor is specific information that is unique to your organisation's authentication server such as a fingerprint of the server certificate, or the CA certificate itself. This allows your credentials to be guaranteed and sent only to your organisation's authentication server and not a server claiming to be it by name.";
+"Trust_Anchor_Info_Text" = "You are using this identity for the first time with the following trust anchor:";
+"Trust_Anchor_Username" = "Username:";
+"Trust_Anchor_Realm" = "Realm:";
+"Trust_Anchor_Sha_Fingerprint_Title" = "Server's trust anchor certificate (SHA - 256 fingerprint):";
+"Trust_Anchor_Check_Info" = "Please check with your realm administrator for the correct fingerprint for your authentication server. if it matches the above fingerprint, confirm the change. If not, then cancel.";
+
+//ABOUT
+"Overview" = "Overview";
+"Credits" = "Credits";
+"License" = "License";
+"Version" = "Version %@";
+"Product_Website" = "Check the %@ Website";
+"Website_URL" = "https://www.jisc.ac.uk/rd/projects/moonshot";
+"Copyright" = "Copyright © 2015 JANET. All Rights Reserved. License Agreement";
+
+//MENU ITEMS
+"Menu_Identity" = "Identity";
+"Menu_Edit" = "Edit";
+"Menu_Remove" = "Remove";
+
+//BUTTONS
+"OK_Button" = "OK";
+"Cancel_Button" = "Cancel";
+"Save_Changes_Button" = "Save changes";
+"Delete_Button" = "Delete";
+"Add_Identity_Button" = "Add Identity";
+"Create_Identity_Button" = "Create";
+"Import_Button" = "Import";
+"Clear_Trust_Anchor_Button" = "Clear Trust Anchor";
+"Create_Identity_Button" = "Create Identity";
+"Connect_Identity_Button" = "Connect";
+"Remember_Identity_Choice_Button" = "Remember my identity choice for this service";
+"Read_More_Button" = "Read More";
+
+//ALERTS
+"Clear_Trust_Anchor_Alert_Message" = "Are you sure you want to clear %@ from identity selector?";
+"Delete_Identity_Alert_Message" = "Are you sure you want to delete %@ from identity selector?";
+"Delete_Service_Alert_Message" = "Are you sure you want to delete the service %@?";
+"Delete_Selection_Rules_Alert_Message" = "Are you sure you want to delete the selection rule %@?";
+"Alert_Info" = "This item will be deleted immediately. You can't undo this action.";
+"Alert_Error_Info" = "Try again later";
+"Alert_Suppression_Message" = "Do not show this message again";
+"Alert_Add_Identity_Error_Message" = "The identity was not added.";
+"Alert_Edit_Identity_Error_Message" = "The identity %@ was not edited.";
+"Alert_Delete_Identity_Error_Message" = "The identity %@ was not deleted.";
+"Alert_Import_Info" = "Importing allows you to select xml file from your computer and import the containing identities. For more information go to our wiki page.";
+"Alert_Import_Message" = "Importing info";
+"Alert_Incorrect_User_Pass_Messsage" = "Incorrect username or password";
+"Alert_Incorrect_User_Pass_Info" = "Please ensure the username and password are correct";
+"Alert_No_Identity_Selected_Message" = "No identity selected";
+"Alert_No_Identity_Selected_Info" = "Please select an option to access the service";
+"Alert_Success_Identity_Connected" = "Identity was successfully connected!";
+"Alert_Error_Identity_Connected" = "Identity was not connected!";
+"Alert_Error_Parsing_XML_Info" = "Please read more about how importing works.";
+"Alert_Error_Parsing_XML_Message" = "Importing failed!";
+"Alert_Success_Parsing_XML_Message" = "Importing succeed!";
+"Alert_Success_Parsing_XML_Info" = "You successfully imported %d identities.";
+"Alert_Success_Parsing_XML_Info_One" = "You successfully imported %d identity.";
+"Alert_Clear_Trust_Anchor_Message" = "Clear Trust Anchor";
+"Alert_Clear_Trust_Anchor_Info" = "Are you sure you want to clear Trust Anchor data?";
+
+
+

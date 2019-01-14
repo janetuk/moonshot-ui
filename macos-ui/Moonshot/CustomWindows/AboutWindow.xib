@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14109"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="AboutWindow">
+            <connections>
+                <outlet property="aboutWindowSegmentedControl" destination="5Uj-Cz-o9b" id="CS7-Xs-V5E"/>
+                <outlet property="creditsTextView" destination="8um-PU-bNR" id="VhG-sZ-LxP"/>
+                <outlet property="creditsView" destination="V0p-Xk-DXq" id="kuS-bY-OJl"/>
+                <outlet property="licenseTextView" destination="I2x-jC-849" id="MwS-Ds-qnH"/>
+                <outlet property="licenseView" destination="CHa-Jo-3jm" id="yRd-47-Lwi"/>
+                <outlet property="overviewView" destination="7zU-dd-7Al" id="xQ8-jx-bOk"/>
+                <outlet property="productNameTextField" destination="HaJ-9m-eFB" id="oQe-US-3PB"/>
+                <outlet property="productVersionTextField" destination="qID-hU-G7J" id="8io-bj-dtk"/>
+                <outlet property="urlButton" destination="4VR-OI-DJa" id="bX5-RP-fu7"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="480" height="250"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
+            <view key="contentView" wantsLayer="YES" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="480" height="250"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <scrollView hidden="YES" fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V0p-Xk-DXq">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="250"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="JVV-5X-fAS">
+                            <rect key="frame" x="0.0" y="0.0" width="465" height="250"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" editable="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" selectionGranularity="word" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" linkDetection="YES" smartInsertDelete="YES" id="8um-PU-bNR">
+                                    <rect key="frame" x="0.0" y="0.0" width="465" height="546"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="465" height="250"/>
+                                    <size key="maxSize" width="480" height="10000000"/>
+                                    <attributedString key="textStorage">
+                                        <fragment>
+                                            <mutableString key="content">Portions of this software use components by the following contributors under various licenses. 
+
+Moonshot technology (including this app): Copyright (C) 2011, JANET(UK)
+
+OpenSSL: Copyright (C) 1998-2004 The OpenSSL Project. All rights reserved; Copyright (C) 1995-1998 Eric Young (eay@cryptsoft.com)
+
+LibRadsec: Copyright (c) 2007-2010, UNINETT AS; Copyright (C) 2011, JANET(UK); Copyright (c) 2010-2013, NORDUnet A/S
+
+Libevent: Copyright (c) 2000-2007 Niels Provos provos@citi.umich.edu; Copyright (c) 2007-2012 Niels Provos and Nick Mathewson; Copyright (c) 2000 Dug Song dugsong@monkey.org; Copyright (c) 1993 The Regents of the University of California; Copyright (c) 1998 Todd C. Miller Todd.Miller@courtesan.com; Copyright (c) 2003 Michael A. Davis mike@datanerds.net; Copyright (c) 2007 Sun Microsystems; Copyright (c) 2002 Christopher Clark; Copyright (c) 2006 Maxim Yegorushkin maxim.yegorushkin@gmail.com; Copyright (c) 1996, David Mazieres dm@uun.org; Copyright (c) 2008, Damien Miller djm@openbsd.org; Copyright (c) 2010 BitTorrent, Inc.
+
+HostAP: Copyright (C) 2004, 2006 The Linux Foundation and its contributors; Copyright (c) 2002-2016, Jouni Malinen j@w1.fi and contributors.
+
+Jansson: Copyright (c) 2009-2011 Petri Lehtinen petri@digip.org
+
+Libconfuse: Copyright (c) 2002-2017 Martin Hedenfalk martin@bzero.se; Copyright (c) 2015 Peter Rosin peda@lysator.liu.se
+
+D-Bus: Copyright (c) 1994 A.M. Kuchling; Copyright (c) 2002-2008 Red Hat, Inc; Copyright (c) 2002-2003 CodeFactory AB; Copyright (c) 2002 Michael Meeks; Copyright (c) 2004 Imendio HB; Copyright (c) 2005 Lennart Poettering; Copyright (c) 2005 Novell, Inc; Copyright (c) 2005 David A. Wheeler; Copyright (c) 2006-2013 Ralf Habacker; Copyright (c) 2006 Mandriva; Copyright (c) 2006 Peter KÃ¼mmel; Copyright (c) 2006 Christian Ehrlicher; Copyright (c) 2006 Thiago Macieira; Copyright (c) 2008 Colin Walters; Copyright (c) 2009 Klaralvdalens Datakonsult AB, a KDAB Group company; Copyright (c) 2011-2012 Nokia Corporation; Copyright (c) 2012-2015 Collabora Ltd; Copyright (c) 2013 Intel Corporation; "modified code from libassuan, (C) FSF"</mutableString>
+                                            <attributes>
+                                                <font key="NSFont" size="12" name="Helvetica"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="xBK-Y3-Szh">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="Xo5-aO-Ck5">
+                            <rect key="frame" x="465" y="0.0" width="15" height="250"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <scrollView hidden="YES" fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CHa-Jo-3jm">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="250"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <clipView key="contentView" ambiguous="YES" copiesOnScroll="NO" id="q45-Ma-arv">
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="250"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <textView ambiguous="YES" editable="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" findStyle="panel" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" linkDetection="YES" smartInsertDelete="YES" id="I2x-jC-849">
+                                    <rect key="frame" x="0.0" y="70" width="480" height="250"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <color key="backgroundColor" white="1" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    <size key="minSize" width="480" height="250"/>
+                                    <size key="maxSize" width="480" height="10000000"/>
+                                    <attributedString key="textStorage">
+                                        <fragment>
+                                            <string key="content">This software and included components are licensed to you under the following agreements:
+
+
+</string>
+                                            <attributes>
+                                                <font key="NSFont" size="12" name="Helvetica"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                    <tabStops>
+                                                        <textTab alignment="left" location="28.299999237060547">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="56.650001525878906">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="85">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="113.34999847412109">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="141.69999694824219">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="170.05000305175781">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="198.39999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="226.75">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="255.10000610351562">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="283.45001220703125">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="311.79998779296875">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="340.14999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                    </tabStops>
+                                                </paragraphStyle>
+                                            </attributes>
+                                        </fragment>
+                                        <fragment>
+                                            <string key="content">	•	OpenSSL License and SSLeay License (OpenSSL)
+	•	BSD Three-Clause License (Libevent, Libradsec, Hostap, Moonshot)
+	•	ISC License (Libconfuse)
+	•	MIT License (Jansson)
+	•	General Public License, Version 2.0 (Libradsec)
+	•	Academic Free License, Version 2.1 (D-Bus)
+</string>
+                                            <attributes>
+                                                <font key="NSFont" size="12" name="Helvetica"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" headIndent="36" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                    <tabStops>
+                                                        <textTab alignment="left" location="11">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="natural" location="36">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="56.650001525878906">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="85">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="113.34999847412109">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="141.69999694824219">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="170.05000305175781">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="198.39999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="226.75">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="255.10000610351562">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="283.45001220703125">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="311.79998779296875">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="340.14999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                    </tabStops>
+                                                </paragraphStyle>
+                                            </attributes>
+                                        </fragment>
+                                        <fragment>
+                                            <string key="content">
+
+To see the license files that apply to this software, click here. 
+To see a combined license file shipped with this software, click here.
+
+Visit the Moonshot Website for access to the software source.</string>
+                                            <attributes>
+                                                <font key="NSFont" size="12" name="Helvetica"/>
+                                                <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0" allowsDefaultTighteningForTruncation="NO">
+                                                    <tabStops>
+                                                        <textTab alignment="left" location="28.299999237060547">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="56.650001525878906">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="85">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="113.34999847412109">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="141.69999694824219">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="170.05000305175781">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="198.39999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="226.75">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="255.10000610351562">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="283.45001220703125">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="311.79998779296875">
+                                                            <options/>
+                                                        </textTab>
+                                                        <textTab alignment="left" location="340.14999389648438">
+                                                            <options/>
+                                                        </textTab>
+                                                    </tabStops>
+                                                </paragraphStyle>
+                                            </attributes>
+                                        </fragment>
+                                    </attributedString>
+                                    <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <connections>
+                                        <outlet property="delegate" destination="-2" id="deE-Bo-zsP"/>
+                                    </connections>
+                                </textView>
+                            </subviews>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </clipView>
+                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="Ik2-HC-H1Y">
+                            <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="Cnh-VT-Nhl">
+                            <rect key="frame" x="-100" y="-100" width="15" height="250"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                        </scroller>
+                    </scrollView>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="7zU-dd-7Al">
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="250"/>
+                        <subviews>
+                            <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mrf-kg-GBE">
+                                <rect key="frame" x="34" y="67" width="138" height="138"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="about_image" id="rQG-Cj-U0o"/>
+                            </imageView>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HaJ-9m-eFB">
+                                <rect key="frame" x="212" y="175" width="198" height="25"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="Lkd-VQ-Mij">
+                                    <font key="font" metaFont="system" size="20"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qID-hU-G7J">
+                                <rect key="frame" x="212" y="147" width="100" height="24"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Label" id="xjc-4B-K1B">
+                                    <font key="font" metaFont="system" size="15"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="E2J-BR-Akz">
+                                <rect key="frame" x="44" y="11" width="383" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="Copyright © 2015 JANET. All Rights Reserved." id="Pft-8l-TEX">
+                                    <font key="font" metaFont="cellTitle"/>
+                                    <color key="textColor" red="0.41159326424870468" green="0.41159326424870468" blue="0.41159326424870468" alpha="0.84999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4VR-OI-DJa">
+                                <rect key="frame" x="214" y="122" width="194" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="roundTextured" title="Button" bezelStyle="texturedRounded" image="default_button" imagePosition="left" alignment="left" alternateImage="selected_button" controlSize="mini" imageScaling="proportionallyDown" inset="2" id="yt1-ED-FNO">
+                                    <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="smallSystem"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="urlButtonPressed:" target="-2" id="Pcd-h2-Qg5"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </customView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="7zU-dd-7Al" firstAttribute="width" secondItem="se5-gp-TjO" secondAttribute="width" id="MIb-zN-V6f"/>
+                    <constraint firstItem="7zU-dd-7Al" firstAttribute="height" secondItem="se5-gp-TjO" secondAttribute="height" id="fcO-co-f2x"/>
+                    <constraint firstItem="7zU-dd-7Al" firstAttribute="centerX" secondItem="se5-gp-TjO" secondAttribute="centerX" id="tR2-8d-OSg"/>
+                    <constraint firstItem="7zU-dd-7Al" firstAttribute="centerY" secondItem="se5-gp-TjO" secondAttribute="centerY" id="vba-1f-4Kq"/>
+                </constraints>
+            </view>
+            <toolbar key="toolbar" implicitIdentifier="63476C2D-EECB-4F29-BE9B-8B2E6E1AFDE5" autosavesConfiguration="NO" displayMode="iconAndLabel" sizeMode="regular" id="DMe-l5-IoT">
+                <allowedToolbarItems>
+                    <toolbarItem implicitItemIdentifier="NSToolbarShowFontsItem" id="Ri1-Yp-XVd"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarPrintItem" id="0uL-om-R47"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarSpaceItem" id="jXA-g5-KQx"/>
+                    <toolbarItem implicitItemIdentifier="NSToolbarFlexibleSpaceItem" id="xka-0w-3gO"/>
+                    <toolbarItem implicitItemIdentifier="FAFCCD3E-39EC-4AAF-90AF-D568842B1526" label="" paletteLabel="" id="GCK-GQ-hws">
+                        <nil key="toolTip"/>
+                        <size key="minSize" width="224" height="24"/>
+                        <size key="maxSize" width="233" height="27"/>
+                        <segmentedControl key="view" verticalHuggingPriority="750" id="5Uj-Cz-o9b">
+                            <rect key="frame" x="0.0" y="14" width="229" height="24"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="LU8-7X-9ME">
+                                <font key="font" metaFont="system"/>
+                                <segments>
+                                    <segment label="Overview" selected="YES"/>
+                                    <segment label="Credits" width="72" tag="1"/>
+                                    <segment label="License" width="72" tag="2"/>
+                                </segments>
+                            </segmentedCell>
+                            <connections>
+                                <action selector="aboutWindowSegmentedControlValueChanged:" target="-2" id="xv1-wb-yZw"/>
+                            </connections>
+                        </segmentedControl>
+                    </toolbarItem>
+                </allowedToolbarItems>
+                <defaultToolbarItems>
+                    <toolbarItem reference="jXA-g5-KQx"/>
+                    <toolbarItem reference="jXA-g5-KQx"/>
+                    <toolbarItem reference="jXA-g5-KQx"/>
+                    <toolbarItem reference="GCK-GQ-hws"/>
+                </defaultToolbarItems>
+            </toolbar>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="-109" y="83"/>
+        </window>
+    </objects>
+    <resources>
+        <image name="about_image" width="256" height="256"/>
+        <image name="default_button" width="14" height="14"/>
+        <image name="selected_button" width="14" height="14"/>
+    </resources>
+</document>
