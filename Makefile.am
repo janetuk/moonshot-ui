@@ -324,8 +324,8 @@ if  OS_MACOS
 app-bundle:
 	cd macos-ui && xcodebuild
 
-## 3: Installer Package
+uninstaller-bundle:
+	cd macos-ui/Uninstaller && xcodebuild
 
-installerdir = $(HOME)/moonshot/mac-client-installer
 
 endif
