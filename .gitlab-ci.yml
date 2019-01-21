@@ -9,6 +9,7 @@ before_script:
 
 .debiancommon: &debiancommon
   stage: build
+  except: tags
   tags:
     - moonshot
   script:
@@ -27,6 +28,7 @@ before_script:
 
 .centoscommon: &centoscommon
   stage: build
+  except: tags
   tags:
     - moonshot
   script:
@@ -44,6 +46,7 @@ before_script:
 
 .alpinecommon: &alpinecommon
   stage: build
+  except: tags
   tags:
     - moonshot
   script:
@@ -84,7 +87,6 @@ debian9:
 
 debian10:
   image: registry.ci.ti.ja.net/jisc/moonshot-build/debian10:latest
-  when: manual
   <<: *debiancommon
 
 raspbian8:
