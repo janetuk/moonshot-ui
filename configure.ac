@@ -48,7 +48,7 @@ case "$host" in
 
     # On macOS, we require dbus-glib-1 for the client library for the time being.
     CLIENT_IPC_MODULE="dbus-glib-1"
-    SERVER_IPC_MODULE="dbus-glib-1"   
+    SERVER_IPC_MODULE="dbus-glib-1"
   
 #    # Use gdbus for everything
 #    CLIENT_IPC_MODULE="gio-2.0"
@@ -194,12 +194,83 @@ else
     AC_MSG_ERROR([
 *** Could not find the Xcode Build binary. Please install Xcode.])
   fi
-  AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+
+AC_MSG_CHECKING(for Apple Developer Team ID)
+APPLE_DEVELOPER_TEAM_ID=
+APPLE_DEVELOPER_ID_INSTALLER=
+APPLE_DEVELOPER_ID_APPLICATION=
+found_apple_developer_id="no"
+AC_ARG_WITH(apple_developer_id,
+    AC_HELP_STRING([--with-apple-developer-id],
+       [Use specified Apple Developer Team ID, set to 'no' for none]),
+    [use_apple_developer_id="$withval"],
+    [use_apple_developer_id=])
+
+  # We don't want to set an Apple Developer ID
+  if test "x$use_apple_developer_id" = "xno"; then
+    AC_MSG_WARN([
+----------------------------------------------------------------------
+  Disabling Apple Developer Team ID.
+
+  This may mean that the Moonshot app and uninstaller will not be
+  signed and may not be able to run on target systems.
+----------------------------------------------------------------------
+    ])
+  else
+    # Ok, there is no Developer ID cert on the system or the one set on the command-line does not exist on this system
+    if test "x$(security find-identity -v login.keychain |grep 'Developer ID' |grep "$use_apple_developer_id" |grep -c -v 'valid identities')" = "x0"; then
+      AC_MSG_RESULT($found_apple_developer_id)
+      if test "x$use_apple_developer_id" = "x"; then
+        AC_MSG_WARN([
+----------------------------------------------------------------------
+  Cannot find a Apple Developer Team ID. Disabling signing.
+
+  This may mean that the Moonshot app and uninstaller will not be
+  signed and may not be able to run on target systems.
+----------------------------------------------------------------------
+        ])
+      else
+        AC_MSG_WARN([
+----------------------------------------------------------------------
+  Cannot find your specified Apple Developer Team ID.
+
+  Please check that a Developer ID Application and a Developer ID 
+  Installer certificate matching your given ID are installed.
+----------------------------------------------------------------------
+        ])
+      fi
+    else
+      # We have a valid Developer ID set, or we haven't set one but there is a valid Developer ID installed
+      found_apple_developer_id="yes"
+      AC_MSG_RESULT($found_apple_developer_id)
+      if test "x$use_apple_developer_id" = "x"; then
+        # We take the first one listed
+        apple_developer_id=$(security find-identity -v login.keychain |grep 'Developer ID' |head -1 |cut -f 2 -d\")
+        use_apple_developer_id=$(echo $apple_developer_id |cut -f 2 -d\( |cut -f 1 -d\))
+        AC_MSG_WARN([Setting Apple Developer ID to "$use_apple_developer_id". This may not be correct!])
+      else
+        AC_MSG_NOTICE([Apple Developer ID is "$use_apple_developer_id".])
+      fi
+      # We list the Apple Developer ID, and then find the Application and Installer certificates for this ID
+      APPLE_DEVELOPER_TEAM_ID=$use_apple_developer_id
+      APPLE_DEVELOPER_ID_INSTALLER=$(security find-identity -v login.keychain |grep "$use_apple_developer_id" |grep 'Developer ID Installer' |cut -f 2 -d\")
+      AC_MSG_NOTICE([Setting Apple Developer ID Installer to "$APPLE_DEVELOPER_ID_INSTALLER".])
+      APPLE_DEVELOPER_ID_APPLICATION=$(security find-identity -v login.keychain |grep "$use_apple_developer_id" |grep 'Developer ID Application' |cut -f 2 -d\")
+      AC_MSG_NOTICE([Setting Apple Developer ID Application to "$APPLE_DEVELOPER_ID_APPLICATION".])
+    fi
+  fi
+  AC_SUBST(APPLE_DEVELOPER_TEAM_ID)
+  AC_SUBST(APPLE_DEVELOPER_ID_INSTALLER)
+  AC_SUBST(APPLE_DEVELOPER_ID_APPLICATION)
 fi
+# To make autotools happy
+AM_CONDITIONAL([WITH_APPLE_DEVELOPER_ID_INSTALLER], [test "x$APPLE_DEVELOPER_ID_INSTALLER" != "x"])
+AM_CONDITIONAL([WITH_APPLE_DEVELOPER_ID_APPLICATION], [test "x$APPLE_DEVELOPER_ID_APPLICATION" != "x"])
+AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+### end of macOS ###
 
 AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
-### end of macOS ###
 
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
@@ -325,7 +396,6 @@ PKG_CHECK_MODULES(moonshot,[
         $GTK_VERSION
         $GEE_VERSION
         $SERVER_IPC_MODULE
-        $MAC
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
