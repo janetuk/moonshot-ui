@@ -411,6 +411,7 @@ AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package nam
 
 AC_CONFIG_FILES([
         Makefile
+        macos-ui/Makefile
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop

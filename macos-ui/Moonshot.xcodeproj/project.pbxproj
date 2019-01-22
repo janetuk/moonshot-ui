@@ -574,7 +574,7 @@
 				TargetAttributes = {
 					78A330AE1DAF7CB500702060 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = D5QJ7EBR49;
+						DevelopmentTeam = APPLE_DEVELOPER_TEAM;
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -888,7 +888,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = D5QJ7EBR49;
+				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/moonshot/include/dbus-1.0",
 					"/usr/local/moonshot/lib/dbus-1.0/include",
@@ -919,7 +919,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = D5QJ7EBR49;
+				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/moonshot/include/dbus-1.0",
 					"/usr/local/moonshot/lib/dbus-1.0/include",
