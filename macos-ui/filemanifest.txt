@@ -97,6 +97,10 @@
 ./moonshot/share/dbus-1/system-services
 ./moonshot/share/dbus-1/system.conf
 ./moonshot/share/dbus-1/system.d
+./moonshot/share/moonshot-ui
+./moonshot/share/moonshot-ui/dbus
+./moonshot/share/moonshot-ui/dbus/org.janet.Moonshot.conf
+./moonshot/share/moonshot-ui/default-identity.msht
 ./moonshot/share/xml
 ./moonshot/share/xml/dbus-1
 ./moonshot/share/xml/dbus-1/busconfig.dtd
