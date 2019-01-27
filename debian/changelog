@@ -1,4 +1,10 @@
-moonshot-ui (1.1.6-0.DIST) unstable; urgency=medium
+moonshot-ui (1.1.7-0.DIST) unstable; urgency=medium
+
+  * TBD
+
+ -- Jisc <assent@jisc.ac.uk>  Mon, 27 Jan 2019 00:00:00 +0000
+
+moonshot-ui (1.1.6-0) unstable; urgency=medium
 
   * Fix regression with libsecret handling that precluded editing Id Cards.
 

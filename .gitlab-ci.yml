@@ -18,7 +18,7 @@ before_script:
     - sed -i "s/DIST/$CI_JOB_NAME.$CI_PIPELINE_ID/g" debian/changelog
     - sh autogen.sh
     - make dist
-    - mv moonshot-ui-1.1.6.tar.xz ../moonshot-ui_1.1.6.orig.tar.xz
+    - mv moonshot-ui-1.1.7.tar.xz ../moonshot-ui_1.1.7.orig.tar.xz
     - debuild -us -uc
     - mkdir build
     - cp ../*.deb build
