@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-char* get_cert_valid_before(const unsigned char* buf, int len, char* datebuf, int datebuf_len)
+const char* get_cert_valid_before(const unsigned char* buf, int len, char* datebuf, int datebuf_len)
 {
     datebuf[0]='\0';
 

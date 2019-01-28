@@ -32,7 +32,7 @@
 
 using Gee;
 
-extern char* get_cert_valid_before(uchar* inbuf, int inlen, char* outbuf, int outlen);
+extern unowned string get_cert_valid_before(uchar* inbuf, int inlen, char* outbuf, int outlen);
 extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 
 
@@ -173,7 +173,7 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
         IdCard.logger.trace("get_expiration_date: encoded length=%ld; decoded length=%d".printf(cert.length, binary.length));
 
         char buf[64];
-        string err = (string) get_cert_valid_before(binary, binary.length, buf, 64);
+        unowned string err = get_cert_valid_before(binary, binary.length, buf, 64);
         if (err != "") {
             IdCard.logger.error(@"get_expiration_date: get_cert_valid_before returned '$err'");
             return null;
