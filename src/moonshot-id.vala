@@ -35,6 +35,10 @@ using Gee;
 extern unowned string get_cert_valid_before(uchar* inbuf, int inlen, char* outbuf, int outlen);
 extern bool get_cert_is_expired_now(uchar* inbuf, int inlen);
 
+/* GCR does not expose these functions */
+extern static void gcr_secure_memory_strfree(string value);
+extern static unowned string gcr_secure_memory_strdup(string value);
+
 
 // A TrustAnchor object can be imported or installed via the API, but cannot
 // be modified by the user, other than being cleared. Hence the fields are read-only.
@@ -252,7 +256,7 @@ public class IdCard : Object
     private unowned string _password;
     public string password {
         get {
-            return (_password!=null) ? _password : "";
+            return (_password != null) ? _password : "";
         }
         set {
             if (_password != null) {
@@ -261,6 +265,21 @@ public class IdCard : Object
             }
             if (value != null)
                 _password = GnomeKeyring.memory_strdup(value);
+        }
+    }
+#elif LIBSECRET_KEYRING
+    private unowned string _password;
+    public string password {
+        get {
+            return (_password != null) ? _password : "";
+        }
+        set {
+            if (_password != null) {
+                gcr_secure_memory_strfree(_password);
+                _password = null;
+            }
+            if (value != null)
+                _password = gcr_secure_memory_strdup(value);
         }
     }
 #else
