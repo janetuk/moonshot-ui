@@ -1,6 +1,6 @@
 moonshot-ui (1.1.7-0.DIST) unstable; urgency=medium
 
-  * TBD
+  * Make use of GCR to provide secure memory when using libsecret
 
  -- Jisc <assent@jisc.ac.uk>  Mon, 27 Jan 2019 00:00:00 +0000
 
