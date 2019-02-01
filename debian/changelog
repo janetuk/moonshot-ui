@@ -1,4 +1,4 @@
-moonshot-ui (1.1.7-0.DIST) unstable; urgency=medium
+moonshot-ui (1.1.7.DIST) unstable; urgency=medium
 
   * Make use of GCR to provide secure memory when using libsecret
 
