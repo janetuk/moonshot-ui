@@ -1,8 +1,9 @@
 moonshot-ui (1.1.7.DIST) unstable; urgency=medium
 
+  * Build source packages
   * Make use of GCR to provide secure memory when using libsecret
 
- -- Jisc <assent@jisc.ac.uk>  Mon, 27 Jan 2019 00:00:00 +0000
+ -- Jisc <assent@jisc.ac.uk>  Sat, 2 Feb 2019 00:00:00 +0000
 
 moonshot-ui (1.1.6-0) unstable; urgency=medium
 
