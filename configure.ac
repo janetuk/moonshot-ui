@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.1.6],
+        [1.1.7],
         [assent@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -65,12 +65,12 @@ case "$host" in
     SERVER_IPC_MODULE="gio-2.0"
 
     PKG_CHECK_MODULES([KEYRING],
-	[libsecret-1],
+	[libsecret-1, gcr-3],
 	[KEYRING_VALAFLAGS=" --pkg libsecret-1 --define LIBSECRET_KEYRING"],
 	[
 		PKG_CHECK_MODULES([KEYRING], [gnome-keyring-1],
 		[KEYRING_VALAFLAGS="--pkg moonshot-gnome-keyring --define GNOME_KEYRING"],
-		[AC_ERROR(["Neither gnome-keyring not libsecret is found])
+		[AC_ERROR(["Neither gnome-keyring not libsecret+gcr is found])
 		])
     ])
     ;;
@@ -117,7 +117,6 @@ AC_SUBST(GEE_VERSION)
 
 # For all platforms: Use libnewt
 PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
-
 
 #enable the optional use of Log4Vala (Must have the package installed!)
 AC_ARG_ENABLE([log4vala],
