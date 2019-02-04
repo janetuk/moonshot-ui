@@ -105,6 +105,13 @@ namespace WebProvisioning
         return check_stack(stack, password_path);
     }
 
+    bool has2fa_handler(SList<string> stack)
+    {
+        string[] has2fa_path = {"has2fa", "identity", "identities"};
+
+        return check_stack(stack, has2fa_path);
+    }
+
     bool user_handler(SList<string> stack)
     {
         string[] user_path = {"user", "identity", "identities"};
@@ -190,6 +197,13 @@ namespace WebProvisioning
             else if (stack.nth_data(0) == "service")
             {
                 card.services.add(text);
+            }
+            else if (stack.nth_data(0) == "has2fa" && has2fa_handler(stack))
+            {
+                if (text == "true" || text == "yes")
+                    card.has_2fa = true;
+                else
+                    card.has_2fa = false;
             }
 
             /* Rules */
