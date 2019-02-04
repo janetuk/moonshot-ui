@@ -159,6 +159,7 @@ int moonshot_get_default_identity (char          **nai_out,
  * @subject: Subject name constraint for @ca_cert, or %NULL
  * @subject_alt: Subject alternative name constraint for @ca_cert, or %NULL
  * @server_cert: Hash of the server certificate; required if @ca_cert is %NULL
+ * @force_flat_file_store: Indicates if using the flat_file_store is mandatory
  * @error: Return location for a #MoonshotError.
  *
  * Calls the Moonshot server to add a new identity. The user will be prompted
@@ -204,6 +205,8 @@ int moonshot_install_id_card (const char     *display_name,
  * @subject: Subject name constraint for @ca_cert, or %NULL
  * @subject_alt: Subject alternative name constraint for @ca_cert, or %NULL
  * @server_cert: Hash of the server certificate; required if @ca_cert is %NULL
+ * @force_flat_file_store: Indicates if using the flat_file_store is mandatory
+ * @has2fa: Whether this IdCard requires being used with a 2FA code
  * @error: Return location for a #MoonshotError.
  *
  * Calls the Moonshot server to add a new identity. The user will be prompted
