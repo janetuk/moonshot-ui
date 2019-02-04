@@ -537,13 +537,27 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
     {
         init_newt();
-        string msg = """You are using your identity <%s> for the first time with the following trust anchor:
+        string warning = "";
+        if (card.trust_anchor.server_cert == "") {
+            warning = _("You are using this identity for the first time with the following trust anchor:");
+        }
+        else {
+            // The server's fingerprint isn't what we're expecting this server to provide.
+            warning = _("WARNING: The certificate we received for the authentication server for %s").printf(card.issuer)
+            + _(" is different than expected. Either the server certificate has changed, or an")
+            + _(" attack may be underway. If you proceed to the wrong server, your login credentials may be compromised.");
+        }
 
+        string msg = """%s
+
+Username: %s
+Realm: %s
+Server's trust anchor certificate (SHA-256 fingerprint):
 %s
 
 Please, check with your realm administrator for the correct fingerprint for your authentication server.
-If it matches the above fingerprint, confirm the change. If not, then cancel.""".printf(card.nai, fingerprint);
-        bool confirmed = yesno_dialog("Accept trust anchor", msg, false, 10);
+If it matches the above fingerprint, confirm the change. If not, then cancel.""".printf(warning, card.username, card.issuer, fingerprint);
+        bool confirmed = yesno_dialog("Accept trust anchor", msg, false, card.trust_anchor.server_cert == "" ? 13 : 16);
         newtFinished();
         return confirmed;
     }
