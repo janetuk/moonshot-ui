@@ -300,7 +300,7 @@ class IdentityDialog : Dialog
 
         if (id.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT) {
             Widget fingerprint = make_ta_fingerprint_widget(id.trust_anchor.server_cert);
-            ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 5, 5);
+            ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 20, 5);
         }
         else {
             Label ca_cert_label = new Label(_("CA Certificate:"));
@@ -315,27 +315,31 @@ class IdentityDialog : Dialog
             if (id.trust_anchor.subject != "") {
                 Label subject_label = new Label(_("Subject: ") + id.trust_anchor.subject);
                 subject_label.set_alignment(0, 0.5f);
-                ta_table.attach(subject_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
+                subject_label.set_line_wrap(true);
+                subject_label.set_size_request(400, -1);
+                ta_table.attach(subject_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
                 row++;
             }
 
             if (id.trust_anchor.subject_alt != "") {
                 Label subject_alt_label = new Label(_("Subject-Alt: ") + id.trust_anchor.subject_alt);
                 subject_alt_label.set_alignment(0, 0.5f);
-                ta_table.attach(subject_alt_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
+                subject_alt_label.set_line_wrap(true);
+                subject_alt_label.set_size_request(400, -1);
+                ta_table.attach(subject_alt_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
                 row++;
             }
 
             Label expiration_label = new Label(_("Expiration date: ") + id.trust_anchor.get_expiration_date());
             expiration_label.set_alignment(0, 0.5f);
-            ta_table.attach(expiration_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 40, 5);
+            ta_table.attach(expiration_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
             row++;
 
             //!!TODO: What goes here?
-            Label constraint_label = new Label(_("Constraint: "));
-            constraint_label.set_alignment(0, 0.5f);
-            ta_table.attach(constraint_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
-            row++;
+            // Label constraint_label = new Label(_("Constraint: "));
+            // constraint_label.set_alignment(0, 0.5f);
+            // ta_table.attach(constraint_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
+            // row++;
         }
 
         trust_anchor_box.pack_start(ta_table, false, false, 0);
