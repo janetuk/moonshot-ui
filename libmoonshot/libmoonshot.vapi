@@ -52,6 +52,22 @@ namespace Moonshot {
                                  int force_flat_file_store,
                                  out Moonshot.Error error);
 
+    [CCode (cname = "moonshot_install_id_card_2fa")]
+    public bool install_id_card_2fa (string display_name,
+                                     string? user_name,
+                                     string? password,
+                                     string? realm,
+                                     string rules_patterns[],
+                                     string rules_always_confirm[],
+                                     string services[],
+                                     string? ca_cert,
+                                     string? subject,
+                                     string? subject_alt,
+                                     string? server_cert,
+                                     int force_flat_file_store,
+                                     int has2fa,
+                                     out Moonshot.Error error);
+
     [CCode (cname = "moonshot_confirm_ca_certificate")]
     public bool moonshot_confirm_ca_certificate (string identity_name,
                                                  string realm,

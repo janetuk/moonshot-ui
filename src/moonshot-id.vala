@@ -395,7 +395,8 @@ public class IdCard : Object
         ISSUER,
         RULES,
         SERVICES,
-        TRUST_ANCHOR;
+        TRUST_ANCHOR,
+        HAS2FA;
     }
 
     public int Compare(IdCard other)
@@ -412,6 +413,9 @@ public class IdCard : Object
 
         if (this.issuer != other.issuer)
             diff |= 1 << DiffFlags.ISSUER;
+
+        if (this.has_2fa != other.has_2fa)
+            diff |= 1 << DiffFlags.HAS2FA;
 
         if (CompareRules(this.rules, other.rules)!=0)
             diff |= 1 << DiffFlags.RULES;
