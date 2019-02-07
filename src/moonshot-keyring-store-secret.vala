@@ -40,8 +40,15 @@ private Collection? find_secret_collection()
     Collection secret_collection = null;
     try {
         Service service = Service.get_sync(ServiceFlags.OPEN_SESSION);
-        secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT,
-                                                      CollectionFlags.NONE);
+        secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT, CollectionFlags.NONE);
+        /* If the default collection does not exist, try to create one called "login" */
+        if (secret_collection == null) {
+            secret_collection = Collection.create_sync(service, "login", "default",
+                                                       CollectionCreateFlags.COLLECTION_CREATE_NONE);
+        }
+        List<DBusProxy> objects = new List<DBusProxy>();
+        objects.append(secret_collection);
+        service.unlock(objects, null, null);
     } catch(GLib.Error e) {
         stdout.printf("Unable to load secret service: %s\n", e.message);
     }
