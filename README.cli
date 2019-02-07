@@ -20,6 +20,8 @@ For GNOME keyring to work properly with Moonshot, a default keyring MUST exist.
 You may use the "seahorse" application to check the existance of this keyring,
 as well as to create it if it does not exist already.
 
+Also, the GTK version of the UI will automatically create a default keyring
+called "login" upon start if a default keyring is not found.
 
 Using GNOME keyring and PAM
 ---------------------------
@@ -31,13 +33,13 @@ In this case, users should source the shipped
 $PREFIX/share/moonshot-ui/enable-moonshot-txt-ui-pam script, which does not
 attempt to unlock the Keyring.
 
-Known issues with CentOS 6
---------------------------
-In CentOS 6 the keyring will not unlock neither with the shipped script nor the
-PAM method. Instead, you should use the script:
+Known issues with CentOS 6 / Ubuntu 14.04
+-----------------------------------------
+In CentOS 6 and Ubuntu 14.04 the keyring will not unlock neither with the
+shipped script nor the PAM method. Instead, you should use the script:
 $PREFIX/share/moonshot-ui/enable-moonshot-txt-ui-pam
-And then use the shipped tool "moonshot-keyring-tool" to create (only the first
-time) and unlock the default keyring.
+And then use the shipped tool "moonshot-keyring-tool" to unlock the default
+keyring.
 
-This is due to a misbehaviour of GNOME keyring in CentOS 6 and has nothing
-to do with Moonshot.
+This is due to a misbehaviour of GNOME keyring in these Distributions
+and has nothing to do with Moonshot.

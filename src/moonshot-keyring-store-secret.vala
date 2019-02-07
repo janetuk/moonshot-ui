@@ -143,10 +143,6 @@ public class KeyringStore : KeyringStoreBase {
         return secret_collection != null;
     }
 
-    public override bool is_locked() {
-        return secret_collection.get_locked();
-    }
-
 }
 
 #endif

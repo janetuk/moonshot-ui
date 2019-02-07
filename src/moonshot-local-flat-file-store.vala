@@ -228,9 +228,5 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         id_card_list = new LinkedList<IdCard>();
         load_id_cards();
     }
-
-    public bool is_locked() {
-        return false;
-    }
 }
 

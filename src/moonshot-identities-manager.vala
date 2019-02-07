@@ -319,11 +319,6 @@ public class IdentityManagerModel : Object {
         return false;
     }
 
-    public bool is_locked()
-    {
-        return this.store.is_locked();
-    }
-
     private IdentityManagerApp parent;
 
     public IdentityManagerModel(IdentityManagerApp parent_app, IIdentityCardStore.StoreType store_type) {

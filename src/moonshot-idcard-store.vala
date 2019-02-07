@@ -55,6 +55,5 @@ public interface IIdentityCardStore : Object {
     public abstract IdCard? update_card(IdCard card);
     public abstract StoreType get_store_type();
     public abstract Gee.List<IdCard> get_card_list();
-    public abstract bool is_locked();
 }
 
