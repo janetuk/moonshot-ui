@@ -129,14 +129,6 @@ public class KeyringStore : KeyringStoreBase {
 
         return true;
     }
-
-    public override bool is_locked() {
-        unowned GnomeKeyring.Info info;
-        GnomeKeyring.Result rv = GnomeKeyring.get_info_sync(null, out info);
-        if (rv != GnomeKeyring.Result.OK)
-            return true;
-        return info.get_is_locked();
-    }
 }
 
 #endif
