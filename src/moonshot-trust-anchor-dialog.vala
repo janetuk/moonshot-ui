@@ -65,9 +65,11 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     }
 
     public bool execute() {
-
         string nai = userid + "@" + realm;
         IdCard? card = parent_app.model.find_id_card(nai, parent_app.use_flat_file_store);
+        if (card == null)
+            card = parent_app.model.find_decorated_id_card(userid, realm, parent_app.use_flat_file_store);
+
         if (card == null) {
             logger.warn(@"execute: Could not find ID card for NAI $nai; returning false.");
             return_confirmation(false);

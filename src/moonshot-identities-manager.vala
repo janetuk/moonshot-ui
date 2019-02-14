@@ -207,6 +207,27 @@ public class IdentityManagerModel : Object {
         return retval;
     }
 
+    /* Finds a decorated (RFC7542) id card from the undecorated NAI */
+    public IdCard? find_decorated_id_card(string username, string realm, bool force_flat_file_store) {
+        IdCard? retval = null;
+        IIdentityCardStore.StoreType saved_store_type = get_store_type();
+        if (force_flat_file_store)
+            set_store_type(IIdentityCardStore.StoreType.FLAT_FILE);
+
+        foreach (IdCard id in get_card_list()) {
+            string[] components = id.username.split("!", 2);
+            if (components.length == 2 && components[0] == realm && components[1] == username) {
+                retval = id;
+                break;
+            }
+        }
+        set_store_type(saved_store_type);
+        if (force_flat_file_store &&
+            (saved_store_type != IIdentityCardStore.StoreType.FLAT_FILE))
+            card_list_changed();
+        return retval;
+    }
+
     public void add_card(IdCard card, bool force_flat_file_store) {
         if (card.temporary) {
             logger.trace("add_card: card is temporary; returning.");
