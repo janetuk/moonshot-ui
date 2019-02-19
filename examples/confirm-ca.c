@@ -30,8 +30,9 @@
  * SUCH DAMAGE.
 */
 #include <libmoonshot.h>
-
+#include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int main (int argc, char *argv[])
 {
@@ -39,19 +40,24 @@ int main (int argc, char *argv[])
     int success;
     int i;
 
-    char *username = "alice",
-         *realm = "test.org",
-         hash[32], hash_str[65];
-
-     /* Convert hash byte array to string */
-    for (i = 0; i < 32; i++) {
-        hash[i] = i;
-        sprintf(&(hash_str[i*2]), "%02X", hash[i]);
+    if (argc < 4) {
+        printf("Usage: confirm-ca <username> <realm> <ta_data_hex>\n");
+        return 1;
     }
 
-    success = moonshot_confirm_ca_certificate ("alice",
-                                               "test.org",
-                                               hash, 32,
+    char *username = argv[1],
+         *realm = argv[2],
+         *ta_data_str = argv[3],
+         *ta_data = strdup(ta_data_str);
+
+    // Convert to binary
+    for (i=0; i<strlen(ta_data_str) / 2; i++)
+        sscanf(&ta_data_str[i*2], "%02X", &ta_data[i]);
+
+    success = moonshot_confirm_ca_certificate (username,
+                                               realm,
+                                               (unsigned char*) ta_data,
+                                               strlen(argv[3]) / 2,
                                                &error);
 
     if (error) {
@@ -59,5 +65,6 @@ int main (int argc, char *argv[])
         return 1;
     }
 
-    printf ("Confirmed: %d for %s@%s %s\n", success, username, realm, hash_str);
+    printf ("Confirmed: %d for %s@%s %s\n", success, username, realm, argv[3]);
+    return 0;
 }

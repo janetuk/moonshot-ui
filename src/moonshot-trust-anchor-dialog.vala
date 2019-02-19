@@ -31,15 +31,25 @@
 */
 using Gtk;
 
+extern int parse_hex_certificate(char* hex_str, char *sha256_hex_fingerprint,
+                                 char* expiration, int expiration_len,
+                                 char* subject, int subject_len,
+                                 char *issuer, int issuer_len);
+
+
 public delegate void TrustAnchorConfirmationCallback(TrustAnchorConfirmationRequest request);
 
 public class TrustAnchorConfirmationRequest : GLib.Object {
     static MoonshotLogger logger = get_logger("TrustAnchorConfirmationRequest");
 
     IdentityManagerApp parent_app;
-    string userid;
-    string realm;
-    string fingerprint;
+    public string userid;
+    public string realm;
+    public string fingerprint;
+    public string issuer;
+    public string subject;
+    public string expiration_date;
+
     public bool confirmed = false;
 
     TrustAnchorConfirmationCallback callback = null;
@@ -47,12 +57,26 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     public TrustAnchorConfirmationRequest(IdentityManagerApp parent_app,
                                           string userid,
                                           string realm,
-                                          string fingerprint)
+                                          string cert_data)
     {
         this.parent_app = parent_app;
         this.userid = userid;
         this.realm = realm;
-        this.fingerprint = fingerprint;
+        this.expiration_date = "";
+        this.issuer = "";
+        this.subject = "";
+
+        uint8 finger[65], expiration[1024], subject[1024], issuer[1024];
+        int rv = parse_hex_certificate(cert_data, finger, expiration, 1024, subject, 1024, issuer, 1204);
+        if (rv > 0) {
+            this.fingerprint = (string) finger;
+            this.subject = (string) subject;
+            this.issuer = (string) issuer;
+            this.expiration_date = (string) expiration;
+        }
+        else {
+            this.fingerprint = cert_data;
+        }
     }
 
     public void set_callback(owned TrustAnchorConfirmationCallback cb)
@@ -95,7 +119,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, userid, realm, fingerprint);
+        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, this);
         if (is_confirmed) {
             logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
 
@@ -125,7 +149,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
                 callback(this);
                 return false;
             }
-            );
+        );
     }
 }
 
@@ -135,10 +159,7 @@ class TrustAnchorDialog : Dialog
 {
     public bool complete = false;
 
-    public TrustAnchorDialog(IdCard card,
-                             string userid,
-                             string realm,
-                             string fingerprint)
+    public TrustAnchorDialog(IdCard card, TrustAnchorConfirmationRequest request)
     {
         string server_ta_label_text = _("Server's trust anchor certificate (SHA-256 fingerprint):");
 
@@ -177,11 +198,12 @@ class TrustAnchorDialog : Dialog
         dialog_label.set_line_wrap(true);
         dialog_label.set_width_chars(60);
 
-        var user_label = new Label(_("Username: ") + userid);
+        var user_label = new Label(_("Username: %s@%s").printf(request.userid, request.realm));
         user_label.set_alignment(0, 0.5f);
 
-        var realm_label = new Label(_("Realm: ") + realm);
-        realm_label.set_alignment(0, 0.5f);
+        var issuer_widget = make_ta_fingerprint_widget(request.issuer, "Issuer:", false);
+        var subject_widget = make_ta_fingerprint_widget(request.subject, "Subject:", false);
+        var expiration_widget = make_ta_fingerprint_widget(request.expiration_date, "Expiration:", false);
 
         string confirm_text = _("\nPlease check with your realm administrator for the correct fingerprint")
         + _(" for your authentication server.\nIf it matches the above fingerprint,")
@@ -192,14 +214,16 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_line_wrap(true);
         confirm_label.set_width_chars(60);
 
-        var trust_anchor_display = make_ta_fingerprint_widget(fingerprint, server_ta_label_text);
+        var trust_anchor_display = make_ta_fingerprint_widget(request.fingerprint, server_ta_label_text);
 
         var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(dialog_label, true, true, 12);
         vbox.pack_start(user_label, true, true, 2);
-        vbox.pack_start(realm_label, true, true, 2);
         vbox.pack_start(trust_anchor_display, true, true, 0);
+        vbox.pack_start(issuer_widget, true, true, 2);
+        vbox.pack_start(subject_widget, true, true, 2);
+        vbox.pack_start(expiration_widget, true, true, 2);
         vbox.pack_start(confirm_label, true, true, 12);
 
         ((Container) content_area).add(vbox);
@@ -208,7 +232,6 @@ class TrustAnchorDialog : Dialog
         this.set_resizable(false);
 
         this.response.connect(on_response);
-
         this.show_all();
     }
 

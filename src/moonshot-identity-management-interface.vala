@@ -9,5 +9,5 @@ public interface IdentityManagerInterface : Object {
     public abstract void queue_identity_request(IdentityRequest request);
     public abstract void make_visible();
     public abstract IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model);
-    public abstract bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint);
+    public abstract bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request);
 }
