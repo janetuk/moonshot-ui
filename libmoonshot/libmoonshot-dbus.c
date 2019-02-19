@@ -838,11 +838,9 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
   g_return_val_if_fail (G_IS_DBUS_PROXY (dbus_proxy), FALSE);
 
   /* Convert hash byte array to string */
-  out = 0;
-  for (i = 0; i < hash_len; i++) {
-    sprintf(&(hash_str[out]), "%02X", ca_hash[i]);
-    out += 2;
-  }
+  for (i = 0; i < hash_len; i++)
+    sprintf(&(hash_str[i * 2]), "%02X", ca_hash[i]);
+
 
   result = g_dbus_proxy_call_sync(dbus_proxy,
                                   "ConfirmCaCertificate",
