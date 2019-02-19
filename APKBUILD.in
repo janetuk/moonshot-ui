@@ -7,7 +7,7 @@ pkgdesc="Moonshot UI"
 url="https://github.com/janetuk/moonshot-ui"
 arch="all"
 license="BSD-3-Clause"
-depends="dbus-x11"
+depends="dbus-x11 ttf-dejavu"
 makedepends="alpine-sdk automake autoconf libtool libressl-dev gettext gtk+-dev libgee-dev newt-dev vala desktop-file-utils dbus-glib-dev libgnome-keyring-dev jansson-dev dbus-x11"
 install=""
 subpackages="$pkgname-dev"
@@ -29,4 +29,6 @@ build() {
 package() {
 	cd "$builddir"
 	make DESTDIR="$pkgdir" install
+	mkdir -p $pkgdir/usr/share/dbus-1/services/
+	ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $pkgdir/usr/share/dbus-1/services/org.janet.Moonshot.service
 }
