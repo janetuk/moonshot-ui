@@ -569,7 +569,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtTextboxSetText(comp, "Server's trust anchor issuer:");
         newtFormAddComponent(form, comp);
         comp = newtTextbox(1, offset + 5, 75, 2,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.issuer != "" ? request.issuer : "Not available");
+        newtTextboxSetText(comp, request.issuer);
         newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
         newtFormAddComponent(form, comp);
 
@@ -577,7 +577,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtTextboxSetText(comp, "Server's trust anchor subject:");
         newtFormAddComponent(form, comp);
         comp = newtTextbox(1, offset + 8, 75, 2,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.subject != "" ? request.subject : "Not available");
+        newtTextboxSetText(comp, request.subject);
         newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
         newtFormAddComponent(form, comp);
 
@@ -585,7 +585,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtTextboxSetText(comp, "Server's trust anchor expiration:");
         newtFormAddComponent(form, comp);
         comp = newtTextbox(1, offset + 11, 75, 1,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.expiration_date != "" ? request.expiration_date : "Not available");
+        newtTextboxSetText(comp, request.expiration_date);
         newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
         newtFormAddComponent(form, comp);
 

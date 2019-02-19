@@ -62,9 +62,9 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
         this.parent_app = parent_app;
         this.userid = userid;
         this.realm = realm;
-        this.expiration_date = "";
-        this.issuer = "";
-        this.subject = "";
+        this.expiration_date = "Not available";
+        this.issuer = "Not available";
+        this.subject = "Not available";
 
         uint8 finger[65], expiration[1024], subject[1024], issuer[1024];
         int rv = parse_hex_certificate(cert_data, finger, expiration, 1024, subject, 1024, issuer, 1204);
