@@ -148,7 +148,7 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     var fingerprint_width_constraint = new ScrolledWindow(null, null);
     fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
     fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
-    fingerprint_width_constraint.set_size_request(400, 30);
+    fingerprint_width_constraint.set_size_request(400, 40);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
     var vbox = new_vbox(0);
