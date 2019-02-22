@@ -542,71 +542,63 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             offset = 4;
         }
 
-        bool result = false;
-        newtComponent form, info, yes_btn, no_btn, chosen, comp;
-        newtCenteredWindow(78, 18 + offset, "Accept trust anchor");
-        info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
-        newtTextboxSetText(info, warning);
-        form = newtForm(null, null, 0);
+        bool? result = null;
+        do {
+            newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
+            newtCenteredWindow(78, 11 + offset, "Accept trust anchor");
+            info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
+            newtTextboxSetText(info, warning);
+            form = newtForm(null, null, 0);
 
-        comp = newtTextbox(1, offset + 2, 75, 1, 0);
-        newtTextboxSetText(comp, "Server's trust anchor certificate (SHA-256 fingerprint):");
-        newtFormAddComponent(form, comp);
-        comp = newtTextbox(1, offset + 3, 75, 1, 0);
-        newtTextboxSetText(comp, request.fingerprint != "" ? request.fingerprint : "None");
-        newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
-        newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 1, 10, 1, 0);
+            newtTextboxSetText(comp, "Username:");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(11, offset + 1, 65, 1, 0);
+            newtTextboxSetText(comp, request.userid);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
 
-        comp = newtTextbox(1, offset + 1, 10, 1, 0);
-        newtTextboxSetText(comp, "Username:");
-        newtFormAddComponent(form, comp);
-        comp = newtTextbox(11, offset + 1, 65, 1, 0);
-        newtTextboxSetText(comp, "%s@%s".printf(card.username, card.issuer));
-        newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
-        newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 2, 10, 1, 0);
+            newtTextboxSetText(comp, "Realm:");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(11, offset + 2, 65, 1, 0);
+            newtTextboxSetText(comp, request.realm);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
 
-        comp = newtTextbox(1, offset + 4, 75, 1, 0);
-        newtTextboxSetText(comp, "Server's trust anchor issuer:");
-        newtFormAddComponent(form, comp);
-        comp = newtTextbox(1, offset + 5, 75, 2,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.issuer);
-        newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
-        newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 3, 75, 1, 0);
+            newtTextboxSetText(comp, "Server's trust anchor certificate (SHA-256 fingerprint):");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 4, 75, 1, 0);
+            newtTextboxSetText(comp, request.fingerprint);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
 
-        comp = newtTextbox(1, offset + 7, 75, 1, 0);
-        newtTextboxSetText(comp, "Server's trust anchor subject:");
-        newtFormAddComponent(form, comp);
-        comp = newtTextbox(1, offset + 8, 75, 2,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.subject);
-        newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
-        newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 6, 75, 3, Flag.WRAP);
+            newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
+                                     + "authentication server. If it matches the above fingerprint, confirm the change. "
+                                     + "If not, then cancel.");
+            newtFormAddComponent(form, comp);
 
-        comp = newtTextbox(1, offset + 10, 75, 1, 0);
-        newtTextboxSetText(comp, "Server's trust anchor expiration:");
-        newtFormAddComponent(form, comp);
-        comp = newtTextbox(1, offset + 11, 75, 1,  Flag.WRAP | Flag.SCROLL);
-        newtTextboxSetText(comp, request.expiration_date);
-        newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
-        newtFormAddComponent(form, comp);
+            yes_btn = newtCompactButton(18, offset + 10, "Yes");
+            no_btn = newtCompactButton(38, offset + 10, "No");
+            view_btn = newtCompactButton(53, offset + 10, "View cert");
 
-        comp = newtTextbox(1, offset + 13, 75, 3, Flag.WRAP);
-        newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
-                                 + "authentication server. If it matches the above fingerprint, confirm the change. "
-                                 + "If not, then cancel.");
-        newtFormAddComponent(form, comp);
-
-        yes_btn = newtCompactButton(23, offset + 17, "Yes");
-        no_btn = newtCompactButton(42, offset + 17, "No");
-
-        newtFormAddComponent(form, info);
-        newtFormAddComponent(form, yes_btn);
-        newtFormAddComponent(form, no_btn);
-        newtFormSetCurrent(form, no_btn);
-        chosen = newtRunForm(form);
-        if (chosen == yes_btn)
-            result = true;
-        newtFormDestroy(form);
-        newtPopWindow();
+            newtFormAddComponent(form, info);
+            newtFormAddComponent(form, yes_btn);
+            newtFormAddComponent(form, no_btn);
+            newtFormAddComponent(form, view_btn);
+            newtFormSetCurrent(form, no_btn);
+            chosen = newtRunForm(form);
+            if (chosen == view_btn)
+                info_dialog("View certificate", request.cert_text, 78, 23, true);
+            if (chosen == yes_btn)
+                result = true;
+            if (chosen == no_btn)
+                result = false;
+            newtFormDestroy(form);
+            newtPopWindow();
+        } while (result == null);
         newtFinished();
         return result;
     }
