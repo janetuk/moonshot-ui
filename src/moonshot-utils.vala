@@ -126,7 +126,7 @@ internal void set_atk_relation(Widget widget, Widget target_widget, Atk.Relation
 }
 
 
-internal Widget make_ta_fingerprint_widget(string server_cert, string? label_text = null, bool do_colonize=true)
+internal Widget make_ta_fingerprint_widget(string server_cert, string? label_text = null, bool do_colonize=true, int height=40, bool scrollbar=false)
 {
     var fingerprint_label = new Label(label_text ?? _("SHA-256 fingerprint:"));
     fingerprint_label.set_alignment(0, 0.5f);
@@ -146,9 +146,10 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     set_atk_relation(fingerprint_label, fingerprint, Atk.RelationType.LABEL_FOR);
 
     var fingerprint_width_constraint = new ScrolledWindow(null, null);
-    fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
+    if (!scrollbar)
+        fingerprint_width_constraint.set_policy(PolicyType.NEVER, PolicyType.NEVER);
     fingerprint_width_constraint.set_shadow_type(ShadowType.IN);
-    fingerprint_width_constraint.set_size_request(400, 40);
+    fingerprint_width_constraint.set_size_request(400, height);
     fingerprint_width_constraint.add_with_viewport(fingerprint);
 
     var vbox = new_vbox(0);

@@ -32,9 +32,7 @@
 using Gtk;
 
 extern int parse_hex_certificate(char* hex_str, char *sha256_hex_fingerprint,
-                                 char* expiration, int expiration_len,
-                                 char* subject, int subject_len,
-                                 char *issuer, int issuer_len);
+                                 char* cert_text, int cert_text_len);
 
 
 public delegate void TrustAnchorConfirmationCallback(TrustAnchorConfirmationRequest request);
@@ -46,6 +44,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     public string userid;
     public string realm;
     public string fingerprint;
+    public string cert_text;
     public string issuer;
     public string subject;
     public string expiration_date;
@@ -62,17 +61,14 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
         this.parent_app = parent_app;
         this.userid = userid;
         this.realm = realm;
-        this.expiration_date = "Not available";
-        this.issuer = "Not available";
-        this.subject = "Not available";
+        this.fingerprint = "Not available";
+        this.cert_text = "Not available";
 
-        uint8 finger[65], expiration[1024], subject[1024], issuer[1024];
-        int rv = parse_hex_certificate(cert_data, finger, expiration, 1024, subject, 1024, issuer, 1204);
+        uint8 finger[65], cert_text[4096];
+        int rv = parse_hex_certificate(cert_data, finger, cert_text, 4096);
         if (rv > 0) {
             this.fingerprint = (string) finger;
-            this.subject = (string) subject;
-            this.issuer = (string) issuer;
-            this.expiration_date = (string) expiration;
+            this.cert_text = (string) cert_text;
         }
         else {
             this.fingerprint = cert_data;
@@ -198,12 +194,11 @@ class TrustAnchorDialog : Dialog
         dialog_label.set_line_wrap(true);
         dialog_label.set_width_chars(60);
 
-        var user_label = new Label(_("Username: %s@%s").printf(request.userid, request.realm));
+        var user_label = new Label(_("Username: ") + request.userid);
         user_label.set_alignment(0, 0.5f);
 
-        var issuer_widget = make_ta_fingerprint_widget(request.issuer, "Issuer:", false);
-        var subject_widget = make_ta_fingerprint_widget(request.subject, "Subject:", false);
-        var expiration_widget = make_ta_fingerprint_widget(request.expiration_date, "Expiration:", false);
+        var realm_label = new Label(_("Realm: ") + request.realm);
+        realm_label.set_alignment(0, 0.5f);
 
         string confirm_text = _("\nPlease check with your realm administrator for the correct fingerprint")
         + _(" for your authentication server.\nIf it matches the above fingerprint,")
@@ -215,15 +210,15 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_width_chars(60);
 
         var trust_anchor_display = make_ta_fingerprint_widget(request.fingerprint, server_ta_label_text);
+        var cert_display = make_ta_fingerprint_widget(request.cert_text, "Certificate", false, 200, true);
 
         var vbox = new_vbox(0);
         vbox.set_border_width(6);
         vbox.pack_start(dialog_label, true, true, 12);
         vbox.pack_start(user_label, true, true, 2);
+        vbox.pack_start(realm_label, true, true, 2);
         vbox.pack_start(trust_anchor_display, true, true, 0);
-        vbox.pack_start(issuer_widget, true, true, 2);
-        vbox.pack_start(subject_widget, true, true, 2);
-        vbox.pack_start(expiration_widget, true, true, 2);
+        vbox.pack_start(cert_display, true, true, 0);
         vbox.pack_start(confirm_label, true, true, 12);
 
         ((Container) content_area).add(vbox);

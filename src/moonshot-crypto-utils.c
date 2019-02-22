@@ -83,18 +83,17 @@ cleanup:
 
 int parse_hex_certificate(const unsigned char* hex_str,
                           unsigned char *sha256_hex_fingerprint,
-                          unsigned char* expiration, int expiration_len,
-                          unsigned char* subject, int subject_len,
-                          unsigned char *issuer, int issuer_len)
+                          unsigned char* cert_text, int cert_text_len)
 {
     // hex -> bytes
     int i = 0, cert_len = strlen(hex_str) / 2;
     unsigned char *cert = malloc(cert_len);
     unsigned char *p = cert;
+    int result = 0;
     X509_NAME *name = NULL;
 
     // make sure we initialise buffers
-    sha256_hex_fingerprint[0] = expiration[0] = subject[0] = issuer[0] = '\0';
+    sha256_hex_fingerprint[0] = cert_text[0] = '\0';
 
     // hex -> bytes
     for (i = 0; i < cert_len; i++)
@@ -102,25 +101,25 @@ int parse_hex_certificate(const unsigned char* hex_str,
 
     // SHA256 fingerprint
     if (sha256(cert, cert_len, sha256_hex_fingerprint) != 32)
-        return 0;
+        goto cleanup;
 
     // parse cert (needs to be on a temporary pointer "p" as it gets modified)
     X509* x = d2i_X509(NULL, &p, cert_len);
     if (x == NULL) {
         fprintf(stderr, "Error parsing server certificate!\n");
-        return 0;
+        goto cleanup;
     }
 
-    name = X509_get_subject_name(x);
-    if (name != NULL)
-        X509_NAME_oneline(name, subject, subject_len);
+    BIO* out_bio = BIO_new(BIO_s_mem());
+    if (X509_print(out_bio, x)) {
+        int write = BIO_read(out_bio, cert_text, cert_text_len - 1);
+        cert_text[write]='\0';
+    }
 
-    name = X509_get_issuer_name(x);
-    if (name != NULL)
-        X509_NAME_oneline(name, issuer, issuer_len);
-
-    get_cert_valid_before(cert, cert_len, expiration, expiration_len);
-
+    result = 1;
+cleanup:
+    BIO_free(out_bio);
+    X509_free(x);
     free(cert);
-    return 1;
+    return result;
 }
