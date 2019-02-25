@@ -545,7 +545,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool? result = null;
         do {
             newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
-            newtCenteredWindow(78, 11 + offset, "Accept trust anchor");
+            newtCenteredWindow(78, 12 + offset, "Accept trust anchor");
             info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
             newtTextboxSetText(info, warning);
             form = newtForm(null, null, 0);
@@ -574,20 +574,21 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
             newtFormAddComponent(form, comp);
 
-            comp = newtTextbox(1, offset + 6, 75, 3, Flag.WRAP);
+            view_btn = newtCompactButton(30, offset + 5, "View cert");
+            newtFormAddComponent(form, view_btn);
+
+            comp = newtTextbox(1, offset + 7, 75, 3, Flag.WRAP);
             newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
                                      + "authentication server. If it matches the above fingerprint, confirm the change. "
                                      + "If not, then cancel.");
             newtFormAddComponent(form, comp);
 
-            yes_btn = newtCompactButton(18, offset + 10, "Yes");
-            no_btn = newtCompactButton(38, offset + 10, "No");
-            view_btn = newtCompactButton(53, offset + 10, "View cert");
+            yes_btn = newtCompactButton(24, offset + 11, "Yes");
+            no_btn = newtCompactButton(45, offset + 11, "No");
 
             newtFormAddComponent(form, info);
             newtFormAddComponent(form, yes_btn);
             newtFormAddComponent(form, no_btn);
-            newtFormAddComponent(form, view_btn);
             newtFormSetCurrent(form, no_btn);
             chosen = newtRunForm(form);
             if (chosen == view_btn)
