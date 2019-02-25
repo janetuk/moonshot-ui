@@ -154,11 +154,12 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 class TrustAnchorDialog : Dialog
 {
     public bool complete = false;
+    private TrustAnchorConfirmationRequest request;
 
     public TrustAnchorDialog(IdCard card, TrustAnchorConfirmationRequest request)
     {
         string server_ta_label_text = _("Server's trust anchor certificate (SHA-256 fingerprint):");
-
+        this.request = request;
         this.set_title(_("Trust Anchor"));
         this.set_modal(true);
 //        this.set_transient_for(parent);
@@ -210,7 +211,7 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_width_chars(60);
 
         var view_button = new Button.with_label(_("View Server Certificate"));
-        view_button.clicked.connect((w) => {view_certificate(request);});
+        view_button.clicked.connect((w) => {view_certificate();});
 
         var trust_anchor_display = make_ta_fingerprint_widget(request.fingerprint, server_ta_label_text);
 
@@ -234,15 +235,15 @@ class TrustAnchorDialog : Dialog
         this.show_all();
     }
 
-    private void view_certificate(TrustAnchorConfirmationRequest request)
+    private void view_certificate()
     {
         string message = "Could not load certificate!";
-        if (request.cert_text != "")
-            message = (string) request.cert_text;
+        if (this.request.cert_text != "")
+            message = (string) this.request.cert_text;
         var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                            Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "The following is the information extracted from the Server certificate.");
-        Container content = dialog.get_content_area();
+        Box content = (Box) dialog.get_content_area();
         content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
         dialog.set_size_request(700, -1);
         dialog.show_all();

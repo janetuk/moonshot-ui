@@ -546,7 +546,7 @@ class IdentityDialog : Dialog
         var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                            Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "The following is the information extracted from the CA certificate for this Trust Anchor.");
-        Container content = dialog.get_content_area();
+        Box content = (Box) dialog.get_content_area();
         content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
         dialog.set_size_request(700, -1);
         dialog.show_all();
