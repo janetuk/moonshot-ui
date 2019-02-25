@@ -81,6 +81,17 @@ cleanup:
   return result;
 }
 
+void x509_to_text(X509 *cert,
+                  unsigned char* cert_text, int cert_text_len)
+{
+    BIO* out_bio = BIO_new(BIO_s_mem());
+    if (X509_print(out_bio, cert)) {
+        int write = BIO_read(out_bio, cert_text, cert_text_len - 1);
+        cert_text[write]='\0';
+    }
+    BIO_free(out_bio);
+}
+
 int parse_hex_certificate(const unsigned char* hex_str,
                           unsigned char *sha256_hex_fingerprint,
                           unsigned char* cert_text, int cert_text_len)
@@ -110,16 +121,24 @@ int parse_hex_certificate(const unsigned char* hex_str,
         goto cleanup;
     }
 
-    BIO* out_bio = BIO_new(BIO_s_mem());
-    if (X509_print(out_bio, x)) {
-        int write = BIO_read(out_bio, cert_text, cert_text_len - 1);
-        cert_text[write]='\0';
-    }
-
+    x509_to_text(x, cert_text, cert_text_len);
     result = 1;
 cleanup:
-    BIO_free(out_bio);
     X509_free(x);
     free(cert);
     return result;
+}
+
+int parse_der_certificate(const unsigned char* der, int der_len,
+                          unsigned char* cert_text, int cert_text_len)
+{
+    // parse cert (needs to be on a temporary pointer "p" as it gets modified)
+    X509* x = d2i_X509(NULL, &der, der_len);
+    if (x == NULL) {
+        fprintf(stderr, "Error parsing server certificate!\n");
+        return 0;
+    }
+    x509_to_text(x, cert_text, cert_text_len);
+    X509_free(x);
+    return 1;
 }
