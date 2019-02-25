@@ -391,9 +391,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     info_dialog("Trust anchor details", msg, 70, 5, false);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
+                    uint8 cert_info[4096];
+                    uint8[] der_cert = Base64.decode(id_card.trust_anchor.ca_cert);
+                    string cert_info_msg = "Could not load certificate!";
+                    int rv = parse_der_certificate(der_cert, der_cert.length, cert_info, 4096);
+                    if (rv == 1)
+                        cert_info_msg = (string) cert_info;
+
                     string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
                                  + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
-                                 + "CA certificate (PEM format):\n%s".printf(id_card.trust_anchor.ca_cert);
+                                 + "CA certificate:\n%s".printf(cert_info_msg);
                     info_dialog("Trust anchor details", msg, 75, 20, true);
                 }
             }

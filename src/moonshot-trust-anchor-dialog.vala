@@ -243,7 +243,6 @@ class TrustAnchorDialog : Dialog
                                            Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
                                            "The following is the information extracted from the Server certificate.");
         Container content = dialog.get_content_area();
-        var hbox = new_hbox(0);
         content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
         dialog.set_size_request(700, -1);
         dialog.show_all();
