@@ -209,8 +209,10 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_line_wrap(true);
         confirm_label.set_width_chars(60);
 
+        var view_button = new Button.with_label(_("View Server Certificate"));
+        view_button.clicked.connect((w) => {view_certificate(request);});
+
         var trust_anchor_display = make_ta_fingerprint_widget(request.fingerprint, server_ta_label_text);
-        var cert_display = make_ta_fingerprint_widget(request.cert_text, "Certificate", false, 200, true);
 
         var vbox = new_vbox(0);
         vbox.set_border_width(6);
@@ -218,7 +220,9 @@ class TrustAnchorDialog : Dialog
         vbox.pack_start(user_label, true, true, 2);
         vbox.pack_start(realm_label, true, true, 2);
         vbox.pack_start(trust_anchor_display, true, true, 0);
-        vbox.pack_start(cert_display, true, true, 0);
+        var hbox = new_hbox(0);
+        hbox.pack_start(view_button, false, false, 0);
+        vbox.pack_start(hbox, false, false, 0);
         vbox.pack_start(confirm_label, true, true, 12);
 
         ((Container) content_area).add(vbox);
@@ -228,6 +232,23 @@ class TrustAnchorDialog : Dialog
 
         this.response.connect(on_response);
         this.show_all();
+    }
+
+    private void view_certificate(TrustAnchorConfirmationRequest request)
+    {
+        string message = "Could not load certificate!";
+        if (request.cert_text != "")
+            message = (string) request.cert_text;
+        var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                           Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                           "The following is the information extracted from the Server certificate.");
+        Container content = dialog.get_content_area();
+        var hbox = new_hbox(0);
+        content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
+        dialog.set_size_request(700, -1);
+        dialog.show_all();
+        dialog.run();
+        dialog.destroy();
     }
 
     private void on_response(Dialog source, int response_id)

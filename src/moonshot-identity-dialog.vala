@@ -548,7 +548,7 @@ class IdentityDialog : Dialog
                                            "The following is the information extracted from the CA certificate for this Trust Anchor.");
         Container content = dialog.get_content_area();
         content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
-        dialog.set_size_request(600, -1);
+        dialog.set_size_request(700, -1);
         dialog.show_all();
         dialog.run();
         dialog.destroy();
