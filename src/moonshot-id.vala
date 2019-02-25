@@ -129,7 +129,9 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
 
     internal static string format_datetime_now() {
         DateTime now = new DateTime.now_utc();
-        string dt = now.format("%b %d %T %Y %Z");
+        string? dt = now.format("%b %d %T %Y %Z");
+        if (dt == null || dt == "")
+            dt = "Formatted date not supported on this system";
         return dt;
     }
 
