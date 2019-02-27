@@ -1,8 +1,11 @@
 moonshot-ui (1.1.8.DIST) unstable; urgency=medium
 
-  * TBD
+  * Fix window being too wide when confirming Trust Anchors
+  * Update source URL
+  * Improve how keyring is handled for non-desktop environments.
+  * Support decorated NAIs when confirming Trust Anchors
 
- -- Jisc <moonshot@jisc.ac.uk>  Sat, 2 Feb 2019 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Wed, 27 Feb 2019 00:00:00 +0000
 
 moonshot-ui (1.1.7) unstable; urgency=medium
 
