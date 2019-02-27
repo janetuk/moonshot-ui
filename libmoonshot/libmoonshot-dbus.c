@@ -681,6 +681,55 @@ int moonshot_install_id_card (const char     *display_name,
                               int            force_flat_file_store,
                               MoonshotError **error)
 {
+  return moonshot_install_id_card_2fa(display_name,
+                                      user_name,
+                                      password,
+                                      realm,
+                                      rules_patterns,
+                                      rules_patterns_length,
+                                      rules_always_confirm,
+                                      rules_always_confirm_length,
+                                      services,
+                                      services_length,
+                                      ca_cert,
+                                      subject,
+                                      subject_alt,
+                                      server_cert,
+                                      force_flat_file_store,
+                                      0,
+                                      error);
+}
+
+
+/**
+ * Install an ID card through the Moonshot DBus service
+ *
+ * There is a mismatch between this libmoonshot API and the
+ * org.janet.Moonshot DBus API. The latter requires many of its inputs
+ * be non-null, whereas this API allows nulls to indicate empty
+ * arguments. Ideally this would be reconciled, probably by updating
+ * the DBus API to make these optional. Until then, null inputs are
+ * converted to empty strings for the DBus method call.
+ *
+ */
+int moonshot_install_id_card_2fa (const char     *display_name,
+                                  const char     *user_name,
+                                  const char     *password,
+                                  const char     *realm,
+                                  char           *rules_patterns[],
+                                  int             rules_patterns_length,
+                                  char           *rules_always_confirm[],
+                                  int             rules_always_confirm_length,
+                                  char           *services[],
+                                  int             services_length,
+                                  const char     *ca_cert,
+                                  const char     *subject,
+                                  const char     *subject_alt,
+                                  const char     *server_cert,
+                                  int            force_flat_file_store,
+                                  int            has2fa,
+                                  MoonshotError **error)
+{
   GError      *g_error = NULL;
   GDBusProxy  *dbus_proxy;
   gboolean     success = FALSE;
@@ -716,7 +765,7 @@ int moonshot_install_id_card (const char     *display_name,
   services_strv[services_length] = NULL;
 
   result = g_dbus_proxy_call_sync(dbus_proxy,
-                                  "InstallIdCard",
+                                  "InstallIdCard2fa",
                                   g_variant_new("("
                                                 "s"   /* display name          (string,  required) */
                                                 "s"   /* user name             (string,  required) */
@@ -730,6 +779,7 @@ int moonshot_install_id_card (const char     *display_name,
                                                 "s"   /* subject_alt           (string,  optional) */
                                                 "s"   /* server cert           (string,  optional) */
                                                 "i"   /* force flat file store (integer, required) */
+                                                "i"   /* has 2FA               (integer, required) */
                                                 ")",
                                                 display_name,
                                                 user_name,
@@ -742,7 +792,8 @@ int moonshot_install_id_card (const char     *display_name,
                                                 subject,
                                                 subject_alt,
                                                 server_cert,
-                                                force_flat_file_store),
+                                                force_flat_file_store,
+                                                has2fa),
                                   G_DBUS_CALL_FLAGS_NONE,
                                   G_MAXINT, /* infinite timeout */
                                   NULL, /* no cancellable */

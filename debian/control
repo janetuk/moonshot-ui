@@ -8,8 +8,7 @@ Build-Depends: debhelper (>= 9), libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk
  dh-autoreconf, valac, libgnome-keyring-dev|libsecret-1-dev, libssl1.0-dev|libssl-dev, dbus
 Standards-Version: 3.9.5
 Homepage: http://www.project-moonshot.org/
-Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/moonshot-ui.git;a=summary
+Vcs-Git: https://github.com/janetuk/moonshot-ui
 
 Package: moonshot-ui
 Architecture: any

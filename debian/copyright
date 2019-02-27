@@ -1,6 +1,6 @@
 Format: Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: moonshot-ui
-Source: git://git.project-moonshot.org/moonshot-ui.git
+Source: https://github.com/janetuk/moonshot-ui
 
 Files: *
 Copyright: 2011-2014 JANET(UK)

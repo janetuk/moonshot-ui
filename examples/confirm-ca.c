@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016, JANET(UK)
+ * Copyright (c) 2011-2014, JANET(UK)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,31 +29,35 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
 */
-using Gee;
-public interface IIdentityCardStore : Object {
-    // Methods
-    public enum StoreType {
-        FLAT_FILE,
-        KEYRING;
+#include <libmoonshot.h>
 
-        public string to_string() {
-            switch (this) {
-                case FLAT_FILE:
-                    return "FLAT_FILE";
+#include <stdio.h>
 
-                case KEYRING:
-                    return "KEYRING";
+int main (int argc, char *argv[])
+{
+    MoonshotError *error = NULL;
+    int success;
+    int i;
 
-                default:
-                    return "UNKNOWN";
-            }
-        }
+    char *username = "alice",
+         *realm = "test.org",
+         hash[32], hash_str[65];
+
+     /* Convert hash byte array to string */
+    for (i = 0; i < 32; i++) {
+        hash[i] = i;
+        sprintf(&(hash_str[i*2]), "%02X", hash[i]);
     }
 
-    public abstract void add_card(IdCard card);
-    public abstract bool remove_card(IdCard card);
-    public abstract IdCard? update_card(IdCard card);
-    public abstract StoreType get_store_type();
-    public abstract Gee.List<IdCard> get_card_list();
-}
+    success = moonshot_confirm_ca_certificate ("alice",
+                                               "test.org",
+                                               hash, 32,
+                                               &error);
 
+    if (error) {
+        printf ("Error: %s\n", error->message);
+        return 1;
+    }
+
+    printf ("Confirmed: %d for %s@%s %s\n", success, username, realm, hash_str);
+}

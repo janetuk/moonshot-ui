@@ -251,6 +251,7 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbus_service_in_file) \
 noinst_PROGRAMS = \
         examples/client \
         examples/service-selection \
+        examples/confirm-ca \
         tests/basic
 
 examples_service_selection_SOURCES = examples/service-selection.c
@@ -260,6 +261,10 @@ examples_service_selection_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(
 examples_client_SOURCES = examples/client.c
 examples_client_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)
 examples_client_LDADD = $(libmoonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
+
+examples_confirm_ca_SOURCES = examples/confirm-ca.c
+examples_confirm_ca_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
+examples_confirm_ca_LDADD = ${top_builddir}/libmoonshot/libmoonshot.la $(moonshot_LIBS)
 
 tests_basic_SOURCES = tests/basic.c
 tests_basic_CPPFLAGS = $(libmoonshot_CFLAGS) $(AM_CPPFLAGS)

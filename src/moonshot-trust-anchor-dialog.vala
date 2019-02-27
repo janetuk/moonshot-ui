@@ -65,9 +65,11 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     }
 
     public bool execute() {
-
         string nai = userid + "@" + realm;
         IdCard? card = parent_app.model.find_id_card(nai, parent_app.use_flat_file_store);
+        if (card == null)
+            card = parent_app.model.find_decorated_id_card(userid, realm, parent_app.use_flat_file_store);
+
         if (card == null) {
             logger.warn(@"execute: Could not find ID card for NAI $nai; returning false.");
             return_confirmation(false);
@@ -166,8 +168,8 @@ class TrustAnchorDialog : Dialog
             // The server's fingerprint isn't what we're expecting this server to provide.
             label_markup = "<span font-weight='heavy'>" +
             _("WARNING: The certificate we received for the authentication server for %s").printf(card.issuer)
-            + _(" is different than expected.  Either the server certificate has changed, or an")
-            + _(" attack may be underway.  If you proceed to the wrong server, your login credentials may be compromised.")
+            + _(" is different than expected.\nEither the server certificate has changed, or an")
+            + _(" attack may be underway.\nIf you proceed to the wrong server, your login credentials may be compromised.")
             + "</span>";
         }
 
@@ -182,7 +184,7 @@ class TrustAnchorDialog : Dialog
         realm_label.set_alignment(0, 0.5f);
 
         string confirm_text = _("\nPlease check with your realm administrator for the correct fingerprint")
-        + _(" for your authentication server.  If it matches the above fingerprint,")
+        + _(" for your authentication server.\nIf it matches the above fingerprint,")
         + _(" confirm the change.  If not, then cancel.");
 
         Label confirm_label = new Label(confirm_text);

@@ -227,6 +227,43 @@ public class MoonshotServer : Object {
                                 string   ?server_cert,
                                 int      force_flat_file_store)
     {
+        return install_id_card_2fa(display_name,
+                                   user_name,
+                                   password,
+                                   realm,
+                                   rules_patterns,
+                                   rules_always_confirm,
+                                   services,
+                                   ca_cert,
+                                   subject,
+                                   subject_alt,
+                                   server_cert,
+                                   force_flat_file_store,
+                                   0);
+    }
+
+    /**
+     * DBus method "InstallIdCard2FA"
+     *
+     * The return data signature is the declared "out" parameters plus the return
+     * value of this method.
+     *
+     * In this case, that is (b).
+     */
+    public bool install_id_card_2fa(string   display_name,
+                                    string   user_name,
+                                    string   ?password,
+                                    string   ?realm,
+                                    string[] ?rules_patterns,
+                                    string[] ?rules_always_confirm,
+                                    string[] ?services,
+                                    string   ?ca_cert,
+                                    string   ?subject,
+                                    string   ?subject_alt,
+                                    string   ?server_cert,
+                                    int      force_flat_file_store,
+                                    int      has2fa)
+    {
         IdCard idcard = new IdCard();
 
         idcard.display_name = display_name;
@@ -235,6 +272,7 @@ public class MoonshotServer : Object {
         if ((password != null) && (password != ""))
             idcard.store_password = true;
         idcard.issuer = realm;
+        idcard.has_2fa = (bool) has2fa;
         idcard.update_services(services);
         var ta = new TrustAnchor(ca_cert, server_cert, subject, subject_alt);
 
@@ -267,7 +305,6 @@ public class MoonshotServer : Object {
         var ret = parent_app.add_identity(idcard, (force_flat_file_store != 0));
         return ret;
     }
-
 
     /**
      * DBus method "InstallFromFile"
