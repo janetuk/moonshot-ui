@@ -33,13 +33,14 @@
 using Gee;
 using Gtk;
 
-
 // Defined here as workaround for emacs vala-mode indentation failure.
 #if VALA_0_12
 const string CANCEL = Stock.CANCEL;
 #else
 const string CANCEL = STOCK_CANCEL;
 #endif
+
+extern int parse_der_certificate(char* der, int der_len, char* cert_text, int cert_text_len);
 
 
 // For use when exporting certificates.
@@ -303,21 +304,12 @@ class IdentityDialog : Dialog
             ta_table.attach(fingerprint, 0, 2, row, row + 2, fill_and_expand, fill_and_expand, 20, 5);
         }
         else {
-            Label ca_cert_label = new Label(_("CA Certificate:"));
-            ca_cert_label.set_alignment(0, 0.5f);
-            var export_button = new Button.with_label(_("Export Certificate"));
-            export_button.clicked.connect((w) => {export_certificate(id);});
-
-            ta_table.attach(ca_cert_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
-            ta_table.attach(export_button, 1, 2, row, row + 1, fill, fill, 0, 0);
-            row++;
-
             if (id.trust_anchor.subject != "") {
                 Label subject_label = new Label(_("Subject: ") + id.trust_anchor.subject);
                 subject_label.set_alignment(0, 0.5f);
                 subject_label.set_line_wrap(true);
                 subject_label.set_size_request(400, -1);
-                ta_table.attach(subject_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
+                ta_table.attach(subject_label, 0, 2, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
                 row++;
             }
 
@@ -326,14 +318,23 @@ class IdentityDialog : Dialog
                 subject_alt_label.set_alignment(0, 0.5f);
                 subject_alt_label.set_line_wrap(true);
                 subject_alt_label.set_size_request(400, -1);
-                ta_table.attach(subject_alt_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
+                ta_table.attach(subject_alt_label, 0, 2, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
                 row++;
             }
 
             Label expiration_label = new Label(_("Expiration date: ") + id.trust_anchor.get_expiration_date());
             expiration_label.set_alignment(0, 0.5f);
-            ta_table.attach(expiration_label, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
+            ta_table.attach(expiration_label, 0, 2, row, row + 1, fill_and_expand, fill_and_expand, 20, 5);
             row++;
+
+            var export_button = new Button.with_label(_("Export CA Certificate"));
+            var view_button = new Button.with_label(_("View CA Certificate"));
+            export_button.clicked.connect((w) => {export_certificate(id);});
+            view_button.clicked.connect((w) => {view_certificate(id);});
+            ta_table.attach(view_button, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 20, 0);
+            ta_table.attach(export_button, 1, 2, row, row + 1, fill, fill, 0, 0);
+            row++;
+
 
             //!!TODO: What goes here?
             // Label constraint_label = new Label(_("Constraint: "));
@@ -532,6 +533,25 @@ class IdentityDialog : Dialog
             });
 
         return services_vbox;
+    }
+
+    private void view_certificate(IdCard id)
+    {
+        uint8 cert_info[4096];
+        uint8[] der_cert = Base64.decode(id.trust_anchor.ca_cert);
+        string message = "Could not load certificate!";
+        int rv = parse_der_certificate(der_cert, der_cert.length, cert_info, 4096);
+        if (rv == 1)
+            message = (string) cert_info;
+        var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                           Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                           "The following is the information extracted from the CA certificate for this Trust Anchor.");
+        Box content = (Box) dialog.get_content_area();
+        content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
+        dialog.set_size_request(700, -1);
+        dialog.show_all();
+        dialog.run();
+        dialog.destroy();
     }
 
     private void export_certificate(IdCard id)
