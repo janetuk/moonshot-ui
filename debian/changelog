@@ -1,8 +1,8 @@
 moonshot-ui (1.1.9.DIST) unstable; urgency=medium
 
-  * TBD
+  * Add a "Show Certificate" button when confirming Trust Anchor.
 
- -- Jisc <moonshot@jisc.ac.uk>  Tue, 28 Feb 2019 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 4 Mar 2019 00:00:00 +0000
 
  moonshot-ui (1.1.8.DIST) unstable; urgency=medium
 
