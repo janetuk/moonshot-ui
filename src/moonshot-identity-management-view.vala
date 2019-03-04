@@ -147,9 +147,9 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         load_id_cards();
     }
 
-    public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
+    public bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request)
     {
-        var dialog = new TrustAnchorDialog(card, userid, realm, fingerprint);
+        var dialog = new TrustAnchorDialog(card, request);
         var response = dialog.run();
         dialog.destroy();
         return (response == ResponseType.OK);

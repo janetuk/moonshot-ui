@@ -31,15 +31,24 @@
 */
 using Gtk;
 
+extern int parse_hex_certificate(char* hex_str, char *sha256_hex_fingerprint,
+                                 char* cert_text, int cert_text_len);
+
+
 public delegate void TrustAnchorConfirmationCallback(TrustAnchorConfirmationRequest request);
 
 public class TrustAnchorConfirmationRequest : GLib.Object {
     static MoonshotLogger logger = get_logger("TrustAnchorConfirmationRequest");
 
     IdentityManagerApp parent_app;
-    string userid;
-    string realm;
-    string fingerprint;
+    public string userid;
+    public string realm;
+    public string fingerprint;
+    public string cert_text;
+    public string issuer;
+    public string subject;
+    public string expiration_date;
+
     public bool confirmed = false;
 
     TrustAnchorConfirmationCallback callback = null;
@@ -47,12 +56,23 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
     public TrustAnchorConfirmationRequest(IdentityManagerApp parent_app,
                                           string userid,
                                           string realm,
-                                          string fingerprint)
+                                          string cert_data)
     {
         this.parent_app = parent_app;
         this.userid = userid;
         this.realm = realm;
-        this.fingerprint = fingerprint;
+        this.fingerprint = "Not available";
+        this.cert_text = "Not available";
+
+        uint8 finger[65], cert_text[4096];
+        int rv = parse_hex_certificate(cert_data, finger, cert_text, 4096);
+        if (rv > 0) {
+            this.fingerprint = (string) finger;
+            this.cert_text = (string) cert_text;
+        }
+        else {
+            this.fingerprint = cert_data;
+        }
     }
 
     public void set_callback(owned TrustAnchorConfirmationCallback cb)
@@ -95,7 +115,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, userid, realm, fingerprint);
+        bool is_confirmed = parent_app.view.confirm_trust_anchor(card, this);
         if (is_confirmed) {
             logger.trace(@"execute: Fingerprint confirmed; updating stored value.");
 
@@ -125,7 +145,7 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
                 callback(this);
                 return false;
             }
-            );
+        );
     }
 }
 
@@ -134,14 +154,12 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
 class TrustAnchorDialog : Dialog
 {
     public bool complete = false;
+    private TrustAnchorConfirmationRequest request;
 
-    public TrustAnchorDialog(IdCard card,
-                             string userid,
-                             string realm,
-                             string fingerprint)
+    public TrustAnchorDialog(IdCard card, TrustAnchorConfirmationRequest request)
     {
         string server_ta_label_text = _("Server's trust anchor certificate (SHA-256 fingerprint):");
-
+        this.request = request;
         this.set_title(_("Trust Anchor"));
         this.set_modal(true);
 //        this.set_transient_for(parent);
@@ -177,10 +195,10 @@ class TrustAnchorDialog : Dialog
         dialog_label.set_line_wrap(true);
         dialog_label.set_width_chars(60);
 
-        var user_label = new Label(_("Username: ") + userid);
+        var user_label = new Label(_("Username: ") + request.userid);
         user_label.set_alignment(0, 0.5f);
 
-        var realm_label = new Label(_("Realm: ") + realm);
+        var realm_label = new Label(_("Realm: ") + request.realm);
         realm_label.set_alignment(0, 0.5f);
 
         string confirm_text = _("\nPlease check with your realm administrator for the correct fingerprint")
@@ -192,7 +210,10 @@ class TrustAnchorDialog : Dialog
         confirm_label.set_line_wrap(true);
         confirm_label.set_width_chars(60);
 
-        var trust_anchor_display = make_ta_fingerprint_widget(fingerprint, server_ta_label_text);
+        var view_button = new Button.with_label(_("View Server Certificate"));
+        view_button.clicked.connect((w) => {view_certificate();});
+
+        var trust_anchor_display = make_ta_fingerprint_widget(request.fingerprint, server_ta_label_text);
 
         var vbox = new_vbox(0);
         vbox.set_border_width(6);
@@ -200,6 +221,9 @@ class TrustAnchorDialog : Dialog
         vbox.pack_start(user_label, true, true, 2);
         vbox.pack_start(realm_label, true, true, 2);
         vbox.pack_start(trust_anchor_display, true, true, 0);
+        var hbox = new_hbox(0);
+        hbox.pack_start(view_button, false, false, 0);
+        vbox.pack_start(hbox, false, false, 0);
         vbox.pack_start(confirm_label, true, true, 12);
 
         ((Container) content_area).add(vbox);
@@ -208,8 +232,23 @@ class TrustAnchorDialog : Dialog
         this.set_resizable(false);
 
         this.response.connect(on_response);
-
         this.show_all();
+    }
+
+    private void view_certificate()
+    {
+        string message = "Could not load certificate!";
+        if (this.request.cert_text != "")
+            message = (string) this.request.cert_text;
+        var dialog = new Gtk.MessageDialog(this, Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                           Gtk.MessageType.INFO, Gtk.ButtonsType.OK,
+                                           "The following is the information extracted from the Server certificate.");
+        Box content = (Box) dialog.get_content_area();
+        content.add(make_ta_fingerprint_widget(message, "", false, 400, true));
+        dialog.set_size_request(700, -1);
+        dialog.show_all();
+        dialog.run();
+        dialog.destroy();
     }
 
     private void on_response(Dialog source, int response_id)

@@ -391,9 +391,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     info_dialog("Trust anchor details", msg, 70, 5, false);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
+                    uint8 cert_info[4096];
+                    uint8[] der_cert = Base64.decode(id_card.trust_anchor.ca_cert);
+                    string cert_info_msg = "Could not load certificate!";
+                    int rv = parse_der_certificate(der_cert, der_cert.length, cert_info, 4096);
+                    if (rv == 1)
+                        cert_info_msg = (string) cert_info;
+
                     string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
                                  + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
-                                 + "CA certificate (PEM format):\n%s".printf(id_card.trust_anchor.ca_cert);
+                                 + "CA certificate:\n%s".printf(cert_info_msg);
                     info_dialog("Trust anchor details", msg, 75, 20, true);
                 }
             }
@@ -525,32 +532,83 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             GLib.Process.exit(0);
     }
 
-    public bool confirm_trust_anchor(IdCard card, string userid, string realm, string fingerprint)
+    public bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request)
     {
         init_newt();
         string warning = "";
+        int offset;
         if (card.trust_anchor.server_cert == "") {
             warning = _("You are using this identity for the first time with the following trust anchor:");
+            offset = 2;
         }
         else {
             // The server's fingerprint isn't what we're expecting this server to provide.
             warning = _("WARNING: The certificate we received for the authentication server for %s").printf(card.issuer)
             + _(" is different than expected. Either the server certificate has changed, or an")
             + _(" attack may be underway. If you proceed to the wrong server, your login credentials may be compromised.");
+            offset = 4;
         }
 
-        string msg = """%s
+        bool? result = null;
+        do {
+            newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
+            newtCenteredWindow(78, 12 + offset, "Accept trust anchor");
+            info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
+            newtTextboxSetText(info, warning);
+            form = newtForm(null, null, 0);
 
-Username: %s
-Realm: %s
-Server's trust anchor certificate (SHA-256 fingerprint):
-%s
+            comp = newtTextbox(1, offset + 1, 10, 1, 0);
+            newtTextboxSetText(comp, "Username:");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(11, offset + 1, 65, 1, 0);
+            newtTextboxSetText(comp, request.userid);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
 
-Please, check with your realm administrator for the correct fingerprint for your authentication server.
-If it matches the above fingerprint, confirm the change. If not, then cancel.""".printf(warning, card.username, card.issuer, fingerprint);
-        bool confirmed = yesno_dialog("Accept trust anchor", msg, false, card.trust_anchor.server_cert == "" ? 13 : 16);
+            comp = newtTextbox(1, offset + 2, 10, 1, 0);
+            newtTextboxSetText(comp, "Realm:");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(11, offset + 2, 65, 1, 0);
+            newtTextboxSetText(comp, request.realm);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
+
+            comp = newtTextbox(1, offset + 3, 75, 1, 0);
+            newtTextboxSetText(comp, "Server's trust anchor certificate (SHA-256 fingerprint):");
+            newtFormAddComponent(form, comp);
+            comp = newtTextbox(1, offset + 4, 75, 1, 0);
+            newtTextboxSetText(comp, request.fingerprint);
+            newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
+            newtFormAddComponent(form, comp);
+
+            view_btn = newtCompactButton(30, offset + 5, "View cert");
+            newtFormAddComponent(form, view_btn);
+
+            comp = newtTextbox(1, offset + 7, 75, 3, Flag.WRAP);
+            newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
+                                     + "authentication server. If it matches the above fingerprint, confirm the change. "
+                                     + "If not, then cancel.");
+            newtFormAddComponent(form, comp);
+
+            yes_btn = newtCompactButton(24, offset + 11, "Yes");
+            no_btn = newtCompactButton(45, offset + 11, "No");
+
+            newtFormAddComponent(form, info);
+            newtFormAddComponent(form, yes_btn);
+            newtFormAddComponent(form, no_btn);
+            newtFormSetCurrent(form, no_btn);
+            chosen = newtRunForm(form);
+            if (chosen == view_btn)
+                info_dialog("View certificate", request.cert_text, 78, 23, true);
+            if (chosen == yes_btn)
+                result = true;
+            if (chosen == no_btn)
+                result = false;
+            newtFormDestroy(form);
+            newtPopWindow();
+        } while (result == null);
         newtFinished();
-        return confirmed;
+        return result;
     }
 
     private void about_dialog()
