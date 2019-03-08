@@ -48,9 +48,10 @@ private Collection? find_secret_collection()
         }
         List<DBusProxy> objects = new List<DBusProxy>();
         objects.append(secret_collection);
-        service.unlock(objects, null, null);
+        if (service.unlock_sync(objects, null, null) == 0)
+            secret_collection = null;
     } catch(GLib.Error e) {
-        stdout.printf("Unable to load secret service: %s\n", e.message);
+        // pass
     }
     return secret_collection;
 }
@@ -78,7 +79,7 @@ public class KeyringStore : KeyringStoreBase {
                                               "Subject-Alt", sstring,
                                               "TA_DateTime_Added", sstring,
                                               "StorePassword", sstring);
-    private static Collection? secret_collection = find_secret_collection();
+    private static Collection? secret_collection = null;
 
     /* Used to keep track of the association between IdCards and Items */
     private Gee.HashMap<IdCard,Item> item_map = new Gee.HashMap<IdCard,Item>();
