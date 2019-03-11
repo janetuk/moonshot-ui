@@ -474,8 +474,39 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
+    private bool id_matches_search(IdCard id_card, string entry_text)
+    {
+        foreach (string search_text in entry_text.split(" ")) {
+            if (search_text == "")
+                continue;
+
+            string search_text_casefold = search_text.casefold();
+
+            if (id_card.issuer != null) {
+                string issuer_casefold = id_card.issuer;
+                if (issuer_casefold.contains(search_text_casefold))
+                    return true;
+            }
+
+            if (id_card.display_name != null) {
+                string display_name_casefold = id_card.display_name.casefold();
+                if (display_name_casefold.contains(search_text_casefold))
+                    return true;
+            }
+
+            if (id_card.services.size > 0) {
+                foreach (string service in id_card.services) {
+                    string service_casefold = service.casefold();
+                    if (service_casefold.contains(search_text_casefold))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private string select_file_dialog() {
-        newtComponent form, select_btn, listbox, cancel_btn, chosen;
+        newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
         string directory = GLib.Environment.get_current_dir();
         string? result = null;
@@ -578,10 +609,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
-                      edit_btn, remove_btn, send_btn, remember_chk, doc;
+                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry;
         bool exit_loop = false;
         int offset = 0;
         bool remember = true;
+        string filter = "";
         init_newt();
         do {
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
@@ -596,10 +628,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 newtFormAddComponent(form, serv);
             }
             doc = newtLabel(1, offset, "Select your identity");
+            filter_entry = newtEntry(25, offset, filter, 35, null, Flag.RETURNEXIT);
             listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
+                if (filter != "" && !id_matches_search(id_card, filter))
+                    continue;
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
                                                   id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
@@ -614,6 +649,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             exit_btn = newtCompactButton(68, 17, "Exit");
             remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service",
                                         remember ? '*' : ' ', " *", null);
+            newtFormAddComponent(form, filter_entry);
             newtFormAddComponent(form, listbox);
             newtFormAddComponent(form, doc);
             if (request != null)
@@ -637,6 +673,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == import_btn) {
                 import_identities();
+            }
+            else if (chosen == filter_entry) {
+                filter = newtEntryGetValue(filter_entry);
             }
             else if (chosen == remove_btn) {
                 delete_id_card_dialog(id_card);
