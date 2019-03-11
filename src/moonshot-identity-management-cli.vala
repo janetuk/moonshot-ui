@@ -662,6 +662,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 newtFormAddComponent(form, send_btn);
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
+            newtFormSetCurrent(form, listbox);
             chosen = newtRunForm(form);
             IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
             remember = (newtCheckboxGetValue(remember_chk) == '*');
