@@ -435,7 +435,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtPopWindow();
     }
 
-    private bool id_card_menu(IdCard? id_card, bool include_send) {
+    private bool id_card_menu(IdCard? id_card, bool include_send, bool remember) {
         bool rv = false;
         newtComponent form, listbox, chosen;
         int height = include_send ? 4: 3;
@@ -454,7 +454,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (chosen == listbox){
             string? option = (string?) newtListboxGetCurrent(listbox);
             if (option == "Send") {
-                send_id_card_confirmation_dialog(id_card);
+                send_id_card_confirmation_dialog(id_card, remember);
                 rv = true;
             }
             else if (option == "Edit")
@@ -470,28 +470,30 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
-                      edit_btn, remove_btn, send_btn, doc;
+                      edit_btn, remove_btn, send_btn, remember_chk, doc;
         bool exit_loop = false;
         int offset = 0;
+        bool remember = true;
         init_newt();
         do {
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
             form = newtForm(null, null, 0);
             if (request != null) {
                 offset = 1;
-                newtComponent info = newtLabel(1, 0, "Request ID for: ");
-                newtComponent serv = newtTextbox(17, 0, 59, 1, 0);
+                newtComponent info = newtLabel(1, 0, "ID requested for: ");
+                newtComponent serv = newtTextbox(19, 0, 59, 1, 0);
                 newtTextboxSetColors(serv, Colorset.TITLE, Colorset.TITLE);
                 newtTextboxSetText(serv, request.service);
                 newtFormAddComponent(form, info);
                 newtFormAddComponent(form, serv);
             }
-            doc = newtLabel(1, offset, "Select an ID card to pop up more options");
-            listbox = newtListbox(1, offset + 1, 19 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            doc = newtLabel(1, offset, "Select your identity");
+            listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
-                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
+                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
+                                                  id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
             }
 
@@ -500,10 +502,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             edit_btn = newtCompactButton(68, offset + 6, "Edit");
             remove_btn = newtCompactButton(68, offset + 8, "Remove");
             send_btn = newtCompactButton(68, offset + 10, "Send");
-            about_btn = newtCompactButton(68, 16, "About");
-            exit_btn = newtCompactButton(68, 18, "Exit");
+            about_btn = newtCompactButton(68, 15, "About");
+            exit_btn = newtCompactButton(68, 17, "Exit");
+            remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service",
+                                        remember ? '*' : ' ', " *", null);
             newtFormAddComponent(form, listbox);
             newtFormAddComponent(form, doc);
+            if (request != null)
+                newtFormAddComponent(form, remember_chk);
             newtFormAddComponent(form, add_btn);
             newtFormAddComponent(form, import_btn);
             newtFormAddComponent(form, edit_btn);
@@ -514,6 +520,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtFormAddComponent(form, exit_btn);
             chosen = newtRunForm(form);
             IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
+            remember = (newtCheckboxGetValue(remember_chk) == '*');
             if (chosen == add_btn){
                 add_id_card_dialog();
             }
@@ -527,18 +534,18 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 delete_id_card_dialog(id_card);
             }
             else if (chosen == send_btn) {
-                send_id_card_confirmation_dialog(id_card);
+                send_id_card_confirmation_dialog(id_card, remember);
                 exit_loop = true;
             }
             else if (chosen == about_btn) {
                 about_dialog();
             }
             else if (chosen == listbox) {
-                exit_loop = id_card_menu(id_card, request != null);
+                exit_loop = id_card_menu(id_card, request != null, remember);
             }
             else {
                 // we need to send NULL identity to gracefully exit properly from the send_identity callback
-                send_id_card_confirmation_dialog(null);
+                send_id_card_confirmation_dialog(null, false);
                 exit_loop = true;
             }
 
@@ -699,15 +706,9 @@ POSSIBILITY OF SUCH DAMAGE.""";
         info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
     }
 
-    private void send_id_card_confirmation_dialog(IdCard? id_card) {
-        bool remember = true;
+    private void send_id_card_confirmation_dialog(IdCard? id_card, bool remember) {
         IdCard? identity = null;
         if (id_card != null) {
-            if (!id_card.services.contains(this.request.service)) {
-                remember = yesno_dialog("Remember identity choice",
-                                         "Do you want to remember your identity choice for this server?", false, 4);
-            }
-
             /* Update password with the information from the user */
             identity = check_add_password(id_card, request, identities_manager);
             if ((identity != null) && (!identity.is_no_identity()))
