@@ -767,12 +767,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                      + "If not, then cancel.");
             newtFormAddComponent(form, comp);
 
-            yes_btn = newtCompactButton(24, offset + 12, "Yes");
-            no_btn = newtCompactButton(45, offset + 12, "No");
+            yes_btn = newtCompactButton(67, offset + 12, "Confirm");
+            no_btn = newtCompactButton(57, offset + 12, "Cancel");
 
             newtFormAddComponent(form, info);
-            newtFormAddComponent(form, yes_btn);
             newtFormAddComponent(form, no_btn);
+            newtFormAddComponent(form, yes_btn);
             newtFormSetCurrent(form, view_btn);
             chosen = newtRunForm(form);
             if (chosen == view_btn)
