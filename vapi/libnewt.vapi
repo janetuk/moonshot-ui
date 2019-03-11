@@ -61,6 +61,9 @@ namespace Newt {
     [CCode (cname = "newtListboxAppendEntry")]
     public int newtListboxAppendEntry(newtComponent co, string text, void* data);
 
+    [CCode (cname = "newtListboxInsertEntry")]
+    public int newtListboxInsertEntry(newtComponent co, string text, void* data, void* key);
+
     [CCode (cname = "newtListboxGetCurrent")]
     public void* newtListboxGetCurrent(newtComponent co);
 

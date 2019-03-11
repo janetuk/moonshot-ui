@@ -32,6 +32,7 @@
 
 using Gee;
 using Newt;
+using WebProvisioning;
 
 public class IdentityManagerCli: IdentityManagerInterface, Object {
     static MoonshotLogger logger = get_logger("IdentityManagerCli");
@@ -83,20 +84,18 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
     }
 
-    /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store)
+    private bool internal_add_identity(IdCard id_card, bool force_flat_file_store)
     {
         // TODO: This could be merged with GTK version
         bool dialog = false;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
                      .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
-        init_newt();
         if (prev_id != null) {
             int flags = prev_id.Compare(id_card);
             logger.trace("add_identity: compare returned " + flags.to_string());
             if (flags == 0) {
-                info_dialog("Warning", "The ID card was already present in your keyring and does not need to be added again.");
+                info_dialog("Warning", "The ID card <%s> was already present in your keyring and does not need to be added again.".printf(id_card.nai));
             } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
                 dialog = yesno_dialog(
                     "Install ID Card",
@@ -115,7 +114,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
                 true, 10);
         }
-        newtFinished();
         if (dialog) {
             this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
@@ -123,6 +121,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         else {
             return false;
         }
+    }
+
+    /* Adds an identity to the store, showing feedback about the process */
+    public bool add_identity(IdCard id_card, bool force_flat_file_store)
+    {
+        init_newt();
+        bool result = internal_add_identity(id_card, force_flat_file_store);
+        newtFinished();
+        return result;
     }
 
     /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
@@ -467,6 +474,107 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
+    private string select_file_dialog() {
+        newtComponent form, select_btn, listbox, cancel_btn, chosen;
+        bool exit_loop = false;
+        string directory = GLib.Environment.get_current_dir();
+        string? result = null;
+        do {
+            newtCenteredWindow(60, 22, "Import Identity file");
+            form = newtForm(null, null, 0);
+            newtComponent locator = newtTextbox(0, 0, 60, 2, Flag.WRAP);
+            newtTextboxSetColors(locator, Colorset.TITLE, Colorset.TITLE);
+            newtTextboxSetText(locator, directory);
+            listbox = newtListbox(0, 2, 18, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            cancel_btn = newtCompactButton(25, 21, "Cancel");
+            GLib.List<string> files = new GLib.List<string>();
+            newtListboxSetWidth(listbox, 58);
+            try{
+                string? name = null;
+                Dir dir = Dir.open(directory, 0);
+                while ((name = dir.read_name()) != null) {
+                    string path = Path.build_filename(directory, name);
+                    files.insert_sorted(path, strcmp);
+                }
+                for (int i=0; i<files.length(); i++) {
+                    string entry = files.nth_data(i);
+                    string text = "%s%s".printf(
+                        Path.get_basename(entry),
+                        FileUtils.test(entry, FileTest.IS_DIR) ? "/" : "");
+                    newtListboxAppendEntry(listbox, text, files.nth(i));
+                }
+
+                // Include ../ since GLib does not provide it to us
+                files.insert_before(files.first(), Path.get_dirname(directory));
+                newtListboxInsertEntry(listbox, "../", files.first(), null);
+            } catch (Error e) {
+                logger.error("Could not open folder!");
+            }
+
+            newtFormAddComponent(form, locator);
+            newtFormAddComponent(form, listbox);
+            newtFormAddComponent(form, cancel_btn);
+            chosen = newtRunForm(form);
+            unowned GLib.List<string>? element = (GLib.List<string>) newtListboxGetCurrent(listbox);
+            if (chosen == listbox) {
+                if (FileUtils.test(element.data, FileTest.IS_DIR))
+                    directory = element.data;
+                else {
+                    result = element.data;
+                    exit_loop = true;
+                }
+            }
+            else
+                exit_loop = true;
+            newtFormDestroy(form);
+            newtPopWindow();
+        } while (!exit_loop);
+
+        return result;
+    }
+
+    private void import_identities() {
+        string? filename = select_file_dialog();
+        int import_count = 0;
+        if (filename == null)
+            return;
+
+        var webp = new Parser(filename);
+        if (!webp.parse()) {
+            info_dialog("ERROR", _("Could not parse identities file."));
+        }
+        else {
+            logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
+            foreach (IdCard card in webp.cards) {
+                if (card == null) {
+                    logger.trace(@"import_identities_cb: Skipping null IdCard");
+                    continue;
+                }
+
+                if (!card.trust_anchor.is_empty()) {
+                    string ta_datetime_added = TrustAnchor.format_datetime_now();
+                    card.trust_anchor.set_datetime_added(ta_datetime_added);
+                    logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
+                                 .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
+                }
+
+                bool result = internal_add_identity(card, use_flat_file_store);
+                if (result) {
+                    logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
+                    import_count++;
+                }
+                else {
+                    logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
+                }
+            }
+            if (import_count == 0) {
+                info_dialog("INFO", "Import completed. No identities were added or updated.");
+            }
+        }
+        // We might need to re-init newt
+        init_newt();
+    }
+
 
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
@@ -528,7 +636,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 edit_id_card_dialog(id_card);
             }
             else if (chosen == import_btn) {
-                // TBD
+                import_identities();
             }
             else if (chosen == remove_btn) {
                 delete_id_card_dialog(id_card);
