@@ -469,7 +469,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
+                      edit_btn, remove_btn, send_btn, doc;
         bool exit_loop = false;
         int offset = 0;
         init_newt();
@@ -486,26 +487,48 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 newtFormAddComponent(form, serv);
             }
             doc = newtLabel(1, offset, "Select an ID card to pop up more options");
-            listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
-            newtListboxSetWidth(listbox, 76);
+            listbox = newtListbox(1, offset + 1, 19 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
             }
 
-            add_btn = newtCompactButton(1, 19, "Add");
-            about_btn = newtCompactButton(60, 19, "About");
-            exit_btn = newtCompactButton(69, 19, "Exit");
+            add_btn = newtCompactButton(68, offset + 2, "Add");
+            import_btn = newtCompactButton(68, offset + 4, "Import");
+            edit_btn = newtCompactButton(68, offset + 6, "Edit");
+            remove_btn = newtCompactButton(68, offset + 8, "Remove");
+            send_btn = newtCompactButton(68, offset + 10, "Send");
+            about_btn = newtCompactButton(68, 16, "About");
+            exit_btn = newtCompactButton(68, 18, "Exit");
             newtFormAddComponent(form, listbox);
             newtFormAddComponent(form, doc);
             newtFormAddComponent(form, add_btn);
+            newtFormAddComponent(form, import_btn);
+            newtFormAddComponent(form, edit_btn);
+            newtFormAddComponent(form, remove_btn);
+            if (request != null)
+                newtFormAddComponent(form, send_btn);
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
             chosen = newtRunForm(form);
             IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
             if (chosen == add_btn){
                 add_id_card_dialog();
+            }
+            else if (chosen == edit_btn) {
+                edit_id_card_dialog(id_card);
+            }
+            else if (chosen == import_btn) {
+                // TBD
+            }
+            else if (chosen == remove_btn) {
+                delete_id_card_dialog(id_card);
+            }
+            else if (chosen == send_btn) {
+                send_id_card_confirmation_dialog(id_card);
+                exit_loop = true;
             }
             else if (chosen == about_btn) {
                 about_dialog();
