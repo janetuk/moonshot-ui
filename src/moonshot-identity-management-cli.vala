@@ -690,7 +690,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool? result = null;
         do {
             newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
-            newtCenteredWindow(78, 12 + offset, "Accept trust anchor");
+            newtCenteredWindow(78, 13 + offset, "Accept trust anchor");
             info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
             newtTextboxSetText(info, warning);
             form = newtForm(null, null, 0);
@@ -714,27 +714,27 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             comp = newtTextbox(1, offset + 3, 75, 1, 0);
             newtTextboxSetText(comp, "Server's trust anchor certificate (SHA-256 fingerprint):");
             newtFormAddComponent(form, comp);
-            comp = newtTextbox(1, offset + 4, 75, 1, 0);
-            newtTextboxSetText(comp, request.fingerprint);
+            comp = newtTextbox(1, offset + 4, 75, 2, 0);
+            newtTextboxSetText(comp, colonize(request.fingerprint, 16));
             newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
             newtFormAddComponent(form, comp);
 
-            view_btn = newtCompactButton(30, offset + 5, "View cert");
+            view_btn = newtCompactButton(0, offset + 6, "View Server Certificate");
             newtFormAddComponent(form, view_btn);
 
-            comp = newtTextbox(1, offset + 7, 75, 3, Flag.WRAP);
+            comp = newtTextbox(1, offset + 8, 75, 3, Flag.WRAP);
             newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
                                      + "authentication server. If it matches the above fingerprint, confirm the change. "
                                      + "If not, then cancel.");
             newtFormAddComponent(form, comp);
 
-            yes_btn = newtCompactButton(24, offset + 11, "Yes");
-            no_btn = newtCompactButton(45, offset + 11, "No");
+            yes_btn = newtCompactButton(24, offset + 12, "Yes");
+            no_btn = newtCompactButton(45, offset + 12, "No");
 
             newtFormAddComponent(form, info);
             newtFormAddComponent(form, yes_btn);
             newtFormAddComponent(form, no_btn);
-            newtFormSetCurrent(form, no_btn);
+            newtFormSetCurrent(form, view_btn);
             chosen = newtRunForm(form);
             if (chosen == view_btn)
                 info_dialog("View certificate", request.cert_text, 78, 23, true);

@@ -25,6 +25,9 @@ namespace Newt {
     [CCode (cname = "newtTextboxSetText")]
     public void newtTextboxSetText(newtComponent co, string text);
 
+    [CCode (cname = "newtButton")]
+    public newtComponent newtButton(int left, int top, string text);
+
     [CCode (cname = "newtCompactButton")]
     public newtComponent newtCompactButton(int left, int top, string text);
 
