@@ -328,53 +328,16 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store)
+    public bool generic_yesno_dialog(string title, string message, bool default_yes)
     {
-        Gtk.MessageDialog dialog;
-        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
-        logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
-                     .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
-        if (prev_id!=null) {
-            int flags = prev_id.Compare(id_card);
-            logger.trace("add_identity: compare returned " + flags.to_string());
-            if (flags == 0) {
-                return false; // no changes, no need to update
-            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
-                dialog = new Gtk.MessageDialog(this,
-                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                               Gtk.MessageType.QUESTION,
-                                               Gtk.ButtonsType.YES_NO,
-                                               _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
-                                               prev_id.display_name,
-                                               prev_id.nai,
-                                               id_card.display_name);
-            } else {
-                dialog = new Gtk.MessageDialog(this,
-                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                               Gtk.MessageType.QUESTION,
-                                               Gtk.ButtonsType.YES_NO,
-                                               _("Would you like to update ID Card '%s' using nai '%s'?"),
-                                               id_card.display_name,
-                                               id_card.nai);
-            }
-        } else {
-            dialog = new Gtk.MessageDialog(this,
-                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                           Gtk.MessageType.QUESTION,
-                                           Gtk.ButtonsType.YES_NO,
-                                           _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
-                                           id_card.display_name);
-        }
+        var dialog = new Gtk.MessageDialog(this,
+                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                       Gtk.MessageType.QUESTION,
+                                       Gtk.ButtonsType.YES_NO,
+                                       message);
         var ret = dialog.run();
         dialog.destroy();
-
-        if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store);
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (ret == Gtk.ResponseType.YES);
     }
 
     private void add_identity_cb()
@@ -945,7 +908,7 @@ SUCH DAMAGE.
                     }
 
 
-                    bool result = add_identity(card, use_flat_file_store);
+                    bool result = add_identity(card, identities_manager, use_flat_file_store);
                     if (result) {
                         logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                         import_count++;

@@ -5,12 +5,12 @@ public errordomain IdentityManagerError {
 }
 
 public interface IdentityManagerInterface : Object {
-    public abstract bool add_identity(IdCard id_card, bool force_flat_file_store);
     public abstract void queue_identity_request(IdentityRequest request);
     public abstract void make_visible();
     public abstract IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model);
     public abstract bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request);
     public abstract void generic_info_dialog(string title, string msg);
+    public abstract bool generic_yesno_dialog(string title, string msg, bool default_true);
 
     /* Reports whether there are identities with ideantical NAI */
     internal void report_expired_trust_anchors(IdentityManagerModel model) {
@@ -41,4 +41,39 @@ public interface IdentityManagerInterface : Object {
         }
     }
 
+    public bool add_identity(IdCard id_card, IdentityManagerModel identities_manager, bool force_flat_file_store)
+    {
+        bool dialog = false;
+        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
+        if (prev_id != null) {
+            int flags = prev_id.Compare(id_card);
+            if (flags == 0) {
+                return false;
+            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
+                dialog = generic_yesno_dialog(
+                    "Install ID Card",
+                    "Would you like to update ID Card '%s' using nai '%s'?".printf(prev_id.display_name, prev_id.nai),
+                    true);
+            } else {
+                dialog = generic_yesno_dialog(
+                    "Install ID Card",
+                    "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?".printf(
+                        prev_id.display_name, prev_id.nai, id_card.display_name),
+                    true);
+            }
+        } else {
+            dialog = generic_yesno_dialog(
+                "Install ID Card",
+                "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
+                true);
+        }
+
+        if (dialog) {
+            identities_manager.add_card(id_card, force_flat_file_store);
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

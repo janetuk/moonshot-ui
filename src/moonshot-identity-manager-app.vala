@@ -114,7 +114,7 @@ public class IdentityManagerApp {
         if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
-            return view.add_identity(id, force_flat_file_store);
+            return view.add_identity(id, model, force_flat_file_store);
         }
         else {
             logger.trace("add_identity: calling model.add_card");

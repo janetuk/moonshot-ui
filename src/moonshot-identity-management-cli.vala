@@ -52,48 +52,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         report_expired_trust_anchors(identities_manager);
     }
 
-    private bool add_identity(IdCard id_card, bool force_flat_file_store)
-    {
-        bool must_finish = newt_init();
-        bool dialog = false;
-        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
-        logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
-                     .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
-        if (prev_id != null) {
-            int flags = prev_id.Compare(id_card);
-            logger.trace("add_identity: compare returned " + flags.to_string());
-            if (flags == 0) {
-                info_dialog("Warning", "The ID card <%s> was already present in your keyring and does not need to be added again.".printf(id_card.nai));
-            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
-                dialog = yesno_dialog(
-                    "Install ID Card",
-                    "Would you like to update ID Card '%s' using nai '%s'?".printf(prev_id.display_name, prev_id.nai),
-                    true, 10);
-            } else {
-                dialog = yesno_dialog(
-                    "Install ID Card",
-                    "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?".printf(
-                        prev_id.display_name, prev_id.nai, id_card.display_name),
-                    true, 10);
-            }
-        } else {
-            dialog = yesno_dialog(
-                "Install ID Card",
-                "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
-                true, 10);
-        }
-
-        newt_finish(must_finish);
-
-        if (dialog) {
-            this.identities_manager.add_card(id_card, force_flat_file_store);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
     /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
      * we store just the request object. */
     public void queue_identity_request(IdentityRequest request)
@@ -103,16 +61,38 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     public void generic_info_dialog(string title, string msg)
     {
-        info_dialog(title, msg, 70, 10, true);
+        info_dialog(title, msg);
+    }
+
+    private int estimate_text_height(string message, int width)
+    {
+        string[] substrings = message.split("\n");
+        return (message.length / width + substrings.length);
+    }
+
+    private int estimate_text_width(string message)
+    {
+        int max_width = 0;
+        string[] substrings = message.split("\n");
+        foreach(string str in substrings)
+            if (str.length > max_width)
+                max_width = str.length;
+        return max_width > 77 ? 77 : max_width;
     }
 
     /* Shows a generic info dialog. NEWT needs to be initialized */
-    private void info_dialog(string title, string msg, int width=70, int height=10, bool scroll=false) {
+    private void info_dialog(string title, string msg) {
         bool finalize = newt_init();
+        int width = estimate_text_width(msg);
+        int height = estimate_text_height(msg, width) + 2;
         newtComponent form, info, button;
-        newtCenteredWindow(width, height, title);
-        int flags = scroll ? Flag.WRAP | Flag.SCROLL : Flag.WRAP;
-        info = newtTextbox(1, 0, width - 3, height - 1, flags);
+        int flags = Flag.WRAP;
+        if (height > 20) {
+            height = 20;
+            flags |= Flag.SCROLL;
+        }
+        newtCenteredWindow(width + 2, height, title);
+        info = newtTextbox(1, 0, width, height - 1, flags);
         newtTextboxSetText(info, msg);
         button = newtCompactButton((width - 11) / 2, height - 1, "Dismiss");
         form = newtForm(null, null, 0);
@@ -199,9 +179,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
-    private bool yesno_dialog(string title, string  message, bool default_yes, int height) {
+    private bool yesno_dialog(string title, string  message, bool default_yes) {
         bool finalize = newt_init();
         bool result = false;
+        int height = estimate_text_height(message, 66) + 2;
         newtComponent form, info, yes_btn, no_btn, chosen;
         newtCenteredWindow(66, height, title);
         info = newtTextbox(1, 0, 65, height - 1, Flag.WRAP);
@@ -223,9 +204,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return result;
     }
 
+    public bool generic_yesno_dialog(string title, string message, bool default_yes)
+    {
+        return yesno_dialog(title, message, default_yes);
+    }
+
     /* Shows a delete ID dialog. If successful, the ID is removed */
     private void delete_id_card_dialog(IdCard id_card) {
-        if (yesno_dialog("Remove ID card", "Are you sure you want to remove this identity?", false, 4))
+        if (yesno_dialog("Remove ID card", "Are you sure you want to remove this identity?", false))
             this.identities_manager.remove_card(id_card);
     }
 
@@ -274,7 +260,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
                 id_card.has_2fa = (newtCheckboxGetValue(mfa_chk) == '*');
                 if (id_card.display_name == "" || id_card.username == "" || id_card.issuer == "") {
-                    info_dialog("Missing information", "Please, fill in the missing fields. Only the password one is optional");
+                    info_dialog("Missing information",
+                                "Please, fill in the missing fields. Only the password one is optional");
                     repeat = true;
                     newtFormSetCurrent(form, disp_entry);
                 }
@@ -376,7 +363,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 string service = services[index];
                 bool remove = yesno_dialog("Remove service association",
                                            "You are about to remove the service <%s>.\n\n".printf(service)
-                                           + "Are you sure you want to do this?", false, 5);
+                                           + "Are you sure you want to do this?", false);
                 if (remove)
                     services.remove_at(index);
 
@@ -385,7 +372,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             else if (chosen == show_btn) {
                 if (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT) {
                     string msg = "Fingerprint:\n%s".printf(id_card.trust_anchor.server_cert);
-                    info_dialog("Trust anchor details", msg, 70, 5, false);
+                    info_dialog("Trust anchor details", msg);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
                     uint8 cert_info[4096];
@@ -398,7 +385,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
                                  + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
                                  + "CA certificate:\n%s".printf(cert_info_msg);
-                    info_dialog("Trust anchor details", msg, 75, 20, true);
+                    info_dialog("Trust anchor details", msg);
                 }
             }
             else if (chosen == cert_btn) {
@@ -408,7 +395,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == passwd_btn) {
                 info_dialog("Cleartext password",
-                            "Your cleartext password is: <%s>".printf(newtEntryGetValue(passwd_entry)), 70, 3);
+                            "Your cleartext password is:\n<%s>".printf(newtEntryGetValue(passwd_entry)));
                 focus = passwd_btn;
             }
             else
@@ -584,7 +571,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                  .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
                 }
 
-                bool result = add_identity(card, use_flat_file_store);
+                bool result = add_identity(card, identities_manager, use_flat_file_store);
                 if (result) {
                     logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                     import_count++;
@@ -770,7 +757,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtFormSetCurrent(form, view_btn);
             chosen = newtRunForm(form);
             if (chosen == view_btn)
-                info_dialog("View certificate", request.cert_text, 78, 23, true);
+                info_dialog("View certificate", request.cert_text);
             if (chosen == yes_btn)
                 result = true;
             if (chosen == no_btn)
@@ -844,7 +831,7 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.""";
-        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
+        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license));
     }
 
     private void send_id_card_confirmation_dialog(IdCard? id_card, bool remember) {
