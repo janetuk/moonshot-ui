@@ -75,7 +75,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Shows a generic info dialog. NEWT needs to be initialized */
-    private void info_dialog(string title, string msg) 
+    private void info_dialog(string title, string msg)
     {
         bool finalize = newt_init();
         int width = estimate_text_width(msg);
@@ -105,14 +105,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
-        newtCenteredWindow(70, 6, title);
-        info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
+        newtCenteredWindow(70, 8, title);
+        info = newtTextbox(1, 0, 68, 5, Flag.WRAP);
         newtTextboxSetText(info, text);
         int entrylen = show_remember ? 53 : 68;
-        entry = newtEntry(1, 3, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
-        storepwd_chk = newtCheckbox(56, 3, "Remember?", ' ', " *", null);
-        accept = newtCompactButton(20, 5, "Accept");
-        abort = newtCompactButton(45, 5, "Abort");
+        entry = newtEntry(1, 5, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
+        storepwd_chk = newtCheckbox(56, 5, "Remember?", ' ', " *", null);
+        accept = newtCompactButton(20, 7, "Accept");
+        abort = newtCompactButton(45, 7, "Abort");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, entry);
         if (show_remember)
@@ -755,37 +755,5 @@ POSSIBILITY OF SUCH DAMAGE.""";
                 return false;
             }
         );
-    }
-
-    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
-    {
-        logger.trace(@"check_add_password");
-        IdCard retval = identity;
-        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
-        bool request_has_pw = (request.password != null) && (request.password != "");
-        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
-            if (request_has_pw) {
-                identity.password = request.password;
-                retval = model.update_card(identity);
-            } else {
-                bool remember = true;
-                identity.password = password_dialog(
-                    "Enter password", "Enter the password for <%s> (<%s>)".printf(identity.display_name, identity.nai),
-                    true, out remember);
-                identity.store_password = remember;
-                if (remember)
-                    identity.temporary = false;
-                retval = model.update_card(identity);
-            }
-        }
-
-        // check 2FA
-        if (retval.has_2fa) {
-            retval.mfa_code = password_dialog(
-                "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai),
-                false, null);
-        }
-
-        return retval;
     }
 }

@@ -9,10 +9,10 @@ public errordomain IdentityManagerError {
 public interface IdentityManagerInterface : Object {
     public abstract void queue_identity_request(IdentityRequest request);
     public abstract void make_visible();
-    public abstract IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model);
     public abstract bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request);
-    public abstract void info_dialog(string title, string msg);
-    public abstract bool yesno_dialog(string title, string msg, bool default_true);
+    internal abstract void info_dialog(string title, string msg);
+    internal abstract bool yesno_dialog(string title, string msg, bool default_true);
+    internal abstract string? password_dialog(string title, string text, bool show_remember, out bool remember);
 
     /* Reports whether there are identities with ideantical NAI */
     internal void report_expired_trust_anchors(IdentityManagerModel model) {
@@ -161,5 +161,36 @@ public interface IdentityManagerInterface : Object {
                 info_dialog("Import completed", "Import completed. No identities were added or updated.");
             }
         }
+    }
+
+    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
+    {
+        IdCard retval = identity;
+        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
+        bool request_has_pw = (request.password != null) && (request.password != "");
+        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
+            if (request_has_pw) {
+                identity.password = request.password;
+                retval = model.update_card(identity);
+            } else {
+                bool remember = true;
+                identity.password = password_dialog(
+                    "Enter password", "Enter the password for:\n\nIdentity: %s\nNAI: %s".printf(identity.display_name, identity.nai),
+                    true, out remember);
+                identity.store_password = remember;
+                if (remember)
+                    identity.temporary = false;
+                retval = model.update_card(identity);
+            }
+        }
+
+        // check 2FA
+        if (retval.has_2fa) {
+            retval.mfa_code = password_dialog(
+                "Enter 2FA", "Enter the 2FA for:\n\nIdentity: %s\nNAI: %s".printf(identity.display_name, identity.nai),
+                false, null);
+        }
+
+        return retval;
     }
 }

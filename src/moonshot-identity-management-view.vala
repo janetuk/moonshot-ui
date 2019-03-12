@@ -431,62 +431,18 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         present();
     }
 
-    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
+    private string? password_dialog(string title, string text, bool show_remember, out bool remember)
     {
-        logger.trace(@"check_add_password");
-        IdCard retval = identity;
-        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
-        bool request_has_pw = (request.password != null) && (request.password != "");
-        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
-            if (request_has_pw) {
-                identity.password = request.password;
-                retval = model.update_card(identity);
-            } else {
-                var dialog = new AddPasswordDialog(identity, request);
-                var result = dialog.run();
-
-                switch (result) {
-                case ResponseType.OK:
-                    identity.password = dialog.password;
-                    // Don't leave passwords in memory longer than necessary.
-                    // (This may not actually clear the data, but it's the best we can do.)
-                    dialog.clear_password();
-                    identity.store_password = dialog.remember;
-                    if (dialog.remember)
-                        identity.temporary = false;
-                    retval = model.update_card(identity);
-                    break;
-                default:
-                    identity = null;
-                    break;
-                }
-                // Do this again, in case OK button wasn't selected.
-                dialog.clear_password();
-                dialog.destroy();
-            }
+        var dialog = new AddPasswordDialog(text, true);
+        var result = dialog.run();
+        remember = dialog.remember;
+        string passwd = dialog.password;
+        dialog.clear_password();
+        dialog.destroy();
+        if (result != ResponseType.OK || passwd == "") {
+            return null;
         }
-
-        // check 2FA
-        if (retval.has_2fa) {
-            var dialog = new Add2FADialog(identity, request);
-            var result = dialog.run();
-
-            switch (result) {
-            case ResponseType.OK:
-                retval.mfa_code = dialog.password;
-                // Don't leave passwords in memory longer than necessary.
-                // (This may not actually clear the data, but it's the best we can do.)
-                dialog.clear_password();
-                break;
-            default:
-                break;
-            }
-            // Do this again, in case OK button wasn't selected.
-            dialog.clear_password();
-            dialog.destroy();
-        }
-
-        return retval;
+        return passwd;
     }
 
     private void send_identity_cb(IdCard id)
