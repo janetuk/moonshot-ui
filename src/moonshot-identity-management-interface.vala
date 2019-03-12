@@ -76,4 +76,48 @@ public interface IdentityManagerInterface : Object {
             return false;
         }
     }
+
+    internal bool id_matches_search(IdCard id_card, string entry_text, SList<IdCard>? candidates)
+    {
+        if (id_card == null)
+            return false;
+
+        if (candidates != null) {
+            bool is_candidate = false;
+            foreach (IdCard candidate in candidates) {
+                if (candidate == id_card)
+                    is_candidate = true;
+            }
+            if (!is_candidate)
+                return false;
+        }
+
+        foreach (string search_text in entry_text.split(" ")) {
+            if (search_text == "")
+                continue;
+
+            string search_text_casefold = search_text.casefold();
+
+            if (id_card.issuer != null) {
+                string issuer_casefold = id_card.issuer;
+                if (issuer_casefold.contains(search_text_casefold))
+                    return true;
+            }
+
+            if (id_card.display_name != null) {
+                string display_name_casefold = id_card.display_name.casefold();
+                if (display_name_casefold.contains(search_text_casefold))
+                    return true;
+            }
+
+            if (id_card.services.size > 0) {
+                foreach (string service in id_card.services) {
+                    string service_casefold = service.casefold();
+                    if (service_casefold.contains(search_text_casefold))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
 }

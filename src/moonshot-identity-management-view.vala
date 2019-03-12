@@ -57,7 +57,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private TreeModelFilter filter;
 
     internal IdentityManagerModel identities_manager;
-    private unowned SList<IdCard>    candidates;
+    private unowned SList<IdCard> candidates;
 
     private GLib.Queue<IdentityRequest> request_queue;
 
@@ -130,66 +130,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     {
         IdCard id_card;
 
-        model.get(iter,
-                  Columns.IDCARD_COL, out id_card);
-
-        if (id_card == null)
-            return false;
-
-        if (candidates != null)
-        {
-            bool is_candidate = false;
-            foreach (IdCard candidate in candidates)
-            {
-                if (candidate == id_card)
-                    is_candidate = true;
-            }
-            if (!is_candidate)
-                return false;
-        }
+        model.get(iter, Columns.IDCARD_COL, out id_card);
 
         string entry_text = search_entry.get_text();
-        if (entry_text == null || entry_text == "")
-        {
-            return true;
-        }
 
-        foreach (string search_text in entry_text.split(" "))
-        {
-            if (search_text == "")
-                continue;
-
-
-            string search_text_casefold = search_text.casefold();
-
-            if (id_card.issuer != null)
-            {
-                string issuer_casefold = id_card.issuer;
-
-                if (issuer_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.display_name != null)
-            {
-                string display_name_casefold = id_card.display_name.casefold();
-
-                if (display_name_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.services.size > 0)
-            {
-                foreach (string service in id_card.services)
-                {
-                    string service_casefold = service.casefold();
-
-                    if (service_casefold.contains(search_text_casefold))
-                        return true;
-                }
-            }
-        }
-        return false;
+        return id_matches_search(id_card, entry_text, candidates);
     }
 
     private void setup_list_model()

@@ -422,37 +422,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
-    private bool id_matches_search(IdCard id_card, string entry_text)
-    {
-        foreach (string search_text in entry_text.split(" ")) {
-            if (search_text == "")
-                continue;
-
-            string search_text_casefold = search_text.casefold();
-
-            if (id_card.issuer != null) {
-                string issuer_casefold = id_card.issuer;
-                if (issuer_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.display_name != null) {
-                string display_name_casefold = id_card.display_name.casefold();
-                if (display_name_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.services.size > 0) {
-                foreach (string service in id_card.services) {
-                    string service_casefold = service.casefold();
-                    if (service_casefold.contains(search_text_casefold))
-                        return true;
-                }
-            }
-        }
-        return false;
-    }
-
     private string select_file_dialog() {
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
@@ -581,7 +550,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
-                if (filter != "" && !id_matches_search(id_card, filter))
+                if (filter != "" && !id_matches_search(id_card, filter, null))
                     continue;
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
                                                   id_card.display_name, id_card.nai);
