@@ -31,7 +31,6 @@
 */
 using Gee;
 using Gtk;
-using WebProvisioning;
 
 public class IdentityManagerView : Window, IdentityManagerInterface {
     static MoonshotLogger logger = get_logger("IdentityManagerView");
@@ -821,58 +820,7 @@ SUCH DAMAGE.
             var file  = File.new_for_path(filename);
             import_directory = file.get_parent().get_path();
 
-            int import_count = 0;
-
-            var webp = new Parser(filename);
-            dialog.destroy();
-            if (!webp.parse()) {
-                var msg_dialog = new Gtk.MessageDialog(this,
-                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                       Gtk.MessageType.INFO,
-                                                       Gtk.ButtonsType.OK,
-                                                       "%s",
-                                                       _("Could not parse identities file."));
-                msg_dialog.run();
-                msg_dialog.destroy();
-            }
-            else {
-                logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
-                foreach (IdCard card in webp.cards)
-                {
-
-                    if (card == null) {
-                        logger.trace(@"import_identities_cb: Skipping null IdCard");
-                        continue;
-                    }
-
-                    if (!card.trust_anchor.is_empty()) {
-                        string ta_datetime_added = TrustAnchor.format_datetime_now();
-                        card.trust_anchor.set_datetime_added(ta_datetime_added);
-                        logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
-                                     .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
-                    }
-
-
-                    bool result = add_identity(card, identities_manager, use_flat_file_store);
-                    if (result) {
-                        logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
-                        import_count++;
-                    }
-                    else {
-                        logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
-                    }
-                }
-                if (import_count == 0) {
-                    var msg_dialog = new Gtk.MessageDialog(this,
-                                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                           Gtk.MessageType.INFO,
-                                                           Gtk.ButtonsType.OK,
-                                                           "%s",
-                                                           _("Import completed. No identities were added or updated."));
-                    msg_dialog.run();
-                    msg_dialog.destroy();
-                }
-            }
+            import_identities(filename, identities_manager, logger);
         }
         dialog.destroy();
     }
