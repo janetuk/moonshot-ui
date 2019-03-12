@@ -97,49 +97,20 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         build_ui();
         load_id_cards();
         connect_signals();
-        report_duplicate_nais();
-        report_expired_trust_anchors();
+        report_duplicate_nais(identities_manager);
+        report_expired_trust_anchors(identities_manager);
     }
 
-    private void report_duplicate_nais() {
-        Gee.List<Gee.List<IdCard>> duplicates;
-        identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (Gee.List<IdCard> list in duplicates) {
-            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
-                + _(" user ID or issuer fields so that they are no longer the same NAI.");
-
-            foreach (var card in list) {
-                message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
-            }
-            var msg_dialog = new Gtk.MessageDialog(this,
-                                                   Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                   Gtk.MessageType.INFO,
-                                                   Gtk.ButtonsType.OK,
-                                                   "%s",
-                                                   message);
-            msg_dialog.run();
-            msg_dialog.destroy();
-        }
-    }
-
-    private void report_expired_trust_anchors() {
-        Gee.List<IdCard> card_list = identities_manager.get_card_list();
-        foreach (IdCard id_card in card_list) {
-            if (id_card.trust_anchor.is_expired()) {
-                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
-                    + _("That means that any attempt to authenticate with that identity will fail. ")
-                    + _("Please, ask your organisation to provide you with an updated credential.");
-                var msg_dialog = new Gtk.MessageDialog(this,
-                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                       Gtk.MessageType.INFO,
-                                                       Gtk.ButtonsType.OK,
-                                                       "%s",
-                                                       message);
-                msg_dialog.run();
-                msg_dialog.destroy();
-            }
-        }
+    public void generic_info_dialog(string title, string msg)
+    {
+        var msg_dialog = new Gtk.MessageDialog(this,
+                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                               Gtk.MessageType.INFO,
+                                               Gtk.ButtonsType.OK,
+                                               "%s",
+                                               msg);
+        msg_dialog.run();
+        msg_dialog.destroy();
     }
 
     private void on_card_list_changed() {
@@ -435,7 +406,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             this.identities_manager.update_card(update_id_card_data(dialog, card));
 
             // Make sure we haven't created a duplicate NAI via this update.
-            report_duplicate_nais();
+            report_duplicate_nais(identities_manager);
             break;
         default:
             break;

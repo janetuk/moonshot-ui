@@ -48,37 +48,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
-        report_duplicate_nais();
-        report_expired_trust_anchors();
-    }
-
-    /* Reports whether there are identities with ideantical NAI */
-    private void report_duplicate_nais() {
-        // TODO: This could be merged with GTK version
-        Gee.List<Gee.List<IdCard>> duplicates;
-        identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (Gee.List<IdCard> list in duplicates) {
-            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
-                + _(" user ID or issuer fields so that they are no longer the same NAI.");
-
-            foreach (var card in list) {
-                message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
-            }
-            info_dialog("Duplicate NAIs", message, 70, 20, true);
-        }
-    }
-
-    private void report_expired_trust_anchors() {
-        Gee.List<IdCard> card_list = identities_manager.get_card_list();
-        foreach (IdCard id_card in card_list) {
-            if (id_card.trust_anchor.is_expired()) {
-                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
-                    + _("That means that any attempt to authenticate with that identity will fail. ")
-                    + _("Please, ask your organisation to provide you with an updated credential.");
-                info_dialog("Expired Trust Anchor", message, 70, 10);
-            }
-        }
+        report_duplicate_nais(identities_manager);
+        report_expired_trust_anchors(identities_manager);
     }
 
     private bool add_identity(IdCard id_card, bool force_flat_file_store)
@@ -128,6 +99,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     public void queue_identity_request(IdentityRequest request)
     {
         this.request = request;
+    }
+
+    public void generic_info_dialog(string title, string msg)
+    {
+        info_dialog(title, msg, 70, 10, true);
     }
 
     /* Shows a generic info dialog. NEWT needs to be initialized */
