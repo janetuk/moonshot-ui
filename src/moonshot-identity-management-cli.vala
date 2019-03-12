@@ -75,7 +75,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Shows a generic info dialog. NEWT needs to be initialized */
-    private void info_dialog(string title, string msg) {
+    private void info_dialog(string title, string msg) 
+    {
         bool finalize = newt_init();
         int width = estimate_text_width(msg);
         int height = estimate_text_height(msg, width) + 2;
@@ -99,7 +100,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Shows a password request dialog. */
-    private string? password_dialog(string title, string text, bool show_remember, out bool remember) {
+    private string? password_dialog(string title, string text, bool show_remember, out bool remember)
+    {
         bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
@@ -107,7 +109,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
         newtTextboxSetText(info, text);
         int entrylen = show_remember ? 53 : 68;
-        entry = newtEntry(1, 3, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT);
+        entry = newtEntry(1, 3, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
         storepwd_chk = newtCheckbox(56, 3, "Remember?", ' ', " *", null);
         accept = newtCompactButton(20, 5, "Accept");
         abort = newtCompactButton(45, 5, "Abort");
@@ -194,10 +196,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         user_label = newtLabel(1, 2, "User name:");
         realm_label = newtLabel(1, 3, "Realm:");
         passwd_label = newtLabel(1, 4, "Password:");
-        disp_entry = newtEntry(15, 1, null, 60, null, 0);
-        user_entry = newtEntry(15, 2, null, 60, null, 0);
-        realm_entry = newtEntry(15, 3, null, 60, null, 0);
-        passwd_entry = newtEntry(15, 4, null, 37, null, Flag.PASSWORD);
+        disp_entry = newtEntry(15, 1, null, 60, null, Flag.SCROLL);
+        user_entry = newtEntry(15, 2, null, 60, null, Flag.SCROLL);
+        realm_entry = newtEntry(15, 3, null, 60, null, Flag.SCROLL);
+        passwd_entry = newtEntry(15, 4, null, 37, null, Flag.PASSWORD | Flag.SCROLL);
         storepwd_chk = newtCheckbox(53, 4, "Remember?", ' ', " *", null);
         mfa_chk = newtCheckbox(67, 4, "2FA?", ' ', " *", null);
         add_btn = newtCompactButton(20, 6, "Add");
@@ -256,13 +258,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtCenteredWindow(78, 18, "Edit Identity");
         form = newtForm(null, null, 0);
         disp_label = newtLabel(1, 1, "Display name:");
-        disp_entry = newtEntry(15, 1, id_card.display_name, 60, null, 0);
+        disp_entry = newtEntry(15, 1, id_card.display_name, 60, null, Flag.SCROLL);
         user_label = newtLabel(1, 2, "User name:");
-        user_entry = newtEntry(15, 2, id_card.username, 60, null, 0);
+        user_entry = newtEntry(15, 2, id_card.username, 60, null, Flag.SCROLL);
         realm_label = newtLabel(1, 3, "Realm:");
-        realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, 0);
+        realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, Flag.SCROLL);
         passwd_label = newtLabel(1, 4, "Password:");
-        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD);
+        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD | Flag.SCROLL);
         storepwd_chk = newtCheckbox(46, 4, "Remember?", ' ', " *", null);
         mfa_chk = newtCheckbox(60, 4, "2FA?", ' ', " *", null);
         passwd_btn = newtCompactButton(68, 4, "Show");
@@ -512,7 +514,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 newtFormAddComponent(form, serv);
             }
             doc = newtLabel(1, offset, "Select your identity");
-            filter_entry = newtEntry(25, offset, filter, 35, null, Flag.RETURNEXIT);
+            filter_entry = newtEntry(25, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
             listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
             newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
