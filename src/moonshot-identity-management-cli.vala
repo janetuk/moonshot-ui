@@ -40,9 +40,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     protected IdentityManagerApp parent_app;
     internal IdentityManagerModel identities_manager;
     private IdentityRequest? request;
+    private bool newt_initiated;
 
     public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) {
         parent_app = app;
+        newt_initiated = false;
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
@@ -63,10 +65,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             foreach (var card in list) {
                 message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
             }
-
-            init_newt();
             info_dialog("Duplicate NAIs", message, 70, 20, true);
-            newtFinished();
         }
     }
 
@@ -77,16 +76,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
                     + _("That means that any attempt to authenticate with that identity will fail. ")
                     + _("Please, ask your organisation to provide you with an updated credential.");
-                init_newt();
                 info_dialog("Expired Trust Anchor", message, 70, 10);
-                newtFinished();
             }
         }
     }
 
-    private bool internal_add_identity(IdCard id_card, bool force_flat_file_store)
+    private bool add_identity(IdCard id_card, bool force_flat_file_store)
     {
-        // TODO: This could be merged with GTK version
+        bool must_finish = newt_init();
         bool dialog = false;
         IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
         logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
@@ -114,6 +111,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
                 true, 10);
         }
+
+        newt_finish(must_finish);
+
         if (dialog) {
             this.identities_manager.add_card(id_card, force_flat_file_store);
             return true;
@@ -121,15 +121,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         else {
             return false;
         }
-    }
-
-    /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store)
-    {
-        init_newt();
-        bool result = internal_add_identity(id_card, force_flat_file_store);
-        newtFinished();
-        return result;
     }
 
     /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
@@ -141,6 +132,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Shows a generic info dialog. NEWT needs to be initialized */
     private void info_dialog(string title, string msg, int width=70, int height=10, bool scroll=false) {
+        bool finalize = newt_init();
         newtComponent form, info, button;
         newtCenteredWindow(width, height, title);
         int flags = scroll ? Flag.WRAP | Flag.SCROLL : Flag.WRAP;
@@ -153,10 +145,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtRunForm(form);
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
     /* Shows a password request dialog. NEWT needs to be initialized */
     private string? password_dialog(string title, string text) {
+        bool finalize = newt_init();
         newtComponent form, entry, info, button, chosen;
         string? password = null;
         newtCenteredWindow(70, 6, title);
@@ -172,6 +166,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         password = newtEntryGetValue(entry);
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         if (chosen == button || password == "")
             return null;
         return password;
@@ -179,6 +174,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Shows a password request dialog. NEWT needs to be initialized */
     private string? password_dialog_remember(string title, string text, out bool remember) {
+        bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
         newtCenteredWindow(70, 6, title);
@@ -199,22 +195,36 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         remember = (newtCheckboxGetValue(storepwd_chk) == '*');
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         if (chosen == abort || password == "")
             return null;
         return password;
     }
 
     /* Initialise NEWT environment */
-    private void init_newt()
+    private bool newt_init()
     {
+        if (newt_initiated)
+            return false;
         newtInit();
         newtCls();
         newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
         newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
+        newt_initiated = true;
+        return true;
+    }
+
+    private void newt_finish(bool finalize)
+    {
+        if (finalize){
+            newtFinished();
+            newt_initiated = false;
+        }
     }
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
     private bool yesno_dialog(string title, string  message, bool default_yes, int height) {
+        bool finalize = newt_init();
         bool result = false;
         newtComponent form, info, yes_btn, no_btn, chosen;
         newtCenteredWindow(66, height, title);
@@ -233,6 +243,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             result = true;
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         return result;
     }
 
@@ -244,6 +255,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Adds an ID card */
     private void add_id_card_dialog() {
+        bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, disp_label, user_label, passwd_label,
                 realm_label, chosen, add_btn, cancel_btn, storepwd_chk, mfa_chk;
         bool repeat = false;
@@ -297,10 +309,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         } while (repeat);
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
     /* Edits an ID card */
     private void edit_id_card_dialog(IdCard id_card) {
+        bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
                 listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
@@ -440,9 +454,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
     private bool id_card_menu(IdCard? id_card, bool include_send, bool remember) {
+        bool finalize = newt_init();
         bool rv = false;
         newtComponent form, listbox, chosen;
         int height = include_send ? 4: 3;
@@ -471,6 +487,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         return rv;
     }
 
@@ -511,6 +528,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         string directory = GLib.Environment.get_current_dir();
         string? result = null;
         do {
+            bool finalize = newt_init();
             newtCenteredWindow(60, 22, "Import Identity file");
             form = newtForm(null, null, 0);
             newtComponent locator = newtTextbox(0, 0, 60, 2, Flag.WRAP);
@@ -559,6 +577,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 exit_loop = true;
             newtFormDestroy(form);
             newtPopWindow();
+            newt_finish(finalize);
         } while (!exit_loop);
 
         return result;
@@ -589,7 +608,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                  .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
                 }
 
-                bool result = internal_add_identity(card, use_flat_file_store);
+                bool result = add_identity(card, use_flat_file_store);
                 if (result) {
                     logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
                     import_count++;
@@ -602,8 +621,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 info_dialog("INFO", "Import completed. No identities were added or updated.");
             }
         }
-        // We might need to re-init newt
-        init_newt();
     }
 
 
@@ -614,8 +631,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         int offset = 0;
         bool remember = true;
         string filter = "";
-        init_newt();
         do {
+            bool finalize = newt_init();
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
             form = newtForm(null, null, 0);
             if (request != null) {
@@ -699,8 +716,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
             newtFormDestroy(form);
             newtPopWindow();
+            newt_finish(finalize);
         } while (!exit_loop);
-        newtFinished();
     }
 
     public void make_visible()
@@ -712,7 +729,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     public bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request)
     {
-        init_newt();
         string warning = "";
         int offset;
         if (card.trust_anchor.server_cert == "") {
@@ -729,6 +745,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
         bool? result = null;
         do {
+            bool must_finish = newt_init();
             newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
             newtCenteredWindow(78, 13 + offset, "Accept trust anchor");
             info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
@@ -784,8 +801,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 result = false;
             newtFormDestroy(form);
             newtPopWindow();
+            newt_finish(must_finish);
         } while (result == null);
-        newtFinished();
         return result;
     }
 
@@ -883,10 +900,8 @@ POSSIBILITY OF SUCH DAMAGE.""";
                 retval = model.update_card(identity);
             } else {
                 bool remember;
-                init_newt();
                 identity.password = password_dialog_remember(
                     "Enter password", "Enter the password for <%s> (<%s>)".printf(identity.display_name, identity.nai), out remember);
-                newtFinished();
                 identity.store_password = remember;
                 if (remember)
                     identity.temporary = false;
@@ -896,10 +911,8 @@ POSSIBILITY OF SUCH DAMAGE.""";
 
         // check 2FA
         if (retval.has_2fa) {
-            init_newt();
             retval.mfa_code = password_dialog(
                 "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai));
-            newtFinished();
         }
 
         return retval;
