@@ -104,45 +104,23 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newt_finish(finalize);
     }
 
-    /* Shows a password request dialog. NEWT needs to be initialized */
-    private string? password_dialog(string title, string text) {
-        bool finalize = newt_init();
-        newtComponent form, entry, info, button, chosen;
-        string? password = null;
-        newtCenteredWindow(70, 6, title);
-        info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
-        newtTextboxSetText(info, text);
-        entry = newtEntry(1, 3, null, 68, null, Flag.PASSWORD | Flag.RETURNEXIT);
-        button = newtCompactButton(30, 5, "Abort");
-        form = newtForm(null, null, 0);
-        newtFormAddComponent(form, entry);
-        newtFormAddComponent(form, info);
-        newtFormAddComponent(form, button);
-        chosen = newtRunForm(form);
-        password = newtEntryGetValue(entry);
-        newtFormDestroy(form);
-        newtPopWindow();
-        newt_finish(finalize);
-        if (chosen == button || password == "")
-            return null;
-        return password;
-    }
-
-    /* Shows a password request dialog. NEWT needs to be initialized */
-    private string? password_dialog_remember(string title, string text, out bool remember) {
+    /* Shows a password request dialog. */
+    private string? password_dialog(string title, string text, bool show_remember, out bool remember) {
         bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
         newtCenteredWindow(70, 6, title);
         info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
         newtTextboxSetText(info, text);
-        entry = newtEntry(1, 3, null, 53, null, Flag.PASSWORD | Flag.RETURNEXIT);
+        int entrylen = show_remember ? 53 : 68;
+        entry = newtEntry(1, 3, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT);
         storepwd_chk = newtCheckbox(56, 3, "Remember?", ' ', " *", null);
         accept = newtCompactButton(20, 5, "Accept");
         abort = newtCompactButton(45, 5, "Abort");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, entry);
-        newtFormAddComponent(form, storepwd_chk);
+        if (show_remember)
+            newtFormAddComponent(form, storepwd_chk);
         newtFormAddComponent(form, info);
         newtFormAddComponent(form, accept);
         newtFormAddComponent(form, abort);
@@ -862,9 +840,10 @@ POSSIBILITY OF SUCH DAMAGE.""";
                 identity.password = request.password;
                 retval = model.update_card(identity);
             } else {
-                bool remember;
-                identity.password = password_dialog_remember(
-                    "Enter password", "Enter the password for <%s> (<%s>)".printf(identity.display_name, identity.nai), out remember);
+                bool remember = true;
+                identity.password = password_dialog(
+                    "Enter password", "Enter the password for <%s> (<%s>)".printf(identity.display_name, identity.nai),
+                    true, out remember);
                 identity.store_password = remember;
                 if (remember)
                     identity.temporary = false;
@@ -875,7 +854,8 @@ POSSIBILITY OF SUCH DAMAGE.""";
         // check 2FA
         if (retval.has_2fa) {
             retval.mfa_code = password_dialog(
-                "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai));
+                "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai),
+                false, null);
         }
 
         return retval;
