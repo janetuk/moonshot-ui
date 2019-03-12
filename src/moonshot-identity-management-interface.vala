@@ -94,6 +94,9 @@ public interface IdentityManagerInterface : Object {
                 return false;
         }
 
+        if (entry_text == "")
+            return true;
+
         foreach (string search_text in entry_text.split(" ")) {
             if (search_text == "")
                 continue;
