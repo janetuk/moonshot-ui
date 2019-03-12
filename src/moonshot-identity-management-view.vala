@@ -278,7 +278,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
                                        Gtk.DialogFlags.DESTROY_WITH_PARENT,
                                        Gtk.MessageType.QUESTION,
                                        Gtk.ButtonsType.YES_NO,
-                                       message);
+                                       "%s", message);
         var ret = dialog.run();
         dialog.destroy();
         return (ret == Gtk.ResponseType.YES);
