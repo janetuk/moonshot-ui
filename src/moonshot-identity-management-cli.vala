@@ -61,7 +61,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private int estimate_text_height(string message, int width)
     {
         string[] substrings = message.split("\n");
-        return (message.length / width + substrings.length);
+        return ((int) message.length / width + substrings.length);
     }
 
     private int estimate_text_width(string message)
@@ -70,7 +70,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         string[] substrings = message.split("\n");
         foreach(string str in substrings)
             if (str.length > max_width)
-                max_width = str.length;
+                max_width = (int) str.length;
         return max_width > 77 ? 77 : max_width;
     }
 
