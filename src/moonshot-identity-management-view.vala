@@ -101,7 +101,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         report_expired_trust_anchors(identities_manager);
     }
 
-    public void generic_info_dialog(string title, string msg)
+    public void info_dialog(string title, string msg)
     {
         var msg_dialog = new Gtk.MessageDialog(this,
                                                Gtk.DialogFlags.DESTROY_WITH_PARENT,
@@ -328,7 +328,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool generic_yesno_dialog(string title, string message, bool default_yes)
+    public bool yesno_dialog(string title, string message, bool default_yes)
     {
         var dialog = new Gtk.MessageDialog(this,
                                        Gtk.DialogFlags.DESTROY_WITH_PARENT,

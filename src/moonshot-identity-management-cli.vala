@@ -59,11 +59,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         this.request = request;
     }
 
-    public void generic_info_dialog(string title, string msg)
-    {
-        info_dialog(title, msg);
-    }
-
     private int estimate_text_height(string message, int width)
     {
         string[] substrings = message.split("\n");
@@ -180,11 +175,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtPopWindow();
         newt_finish(finalize);
         return result;
-    }
-
-    public bool generic_yesno_dialog(string title, string message, bool default_yes)
-    {
-        return yesno_dialog(title, message, default_yes);
     }
 
     /* Shows a delete ID dialog. If successful, the ID is removed */
