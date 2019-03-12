@@ -128,7 +128,7 @@ namespace WebProvisioning
                                                 (int) card.has_2fa,
                                                 out error);
             if (!ret) {
-                stdout.printf("Card was not installed because user rejected it.\n");
+                stdout.printf("Card was not installed because user rejected it or it was already installed.\n");
             }
 
             if (error != null)
