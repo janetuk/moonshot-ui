@@ -158,10 +158,8 @@ internal Widget make_ta_fingerprint_widget(string server_cert, string? label_tex
     return vbox;
 }
 
-    // Yeah, it doesn't mean "colonize" the way you might think... :-)
+// Yeah, it doesn't mean "colonize" the way you might think... :-)
 internal static string colonize(string input, int bytes_per_line) {
-    return_if_fail(input.length % 2 == 0);
-
     string result = "";
     int i = 0;
     int line_bytes = 0;
