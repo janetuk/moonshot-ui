@@ -1,8 +1,8 @@
 moonshot-ui (1.1.10.DIST) unstable; urgency=medium
 
-  * TBD
+  * Homogenise TXT and GTK UI and factorise shared code
 
- -- Jisc <moonshot@jisc.ac.uk>  Tue, 5 Mar 2019 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Wed, 20 Mar 2019 00:00:00 +0000
 
 moonshot-ui (1.1.9.DIST) unstable; urgency=medium
 
