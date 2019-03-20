@@ -39,90 +39,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     protected IdentityManagerApp parent_app;
     internal IdentityManagerModel identities_manager;
     private IdentityRequest? request;
+    private bool newt_initiated;
 
     public IdentityManagerCli(IdentityManagerApp app, bool use_flat_file_store) {
         parent_app = app;
+        newt_initiated = false;
         this.use_flat_file_store = use_flat_file_store;
         identities_manager = parent_app.model;
         request = null;
-        report_duplicate_nais();
-        report_expired_trust_anchors();
-    }
-
-    /* Reports whether there are identities with ideantical NAI */
-    private void report_duplicate_nais() {
-        // TODO: This could be merged with GTK version
-        Gee.List<Gee.List<IdCard>> duplicates;
-        identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (Gee.List<IdCard> list in duplicates) {
-            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
-                + _(" user ID or issuer fields so that they are no longer the same NAI.");
-
-            foreach (var card in list) {
-                message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
-            }
-
-            init_newt();
-            info_dialog("Duplicate NAIs", message, 70, 20, true);
-            newtFinished();
-        }
-    }
-
-    private void report_expired_trust_anchors() {
-        Gee.List<IdCard> card_list = identities_manager.get_card_list();
-        foreach (IdCard id_card in card_list) {
-            if (id_card.trust_anchor.is_expired()) {
-                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
-                    + _("That means that any attempt to authenticate with that identity will fail. ")
-                    + _("Please, ask your organisation to provide you with an updated credential.");
-                init_newt();
-                info_dialog("Expired Trust Anchor", message, 70, 10);
-                newtFinished();
-            }
-        }
-    }
-
-    /* Adds an identity to the store, showing feedback about the process */
-    public bool add_identity(IdCard id_card, bool force_flat_file_store)
-    {
-        // TODO: This could be merged with GTK version
-        bool dialog = false;
-        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
-        logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
-                     .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
-        init_newt();
-        if (prev_id != null) {
-            int flags = prev_id.Compare(id_card);
-            logger.trace("add_identity: compare returned " + flags.to_string());
-            if (flags == 0) {
-                info_dialog("Warning", "The ID card was already present in your keyring and does not need to be added again.");
-            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
-                dialog = yesno_dialog(
-                    "Install ID Card",
-                    "Would you like to update ID Card '%s' using nai '%s'?".printf(prev_id.display_name, prev_id.nai),
-                    true, 10);
-            } else {
-                dialog = yesno_dialog(
-                    "Install ID Card",
-                    "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?".printf(
-                        prev_id.display_name, prev_id.nai, id_card.display_name),
-                    true, 10);
-            }
-        } else {
-            dialog = yesno_dialog(
-                "Install ID Card",
-                "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
-                true, 10);
-        }
-        newtFinished();
-        if (dialog) {
-            this.identities_manager.add_card(id_card, force_flat_file_store);
-            return true;
-        }
-        else {
-            return false;
-        }
+        report_duplicate_nais(identities_manager);
+        report_expired_trust_anchors(identities_manager);
     }
 
     /* Queues an identity request. Since the TXT version can only handle one request, instead of a QUEUE object,
@@ -132,12 +58,36 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         this.request = request;
     }
 
+    private int estimate_text_height(string message, int width)
+    {
+        string[] substrings = message.split("\n");
+        return ((int) message.length / width + substrings.length);
+    }
+
+    private int estimate_text_width(string message)
+    {
+        int max_width = 0;
+        string[] substrings = message.split("\n");
+        foreach(string str in substrings)
+            if (str.length > max_width)
+                max_width = (int) str.length;
+        return max_width > 77 ? 77 : max_width;
+    }
+
     /* Shows a generic info dialog. NEWT needs to be initialized */
-    private void info_dialog(string title, string msg, int width=70, int height=10, bool scroll=false) {
+    private void info_dialog(string title, string msg)
+    {
+        bool finalize = newt_init();
+        int width = estimate_text_width(msg);
+        int height = estimate_text_height(msg, width) + 2;
         newtComponent form, info, button;
-        newtCenteredWindow(width, height, title);
-        int flags = scroll ? Flag.WRAP | Flag.SCROLL : Flag.WRAP;
-        info = newtTextbox(1, 0, width - 3, height - 1, flags);
+        int flags = Flag.WRAP;
+        if (height > 20) {
+            height = 20;
+            flags |= Flag.SCROLL;
+        }
+        newtCenteredWindow(width + 2, height, title);
+        info = newtTextbox(1, 0, width, height - 1, flags);
         newtTextboxSetText(info, msg);
         button = newtCompactButton((width - 11) / 2, height - 1, "Dismiss");
         form = newtForm(null, null, 0);
@@ -146,44 +96,27 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtRunForm(form);
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
-    /* Shows a password request dialog. NEWT needs to be initialized */
-    private string? password_dialog(string title, string text) {
-        newtComponent form, entry, info, button, chosen;
-        string? password = null;
-        newtCenteredWindow(70, 6, title);
-        info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
-        newtTextboxSetText(info, text);
-        entry = newtEntry(1, 3, null, 68, null, Flag.PASSWORD | Flag.RETURNEXIT);
-        button = newtCompactButton(30, 5, "Abort");
-        form = newtForm(null, null, 0);
-        newtFormAddComponent(form, entry);
-        newtFormAddComponent(form, info);
-        newtFormAddComponent(form, button);
-        chosen = newtRunForm(form);
-        password = newtEntryGetValue(entry);
-        newtFormDestroy(form);
-        newtPopWindow();
-        if (chosen == button || password == "")
-            return null;
-        return password;
-    }
-
-    /* Shows a password request dialog. NEWT needs to be initialized */
-    private string? password_dialog_remember(string title, string text, out bool remember) {
+    /* Shows a password request dialog. */
+    private string? password_dialog(string title, string text, bool show_remember, out bool remember)
+    {
+        bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
-        newtCenteredWindow(70, 6, title);
-        info = newtTextbox(1, 0, 68, 3, Flag.WRAP);
+        newtCenteredWindow(70, 8, title);
+        info = newtTextbox(1, 0, 68, 5, Flag.WRAP);
         newtTextboxSetText(info, text);
-        entry = newtEntry(1, 3, null, 53, null, Flag.PASSWORD | Flag.RETURNEXIT);
-        storepwd_chk = newtCheckbox(56, 3, "Remember?", ' ', " *", null);
-        accept = newtCompactButton(20, 5, "Accept");
-        abort = newtCompactButton(45, 5, "Abort");
+        int entrylen = show_remember ? 53 : 68;
+        entry = newtEntry(1, 5, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
+        storepwd_chk = newtCheckbox(56, 5, "Remember?", ' ', " *", null);
+        accept = newtCompactButton(20, 7, "Accept");
+        abort = newtCompactButton(45, 7, "Abort");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, entry);
-        newtFormAddComponent(form, storepwd_chk);
+        if (show_remember)
+            newtFormAddComponent(form, storepwd_chk);
         newtFormAddComponent(form, info);
         newtFormAddComponent(form, accept);
         newtFormAddComponent(form, abort);
@@ -192,23 +125,38 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         remember = (newtCheckboxGetValue(storepwd_chk) == '*');
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         if (chosen == abort || password == "")
             return null;
         return password;
     }
 
     /* Initialise NEWT environment */
-    private void init_newt()
+    private bool newt_init()
     {
+        if (newt_initiated)
+            return false;
         newtInit();
         newtCls();
         newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
         newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
+        newt_initiated = true;
+        return true;
+    }
+
+    private void newt_finish(bool finalize)
+    {
+        if (finalize){
+            newtFinished();
+            newt_initiated = false;
+        }
     }
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
-    private bool yesno_dialog(string title, string  message, bool default_yes, int height) {
+    private bool yesno_dialog(string title, string  message, bool default_yes) {
+        bool finalize = newt_init();
         bool result = false;
+        int height = estimate_text_height(message, 66) + 2;
         newtComponent form, info, yes_btn, no_btn, chosen;
         newtCenteredWindow(66, height, title);
         info = newtTextbox(1, 0, 65, height - 1, Flag.WRAP);
@@ -226,17 +174,19 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             result = true;
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         return result;
     }
 
     /* Shows a delete ID dialog. If successful, the ID is removed */
     private void delete_id_card_dialog(IdCard id_card) {
-        if (yesno_dialog("Remove ID card", "Are you sure you want to remove this identity?", false, 4))
+        if (yesno_dialog("Remove ID card", "Are you sure you want to remove this identity?", false))
             this.identities_manager.remove_card(id_card);
     }
 
     /* Adds an ID card */
     private void add_id_card_dialog() {
+        bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, disp_label, user_label, passwd_label,
                 realm_label, chosen, add_btn, cancel_btn, storepwd_chk, mfa_chk;
         bool repeat = false;
@@ -246,10 +196,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         user_label = newtLabel(1, 2, "User name:");
         realm_label = newtLabel(1, 3, "Realm:");
         passwd_label = newtLabel(1, 4, "Password:");
-        disp_entry = newtEntry(15, 1, null, 60, null, 0);
-        user_entry = newtEntry(15, 2, null, 60, null, 0);
-        realm_entry = newtEntry(15, 3, null, 60, null, 0);
-        passwd_entry = newtEntry(15, 4, null, 37, null, Flag.PASSWORD);
+        disp_entry = newtEntry(15, 1, null, 60, null, Flag.SCROLL);
+        user_entry = newtEntry(15, 2, null, 60, null, Flag.SCROLL);
+        realm_entry = newtEntry(15, 3, null, 60, null, Flag.SCROLL);
+        passwd_entry = newtEntry(15, 4, null, 37, null, Flag.PASSWORD | Flag.SCROLL);
         storepwd_chk = newtCheckbox(53, 4, "Remember?", ' ', " *", null);
         mfa_chk = newtCheckbox(67, 4, "2FA?", ' ', " *", null);
         add_btn = newtCompactButton(20, 6, "Add");
@@ -279,7 +229,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 id_card.store_password = (newtCheckboxGetValue(storepwd_chk) == '*');
                 id_card.has_2fa = (newtCheckboxGetValue(mfa_chk) == '*');
                 if (id_card.display_name == "" || id_card.username == "" || id_card.issuer == "") {
-                    info_dialog("Missing information", "Please, fill in the missing fields. Only the password one is optional");
+                    info_dialog("Missing information",
+                                "Please, fill in the missing fields. Only the password one is optional");
                     repeat = true;
                     newtFormSetCurrent(form, disp_entry);
                 }
@@ -290,10 +241,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         } while (repeat);
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
     /* Edits an ID card */
     private void edit_id_card_dialog(IdCard id_card) {
+        bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
                 listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
@@ -305,13 +258,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtCenteredWindow(78, 18, "Edit Identity");
         form = newtForm(null, null, 0);
         disp_label = newtLabel(1, 1, "Display name:");
-        disp_entry = newtEntry(15, 1, id_card.display_name, 60, null, 0);
+        disp_entry = newtEntry(15, 1, id_card.display_name, 60, null, Flag.SCROLL);
         user_label = newtLabel(1, 2, "User name:");
-        user_entry = newtEntry(15, 2, id_card.username, 60, null, 0);
+        user_entry = newtEntry(15, 2, id_card.username, 60, null, Flag.SCROLL);
         realm_label = newtLabel(1, 3, "Realm:");
-        realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, 0);
+        realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, Flag.SCROLL);
         passwd_label = newtLabel(1, 4, "Password:");
-        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD);
+        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD | Flag.SCROLL);
         storepwd_chk = newtCheckbox(46, 4, "Remember?", ' ', " *", null);
         mfa_chk = newtCheckbox(60, 4, "2FA?", ' ', " *", null);
         passwd_btn = newtCompactButton(68, 4, "Show");
@@ -379,7 +332,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 string service = services[index];
                 bool remove = yesno_dialog("Remove service association",
                                            "You are about to remove the service <%s>.\n\n".printf(service)
-                                           + "Are you sure you want to do this?", false, 5);
+                                           + "Are you sure you want to do this?", false);
                 if (remove)
                     services.remove_at(index);
 
@@ -388,7 +341,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             else if (chosen == show_btn) {
                 if (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT) {
                     string msg = "Fingerprint:\n%s".printf(id_card.trust_anchor.server_cert);
-                    info_dialog("Trust anchor details", msg, 70, 5, false);
+                    info_dialog("Trust anchor details", msg);
                 }
                 else if (ta_type == TrustAnchor.TrustAnchorType.CA_CERT) {
                     uint8 cert_info[4096];
@@ -401,7 +354,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     string msg = "Subject: %s\n\n".printf(id_card.trust_anchor.subject)
                                  + "Expiration date: %s\n\n".printf(id_card.trust_anchor.get_expiration_date())
                                  + "CA certificate:\n%s".printf(cert_info_msg);
-                    info_dialog("Trust anchor details", msg, 75, 20, true);
+                    info_dialog("Trust anchor details", msg);
                 }
             }
             else if (chosen == cert_btn) {
@@ -411,7 +364,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == passwd_btn) {
                 info_dialog("Cleartext password",
-                            "Your cleartext password is: <%s>".printf(newtEntryGetValue(passwd_entry)), 70, 3);
+                            "Your cleartext password is:\n<%s>".printf(newtEntryGetValue(passwd_entry)));
                 focus = passwd_btn;
             }
             else
@@ -433,9 +386,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
     }
 
-    private bool id_card_menu(IdCard? id_card, bool include_send) {
+    private bool id_card_menu(IdCard? id_card, bool include_send, bool remember) {
+        bool finalize = newt_init();
         bool rv = false;
         newtComponent form, listbox, chosen;
         int height = include_send ? 4: 3;
@@ -454,7 +409,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (chosen == listbox){
             string? option = (string?) newtListboxGetCurrent(listbox);
             if (option == "Send") {
-                send_id_card_confirmation_dialog(id_card);
+                send_id_card_confirmation_dialog(id_card, remember);
                 rv = true;
             }
             else if (option == "Edit")
@@ -464,65 +419,174 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         }
         newtFormDestroy(form);
         newtPopWindow();
+        newt_finish(finalize);
         return rv;
+    }
+
+    private string select_file_dialog() {
+        newtComponent form, listbox, cancel_btn, chosen;
+        bool exit_loop = false;
+        string directory = GLib.Environment.get_current_dir();
+        string? result = null;
+        do {
+            bool finalize = newt_init();
+            newtCenteredWindow(60, 22, "Import Identity file");
+            form = newtForm(null, null, 0);
+            newtComponent locator = newtTextbox(0, 0, 60, 2, Flag.WRAP);
+            newtTextboxSetColors(locator, Colorset.TITLE, Colorset.TITLE);
+            newtTextboxSetText(locator, directory);
+            listbox = newtListbox(0, 2, 18, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            cancel_btn = newtCompactButton(25, 21, "Cancel");
+            GLib.List<string> files = new GLib.List<string>();
+            newtListboxSetWidth(listbox, 58);
+            try{
+                string? name = null;
+                Dir dir = Dir.open(directory, 0);
+                while ((name = dir.read_name()) != null) {
+                    string path = Path.build_filename(directory, name);
+                    files.insert_sorted(path, strcmp);
+                }
+                for (int i=0; i<files.length(); i++) {
+                    string entry = files.nth_data(i);
+                    string text = "%s%s".printf(
+                        Path.get_basename(entry),
+                        FileUtils.test(entry, FileTest.IS_DIR) ? "/" : "");
+                    newtListboxAppendEntry(listbox, text, files.nth(i));
+                }
+
+                // Include ../ since GLib does not provide it to us
+                files.insert_before(files.first(), Path.get_dirname(directory));
+                newtListboxInsertEntry(listbox, "../", files.first(), null);
+            } catch (Error e) {
+                logger.error("Could not open folder!");
+            }
+
+            newtFormAddComponent(form, locator);
+            newtFormAddComponent(form, listbox);
+            newtFormAddComponent(form, cancel_btn);
+            chosen = newtRunForm(form);
+            unowned GLib.List<string>? element = (GLib.List<string>) newtListboxGetCurrent(listbox);
+            if (chosen == listbox) {
+                if (FileUtils.test(element.data, FileTest.IS_DIR))
+                    directory = element.data;
+                else {
+                    result = element.data;
+                    exit_loop = true;
+                }
+            }
+            else
+                exit_loop = true;
+            newtFormDestroy(form);
+            newtPopWindow();
+            newt_finish(finalize);
+        } while (!exit_loop);
+
+        return result;
+    }
+
+    private void import_identities_dialog() {
+        string? filename = select_file_dialog();
+        if (filename == null)
+            return;
+
+        import_identities(filename, identities_manager, logger);
     }
 
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, doc;
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
+                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry;
         bool exit_loop = false;
         int offset = 0;
-        init_newt();
+        bool remember = true;
+        string filter = "";
         do {
+            bool finalize = newt_init();
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
             form = newtForm(null, null, 0);
             if (request != null) {
                 offset = 1;
-                newtComponent info = newtLabel(1, 0, "Request ID for: ");
-                newtComponent serv = newtTextbox(17, 0, 59, 1, 0);
+                newtComponent info = newtLabel(1, 0, "ID requested for: ");
+                newtComponent serv = newtTextbox(19, 0, 59, 1, 0);
                 newtTextboxSetColors(serv, Colorset.TITLE, Colorset.TITLE);
                 newtTextboxSetText(serv, request.service);
                 newtFormAddComponent(form, info);
                 newtFormAddComponent(form, serv);
             }
-            doc = newtLabel(1, offset, "Select an ID card to pop up more options");
-            listbox = newtListbox(1, offset + 1, 17 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
-            newtListboxSetWidth(listbox, 76);
+            doc = newtLabel(1, offset, "Select your identity");
+            filter_entry = newtEntry(25, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
+            listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+            newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
             foreach (IdCard id_card in card_list) {
-                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "", id_card.display_name, id_card.nai);
+                if (filter != "" && !id_matches_search(id_card, filter, null))
+                    continue;
+                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
+                                                  id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
             }
 
-            add_btn = newtCompactButton(1, 19, "Add");
-            about_btn = newtCompactButton(60, 19, "About");
-            exit_btn = newtCompactButton(69, 19, "Exit");
+            add_btn = newtCompactButton(68, offset + 2, "Add");
+            import_btn = newtCompactButton(68, offset + 4, "Import");
+            edit_btn = newtCompactButton(68, offset + 6, "Edit");
+            remove_btn = newtCompactButton(68, offset + 8, "Remove");
+            send_btn = newtCompactButton(68, offset + 10, "Send");
+            about_btn = newtCompactButton(68, 15, "About");
+            exit_btn = newtCompactButton(68, 17, "Exit");
+            remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service",
+                                        remember ? '*' : ' ', " *", null);
+            newtFormAddComponent(form, filter_entry);
             newtFormAddComponent(form, listbox);
             newtFormAddComponent(form, doc);
+            if (request != null)
+                newtFormAddComponent(form, remember_chk);
             newtFormAddComponent(form, add_btn);
+            newtFormAddComponent(form, import_btn);
+            newtFormAddComponent(form, edit_btn);
+            newtFormAddComponent(form, remove_btn);
+            if (request != null)
+                newtFormAddComponent(form, send_btn);
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
+            newtFormSetCurrent(form, listbox);
             chosen = newtRunForm(form);
             IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
+            remember = (newtCheckboxGetValue(remember_chk) == '*');
             if (chosen == add_btn){
                 add_id_card_dialog();
+            }
+            else if (chosen == edit_btn) {
+                edit_id_card_dialog(id_card);
+            }
+            else if (chosen == import_btn) {
+                import_identities_dialog();
+            }
+            else if (chosen == filter_entry) {
+                filter = newtEntryGetValue(filter_entry);
+            }
+            else if (chosen == remove_btn) {
+                delete_id_card_dialog(id_card);
+            }
+            else if (chosen == send_btn) {
+                send_id_card_confirmation_dialog(id_card, remember);
+                exit_loop = true;
             }
             else if (chosen == about_btn) {
                 about_dialog();
             }
             else if (chosen == listbox) {
-                exit_loop = id_card_menu(id_card, request != null);
+                exit_loop = id_card_menu(id_card, request != null, remember);
             }
             else {
                 // we need to send NULL identity to gracefully exit properly from the send_identity callback
-                send_id_card_confirmation_dialog(null);
+                send_id_card_confirmation_dialog(null, false);
                 exit_loop = true;
             }
 
             newtFormDestroy(form);
             newtPopWindow();
+            newt_finish(finalize);
         } while (!exit_loop);
-        newtFinished();
     }
 
     public void make_visible()
@@ -534,7 +598,6 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     public bool confirm_trust_anchor(IdCard card, TrustAnchorConfirmationRequest request)
     {
-        init_newt();
         string warning = "";
         int offset;
         if (card.trust_anchor.server_cert == "") {
@@ -551,8 +614,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
         bool? result = null;
         do {
+            bool must_finish = newt_init();
             newtComponent form, info, yes_btn, no_btn, chosen, comp, view_btn;
-            newtCenteredWindow(78, 12 + offset, "Accept trust anchor");
+            newtCenteredWindow(78, 13 + offset, "Accept trust anchor");
             info = newtTextbox(1, 0, 76, offset, Flag.WRAP);
             newtTextboxSetText(info, warning);
             form = newtForm(null, null, 0);
@@ -576,38 +640,38 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             comp = newtTextbox(1, offset + 3, 75, 1, 0);
             newtTextboxSetText(comp, "Server's trust anchor certificate (SHA-256 fingerprint):");
             newtFormAddComponent(form, comp);
-            comp = newtTextbox(1, offset + 4, 75, 1, 0);
-            newtTextboxSetText(comp, request.fingerprint);
+            comp = newtTextbox(1, offset + 4, 75, 2, 0);
+            newtTextboxSetText(comp, colonize(request.fingerprint, 16));
             newtTextboxSetColors(comp, Colorset.TITLE, Colorset.TITLE);
             newtFormAddComponent(form, comp);
 
-            view_btn = newtCompactButton(30, offset + 5, "View cert");
+            view_btn = newtCompactButton(0, offset + 6, "View Server Certificate");
             newtFormAddComponent(form, view_btn);
 
-            comp = newtTextbox(1, offset + 7, 75, 3, Flag.WRAP);
+            comp = newtTextbox(1, offset + 8, 75, 3, Flag.WRAP);
             newtTextboxSetText(comp, "Please, check with your realm administrator for the correct fingerprint for your "
                                      + "authentication server. If it matches the above fingerprint, confirm the change. "
                                      + "If not, then cancel.");
             newtFormAddComponent(form, comp);
 
-            yes_btn = newtCompactButton(24, offset + 11, "Yes");
-            no_btn = newtCompactButton(45, offset + 11, "No");
+            yes_btn = newtCompactButton(67, offset + 12, "Confirm");
+            no_btn = newtCompactButton(57, offset + 12, "Cancel");
 
             newtFormAddComponent(form, info);
-            newtFormAddComponent(form, yes_btn);
             newtFormAddComponent(form, no_btn);
-            newtFormSetCurrent(form, no_btn);
+            newtFormAddComponent(form, yes_btn);
+            newtFormSetCurrent(form, view_btn);
             chosen = newtRunForm(form);
             if (chosen == view_btn)
-                info_dialog("View certificate", request.cert_text, 78, 23, true);
+                info_dialog("View certificate", request.cert_text);
             if (chosen == yes_btn)
                 result = true;
             if (chosen == no_btn)
                 result = false;
             newtFormDestroy(form);
             newtPopWindow();
+            newt_finish(must_finish);
         } while (result == null);
-        newtFinished();
         return result;
     }
 
@@ -673,18 +737,12 @@ INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
 CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 ARISING IN ANY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.""";
-        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license), 78, 20, true);
+        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, license));
     }
 
-    private void send_id_card_confirmation_dialog(IdCard? id_card) {
-        bool remember = true;
+    private void send_id_card_confirmation_dialog(IdCard? id_card, bool remember) {
         IdCard? identity = null;
         if (id_card != null) {
-            if (!id_card.services.contains(this.request.service)) {
-                remember = yesno_dialog("Remember identity choice",
-                                         "Do you want to remember your identity choice for this server?", false, 4);
-            }
-
             /* Update password with the information from the user */
             identity = check_add_password(id_card, request, identities_manager);
             if ((identity != null) && (!identity.is_no_identity()))
@@ -697,39 +755,5 @@ POSSIBILITY OF SUCH DAMAGE.""";
                 return false;
             }
         );
-    }
-
-    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
-    {
-        logger.trace(@"check_add_password");
-        IdCard retval = identity;
-        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
-        bool request_has_pw = (request.password != null) && (request.password != "");
-        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
-            if (request_has_pw) {
-                identity.password = request.password;
-                retval = model.update_card(identity);
-            } else {
-                bool remember;
-                init_newt();
-                identity.password = password_dialog_remember(
-                    "Enter password", "Enter the password for <%s> (<%s>)".printf(identity.display_name, identity.nai), out remember);
-                newtFinished();
-                identity.store_password = remember;
-                if (remember)
-                    identity.temporary = false;
-                retval = model.update_card(identity);
-            }
-        }
-
-        // check 2FA
-        if (retval.has_2fa) {
-            init_newt();
-            retval.mfa_code = password_dialog(
-                "Enter 2FA code", "Enter the 2FA code for <%s> (<%s>)".printf(identity.display_name, identity.nai));
-            newtFinished();
-        }
-
-        return retval;
     }
 }

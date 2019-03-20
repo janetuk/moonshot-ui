@@ -114,7 +114,7 @@ public class IdentityManagerApp {
         if (view != null)
         {
             logger.trace("add_identity: calling view.add_identity");
-            return view.add_identity(id, force_flat_file_store);
+            return view.add_identity(id, model, force_flat_file_store);
         }
         else {
             logger.trace("add_identity: calling model.add_card");
@@ -263,50 +263,50 @@ public class IdentityManagerApp {
         }
     }
 
-        private void name_lost_cb(DBusConnection? conn, string name){
-                logger.trace("name_lost_cb");
+    private void name_lost_cb(DBusConnection? conn, string name){
+            logger.trace("name_lost_cb");
 
-                // This callback usually means that another moonshot is already running.
-                // But it *might* mean that we lost the name for some other reason
-                // (though it's unclear to me yet what those reasons are.)
-                // Clearing these flags seems like a good idea for that case. -- dbreslau
-                name_is_owned = false;
-                show_requested = false;
+            // This callback usually means that another moonshot is already running.
+            // But it *might* mean that we lost the name for some other reason
+            // (though it's unclear to me yet what those reasons are.)
+            // Clearing these flags seems like a good idea for that case. -- dbreslau
+            name_is_owned = false;
+            show_requested = false;
 
-                // If we fail to connect to the DBus bus, this callback is called with conn=null
-                if (conn == null) {
-                        unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
-                        logger.error("name_lost_cb: Failed to connect to bus");
-                        if (dbus_address_env == null) {
-                                stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
-                                                          "You may want to try 'dbus-run-session' to start a session bus.\n");
-                                GLib.Process.exit(1);
-                        } else {
-                                stderr.printf("Could not connect to dbus session bus. (DBUS_SESSION_BUS_ADDRESS=\"%s\")\n"+
-                                                          "You may want to unset DBUS_SESSION_BUS_ADDRESS or try 'dbus-run-session' to start a session bus.\n",
-                                                          dbus_address_env);
-                                GLib.Process.exit(1);
-                        }
-                }
+            // If we fail to connect to the DBus bus, this callback is called with conn=null
+            if (conn == null) {
+                    unowned string dbus_address_env = GLib.Environment.get_variable ("DBUS_SESSION_BUS_ADDRESS");
+                    logger.error("name_lost_cb: Failed to connect to bus");
+                    if (dbus_address_env == null) {
+                            stderr.printf("Could not connect to dbus session bus (DBUS_SESSION_BUS_ADDRESS is not set).\n"+
+                                                      "You may want to try 'dbus-run-session' to start a session bus.\n");
+                            GLib.Process.exit(1);
+                    } else {
+                            stderr.printf("Could not connect to dbus session bus. (DBUS_SESSION_BUS_ADDRESS=\"%s\")\n"+
+                                                      "You may want to unset DBUS_SESSION_BUS_ADDRESS or try 'dbus-run-session' to start a session bus.\n",
+                                                      dbus_address_env);
+                            GLib.Process.exit(1);
+                    }
+            }
 
-                try {
-                        if (!shown) {
-                                IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
-                                shown = manager.show_ui();
-                        }
-                } catch (IOError e) {
-                        logger.error("name_lost_cb: Caught IOError: " + e.message);
-                }
-                if (!shown) {
-                        logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
-                        stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
-                        GLib.Process.exit(1);
-                } else {
-                        logger.trace("name_lost_cb: Showed previously launched identity manager.");
-                        stdout.printf("Showed previously launched identity manager.\n");
-                        GLib.Process.exit(0);
-                }
-        }
+            try {
+                    if (!shown) {
+                            IIdentityManager manager = Bus.get_proxy_sync(BusType.SESSION, name, "/org/janet/moonshot");
+                            shown = manager.show_ui();
+                    }
+            } catch (IOError e) {
+                    logger.error("name_lost_cb: Caught IOError: " + e.message);
+            }
+            if (!shown) {
+                    logger.error("name_lost_cb: Couldn't own name '%s' on dbus or show previously launched identity manager".printf(name));
+                    stderr.printf("Couldn't own name '%s' on dbus or show previously launched identity manager.\n", name);
+                    GLib.Process.exit(1);
+            } else {
+                    logger.trace("name_lost_cb: Showed previously launched identity manager.");
+                    stdout.printf("Showed previously launched identity manager.\n");
+                    GLib.Process.exit(0);
+            }
+    }
 
     private void init_ipc_server() {
         this.ipc_server = new MoonshotServer(this);

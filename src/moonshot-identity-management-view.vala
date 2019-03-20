@@ -31,7 +31,6 @@
 */
 using Gee;
 using Gtk;
-using WebProvisioning;
 
 public class IdentityManagerView : Window, IdentityManagerInterface {
     static MoonshotLogger logger = get_logger("IdentityManagerView");
@@ -57,7 +56,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private TreeModelFilter filter;
 
     internal IdentityManagerModel identities_manager;
-    private unowned SList<IdCard>    candidates;
+    private unowned SList<IdCard> candidates;
 
     private GLib.Queue<IdentityRequest> request_queue;
 
@@ -97,49 +96,20 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         build_ui();
         load_id_cards();
         connect_signals();
-        report_duplicate_nais();
-        report_expired_trust_anchors();
+        report_duplicate_nais(identities_manager);
+        report_expired_trust_anchors(identities_manager);
     }
 
-    private void report_duplicate_nais() {
-        Gee.List<Gee.List<IdCard>> duplicates;
-        identities_manager.find_duplicate_nai_sets(out duplicates);
-        foreach (Gee.List<IdCard> list in duplicates) {
-            string message = _("The following identities use the same Network Access Identifier (NAI),\n'%s'.").printf(list.get(0).nai)
-                + _("\n\nDuplicate NAIs are not allowed. Please remove identities you don't need, or modify")
-                + _(" user ID or issuer fields so that they are no longer the same NAI.");
-
-            foreach (var card in list) {
-                message += _("\n\nDisplay Name: '%s'\nServices:\n     %s").printf(card.display_name, card.get_services_string(",\n     "));
-            }
-            var msg_dialog = new Gtk.MessageDialog(this,
-                                                   Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                   Gtk.MessageType.INFO,
-                                                   Gtk.ButtonsType.OK,
-                                                   "%s",
-                                                   message);
-            msg_dialog.run();
-            msg_dialog.destroy();
-        }
-    }
-
-    private void report_expired_trust_anchors() {
-        Gee.List<IdCard> card_list = identities_manager.get_card_list();
-        foreach (IdCard id_card in card_list) {
-            if (id_card.trust_anchor.is_expired()) {
-                string message = _("Trust anchor for identity '%s' expired the %s.\n\n").printf(id_card.nai, id_card.trust_anchor.get_expiration_date())
-                    + _("That means that any attempt to authenticate with that identity will fail. ")
-                    + _("Please, ask your organisation to provide you with an updated credential.");
-                var msg_dialog = new Gtk.MessageDialog(this,
-                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                       Gtk.MessageType.INFO,
-                                                       Gtk.ButtonsType.OK,
-                                                       "%s",
-                                                       message);
-                msg_dialog.run();
-                msg_dialog.destroy();
-            }
-        }
+    public void info_dialog(string title, string msg)
+    {
+        var msg_dialog = new Gtk.MessageDialog(this,
+                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                               Gtk.MessageType.INFO,
+                                               Gtk.ButtonsType.OK,
+                                               "%s",
+                                               msg);
+        msg_dialog.run();
+        msg_dialog.destroy();
     }
 
     private void on_card_list_changed() {
@@ -159,66 +129,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     {
         IdCard id_card;
 
-        model.get(iter,
-                  Columns.IDCARD_COL, out id_card);
-
-        if (id_card == null)
-            return false;
-
-        if (candidates != null)
-        {
-            bool is_candidate = false;
-            foreach (IdCard candidate in candidates)
-            {
-                if (candidate == id_card)
-                    is_candidate = true;
-            }
-            if (!is_candidate)
-                return false;
-        }
+        model.get(iter, Columns.IDCARD_COL, out id_card);
 
         string entry_text = search_entry.get_text();
-        if (entry_text == null || entry_text == "")
-        {
-            return true;
-        }
 
-        foreach (string search_text in entry_text.split(" "))
-        {
-            if (search_text == "")
-                continue;
-
-
-            string search_text_casefold = search_text.casefold();
-
-            if (id_card.issuer != null)
-            {
-                string issuer_casefold = id_card.issuer;
-
-                if (issuer_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.display_name != null)
-            {
-                string display_name_casefold = id_card.display_name.casefold();
-
-                if (display_name_casefold.contains(search_text_casefold))
-                    return true;
-            }
-
-            if (id_card.services.size > 0)
-            {
-                foreach (string service in id_card.services)
-                {
-                    string service_casefold = service.casefold();
-
-                    if (service_casefold.contains(search_text_casefold))
-                        return true;
-                }
-            }
-        }
-        return false;
+        return id_matches_search(id_card, entry_text, candidates);
     }
 
     private void setup_list_model()
@@ -357,53 +272,16 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.send_button.set_sensitive(false);
     }
 
-    public bool add_identity(IdCard id_card, bool force_flat_file_store)
+    public bool yesno_dialog(string title, string message, bool default_yes)
     {
-        Gtk.MessageDialog dialog;
-        IdCard? prev_id = identities_manager.find_id_card(id_card.nai, force_flat_file_store);
-        logger.trace("add_identity(flat=%s, card='%s'): find_id_card returned %s"
-                     .printf(force_flat_file_store.to_string(), id_card.display_name, (prev_id != null ? prev_id.display_name : "null")));
-        if (prev_id!=null) {
-            int flags = prev_id.Compare(id_card);
-            logger.trace("add_identity: compare returned " + flags.to_string());
-            if (flags == 0) {
-                return false; // no changes, no need to update
-            } else if ((flags & (1 << IdCard.DiffFlags.DISPLAY_NAME)) != 0) {
-                dialog = new Gtk.MessageDialog(this,
-                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                               Gtk.MessageType.QUESTION,
-                                               Gtk.ButtonsType.YES_NO,
-                                               _("Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?"),
-                                               prev_id.display_name,
-                                               prev_id.nai,
-                                               id_card.display_name);
-            } else {
-                dialog = new Gtk.MessageDialog(this,
-                                               Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                               Gtk.MessageType.QUESTION,
-                                               Gtk.ButtonsType.YES_NO,
-                                               _("Would you like to update ID Card '%s' using nai '%s'?"),
-                                               id_card.display_name,
-                                               id_card.nai);
-            }
-        } else {
-            dialog = new Gtk.MessageDialog(this,
-                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                           Gtk.MessageType.QUESTION,
-                                           Gtk.ButtonsType.YES_NO,
-                                           _("Would you like to add '%s' ID Card to the ID Card Organizer?"),
-                                           id_card.display_name);
-        }
+        var dialog = new Gtk.MessageDialog(this,
+                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
+                                       Gtk.MessageType.QUESTION,
+                                       Gtk.ButtonsType.YES_NO,
+                                       "%s", message);
         var ret = dialog.run();
         dialog.destroy();
-
-        if (ret == Gtk.ResponseType.YES) {
-            this.identities_manager.add_card(id_card, force_flat_file_store);
-            return true;
-        }
-        else {
-            return false;
-        }
+        return (ret == Gtk.ResponseType.YES);
     }
 
     private void add_identity_cb()
@@ -435,7 +313,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             this.identities_manager.update_card(update_id_card_data(dialog, card));
 
             // Make sure we haven't created a duplicate NAI via this update.
-            report_duplicate_nais();
+            report_duplicate_nais(identities_manager);
             break;
         default:
             break;
@@ -553,62 +431,18 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         present();
     }
 
-    public IdCard check_add_password(IdCard identity, IdentityRequest request, IdentityManagerModel model)
+    private string? password_dialog(string title, string text, bool show_remember, out bool remember)
     {
-        logger.trace(@"check_add_password");
-        IdCard retval = identity;
-        bool idcard_has_pw = (identity.password != null) && (identity.password != "");
-        bool request_has_pw = (request.password != null) && (request.password != "");
-        if ((!idcard_has_pw) && (!identity.is_no_identity())) {
-            if (request_has_pw) {
-                identity.password = request.password;
-                retval = model.update_card(identity);
-            } else {
-                var dialog = new AddPasswordDialog(identity, request);
-                var result = dialog.run();
-
-                switch (result) {
-                case ResponseType.OK:
-                    identity.password = dialog.password;
-                    // Don't leave passwords in memory longer than necessary.
-                    // (This may not actually clear the data, but it's the best we can do.)
-                    dialog.clear_password();
-                    identity.store_password = dialog.remember;
-                    if (dialog.remember)
-                        identity.temporary = false;
-                    retval = model.update_card(identity);
-                    break;
-                default:
-                    identity = null;
-                    break;
-                }
-                // Do this again, in case OK button wasn't selected.
-                dialog.clear_password();
-                dialog.destroy();
-            }
+        var dialog = new AddPasswordDialog(text, true);
+        var result = dialog.run();
+        remember = dialog.remember;
+        string passwd = dialog.password;
+        dialog.clear_password();
+        dialog.destroy();
+        if (result != ResponseType.OK || passwd == "") {
+            return null;
         }
-
-        // check 2FA
-        if (retval.has_2fa) {
-            var dialog = new Add2FADialog(identity, request);
-            var result = dialog.run();
-
-            switch (result) {
-            case ResponseType.OK:
-                retval.mfa_code = dialog.password;
-                // Don't leave passwords in memory longer than necessary.
-                // (This may not actually clear the data, but it's the best we can do.)
-                dialog.clear_password();
-                break;
-            default:
-                break;
-            }
-            // Do this again, in case OK button wasn't selected.
-            dialog.clear_password();
-            dialog.destroy();
-        }
-
-        return retval;
+        return passwd;
     }
 
     private void send_identity_cb(IdCard id)
@@ -942,58 +776,7 @@ SUCH DAMAGE.
             var file  = File.new_for_path(filename);
             import_directory = file.get_parent().get_path();
 
-            int import_count = 0;
-
-            var webp = new Parser(filename);
-            dialog.destroy();
-            if (!webp.parse()) {
-                var msg_dialog = new Gtk.MessageDialog(this,
-                                                       Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                       Gtk.MessageType.INFO,
-                                                       Gtk.ButtonsType.OK,
-                                                       "%s",
-                                                       _("Could not parse identities file."));
-                msg_dialog.run();
-                msg_dialog.destroy();
-            }
-            else {
-                logger.trace(@"import_identities_cb: Have $(webp.cards.length) IdCards");
-                foreach (IdCard card in webp.cards)
-                {
-
-                    if (card == null) {
-                        logger.trace(@"import_identities_cb: Skipping null IdCard");
-                        continue;
-                    }
-
-                    if (!card.trust_anchor.is_empty()) {
-                        string ta_datetime_added = TrustAnchor.format_datetime_now();
-                        card.trust_anchor.set_datetime_added(ta_datetime_added);
-                        logger.trace("import_identities_cb : Set ta_datetime_added for '%s' to '%s'; ca_cert='%s'; server_cert='%s'"
-                                     .printf(card.display_name, ta_datetime_added, card.trust_anchor.ca_cert, card.trust_anchor.server_cert));
-                    }
-
-
-                    bool result = add_identity(card, use_flat_file_store);
-                    if (result) {
-                        logger.trace(@"import_identities_cb: Added or updated '$(card.display_name)'");
-                        import_count++;
-                    }
-                    else {
-                        logger.trace(@"import_identities_cb: Did not add or update '$(card.display_name)'");
-                    }
-                }
-                if (import_count == 0) {
-                    var msg_dialog = new Gtk.MessageDialog(this,
-                                                           Gtk.DialogFlags.DESTROY_WITH_PARENT,
-                                                           Gtk.MessageType.INFO,
-                                                           Gtk.ButtonsType.OK,
-                                                           "%s",
-                                                           _("Import completed. No identities were added or updated."));
-                    msg_dialog.run();
-                    msg_dialog.destroy();
-                }
-            }
+            import_identities(filename, identities_manager, logger);
         }
         dialog.destroy();
     }
