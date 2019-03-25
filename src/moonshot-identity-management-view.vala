@@ -127,7 +127,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private bool visible_func(TreeModel model, TreeIter iter)
     {
-        IdCard id_card;
+        IdCard? id_card;
 
         model.get(iter, Columns.IDCARD_COL, out id_card);
 

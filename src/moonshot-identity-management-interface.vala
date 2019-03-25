@@ -79,7 +79,7 @@ public interface IdentityManagerInterface : Object {
         }
     }
 
-    internal bool id_matches_search(IdCard id_card, string entry_text, SList<IdCard>? candidates)
+    internal bool id_matches_search(IdCard? id_card, string entry_text, SList<IdCard>? candidates)
     {
         if (id_card == null)
             return false;
