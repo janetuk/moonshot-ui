@@ -161,12 +161,12 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtCenteredWindow(66, height, title);
         info = newtTextbox(1, 0, 65, height - 1, Flag.WRAP);
         newtTextboxSetText(info, message);
-        yes_btn = newtCompactButton(20, height - 1, "Yes");
-        no_btn = newtCompactButton(39, height - 1, "No");
+        no_btn = newtCompactButton(20, height - 1, "No");
+        yes_btn = newtCompactButton(39, height - 1, "Yes");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, info);
-        newtFormAddComponent(form, yes_btn);
         newtFormAddComponent(form, no_btn);
+        newtFormAddComponent(form, yes_btn);
         if (!default_yes)
             newtFormSetCurrent(form, no_btn);
         chosen = newtRunForm(form);
