@@ -500,6 +500,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         int offset = 0;
         bool remember = true;
         string filter = "";
+        bool focus_on_search = false;
+
         do {
             bool finalize = newt_init();
             newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
@@ -548,7 +550,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 newtFormAddComponent(form, send_btn);
             newtFormAddComponent(form, about_btn);
             newtFormAddComponent(form, exit_btn);
-            newtFormSetCurrent(form, listbox);
+            if (focus_on_search)
+                newtFormSetCurrent(form, filter_entry);
+            else
+                newtFormSetCurrent(form, listbox);
+            focus_on_search = false;
             chosen = newtRunForm(form);
             IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
             remember = (newtCheckboxGetValue(remember_chk) == '*');
@@ -563,6 +569,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == filter_entry) {
                 filter = newtEntryGetValue(filter_entry);
+                focus_on_search = true;
             }
             else if (chosen == remove_btn) {
                 delete_id_card_dialog(id_card);
