@@ -329,12 +329,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
             if (chosen == listbox || chosen == remove_btn) {
                 int index = (int) newtListboxGetCurrent(listbox);
-                string service = services[index];
-                bool remove = yesno_dialog("Remove service association",
+                if (index > 0) {
+                    string service = services[index];
+                    bool remove = yesno_dialog("Remove service association",
                                            "You are about to remove the service <%s>.\n\n".printf(service)
                                            + "Are you sure you want to do this?", false);
-                if (remove)
-                    services.remove_at(index);
+                    if (remove)
+                        services.remove_at(index);
+                }
 
                 focus = listbox;
             }
