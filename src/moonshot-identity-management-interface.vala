@@ -55,19 +55,19 @@ public interface IdentityManagerInterface : Object {
                 dialog = yesno_dialog(
                     "Install ID Card",
                     "Would you like to update ID Card '%s' using nai '%s'?".printf(prev_id.display_name, prev_id.nai),
-                    true);
+                    false);
             } else {
                 dialog = yesno_dialog(
                     "Install ID Card",
                     "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?".printf(
                         prev_id.display_name, prev_id.nai, id_card.display_name),
-                    true);
+                    false);
             }
         } else {
             dialog = yesno_dialog(
                 "Install ID Card",
                 "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
-                true);
+                false);
         }
 
         if (dialog) {
