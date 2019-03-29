@@ -16,10 +16,12 @@ static gboolean force = FALSE;
 static gchar* username = NULL;
 static gchar* realm = NULL;
 static gchar* password = NULL;
+static gchar** rules = NULL;
 
 static GOptionEntry options[] = {
     {"ca-cert", 'c', 0, G_OPTION_ARG_FILENAME, &ca_cert_filename, "Path to the Trust Anchor's CA certificate", NULL},
     {"server-cert", 's', 0, G_OPTION_ARG_FILENAME, &server_cert_filename, "Path to the Trust Anchor's server certificate", NULL},
+    {"selection-rule", 'r', 0, G_OPTION_ARG_STRING_ARRAY, &rules, "A selection rule. Can be specified multiple times", NULL},
     {"omit-expired", 'f', 0, G_OPTION_ARG_NONE, &force, "Generate the credential even if the certificate is expired", NULL},
     {NULL}
 };
@@ -98,6 +100,7 @@ int main(int argc, char* argv[])
     X509 *cert = NULL;
     gchar* subject = NULL;
     gchar* fingerprint = NULL;
+    gchar** rule = NULL;
 
     // parse arguments
     context = g_option_context_new("USERNAME REALM PASSWORD - Generate XML credentials for a specific IDP");
@@ -161,6 +164,16 @@ int main(int argc, char* argv[])
     g_printf("        <user>%s</user>\n", username);
     g_printf("        <password>%s</password>\n", password);
     g_printf("        <realm>%s</realm>\n", realm);
+    if (rules != NULL) {
+        g_printf("        <selection-rules>\n");
+        for (rule = rules; *rule != NULL; rule++) {
+            g_printf("          <rule>\n");
+            g_printf("            <pattern>%s</pattern>\n", *rule);
+            g_printf("            <always-confirm>false</always-confirm>\n");
+            g_printf("          </rule>\n");
+        }
+        g_printf("        </selection-rules>\n");
+    }
     if (ca_cert_filename || server_cert_filename) {
         g_printf("        <trust-anchor>\n");
         if(ca_cert_filename) {
