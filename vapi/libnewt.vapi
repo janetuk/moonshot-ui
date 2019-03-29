@@ -70,6 +70,9 @@ namespace Newt {
     [CCode (cname = "newtListboxGetCurrent")]
     public void* newtListboxGetCurrent(newtComponent co);
 
+    [CCode (cname = "newtListboxSetCurrentByKey")]
+    public void newtListboxSetCurrentByKey(newtComponent co, void * key);
+
     [CCode (cname = "newtLabel")]
     public newtComponent newtLabel(int left, int top, string text);
 

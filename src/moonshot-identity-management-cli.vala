@@ -494,108 +494,110 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         import_identities(filename, identities_manager, logger);
     }
 
-
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
                       edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry;
         bool exit_loop = false;
         int offset = 0;
-        bool remember = true;
         string filter = "";
-        bool focus_on_search = false;
+        weak newtComponent focus;
 
+        bool finalize = newt_init();
+        newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
+        form = newtForm(null, null, 0);
+        if (request != null) {
+            offset = 1;
+            newtComponent info = newtLabel(1, 0, "ID requested for: ");
+            newtComponent serv = newtTextbox(19, 0, 59, 1, 0);
+            newtTextboxSetColors(serv, Colorset.TITLE, Colorset.TITLE);
+            newtTextboxSetText(serv, request.service);
+            newtFormAddComponent(form, info);
+            newtFormAddComponent(form, serv);
+        }
+
+        doc = newtLabel(1, offset, "Select your identity:");
+        filter_entry = newtEntry(22, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
+        listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+        newtListboxSetWidth(listbox, 66);
+        add_btn = newtCompactButton(68, offset + 2, "Add");
+        import_btn = newtCompactButton(68, offset + 4, "Import");
+        edit_btn = newtCompactButton(68, offset + 6, "Edit");
+        remove_btn = newtCompactButton(68, offset + 8, "Remove");
+        send_btn = newtCompactButton(68, offset + 10, "Send");
+        about_btn = newtCompactButton(68, 15, "About");
+        exit_btn = newtCompactButton(68, 17, "Exit");
+        remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
+        newtFormAddComponent(form, filter_entry);
+        newtFormAddComponent(form, listbox);
+        newtFormAddComponent(form, doc);
+        if (request != null)
+            newtFormAddComponent(form, remember_chk);
+        newtFormAddComponent(form, add_btn);
+        newtFormAddComponent(form, import_btn);
+        newtFormAddComponent(form, edit_btn);
+        newtFormAddComponent(form, remove_btn);
+        if (request != null)
+            newtFormAddComponent(form, send_btn);
+        newtFormAddComponent(form, about_btn);
+        newtFormAddComponent(form, exit_btn);
+
+        focus = listbox;
+        IdCard? selected_id_card = null;
         do {
-            bool finalize = newt_init();
-            newtCenteredWindow(78, 20, "Moonshot Identity Selector (Text version)");
-            form = newtForm(null, null, 0);
-            if (request != null) {
-                offset = 1;
-                newtComponent info = newtLabel(1, 0, "ID requested for: ");
-                newtComponent serv = newtTextbox(19, 0, 59, 1, 0);
-                newtTextboxSetColors(serv, Colorset.TITLE, Colorset.TITLE);
-                newtTextboxSetText(serv, request.service);
-                newtFormAddComponent(form, info);
-                newtFormAddComponent(form, serv);
-            }
-            doc = newtLabel(1, offset, "Select your identity");
-            filter_entry = newtEntry(25, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
-            listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
-            newtListboxSetWidth(listbox, 66);
             Gee.List<IdCard> card_list = identities_manager.get_card_list();
+            newtListboxClear(listbox);
             foreach (IdCard id_card in card_list) {
                 if (filter != "" && !id_matches_search(id_card, filter, null))
                     continue;
                 string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
                                                   id_card.display_name, id_card.nai);
                 newtListboxAppendEntry(listbox, text, id_card);
+
+                // select the previously selected ID card, if available
+                if (selected_id_card != null && id_card.nai == selected_id_card.nai)
+                    newtListboxSetCurrentByKey(listbox, id_card);
             }
 
-            add_btn = newtCompactButton(68, offset + 2, "Add");
-            import_btn = newtCompactButton(68, offset + 4, "Import");
-            edit_btn = newtCompactButton(68, offset + 6, "Edit");
-            remove_btn = newtCompactButton(68, offset + 8, "Remove");
-            send_btn = newtCompactButton(68, offset + 10, "Send");
-            about_btn = newtCompactButton(68, 15, "About");
-            exit_btn = newtCompactButton(68, 17, "Exit");
-            remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service",
-                                        remember ? '*' : ' ', " *", null);
-            newtFormAddComponent(form, filter_entry);
-            newtFormAddComponent(form, listbox);
-            newtFormAddComponent(form, doc);
-            if (request != null)
-                newtFormAddComponent(form, remember_chk);
-            newtFormAddComponent(form, add_btn);
-            newtFormAddComponent(form, import_btn);
-            newtFormAddComponent(form, edit_btn);
-            newtFormAddComponent(form, remove_btn);
-            if (request != null)
-                newtFormAddComponent(form, send_btn);
-            newtFormAddComponent(form, about_btn);
-            newtFormAddComponent(form, exit_btn);
-            if (focus_on_search)
-                newtFormSetCurrent(form, filter_entry);
-            else
-                newtFormSetCurrent(form, listbox);
-            focus_on_search = false;
+            newtFormSetCurrent(form, focus);
             chosen = newtRunForm(form);
-            IdCard? id_card = (IdCard?) newtListboxGetCurrent(listbox);
-            remember = (newtCheckboxGetValue(remember_chk) == '*');
-            if (chosen == add_btn){
+            focus = listbox;
+            selected_id_card = (IdCard?) newtListboxGetCurrent(listbox);
+            bool remember = (newtCheckboxGetValue(remember_chk) == '*');
+            if (chosen == add_btn) {
                 add_id_card_dialog();
             }
             else if (chosen == edit_btn) {
-                edit_id_card_dialog(id_card);
+                edit_id_card_dialog(selected_id_card);
             }
             else if (chosen == import_btn) {
                 import_identities_dialog();
             }
             else if (chosen == filter_entry) {
                 filter = newtEntryGetValue(filter_entry);
-                focus_on_search = true;
+                focus = filter_entry;
             }
             else if (chosen == remove_btn) {
-                delete_id_card_dialog(id_card);
+                delete_id_card_dialog(selected_id_card);
             }
             else if (chosen == send_btn) {
-                send_id_card_confirmation_dialog(id_card, remember);
+                send_id_card_confirmation_dialog(selected_id_card, remember);
                 exit_loop = true;
             }
             else if (chosen == about_btn) {
                 about_dialog();
             }
             else if (chosen == listbox) {
-                exit_loop = id_card_menu(id_card, request != null, remember);
+                exit_loop = id_card_menu(selected_id_card, request != null, remember);
             }
             else {
                 // we need to send NULL identity to gracefully exit properly from the send_identity callback
                 send_id_card_confirmation_dialog(null, false);
                 exit_loop = true;
             }
-
-            newtFormDestroy(form);
-            newtPopWindow();
-            newt_finish(finalize);
         } while (!exit_loop);
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
     }
 
     public void make_visible()
