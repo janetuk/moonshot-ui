@@ -495,7 +495,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
-                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry;
+                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn;
         bool exit_loop = false;
         int offset = 0;
         string filter = "";
@@ -516,6 +516,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
         doc = newtLabel(1, offset, "Select your identity:");
         filter_entry = newtEntry(22, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
+        filter_btn = newtCompactButton(57, offset, "Filter");
         listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
         add_btn = newtCompactButton(68, offset + 2, "Add");
@@ -527,6 +528,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         exit_btn = newtCompactButton(68, 17, "Exit");
         remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
+        newtFormAddComponent(form, filter_btn);
         newtFormAddComponent(form, listbox);
         newtFormAddComponent(form, doc);
         if (request != null)
@@ -571,7 +573,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             else if (chosen == import_btn) {
                 import_identities_dialog();
             }
-            else if (chosen == filter_entry) {
+            else if (chosen == filter_entry || chosen == filter_btn) {
                 filter = newtEntryGetValue(filter_entry);
                 focus = filter_entry;
             }
