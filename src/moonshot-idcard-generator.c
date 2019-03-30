@@ -5,31 +5,28 @@
 #include <glib/gprintf.h>
 
 /* DISCLAIMER: This application does not free any memory on purpose.
- * As it is intended to be a oneshot application, that won't run for more than
+ * As it is intended to be a oneshot application, which won't run for more than
  * a few seconds at most, freeing memory would make code uglier while memory
  * waste is not a big concern at all.
  */
 
-static gchar* cert_filename = NULL;
-static gboolean is_server_cert = FALSE;
-static gchar* username = NULL;
-static gchar* password = NULL;
-static gchar* realm = NULL;
+static gchar* ca_cert_filename = NULL;
+static gchar* server_cert_filename = FALSE;
 static gboolean force = FALSE;
-
+static gchar* username = NULL;
+static gchar* realm = NULL;
+static gchar* password = NULL;
+static gchar** rules = NULL;
 
 static GOptionEntry options[] = {
-    {"cert", 'c', 0, G_OPTION_ARG_FILENAME, &cert_filename, "Path to the Trust Anchor certificate", NULL},
-    {"is-server-cert", 's', 0, G_OPTION_ARG_NONE, &is_server_cert,
-     "The Trust Anchor is a server certificate (if omitted it is assumed to be a CA certificate)", NULL},
-    {"realm", 'r', 0, G_OPTION_ARG_STRING, &realm, "Realm of the IDP", NULL},
-    {"username", 'u', 0, G_OPTION_ARG_STRING, &username, "Username for the credential.", NULL},
-    {"password", 'p', 0, G_OPTION_ARG_STRING, &password, "Password for the credential.", NULL},
+    {"ca-cert", 'c', 0, G_OPTION_ARG_FILENAME, &ca_cert_filename, "Path to the Trust Anchor's CA certificate", NULL},
+    {"server-cert", 's', 0, G_OPTION_ARG_FILENAME, &server_cert_filename, "Path to the Trust Anchor's server certificate", NULL},
+    {"selection-rule", 'r', 0, G_OPTION_ARG_STRING_ARRAY, &rules, "A selection rule. Can be specified multiple times", NULL},
     {"omit-expired", 'f', 0, G_OPTION_ARG_NONE, &force, "Generate the credential even if the certificate is expired", NULL},
     {NULL}
 };
 
-X509* get_pem(char* filename) {
+X509* read_pem(char* filename) {
     X509 *rv = NULL;
     FILE *fp = fopen(filename, "rt");
     if (fp != NULL) {
@@ -96,40 +93,69 @@ gboolean check_cert_date(X509 *cert) {
     return TRUE;
 }
 
-
 int main(int argc, char* argv[])
 {
     GError *error = NULL;
     GOptionContext *context = NULL;
     X509 *cert = NULL;
+    gchar* subject = NULL;
+    gchar* fingerprint = NULL;
+    gchar** rule = NULL;
 
     // parse arguments
-    context = g_option_context_new("- Generate XML credentials for a specific IDP");
+    context = g_option_context_new("USERNAME REALM PASSWORD - Generate XML credentials for a specific IDP");
     g_option_context_add_main_entries(context, options, NULL);
-    if (!g_option_context_parse (context, &argc, &argv, &error)) {
-        g_fprintf(stderr, "error: %s\n", error->message);
+    if (!g_option_context_parse (context, &argc, &argv, &error) || argc < 3) {
+        if (error)
+            g_fprintf(stderr, "error: %s\n", error->message);
         g_fprintf(stderr, "Run '%s --help' to see a full list of available arguments\n", argv[0]);
         exit (1);
     }
 
+    username = argv[1];
+    realm = argv[2];
+    password = argv[3];
+
     // check if all the mandatory arguements have been provided
-    if (cert_filename == NULL || username == NULL || password == NULL || realm == NULL) {
+    if (username == NULL || password == NULL || realm == NULL) {
         g_fprintf(stderr, "You MUST provide a value for all the mandatory arguments.\n");
         g_fprintf(stderr, "%s", g_option_context_get_help(context, TRUE, NULL));
         return 1;
     }
 
-    // Read the certificate
-    cert = get_pem(cert_filename);
-    // check cert is indeed an X.509 PEM certificate
-    if (cert == NULL) {
-        g_fprintf(stderr, "The indicated certificate is not a PEM file.\n");
-        return 1;
+    // Read server cert and compute the fingerprint
+    if (server_cert_filename != NULL) {
+        cert = read_pem(server_cert_filename);
+        if (cert == NULL) {
+            g_fprintf(stderr, "The indicated server certificate is not a PEM file.\n");
+            return 1;
+        }
+        if (!check_cert_date(cert) && !force) {
+            g_fprintf(stderr, "The indicated server certificate is expired.\n");
+            return 1;
+        }
+
+        subject = get_cert_subject_name(cert);
+        fingerprint = get_cert_fingerprint(cert);
     }
 
-    if (!check_cert_date(cert) && !force)
-        return 1;
-
+    // Read the CA certificate
+    if (ca_cert_filename != NULL) {
+        if (server_cert_filename == NULL) {
+            g_fprintf(stderr, "You need to indicate a server certificate when using a CA certificate.\n");
+            return 1;
+        }
+        cert = read_pem(ca_cert_filename);
+        // check cert is indeed an X.509 PEM certificate
+        if (cert == NULL) {
+            g_fprintf(stderr, "The indicated CA certificate is not a PEM file.\n");
+            return 1;
+        }
+        if (!check_cert_date(cert) && !force) {
+            g_fprintf(stderr, "The indicated CA certificate is expired.\n");
+            return 1;
+        }
+    }
 
     g_printf("<?xml version='1.0' encoding='UTF-8'?>\n");
     g_printf("<identities>\n");
@@ -138,21 +164,33 @@ int main(int argc, char* argv[])
     g_printf("        <user>%s</user>\n", username);
     g_printf("        <password>%s</password>\n", password);
     g_printf("        <realm>%s</realm>\n", realm);
-    g_printf("        <trust-anchor>\n");
-    if (is_server_cert) {
-        g_printf("            <server-cert>\n");
-        g_printf("                %s\n", get_cert_fingerprint(cert));
-        g_printf("            </server-cert>\n");
+    if (rules != NULL) {
+        g_printf("        <selection-rules>\n");
+        for (rule = rules; *rule != NULL; rule++) {
+            g_printf("          <rule>\n");
+            g_printf("            <pattern>%s</pattern>\n", *rule);
+            g_printf("            <always-confirm>false</always-confirm>\n");
+            g_printf("          </rule>\n");
+        }
+        g_printf("        </selection-rules>\n");
     }
-    else {
-        g_printf("            <ca-cert>\n");
-        g_printf("%s\n", get_cert_raw_pem(cert_filename));;
-        g_printf("            </ca-cert>\n");
-        g_printf("            <subject>\n");
-        g_printf("                %s\n", get_cert_subject_name(cert));
-        g_printf("            </subject>\n");
+    if (ca_cert_filename || server_cert_filename) {
+        g_printf("        <trust-anchor>\n");
+        if(ca_cert_filename) {
+            g_printf("            <ca-cert>\n");
+            g_printf("%s\n", get_cert_raw_pem(ca_cert_filename));;
+            g_printf("            </ca-cert>\n");
+            g_printf("            <subject>\n");
+            g_printf("                %s\n", subject);
+            g_printf("            </subject>\n");
+        }
+        else if (server_cert_filename) {
+            g_printf("            <server-cert>\n");
+            g_printf("                %s\n", fingerprint);
+            g_printf("            </server-cert>\n");
+        }
+        g_printf("        </trust-anchor>\n");
     }
-    g_printf("        </trust-anchor>\n");
     g_printf("    </identity>\n");
     g_printf("</identities>\n");
 
