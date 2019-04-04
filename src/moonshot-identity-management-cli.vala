@@ -33,6 +33,9 @@
 using Gee;
 using Newt;
 
+const string WARN_GROUP="WarningDialogs";
+const string PATH_GROUP="Paths";
+
 public class IdentityManagerCli: IdentityManagerInterface, Object {
     static MoonshotLogger logger = get_logger("IdentityManagerCli");
     bool use_flat_file_store = false;
@@ -156,9 +159,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
     private bool yesno_dialog(string title, string msg, bool default_yes) {
-        const string GROUP_NAME="WarningDialogs";
-        if (get_bool_setting(GROUP_NAME, title, false)) {
-            logger.trace(@"confirm: Settings group $GROUP_NAME has 'true' for key $title; skipping dialog and returning true.");
+        if (get_bool_setting(WARN_GROUP, title, false)) {
+            logger.trace(@"confirm: Settings group $WARN_GROUP has 'true' for key $title; skipping dialog and returning true.");
             return true;
         }
         bool finalize = newt_init();
@@ -171,7 +173,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtTextboxSetText(info, message);
         remember_chk = newtCheckbox(0, text_height + 1, _("Do not show this message again"), ' ', " *", null);
         no_btn = newtCompactButton(text_width / 2 - 10, text_height + 3, "No");
-        yes_btn = newtCompactButton(text_width / 2 + 5, text_height + 3, "Yes: %d".printf(text_height));
+        yes_btn = newtCompactButton(text_width / 2 + 5, text_height + 3, "Yes");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, info);
         newtFormAddComponent(form, remember_chk);
@@ -183,7 +185,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (chosen == yes_btn) {
             result = true;
             if (newtCheckboxGetValue(remember_chk) == '*') {
-                set_bool_setting(GROUP_NAME, title, true);
+                set_bool_setting(WARN_GROUP, title, true);
             }
         }
         newtFormDestroy(form);
@@ -445,10 +447,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private string select_file_dialog() {
-        const string GROUP_NAME="Paths";
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
-        string directory = get_string_setting(GROUP_NAME, "last_import_folder", GLib.Environment.get_home_dir());
+        string directory = get_string_setting(PATH_GROUP, "last_import_folder", GLib.Environment.get_home_dir());
         string? result = null;
         do {
             bool finalize = newt_init();
@@ -492,7 +493,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 if (FileUtils.test(element.data, FileTest.IS_DIR))
                     directory = element.data;
                 else {
-                    set_string_setting(GROUP_NAME, "last_import_folder", directory);
+                    set_string_setting(PATH_GROUP, "last_import_folder", directory);
 
                     result = element.data;
                     exit_loop = true;
