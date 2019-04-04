@@ -154,24 +154,38 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
     private bool yesno_dialog(string title, string  message, bool default_yes) {
+        const string GROUP_NAME="WarningDialogs";
+        if (get_bool_setting(GROUP_NAME, title, false)) {
+            logger.trace(@"confirm: Settings group $GROUP_NAME has 'true' for key $title; skipping dialog and returning true.");
+            return true;
+        }
         bool finalize = newt_init();
         bool result = false;
-        int height = estimate_text_height(message, 66) + 2;
-        newtComponent form, info, yes_btn, no_btn, chosen;
+        int height = estimate_text_height(message, 66) + 3;
+        newtComponent form, info, yes_btn, no_btn, remember_chk, remember_text, chosen;
         newtCenteredWindow(66, height, title);
-        info = newtTextbox(1, 0, 65, height - 1, Flag.WRAP);
+        info = newtTextbox(1, 0, 65, height - 2, Flag.WRAP);
         newtTextboxSetText(info, message);
+        remember_chk = newtCheckbox(1, height - 2, "", ' ', " *", null);
+        remember_text = newtTextbox(5, height - 2, 30, 1, 0);
+        newtTextboxSetText(remember_text, _("Do not show this message again"));
         no_btn = newtCompactButton(20, height - 1, "No");
         yes_btn = newtCompactButton(39, height - 1, "Yes");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, info);
+        newtFormAddComponent(form, remember_chk);
+        newtFormAddComponent(form, remember_text);
         newtFormAddComponent(form, no_btn);
         newtFormAddComponent(form, yes_btn);
         if (!default_yes)
             newtFormSetCurrent(form, no_btn);
         chosen = newtRunForm(form);
-        if (chosen == yes_btn)
+        if (chosen == yes_btn) {
             result = true;
+            if (newtCheckboxGetValue(remember_chk) == '*') {
+                set_bool_setting(GROUP_NAME, title, true);
+            }
+        }
         newtFormDestroy(form);
         newtPopWindow();
         newt_finish(finalize);
