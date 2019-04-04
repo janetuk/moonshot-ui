@@ -445,9 +445,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private string select_file_dialog() {
+        const string GROUP_NAME="Paths";
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
-        string directory = GLib.Environment.get_current_dir();
+        string directory = get_string_setting(GROUP_NAME, "last_import_folder", GLib.Environment.get_home_dir());
         string? result = null;
         do {
             bool finalize = newt_init();
@@ -491,6 +492,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 if (FileUtils.test(element.data, FileTest.IS_DIR))
                     directory = element.data;
                 else {
+                    set_string_setting(GROUP_NAME, "last_import_folder", directory);
+
                     result = element.data;
                     exit_loop = true;
                 }

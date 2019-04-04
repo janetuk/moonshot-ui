@@ -186,3 +186,20 @@ internal string get_string_setting(string group_name, string key_name, string de
     }
     return default;
 }
+
+internal void set_string_setting(string group_name, string key_name, string value, KeyFile? key_file=null)
+{
+    KeyFile tmp_key_file = null;
+    if (key_file == null) {
+        // Use tmp_key_file to hold an owned reference (since key_file is unowned)
+        tmp_key_file = get_keyfile();
+        key_file = tmp_key_file;
+    }
+
+    key_file.set_string(group_name, key_name, value);
+
+    if (tmp_key_file != null) {
+        // This is a "one-shot" settings update; save it now.
+        save_keyfile(key_file);
+    }
+}
