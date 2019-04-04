@@ -139,7 +139,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtInit();
         newtCls();
         newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
-        newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
+        newtDrawRootText(-25, -1, "(c) 2019 Jisc limited");
         newt_initiated = true;
         return true;
     }
