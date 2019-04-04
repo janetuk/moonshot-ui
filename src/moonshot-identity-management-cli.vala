@@ -394,13 +394,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         bool rv = false;
         newtComponent form, listbox, chosen;
-        int height = include_send ? 4: 3;
+        int height = include_send ? 5: 3;
         newtCenteredWindow(15, height, "Action");
         form = newtForm(null, null, 0);
-        listbox = newtListbox(1, 0, height, Flag.RETURNEXIT);
-        newtListboxSetWidth(listbox, 13);
-        if (include_send)
+        listbox = newtListbox(0, 0, height, Flag.RETURNEXIT);
+        newtListboxSetWidth(listbox, 15);
+        if (include_send) {
             newtListboxAppendEntry(listbox, "Send", (void *) "Send");
+            newtListboxAppendEntry(listbox, "Send & forget", (void *) "SendForget");
+        }
         newtListboxAppendEntry(listbox, "Edit", (void *) "Edit");
         newtListboxAppendEntry(listbox, "Remove", (void *) "Remove");
         newtListboxAppendEntry(listbox, "Back", (void *) "Back");
@@ -411,6 +413,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             string? option = (string?) newtListboxGetCurrent(listbox);
             if (option == "Send") {
                 send_id_card_confirmation_dialog(id_card, remember);
+                rv = true;
+            }
+            else if (option == "SendForget") {
+                send_id_card_confirmation_dialog(id_card, false);
                 rv = true;
             }
             else if (option == "Edit")
