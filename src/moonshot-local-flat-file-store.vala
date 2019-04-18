@@ -32,8 +32,8 @@
 using Gee;
 
 extern long get_encryption_key(char* buffer, int buflen);
-extern int encrypt(char *plaintext, int plaintext_len, char *key, char *ciphertext);
-extern int decrypt(char *ciphertext, int ciphertext_len, char *key, char *plaintext);
+extern int encrypt(char *plaintext, long plaintext_len, char *key, char *ciphertext);
+extern int decrypt(char *ciphertext, long ciphertext_len, char *key, char *plaintext);
 
 errordomain FlatFileError {
     ENCRYPTION
@@ -94,8 +94,14 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         uint8[] contents;
 
         try{
-            File file = File.new_for_path(filename);
-            file.load_contents(null, out contents, null);
+            FileStream? stream = FileStream.open(filename, "rb");
+            if (stream == null)
+                throw new FlatFileError.ENCRYPTION("File does not exist");
+            stream.seek(0, FileSeek.END);
+            long size = stream.tell ();
+            stream.rewind ();
+            contents = new uint8[size];
+            stream.read(contents, size);
         }
         catch (GLib.Error e) {
             logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
@@ -247,7 +253,6 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         var text = key_file.to_data(null);
         var path = get_data_dir();
         var filename = Path.build_filename(path, FILE_NAME);
-        var file  = File.new_for_path(filename);
         uint8[] data;
         logger.trace("store_id_cards: attempting to store to " + filename);
 
@@ -275,7 +280,8 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         }
 
         try {
-            file.replace_contents(data, null, false, FileCreateFlags.PRIVATE | FileCreateFlags.REPLACE_DESTINATION, null);
+            FileStream stream = FileStream.open(filename, "wb");
+            stream.write(data, 1);
         }
         catch (GLib.Error e)  {
             logger.error("store_id_cards: Error while saving keyfile: %s\n".printf(e.message));

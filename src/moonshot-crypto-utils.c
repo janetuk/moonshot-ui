@@ -146,7 +146,7 @@ int parse_der_certificate(const unsigned char* der, int der_len,
     return 1;
 }
 
-int encrypt(unsigned char *plaintext, int plaintext_len,
+int encrypt(unsigned char *plaintext, long plaintext_len,
             unsigned char *key, unsigned char *ciphertext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
@@ -203,7 +203,7 @@ cleanup:
     return ciphertext_len;
 }
 
-int decrypt(unsigned char *ciphertext, int ciphertext_len,
+int decrypt(unsigned char *ciphertext, long ciphertext_len,
             unsigned char *key, unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
