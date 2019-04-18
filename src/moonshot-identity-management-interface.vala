@@ -109,6 +109,12 @@ public interface IdentityManagerInterface : Object {
                     return true;
             }
 
+            if (id_card.username != null) {
+                string username_casefold = id_card.username;
+                if (username_casefold.contains(search_text_casefold))
+                    return true;
+            }
+
             if (id_card.display_name != null) {
                 string display_name_casefold = id_card.display_name.casefold();
                 if (display_name_casefold.contains(search_text_casefold))
