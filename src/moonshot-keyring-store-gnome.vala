@@ -103,6 +103,10 @@ public class KeyringStore : KeyringStoreBase {
         return true;
     }
 
+    public override string get_store_name() {
+        return "GNOME_KEYRING";
+    }
+
     public static bool is_available() {
         if (!GnomeKeyring.is_available())
             return false;

@@ -96,6 +96,7 @@ public class IdentityManagerApp {
         if (headless && keyring_available && !use_flat_file_store && !model.HasNonTrivialIdentities())
             model.set_store_type(IIdentityCardStore.StoreType.KEYRING);
 
+
         /* We create one view or the other, or none if we have no control over STDOUT (i.e. daemons) */
         if (!headless)
             view = new IdentityManagerView(this, use_flat_file_store);
