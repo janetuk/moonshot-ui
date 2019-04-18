@@ -31,11 +31,21 @@
  */
 using Gee;
 
+extern long get_encryption_key(char* buffer, int buflen);
+extern int encrypt(char *plaintext, int plaintext_len, char *key, char *ciphertext);
+extern int decrypt(char *ciphertext, int ciphertext_len, char *key, char *plaintext);
+
+errordomain FlatFileError {
+    ENCRYPTION
+}
+
+
 public class LocalFlatFileStore : Object, IIdentityCardStore {
     static MoonshotLogger logger = get_logger("LocalFlatFileStore");
 
     private Gee.List<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
+    private bool encrypted = false;
 
     public void add_card(IdCard card) {
         id_card_list.add(card);
@@ -71,19 +81,52 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         return IIdentityCardStore.StoreType.FLAT_FILE;
     }
 
+    public string get_store_name() {
+        return encrypted ? "ENCRYPTED_FLAT_FILE" : "FLAT_FILE";
+    }
+
     private void load_id_cards() {
         id_card_list.clear();
         var key_file = new KeyFile();
         var path = get_data_dir();
         var filename = Path.build_filename(path, FILE_NAME);
         logger.trace("load_id_cards: attempting to load from " + filename);
+        uint8[] contents;
+
+        try{
+            File file = File.new_for_path(filename);
+            file.load_contents(null, out contents, null);
+        }
+        catch (GLib.Error e) {
+            logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
+            return;
+        }
+
+        try{
+            if (encrypted) {
+                uint8 key[128];
+                long keylen = get_encryption_key(key, 128);
+                if (keylen < 0)
+                    throw new FlatFileError.ENCRYPTION("Could not get the decryption key");
+                uint8[] plaintext = new uint8[contents.length];
+                int plainlen = decrypt(contents, contents.length, key, plaintext);
+                if (plainlen < 0)
+                    throw new FlatFileError.ENCRYPTION("Could not decrypt file.");
+                plaintext.resize(plainlen);
+                contents = plaintext;
+            }
+        }
+        catch (FlatFileError.ENCRYPTION e) {
+            logger.error("load_id_cards: Error while decrypting keyfile %s: %s\n".printf(filename, e.message));
+            stderr.printf("load_id_cards: Error while decrypting keyfile %s: %s\n".printf(filename, e.message));
+            Posix.exit(1);
+        }
 
         try {
-            key_file.load_from_file(filename, KeyFileFlags.NONE);
+            key_file.load_from_data((string) contents, contents.length, KeyFileFlags.NONE);
         }
-        catch (Error e) {
+        catch (GLib.Error e) {
             logger.error("load_id_cards: Error while loading keyfile %s: %s\n".printf(filename, e.message));
-            // stdout.printf("Error while attempting to load from %s: %s\n", filename, e.message);
             return;
         }
 
@@ -202,21 +245,39 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         }
 
         var text = key_file.to_data(null);
+        var path = get_data_dir();
+        var filename = Path.build_filename(path, FILE_NAME);
+        var file  = File.new_for_path(filename);
+        uint8[] data;
+        logger.trace("store_id_cards: attempting to store to " + filename);
+
+        if (encrypted) {
+            try {
+                uint8 key[128];
+                long keylen = get_encryption_key(key, 128);
+                if (keylen < 0)
+                    throw new FlatFileError.ENCRYPTION("Could not get the encryption key");
+                uint8[] ciphertext = new uint8[text.length * 2];
+                int cipherlen = encrypt(text.data, text.length, key, ciphertext);
+                if (cipherlen < 0)
+                    throw new FlatFileError.ENCRYPTION("Could not encrypt file.");
+                ciphertext.resize(cipherlen);
+                data = ciphertext;
+            }
+            catch (Error e) {
+                logger.error("store_id_cards: Error while encrypting keyfile: %s\n".printf(e.message));
+                stdout.printf("Error encrypting keyfile:  %s\n", e.message);
+                return;
+            }
+        }
+        else {
+            data = text.data;
+        }
 
         try {
-            var path = get_data_dir();
-            var filename = Path.build_filename(path, FILE_NAME);
-            logger.trace("store_id_cards: attempting to store to " + filename);
-            var file  = File.new_for_path(filename);
-            var stream = file.replace(null, false, FileCreateFlags.PRIVATE);
-#if GIO_VAPI_USES_ARRAYS
-            stream.write(text.data);
-#else
-            var bits = text.data;
-            stream.write(&bits[0], bits.length);
-#endif
-                }
-        catch (Error e) {
+            file.replace_contents(data, null, false, FileCreateFlags.PRIVATE | FileCreateFlags.REPLACE_DESTINATION, null);
+        }
+        catch (GLib.Error e)  {
             logger.error("store_id_cards: Error while saving keyfile: %s\n".printf(e.message));
             stdout.printf("Error:  %s\n", e.message);
         }
@@ -226,6 +287,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
 
     public LocalFlatFileStore() {
         id_card_list = new LinkedList<IdCard>();
+
+        /* Check whether there is a key available. We get 1 byte so we avoid copying the whole key */
+        uint8 key[1];
+        long keylen = get_encryption_key(key, 1);
+        if (keylen > 0)
+            encrypted = true;
         load_id_cards();
     }
 }
