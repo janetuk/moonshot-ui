@@ -32,8 +32,8 @@
 using Gee;
 
 extern long get_encryption_key(char* buffer, int buflen);
-extern int encrypt(char *plaintext, long plaintext_len, char *key, char *ciphertext);
-extern int decrypt(char *ciphertext, long ciphertext_len, char *key, char *plaintext);
+extern long data_encrypt(char *plaintext, long plaintext_len, char *key, char *ciphertext);
+extern long data_decrypt(char *ciphertext, long ciphertext_len, char *key, char *plaintext);
 
 errordomain FlatFileError {
     ENCRYPTION
@@ -115,10 +115,10 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 if (keylen < 0)
                     throw new FlatFileError.ENCRYPTION("Could not get the decryption key");
                 uint8[] plaintext = new uint8[contents.length];
-                int plainlen = decrypt(contents, contents.length, key, plaintext);
+                long plainlen = data_decrypt(contents, contents.length, key, plaintext);
                 if (plainlen < 0)
                     throw new FlatFileError.ENCRYPTION("Could not decrypt file.");
-                plaintext.resize(plainlen);
+                plaintext.resize((int)plainlen);
                 contents = plaintext;
             }
         }
@@ -263,10 +263,10 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 if (keylen < 0)
                     throw new FlatFileError.ENCRYPTION("Could not get the encryption key");
                 uint8[] ciphertext = new uint8[text.length * 2];
-                int cipherlen = encrypt(text.data, text.length, key, ciphertext);
+                long cipherlen = data_encrypt(text.data, text.length, key, ciphertext);
                 if (cipherlen < 0)
                     throw new FlatFileError.ENCRYPTION("Could not encrypt file.");
-                ciphertext.resize(cipherlen);
+                ciphertext.resize((int)cipherlen);
                 data = ciphertext;
             }
             catch (Error e) {
