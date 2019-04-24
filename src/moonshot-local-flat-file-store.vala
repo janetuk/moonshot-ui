@@ -45,6 +45,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
 
     private Gee.List<IdCard> id_card_list;
     private const string FILE_NAME = "identities.txt";
+    private const string ENCRYPTED_FILE_NAME = "identities.txt.aes";
     private bool encrypted = false;
 
     public void add_card(IdCard card) {
@@ -89,7 +90,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         id_card_list.clear();
         var key_file = new KeyFile();
         var path = get_data_dir();
-        var filename = Path.build_filename(path, FILE_NAME);
+        var filename = encrypted ? Path.build_filename(path, ENCRYPTED_FILE_NAME) : Path.build_filename(path, FILE_NAME);
         logger.trace("load_id_cards: attempting to load from " + filename);
         uint8[] contents;
 
@@ -117,7 +118,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
                 uint8[] plaintext = new uint8[contents.length];
                 long plainlen = data_decrypt(contents, contents.length, key, plaintext);
                 if (plainlen < 0)
-                    throw new FlatFileError.ENCRYPTION("Could not decrypt file.");
+                    throw new FlatFileError.ENCRYPTION("Failed decrypting file, possibly due to a wrong password.");
                 plaintext.resize((int)plainlen);
                 contents = plaintext;
             }
@@ -252,7 +253,7 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
 
         var text = key_file.to_data(null);
         var path = get_data_dir();
-        var filename = Path.build_filename(path, FILE_NAME);
+        var filename = encrypted ? Path.build_filename(path, ENCRYPTED_FILE_NAME) : Path.build_filename(path, FILE_NAME);
         uint8[] data;
         logger.trace("store_id_cards: attempting to store to " + filename);
 
