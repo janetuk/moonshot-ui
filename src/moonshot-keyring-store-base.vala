@@ -168,6 +168,8 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
         return IIdentityCardStore.StoreType.KEYRING;
     }
 
+    public abstract string get_store_name();
+
     public Gee.List<IdCard> get_card_list() {
         try {
             return load_id_cards();

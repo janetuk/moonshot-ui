@@ -118,6 +118,13 @@ AC_SUBST(GEE_VERSION)
 # For all platforms: Use libnewt
 PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
 
+# For all platforms: Use libkeyutils
+AC_CHECK_HEADERS([keyutils.h])
+AC_CHECK_LIB(keyutils, request_key, [], [
+  echo "Error! You need to have libkeyutils"
+  exit -1
+])
+
 #enable the optional use of Log4Vala (Must have the package installed!)
 AC_ARG_ENABLE([log4vala],
 [  --enable-log4vala    Enable use of log4vala for logging],
