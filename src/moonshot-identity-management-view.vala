@@ -55,6 +55,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
+    private Gtk.Statusbar statusbar;
+
     internal IdentityManagerModel identities_manager;
     private unowned SList<IdCard> candidates;
 
@@ -698,6 +700,10 @@ SUCH DAMAGE.
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
         main_vbox.pack_start(top_table, true, true, 6);
+
+        statusbar = new Gtk.Statusbar();
+        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend".printf(this.identities_manager.get_store_name())));
+        main_vbox.pack_start(statusbar, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();
