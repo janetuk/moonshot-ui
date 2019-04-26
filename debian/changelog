@@ -1,6 +1,7 @@
 moonshot-ui (1.2.0.DIST) unstable; urgency=medium
 
   * Support AES-GCM encrypted flat files using kernel session keyring.
+  * UI layout adjustements
 
  -- Jisc <moonshot@jisc.ac.uk>  Fri, 26 Apr 2019 00:00:00 +0000
 
