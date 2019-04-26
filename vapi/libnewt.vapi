@@ -22,8 +22,17 @@ namespace Newt {
     [CCode (cname = "newtTextbox")]
     public newtComponent newtTextbox(int left, int top, int width, int height, int flags);
 
+    [CCode (cname = "newtTextboxReflowed")]
+    public newtComponent newtTextboxReflowed(int left, int top, string text, int width, int flexDown, int flexUp, int flags);
+
+    [CCode (cname = "newtTextboxSetHeight")]
+    public void newtTextboxSetHeight(newtComponent co, int height);
+
     [CCode (cname = "newtTextboxSetText")]
     public void newtTextboxSetText(newtComponent co, string text);
+
+    [CCode (cname = "newtTextboxGetNumLines")]
+    public int newtTextboxGetNumLines(newtComponent co);
 
     [CCode (cname = "newtButton")]
     public newtComponent newtButton(int left, int top, string text);
@@ -45,6 +54,9 @@ namespace Newt {
 
     [CCode (cname = "newtEntry")]
     public newtComponent newtEntry(int left, int top, string? initialValue, int width, out string? resultPtr, int flags);
+
+    [CCode (cname = "newtReflowText")]
+    public string newtReflowText(string text, int width, int flexDown, int flexUp, out int actualWidth, out int actualHeight);
 
     [CCode (cname = "newtFormDestroy")]
     public void newtFormDestroy(newtComponent form);

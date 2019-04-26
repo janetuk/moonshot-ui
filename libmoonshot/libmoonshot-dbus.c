@@ -340,7 +340,7 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
   GError     *g_error = NULL;
   GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_NONE;
   gchar*     owner_name = NULL;
-
+  int        retries = 0;
   /*
     For the CLI operation the Moonshot server needs to be a child process of the application using libmoonshot,
     or it is not possible to get direct access to stdout and stdin. Hence, we disable DBUS AUTO-START and
@@ -361,17 +361,18 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
 
   /* This will autostart the service if it is not already running. */
   do {
-    if (g_proxy)
+    if (g_proxy) {
       g_object_unref(g_proxy);
-    g_proxy = g_dbus_proxy_new_sync(
-        conn->connection,
-        flags,
-        NULL, /* expected interface */
-        MOONSHOT_DBUS_NAME,
-        MOONSHOT_DBUS_PATH,
-        MOONSHOT_DBUS_NAME,
-        NULL, /* no cancellable */
-        &g_error);
+    }
+
+    g_proxy = g_dbus_proxy_new_sync(conn->connection,
+                                    flags,
+                                    NULL, /* expected interface */
+                                    MOONSHOT_DBUS_NAME,
+                                    MOONSHOT_DBUS_PATH,
+                                    MOONSHOT_DBUS_NAME,
+                                    NULL, /* no cancellable */
+                                    &g_error);
 
     if (g_error != NULL) {
       *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
@@ -382,8 +383,14 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
     }
     owner_name = g_dbus_proxy_get_name_owner(g_proxy);
     // if there is no owner name yet, wait a little bit and try to get a proxy again
-    if (!owner_name)
+    if (!owner_name) {
+      /* we try 20 times before giving up */
+      if (retries++ > 20) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
+        return NULL;
+      }
       usleep(10000);
+    }
   } while (!owner_name);
   g_free(owner_name);
   return g_proxy;

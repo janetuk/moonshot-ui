@@ -142,9 +142,9 @@ if OS_LINUX
 
 AM_CPPFLAGS += $(KEYRING_CFLAGS)
 AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
-src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt
+src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
 src_moonshot_keyring_tool_LDFLAGS += $(KEYRING_LIBS)
-src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt
+src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
 src_moonshot_idcard_generator_LDFLAGS += -lcrypto
 
 ## Installing mime type data

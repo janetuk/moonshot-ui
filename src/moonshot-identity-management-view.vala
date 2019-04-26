@@ -55,6 +55,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
+    private Gtk.Statusbar statusbar;
+
     internal IdentityManagerModel identities_manager;
     private unowned SList<IdCard> candidates;
 
@@ -370,17 +372,13 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     {
         clear_selection_prompts();
 
-        var prompting_service = new Label(_("Identity requested for service:\n%s").printf(service));
-        prompting_service.set_line_wrap(true);
-
+        var prompting_service = new Label(null);
+        prompting_service.set_markup(_("Identity requested for service: <b>%s</b>").printf(service));
         // left-align
         prompting_service.set_alignment(0, (float )0.5);
+        prompting_service.set_padding(12, 6);
 
-        var selection_prompt = new Label(_("Select your identity:"));
-        selection_prompt.set_alignment(0, 1);
-
-        this.service_prompt_vbox.pack_start(prompting_service, false, false, 12);
-        this.service_prompt_vbox.pack_start(selection_prompt, false, false, 2);
+        this.service_prompt_vbox.pack_start(prompting_service, false, false, 0);
         this.service_prompt_vbox.show_all();
     }
 
@@ -522,7 +520,7 @@ SUCH DAMAGE.
 
         AboutDialog about = new AboutDialog();
         about.set_logo_icon_name("moonshot");
-        about.set_comments(_("Moonshot project UI\n Using GTK%d and %s backend".printf(Gtk.MAJOR_VERSION, this.identities_manager.get_store_type().to_string())));
+        about.set_comments(_("Moonshot project UI\n Using GTK%d and %s backend".printf(Gtk.MAJOR_VERSION, this.identities_manager.get_store_name())));
         about.set_copyright(copyright);
         about.set_website(Config.PACKAGE_URL);
         about.set_website_label(_("Visit the Moonshot project web site"));
@@ -608,8 +606,6 @@ SUCH DAMAGE.
         int row = 0;
 
         service_prompt_vbox = new_vbox(0);
-        top_table.attach(service_prompt_vbox, 0, 1, row, row + 1, fill_and_expand, fill_and_expand, 12, 0);
-        row++;
 
         string search_tooltip_text = _("Search for an identity or service");
         this.search_entry = new Entry();
@@ -635,13 +631,10 @@ SUCH DAMAGE.
 
         var search_vbox = new_vbox(0);
         search_vbox.pack_start(search_entry, false, false, 0);
-        var search_spacer = new Alignment(0, 0, 0, 0);
-        search_spacer.set_size_request(0, 2);
-        search_vbox.pack_start(search_spacer, false, false, 0);
         search_vbox.pack_start(full_search_label, false, false, 0);
 
         // Overlap with the service_prompt_box
-        top_table.attach(search_vbox, 5, num_cols - button_width, row - 1, row + 1, fill_and_expand, fill, 0, 12);
+        top_table.attach(search_vbox, 3, num_cols - button_width, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
         row++;
 
         this.custom_vbox = new CustomVBox(this, false, 2);
@@ -659,7 +652,7 @@ SUCH DAMAGE.
         // Right below id_scrollwin:
         remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
         remember_identity_binding.active = true;
-        top_table.attach(remember_identity_binding, 0, num_cols / 2, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
+        top_table.attach(remember_identity_binding, 0, num_cols - 1, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
 
         var add_button = new Button.with_label(_("Add"));
         add_button.clicked.connect((w) => {add_identity_cb();});
@@ -692,12 +685,17 @@ SUCH DAMAGE.
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
+        statusbar = new Gtk.Statusbar();
+        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend".printf(this.identities_manager.get_store_name())));
+
         var main_vbox = new_vbox(0);
 
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-        main_vbox.pack_start(top_table, true, true, 6);
+        main_vbox.pack_start(service_prompt_vbox, false, false, 0);
+        main_vbox.pack_start(top_table, true, true, 0);
+        main_vbox.pack_start(statusbar, false, true, 0);
 
         add(main_vbox);
         main_vbox.show_all();

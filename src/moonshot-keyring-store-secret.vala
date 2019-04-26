@@ -135,6 +135,10 @@ public class KeyringStore : KeyringStoreBase {
         return true;
     }
 
+    public override string get_store_name() {
+        return "LIBSECRET";
+    }
+
     public static bool is_available()
     {
         if (secret_collection == null) {
