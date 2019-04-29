@@ -98,10 +98,6 @@ raspbian9:
   when: manual
   <<: *debiancommon
 
-ubuntu14:
-  image: $DOCKER_REGISTRY_URL/ubuntu14:latest
-  <<: *debiancommon
-
 ubuntu16:
   image: $DOCKER_REGISTRY_URL/ubuntu16:latest
   <<: *debiancommon
