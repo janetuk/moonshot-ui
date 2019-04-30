@@ -94,10 +94,6 @@ raspbian9:
   image: $DOCKER_REGISTRY_URL/raspbian9:latest
   <<: *debiancommon
 
-ubuntu14:
-  image: $DOCKER_REGISTRY_URL/ubuntu14:latest
-  <<: *debiancommon
-
 ubuntu16:
   image: $DOCKER_REGISTRY_URL/ubuntu16:latest
   <<: *debiancommon
