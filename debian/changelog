@@ -1,8 +1,8 @@
 moonshot-ui (1.2.1.DIST) unstable; urgency=medium
 
-  * TBD
+  * Fix memory issue.
 
- -- Jisc <moonshot@jisc.ac.uk>  Sat, 27 Apr 2019 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Tue, 30 Apr 2019 00:00:00 +0000
 
 moonshot-ui (1.2.0.DIST) unstable; urgency=medium
 
