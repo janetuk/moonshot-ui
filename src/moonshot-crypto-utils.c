@@ -147,13 +147,15 @@ int parse_der_certificate(const unsigned char* der, int der_len,
 }
 
 long data_encrypt(unsigned char *plaintext, long plaintext_len,
-                 unsigned char *key, unsigned char *ciphertext)
+                 unsigned char *passwd, unsigned char *ciphertext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
     int len;
     int ciphertext_len = -1;
-    char iv[12];
-    char tag[16];
+    char iv[12], tag[16], key[32];
+
+    EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), "This is my salt", passwd,
+                   strlen(passwd), 20, key, iv);
 
     if (!RAND_bytes(iv, 12))
         goto cleanup;
@@ -204,7 +206,7 @@ cleanup:
 }
 
 long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
-                 unsigned char *key, unsigned char *plaintext)
+                 unsigned char *passwd, unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
     int len;
@@ -212,6 +214,10 @@ long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
     int ret = -1;
     char *tag = ciphertext + ciphertext_len - 16;
     ciphertext_len -= 16;
+    char key[32], tmp[12];
+
+    EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), "This is my salt", passwd,
+                   strlen(passwd), 20, key, tmp);
 
     char *iv = ciphertext + ciphertext_len - 12;
     ciphertext_len -= 12;
