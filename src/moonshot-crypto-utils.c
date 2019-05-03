@@ -146,19 +146,26 @@ int parse_der_certificate(const unsigned char* der, int der_len,
     return 1;
 }
 
+#define SALT_SIZE 16
+#define ITERATIONS 2000
+
 long data_encrypt(unsigned char *plaintext, long plaintext_len,
                  unsigned char *passwd, unsigned char *ciphertext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
     int len;
     int ciphertext_len = -1;
-    char iv[12], tag[16], key[32];
+    char keymat[12 + 32], tag[16], salt[SALT_SIZE], *key, *iv;
 
-    EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), "This is my salt", passwd,
-                   strlen(passwd), 20, key, iv);
-
-    if (!RAND_bytes(iv, 12))
+    if (!RAND_bytes(salt, SALT_SIZE))
         goto cleanup;
+
+    if (!PKCS5_PBKDF2_HMAC(passwd, strlen(passwd), salt, SALT_SIZE, ITERATIONS,
+                           EVP_sha1(), 32 + 12, keymat))
+        goto cleanup;
+
+    key = keymat;
+    iv = keymat + 32;
 
     /* Create and initialise the context */
     if(!(ctx = EVP_CIPHER_CTX_new()))
@@ -169,7 +176,8 @@ long data_encrypt(unsigned char *plaintext, long plaintext_len,
         goto cleanup;
 
     /* Initialise key and IV */
-    if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv)) goto cleanup;
+    if(1 != EVP_EncryptInit_ex(ctx, NULL, NULL, key, iv))
+        goto cleanup;
 
     /* Provide the message to be encrypted, and obtain the encrypted output.
      * EVP_EncryptUpdate can be called multiple times if necessary
@@ -190,9 +198,9 @@ long data_encrypt(unsigned char *plaintext, long plaintext_len,
     if(1 != EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_GET_TAG, 16, tag))
         goto cleanup;
 
-    /* Add IV */
-    memcpy(ciphertext + ciphertext_len, iv, 12);
-    ciphertext_len += 12;
+    /* Add salt */
+    memcpy(ciphertext + ciphertext_len, salt, SALT_SIZE);
+    ciphertext_len += SALT_SIZE;
 
     /* Add tag */
     memcpy(ciphertext + ciphertext_len, tag, 16);
@@ -212,15 +220,20 @@ long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
     int len;
     int plaintext_len;
     int ret = -1;
-    char *tag = ciphertext + ciphertext_len - 16;
+    char keymat[32 + 12], *key, *iv, *salt, *tag;
+
+    tag = ciphertext + ciphertext_len - 16;
     ciphertext_len -= 16;
-    char key[32], tmp[12];
 
-    EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha1(), "This is my salt", passwd,
-                   strlen(passwd), 20, key, tmp);
+    salt = ciphertext + ciphertext_len - SALT_SIZE;
+    ciphertext_len -= SALT_SIZE;
 
-    char *iv = ciphertext + ciphertext_len - 12;
-    ciphertext_len -= 12;
+    if (!PKCS5_PBKDF2_HMAC(passwd, strlen(passwd), salt, SALT_SIZE, ITERATIONS,
+                           EVP_sha1(), 32 + 12, keymat))
+        goto cleanup;
+
+    key = keymat;
+    iv = keymat + 32;
 
     /* Create and initialise the context */
     if(!(ctx = EVP_CIPHER_CTX_new()))
@@ -231,7 +244,8 @@ long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
         goto cleanup;
 
     /* Initialise key and IV */
-    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) goto cleanup;
+    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv))
+        goto cleanup;
 
     /* Provide the message to be decrypted, and obtain the plaintext output.
      * EVP_DecryptUpdate can be called multiple times if necessary
