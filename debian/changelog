@@ -1,6 +1,7 @@
 moonshot-ui (1.2.3.DIST) unstable; urgency=medium
 
-  * TBD
+  * Restore support for loading direct-password ENCRIPTED_FLAT_FILE, in order
+    to avoid loosing access to previously generated credential stores.
 
  -- Jisc <moonshot@jisc.ac.uk>  Fri, 3 May 2019 00:00:00 +0000
 

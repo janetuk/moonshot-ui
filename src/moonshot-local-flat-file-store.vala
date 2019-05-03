@@ -36,7 +36,8 @@ extern long data_encrypt(char *plaintext, long plaintext_len, char *key, char *c
 extern long data_decrypt(char *ciphertext, long ciphertext_len, char *key, char *plaintext);
 
 errordomain FlatFileError {
-    ENCRYPTION
+    ENCRYPTION,
+    LOAD
 }
 
 
@@ -97,10 +98,12 @@ public class LocalFlatFileStore : Object, IIdentityCardStore {
         try{
             FileStream? stream = FileStream.open(filename, "rb");
             if (stream == null)
-                throw new FlatFileError.ENCRYPTION("File does not exist");
+                throw new FlatFileError.LOAD("File does not exist");
             stream.seek(0, FileSeek.END);
-            long size = stream.tell ();
+            long size = stream.tell();
             stream.rewind ();
+            if (size == 0)
+                throw new FlatFileError.LOAD("File is empty");
             contents = new uint8[size];
             stream.read(contents, size);
         }
