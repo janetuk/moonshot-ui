@@ -148,7 +148,6 @@ int parse_der_certificate(const unsigned char* der, int der_len,
 
 #define SALT_SIZE 16
 #define ITERATIONS 2000
-
 long data_encrypt(unsigned char *plaintext, long plaintext_len,
                  unsigned char *passwd, unsigned char *ciphertext)
 {
@@ -214,13 +213,16 @@ cleanup:
 }
 
 long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
-                 unsigned char *passwd, unsigned char *plaintext)
+                  unsigned char *passwd, unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
     int len;
     int plaintext_len;
     int ret = -1;
     char keymat[32 + 12], *key, *iv, *salt, *tag;
+
+    if (!ciphertext)
+        goto cleanup;
 
     tag = ciphertext + ciphertext_len - 16;
     ciphertext_len -= 16;
@@ -267,15 +269,13 @@ cleanup:
     /* Clean up */
     EVP_CIPHER_CTX_free(ctx);
 
-    if(ret > 0)
-    {
-        /* Success */
+    /* Success */
+    if(ret > 0) {
         plaintext_len += len;
         return plaintext_len;
     }
-    else
-    {
-        /* Verify failed */
+    /* Verify failed */
+    else {
         return -1;
     }
 }
