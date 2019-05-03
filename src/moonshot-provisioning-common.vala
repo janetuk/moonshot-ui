@@ -30,7 +30,7 @@
  * SUCH DAMAGE.
 */
 
-
+using Markup;
 
 namespace WebProvisioning
 {
@@ -301,6 +301,78 @@ namespace WebProvisioning
                 logger.error("Could not parse %s, invalid content".printf(path));
                 return false;
             }
+        }
+    }
+
+    public class Writer : Object
+    {
+        protected static string write_identity(IdCard card) {
+            string result = "  <identity>\n";
+            result += "    <display-name>%s</display-name>\n".printf(escape_text(card.display_name));
+            result += "    <user>%s</user>\n".printf(escape_text(card.username));
+            result += "    <password>%s</password>\n".printf(escape_text(card.password));
+            result += "    <realm>%s</realm>\n".printf(escape_text(card.issuer));
+            result += "    <has2fa>%s</has2fa>\n".printf(card.has_2fa ? "true" : "false");
+            if (card.services.size > 0) {
+                result += "    <services>\n";
+                foreach (string service in card.services)
+                    result += "      <service>%s</service>\n".printf(escape_text(service));
+                result += "    </services>\n";
+            }
+            if (card.rules.length > 0) {
+                result += "    <selection-rules>\n";
+                for(int i = 0; i < card.rules.length; i++) {
+                    Rule rule = card.rules[i];
+                    result += "      <rule>\n";
+                    result += "        <pattern>%s</pattern>\n".printf(escape_text(rule.pattern));
+                    result += "        <always-confirm>%s</always-confirm>\n".printf(rule.always_confirm);
+                    result += "      </rule>\n";
+                }
+                result += "    </selection-rules>\n";
+            }
+            result += "    <trust-anchor>\n";
+            if (card.trust_anchor.ca_cert != "") {
+                result += "      <ca-cert>\n";
+                result += card.trust_anchor.ca_cert + "\n";
+                result += "      </ca-cert>\n";
+            }
+            if (card.trust_anchor.subject != "")
+                result += "      <subject>%s</subject>\n".printf(escape_text(card.trust_anchor.subject));
+            if (card.trust_anchor.subject_alt != "")
+                result += "      <subject-alt>%s</subject-alt>\n".printf(escape_text(card.trust_anchor.subject_alt));
+            if (card.trust_anchor.server_cert != "")
+                result += "      <server-cert>%s</server-cert>\n".printf(card.trust_anchor.server_cert);
+            result += "    </trust-anchor>\n";
+            result += "  </identity>\n";
+            return result;
+        }
+
+        public static string write(Gee.List<IdCard> cards) {
+            string result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+            result += "<identities>\n";
+            foreach (IdCard card in cards) {
+                if (!card.is_no_identity())
+                    result += write_identity(card);
+            }
+            result += "</identities>\n";
+            return result;
+        }
+
+        public static bool store(string filename, Gee.List<IdCard> cards) {
+            string result = write(cards);
+            try {
+                FileStream stream = FileStream.open(filename, "wt");
+                if (stream == null)
+                    return false;
+                // workaround old VALA error
+                var towrite = result.data;
+                stream.write(towrite, 1);
+            }
+            catch (GLib.Error e)  {
+                stdout.printf("Error:  %s\n", e.message);
+                return false;
+            }
+            return true;
         }
     }
 }
