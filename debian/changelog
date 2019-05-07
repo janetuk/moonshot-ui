@@ -1,3 +1,9 @@
+moonshot-ui (1.2.4.DIST) unstable; urgency=medium
+
+  * TBD
+
+ -- Jisc <moonshot@jisc.ac.uk>  Tue, 7 May 2019 00:00:00 +0000
+
 moonshot-ui (1.2.3.DIST) unstable; urgency=medium
 
   * Restore support for loading direct-password ENCRIPTED_FLAT_FILE, in order
