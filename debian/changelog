@@ -1,3 +1,11 @@
+moonshot-ui (1.2.3.DIST) unstable; urgency=medium
+
+  * Restore support for loading direct-password ENCRIPTED_FLAT_FILE, in order
+    to avoid loosing access to previously generated credential stores.
+  * Implement credential store export to WebP format.
+
+ -- Jisc <moonshot@jisc.ac.uk>  Tue, 7 May 2019 00:00:00 +0000
+
 moonshot-ui (1.2.2.DIST) unstable; urgency=medium
 
   * Use a key derivation function for the ENCRYPTED_FLAT_FILE backend

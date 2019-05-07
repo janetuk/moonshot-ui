@@ -82,7 +82,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     {
         bool finalize = newt_init();
         int text_height, text_width;
-        string message = newtReflowText(msg, 76, 50, 0, out text_width, out text_height);
+        string message = newtReflowText(msg, 76, 30, 0, out text_width, out text_height);
         newtComponent form, info, button;
         int flags = 0;
         if (text_height > 20) {
@@ -518,7 +518,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     private void select_id_card_dialog() {
-        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn,
+        newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn, export_btn,
                       edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn;
         bool exit_loop = false;
         int offset = 0;
@@ -548,6 +548,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         edit_btn = newtCompactButton(68, offset + 6, "Edit");
         remove_btn = newtCompactButton(68, offset + 8, "Remove");
         send_btn = newtCompactButton(68, offset + 10, "Send");
+        export_btn = newtCompactButton(68, 13, "Export");
         about_btn = newtCompactButton(68, 15, "About");
         exit_btn = newtCompactButton(68, 17, "Exit");
         remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
@@ -563,6 +564,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, remove_btn);
         if (request != null)
             newtFormAddComponent(form, send_btn);
+        newtFormAddComponent(form, export_btn);
         newtFormAddComponent(form, about_btn);
         newtFormAddComponent(form, exit_btn);
 
@@ -610,6 +612,27 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == about_btn) {
                 about_dialog();
+            }
+            else if (chosen == export_btn) {
+                string filename = "/tmp/credentials.xml";
+                bool overwrite = true;
+                if (FileUtils.test(filename, FileTest.EXISTS)) {
+                    overwrite = yesno_dialog("Overwrite file?",
+                                             "File %s already exists on your system. Do you want to".printf(filename)
+                                             + " overwrite it with the new credentials file?",
+                                             false);
+                }
+                if (overwrite) {
+                    bool result = WebProvisioning.Writer.store(filename, card_list);
+                    if (result) {
+                        info_dialog("Identities stored",
+                                    "Your identities have been stored in:\n%s\n\n".printf(filename) +
+                                    "Please, note that passwords are stored in cleartext.");
+                    }
+                    else {
+                        info_dialog("ERROR", "Failed trying to store identities in:\n%s".printf(filename));
+                    }
+                }
             }
             else if (chosen == listbox) {
                 exit_loop = id_card_menu(selected_id_card, request != null, remember);

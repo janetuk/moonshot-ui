@@ -212,7 +212,66 @@ cleanup:
     return ciphertext_len;
 }
 
-long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
+/* We keep this function to support old password-based encrypted credential files.
+   TODO: This function will eventually go out */
+long data_decrypt_legacy(unsigned char *ciphertext, long ciphertext_len,
+                         unsigned char *key, unsigned char *plaintext)
+{
+    EVP_CIPHER_CTX *ctx = NULL;
+    int len;
+    int plaintext_len;
+    int ret = -1;
+    char *tag = ciphertext + ciphertext_len - 16;
+    ciphertext_len -= 16;
+
+    char *iv = ciphertext + ciphertext_len - 12;
+    ciphertext_len -= 12;
+
+    /* Create and initialise the context */
+    if(!(ctx = EVP_CIPHER_CTX_new()))
+        goto cleanup;
+
+    /* Initialise the decryption operation. */
+    if(!EVP_DecryptInit_ex(ctx, EVP_aes_256_gcm(), NULL, NULL, NULL))
+        goto cleanup;
+
+    /* Initialise key and IV */
+    if(!EVP_DecryptInit_ex(ctx, NULL, NULL, key, iv)) goto cleanup;
+
+    /* Provide the message to be decrypted, and obtain the plaintext output.
+     * EVP_DecryptUpdate can be called multiple times if necessary
+     */
+    if(!EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
+        goto cleanup;
+    plaintext_len = len;
+
+    /* Set expected tag value. Works in OpenSSL 1.0.1d and later */
+    if(!EVP_CIPHER_CTX_ctrl(ctx, EVP_CTRL_GCM_SET_TAG, 16, tag))
+        goto cleanup;
+
+    /* Finalise the decryption. A positive return value indicates success,
+     * anything else is a failure - the plaintext is not trustworthy.
+     */
+    ret = EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
+
+cleanup:
+    /* Clean up */
+    EVP_CIPHER_CTX_free(ctx);
+
+    if(ret > 0)
+    {
+        /* Success */
+        plaintext_len += len;
+        return plaintext_len;
+    }
+    else
+    {
+        /* Verify failed */
+        return -1;
+    }
+}
+
+long data_decrypt_pbkdf2(unsigned char *ciphertext, long ciphertext_len,
                   unsigned char *passwd, unsigned char *plaintext)
 {
     EVP_CIPHER_CTX *ctx = NULL;
@@ -220,9 +279,6 @@ long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
     int plaintext_len;
     int ret = -1;
     char keymat[32 + 12], *key, *iv, *salt, *tag;
-
-    if (!ciphertext)
-        goto cleanup;
 
     tag = ciphertext + ciphertext_len - 16;
     ciphertext_len -= 16;
@@ -278,6 +334,16 @@ cleanup:
     else {
         return -1;
     }
+}
+
+long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
+                  unsigned char *passwd, unsigned char *plaintext)
+{
+    long rc = data_decrypt_pbkdf2(ciphertext, ciphertext_len, passwd, plaintext);
+    if (rc > 0)
+        return rc;
+    fprintf(stderr, "Trying legacy\n");
+    return data_decrypt_legacy(ciphertext, ciphertext_len, passwd, plaintext);
 }
 
 long get_encryption_key(char* buffer, int buflen)

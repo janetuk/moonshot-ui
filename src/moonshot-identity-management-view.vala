@@ -677,12 +677,20 @@ SUCH DAMAGE.
         row++;
 
         // push the send button down another row.
-        row++;
         this.send_button = new Button.with_label(_("Send"));
         send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
         // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
+
+        // push the send button down another row.
+        row++;
+        row++;
+        row++;
+        var export_button = new Button.with_label(_("Export"));
+        export_button.clicked.connect((w) => {export_identities_cb();});
+        top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
         statusbar = new Gtk.Statusbar();
@@ -775,6 +783,32 @@ SUCH DAMAGE.
             import_directory = file.get_parent().get_path();
 
             import_identities(filename, identities_manager, logger);
+        }
+        dialog.destroy();
+    }
+
+    private void export_identities_cb() {
+        var dialog = new FileChooserDialog("Save File",
+                                           this,
+                                           FileChooserAction.SAVE,
+                                           _("Cancel"),ResponseType.CANCEL,
+                                           _("Save"), ResponseType.ACCEPT,
+                                           null);
+        dialog.set_do_overwrite_confirmation(true);
+        if (export_directory != null) {
+            dialog.set_current_folder(export_directory);
+        }
+        string default_filename = "credentials.xml";
+        dialog.set_current_name(default_filename);
+        if (dialog.run() == ResponseType.ACCEPT)
+        {
+            string filename = dialog.get_filename();
+            Gee.List<IdCard> card_list = identities_manager.get_card_list();
+            bool result = WebProvisioning.Writer.store(filename, card_list);
+            if (!result)
+                info_dialog("Error", "Could not save Identities file");
+            var file  = File.new_for_path(filename);
+            export_directory = file.get_parent().get_path();
         }
         dialog.destroy();
     }
