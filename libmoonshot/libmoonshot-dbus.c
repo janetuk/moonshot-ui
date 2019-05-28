@@ -352,8 +352,14 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
       gchar **envp = NULL;
       /* If we launched our own bus, make sure the proxy has access to it by setting the appropriate env variable */
-      if (conn->bus)
-        envp = g_environ_setenv(g_get_environ(), "DBUS_SESSION_BUS_ADDRESS", conn->bus->address, TRUE);
+      if (conn->bus) {
+        // Old GLIB does not have g_environ_setenv, so we mimic it
+        envp = g_get_environ();
+        guint length = g_strv_length(envp);
+        envp = g_renew (gchar *, envp, length + 2);
+        envp[length] = g_strdup_printf ("%s=%s", "DBUS_SESSION_BUS_ADDRESS", conn->bus->address);
+        envp[length + 1] = NULL;
+      }
       result = g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, envp,  0, NULL, NULL,
                                         &(conn->service_pid), NULL, NULL, NULL, NULL);
       g_strfreev(envp);
