@@ -429,8 +429,8 @@ public static int main(string[] args) {
     Intl.bind_textdomain_codeset(Config.GETTEXT_PACKAGE, "UTF-8");
     Intl.textdomain(Config.GETTEXT_PACKAGE);
 
-    // When explicitly launched, cli is automatically enabled
-    if (explicitly_launched)
+    // When explicitly launched in headless, cli is automatically enabled
+    if (explicitly_launched && headless)
         cli_enabled = true;
 
     IdentityManagerApp app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled, explicitly_launched);
