@@ -278,6 +278,7 @@ AC_CONFIG_FILES([
         moonshot-webp.desktop
         moonshot-ui.spec
         APKBUILD
+        PKGBUILD
 ])
 
 AC_OUTPUT
