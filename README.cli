@@ -1,39 +1,42 @@
 How to use the Moonshot Text UI
 --------------------------------------
 This UI version comes with support for text interface. In order to make
-use of it, some conditions need to be met:
+use of it with either the ENCRYPTED_FLAT_FILE or the LIBSECRET/GNOME_KEYRING
+backends, some conditions need to be met:
 
-1) A DBUS session MUST exist, so the Moonshot UI can connect to it when an
-   application asks for an identity to be used.
+1) For the ENCRYPTED_FLAT_FILE backend, a key named "moonshot-ui" must be
+   defined in the kernel session keyring.
 
-   A dbus session can be easily created by executing "dbus-launch bash", to get
-   the session on a new shell, or "eval $(dbus-launch --sh-syntax)", to get the
-   session on the current shell.
-
-2) If the GNOME Keyring backend is to be used, an unlocked instance must be
-   running and associated to the same DBUS session mentioned above.
-
-   This can be achieved by executing the following command, where $PASSWD is
-   the password for unlocking the default keyring:
-   $> echo -n $PASSWD | gnome-keyring-daemon --unlock
-   $> eval "$(/usr/bin/gnome-keyring-daemon --start)"
-
-   See the requirements for GNOME keyring below.
-
-3) If the ENCRYPTED_FLAT_FILE backend is to be used, a key named "moonshot-ui"
-   must be defined in the kernel session keyring.
-
-   This can be achieved by using the keyctl command, as follows:
-   "keyctl add user moonshot-ui $PASSWD @s"
+   This can be easily achieved by using the keyctl command, where $PASSWD is
+   the encryption key:
+   - Option 1: key is provided directly in the command line:
+      "keyctl add user moonshot-ui $PASSWD @s"
+   - Option 2: key is introduced interactively (use Ctrl+D to finish):
+      "keyctl padd user moonshot-ui @s"
 
    When the key is found, the UI will use it as the master password to decrypt
    the AES-GCM encrypted credential file, located in
-   $HOME/.local/share/moonshot-ui/identities.txt.aes.
+   $HOME/.local/share/moonshot-ui/identities.txt.aes
+
+2) If the GNOME Keyring backend is to be used (not recommended, unless you
+   really need it), a DBUS session MUST exist, so the Moonshot UI can connect
+   to it when an application asks for an identity to be used. Besides, an
+   unlocked instance of GNOME Keyring must be running and associated to the
+   same DBUS session.
+
+   This can be achieved by executing the following commands, where $PASSWD is
+   the password for unlocking the default keyring:
+   $> eval "$(dbus-launch --sh-syntax)"
+   $> echo -n $PASSWD | gnome-keyring-daemon --unlock
+   $> eval "$(/usr/bin/gnome-keyring-daemon --start)"
+
+   For convenience, we ship a script that performs these steps. You can find it
+   in: /usr/share/moonshot-ui/enable-moonshot-txt-ui-gnome-keyring
 
 Requirements for using GNOME keyring
 -------------------------------------
 For Moonshot to work properly with GNOME keyring, a default keyring MUST exist.
-You may use the "seahorse" application to check the existance of this keyring,
+You may use the "seahorse" application to check the existence of this keyring,
 as well as to create it if it does not exist already.
 
 Also, the GTK version of the UI will automatically create a default keyring
@@ -46,7 +49,7 @@ and/or SSH login. In this case, a default keyring called "login" would
 automatically be created by PAM if it does not exist.
 
 In this case, the "gnome-keyring-daemon --unlock" described above is not
-reequired, although it would still be required to start the daemon manually.
+required, although it would still be required to start the daemon manually.
 
 Known issues of GNOME keyring with CentOS 6
 -----------------------------------------
