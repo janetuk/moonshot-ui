@@ -55,9 +55,10 @@ public class IdentityManagerApp {
     public bool use_flat_file_store {public get; private set;}
     public bool headless {public get; private set;}
 
-    /** If we're successfully registered with DBus, then show the UI. Otherwise, wait until we're registered. */
+    /** If we're successfully registered with DBus, or the UI was explicitly launched in TXT mode, show the UI.
+        Otherwise, wait until we're registered. */
     public void show() {
-        if (name_is_owned) {
+        if (name_is_owned || (explicitly_launched && headless)) {
             if (view != null) {
                 view.make_visible();
             }
@@ -72,8 +73,9 @@ public class IdentityManagerApp {
     internal IdentityManagerApp.dummy() {}
 #endif
 
-    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled) {
+    public IdentityManagerApp(bool headless, bool use_flat_file_store, bool cli_enabled, bool explicitly_launched) {
         this.headless = headless;
+        this.explicitly_launched = explicitly_launched;
 
         use_flat_file_store |= UserForcesFlatFileStore();
         this.use_flat_file_store = use_flat_file_store;
@@ -108,7 +110,9 @@ public class IdentityManagerApp {
         if (card_list.size > 0)
             this.default_id_card = card_list.last();
 
-        init_ipc_server();
+        /* Start the IPC server, except when explicitly launched in TEXT mode. */
+        if (!(explicitly_launched && cli_enabled))
+            init_ipc_server();
     }
 
     public bool add_identity(IdCard id, bool force_flat_file_store) {
@@ -429,8 +433,7 @@ public static int main(string[] args) {
     if (explicitly_launched)
         cli_enabled = true;
 
-    IdentityManagerApp app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled);
-    app.explicitly_launched = explicitly_launched;
+    IdentityManagerApp app = new IdentityManagerApp(headless, use_flat_file_store, cli_enabled, explicitly_launched);
     IdentityManagerApp.logger.trace(@"main: explicitly_launched=$explicitly_launched");
 
     if (app.explicitly_launched) {
