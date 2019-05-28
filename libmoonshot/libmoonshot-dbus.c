@@ -218,7 +218,6 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
     dbus_terminate_bus(bus);
     bus = NULL;
   }
-
   return bus;
 }
 
@@ -347,13 +346,18 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
     start it ourselves. Spawn a CLI Moonshot server when:
       1) There is no DISPLAY environment variable.
       2) We are in control of stdin and stdout (ie. we are running in the foreground).
-      3) There was a pre-existing DBUS session (we did not launched the session above).
-         Otherwise, we would have problems with the keyring.
   */
-  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && !conn->bus) {
+  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin))) {
+      gboolean result = FALSE;
       flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
-      if (!g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, NULL,  0, NULL, NULL,
-                                   &(conn->service_pid), NULL, NULL, NULL, NULL)) {
+      gchar **envp = NULL;
+      /* If we launched our own bus, make sure the proxy has access to it by setting the appropriate env variable */
+      if (conn->bus)
+        envp = g_environ_setenv(g_get_environ(), "DBUS_SESSION_BUS_ADDRESS", conn->bus->address, TRUE);
+      result = g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, envp,  0, NULL, NULL,
+                                        &(conn->service_pid), NULL, NULL, NULL, NULL);
+      g_strfreev(envp);
+      if (!result) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
         return NULL;
       }
