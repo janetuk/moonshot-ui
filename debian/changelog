@@ -1,8 +1,9 @@
 moonshot-ui (1.2.4.DIST) unstable; urgency=medium
 
-  * TBD
+  * Allow using the TEXT UI without explicitly launching a DBUS session. This
+    works only with the FLAT_FILE and ENCRYPTED_FLAT_FILE.
 
- -- Jisc <moonshot@jisc.ac.uk>  Tue, 7 May 2019 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 3 Jun 2019 00:00:00 +0000
 
 moonshot-ui (1.2.3.DIST) unstable; urgency=medium
 
