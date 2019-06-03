@@ -548,9 +548,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         edit_btn = newtCompactButton(68, offset + 6, "Edit");
         remove_btn = newtCompactButton(68, offset + 8, "Remove");
         send_btn = newtCompactButton(68, offset + 10, "Send");
-        export_btn = newtCompactButton(68, 13, "Export");
-        about_btn = newtCompactButton(68, 15, "About");
-        exit_btn = newtCompactButton(68, 17, "Exit");
+        export_btn = newtCompactButton(68, 14, "Export");
+        about_btn = newtCompactButton(68, 16, "About");
+        exit_btn = newtCompactButton(68, 18, "Exit");
         remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
         newtFormAddComponent(form, filter_btn);
