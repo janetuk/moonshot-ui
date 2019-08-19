@@ -1,6 +1,9 @@
 moonshot.svg
-macos-ui/Docs/UI
+macos-ui/Docs/UI:UX.pdf
 macos-ui/Installer/installer_background.png
+macos-ui/Installer/moonshot-dmg-background-with-start.png
+macos-ui/Installer/moonshot-dmg-background.png
+macos-ui/Installer/moonshot-dmg-volumeicons.icns
 macos-ui/Moonshot/Assets.xcassets/AppIcon.appiconset/icon_128x128.png
 macos-ui/Moonshot/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png
 macos-ui/Moonshot/Assets.xcassets/AppIcon.appiconset/icon_16x16.png
