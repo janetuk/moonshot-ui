@@ -36,6 +36,7 @@ before_script:
     - make dist
     - mkdir -p SOURCES
     - mv -f moonshot-ui-*tar.xz SOURCES
+    - yum -y gnome-keyring-devel
     - rpmbuild -bb moonshot-ui.spec --define "_topdir `pwd`"
   artifacts:
     expire_in: 6 months
