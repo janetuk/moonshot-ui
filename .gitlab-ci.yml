@@ -17,7 +17,6 @@ before_script:
     - sh autogen.sh
     - make dist
     - mv moonshot-ui-1.1.5.tar.xz ../moonshot-ui_1.1.5.orig.tar.xz
-    - rm -rf macos-ui
     - debuild -us -uc
     - mkdir build
     - cp ../*.deb build
