@@ -248,6 +248,7 @@ EXTRA_DIST = webprovisioning/moonshot.xml $(dbus_service_in_file) \
 	README.webprovisioning README.windows \
 	moonshot-ui.spec moonshot.svg \
 	vapi/moonshot-gnome-keyring.vapi libmoonshot/libmoonshot.vapi
+EXTRA_DIST += macos-ui/Makefile.am
 
 noinst_PROGRAMS = \
         examples/client \
