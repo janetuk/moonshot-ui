@@ -4,12 +4,11 @@ Priority: optional
 Maintainer: Sam Hartman <hartmans@debian.org>
 Build-Depends: debhelper (>= 9), libatk1.0-dev (>= 1.20), libglib2.0-dev, libgtk-3-dev,
     gettext, autotools-dev, desktop-file-utils, libgee-0.8-dev|libgee-dev,
-    autopoint, autoconf, autotools-dev, automake, libtool,
- dh-autoreconf, valac, libgnome-keyring-dev|libsecret-1-dev, libssl1.0-dev|libssl-dev, dbus
+    autopoint, autoconf, autotools-dev, automake, libtool, libkeyutils-dev,
+    dh-autoreconf, valac, libgnome-keyring-dev|libsecret-1-dev, libssl1.0-dev|libssl-dev, dbus
 Standards-Version: 3.9.5
 Homepage: http://www.project-moonshot.org/
-Vcs-Git: http://www.project-moonshot.org/git/moonshot-ui.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/moonshot-ui.git;a=summary
+Vcs-Git: https://github.com/janetuk/moonshot-ui
 
 Package: moonshot-ui
 Architecture: any
