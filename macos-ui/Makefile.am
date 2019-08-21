@@ -10,18 +10,16 @@ EXTRA_DIST = Docs \
              Uninstaller \
              filemanifest.txt
 
-install:
-
 #  On macOS we use dbus_check.sh as the 'binary' for this package,
 #  On Linux we just bundle it like the rest of the source
 
 if !OS_MACOS
-
 EXTRA_DIST += dbus_check.sh
-
 else
+bin_SCRIPTS = dbus_check.sh
+endif
 
-bin_PROGRAMS = dbus_check.sh
+if OS_MACOS
 
 installer: Installer/Moonshot.dmg
 if WITH_APPLE_DEVELOPER_ID_APPLICATION
