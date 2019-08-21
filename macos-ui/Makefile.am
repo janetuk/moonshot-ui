@@ -1,5 +1,15 @@
 AUTOMAKE_OPTIONS = foreign
 
+EXTRA_DIST = Docs \
+             Installer \
+             Moonshot \
+             Moonshot.xcodeproj \
+             moonshot_mac_util \
+             MoonshotTests \
+             MoonshotUITests \
+             Uninstaller \
+             filemanifest.txt
+
 if !OS_MACOS
 FIRST_TARGET = 
 else
