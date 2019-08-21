@@ -12,6 +12,7 @@
 ./moonshot/bin
 ./moonshot/bin/c_rehash
 ./moonshot/bin/certs
+./moonshot/bin/dbus_check.sh
 ./moonshot/bin/dbus-binding-tool
 ./moonshot/bin/dbus-cleanup-sockets
 ./moonshot/bin/dbus-daemon

@@ -131,7 +131,7 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 
 endif
 
-if  OS_MACOS
+if OS_MACOS
 
 AM_CPPFLAGS = 
 AM_VALAFLAGS = 

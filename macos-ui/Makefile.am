@@ -10,17 +10,23 @@ EXTRA_DIST = Docs \
              Uninstaller \
              filemanifest.txt
 
-if !OS_MACOS
-FIRST_TARGET = 
-else
-FIRST_TARGET = Installer/Moonshot.dmg
-endif
+install:
 
-install: $(FIRST_TARGET)
+#  On macOS we use dbus_check.sh as the 'binary' for this package,
+#  On Linux we just bundle it like the rest of the source
+
+if !OS_MACOS
+
+EXTRA_DIST += dbus_check.sh
+
+else
+
+bin_PROGRAMS = dbus_check.sh
+
+installer: Installer/Moonshot.dmg
 if WITH_APPLE_DEVELOPER_ID_APPLICATION
 	codesign --sign "$(APPLE_DEVELOPER_ID_APPLICATION)" $<
 endif
-if OS_MACOS
 	cp $< ./
 
 DMG_INPUTS = Installer/create-dmg.sh \
@@ -77,14 +83,14 @@ Installer/LatestBuild/Uninstall\\ Moonshot.app: Uninstaller/build/Release/Uninst
 	mv Uninstaller/build/Release/*.app $(abs_srcdir)/Installer/LatestBuild/
 
 build/Release/Moonshot.app:
-if WITH_APPLE_DEVELOPER_ID_APPLICATION
-	cd Moonshot.xcodeproj; \
-	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
-else
+#if WITH_APPLE_DEVELOPER_ID_APPLICATION
+#	cd Moonshot.xcodeproj; \
+#	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
+#else
 	cd Moonshot.xcodeproj; \
 	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = \"\";/g' project.pbxproj; \
 	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
-endif
+#endif
 	$(XCODEBUILD)
 
 Uninstaller/build/Release/Uninstall\\ Moonshot.app:
