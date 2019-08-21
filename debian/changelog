@@ -1,4 +1,4 @@
-moonshot-ui (1.1.5-0) unstable; urgency=medium
+moonshot-ui (1.1.5.DIST) unstable; urgency=medium
 
   * Include Debian Buster build
 
