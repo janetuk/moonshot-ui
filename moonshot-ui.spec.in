@@ -98,106 +98,106 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
-* Mon 03 Jun 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
+* Mon Jun 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
 - TBD
 
-* Mon 03 Jun 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.5-1
+* Mon Jun 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.5-1
 - Make sure we disconnect from DBUS when we started the server and the DBUS
   session.
 
-* Mon 03 Jun 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.4-1
+* Mon Jun 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.4-1
 - Allow using the TEXT UI without explicitly launching a DBUS session. This
   works only with the FLAT_FILE and ENCRYPTED_FLAT_FILE.
 
-* Tue 07 May 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.3-1
+* Tue May 07 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.3-1
 - Restore support for loading direct-password ENCRIPTED_FLAT_FILE, in order
   to avoid loosing access to previously generated credential stores.
 - Implement credential store export to WebP format.
 
-* Fri 03 May 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.2-1
+* Fri May 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.2-1
 - Use a key derivation function for the ENCRYPTED_FLAT_FILE backend
 - Update README.cli
 
-* Tue 30 Apr 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.1-1
+* Tue Apr 30 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.1-1
 - Fix memory issue.
 
-* Fri 26 Apr 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.0-1
+* Fri Apr 26 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.0-1
 - Support AES-GCM encrypted flat files using kernel session keyring.
 - UI layout adjustments
 
-* Sat 30 Mar 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.11-1
+* Sat Mar 30 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.11-1
 - Minor improvements to the TXT UI and moonshot-idcard-generator
 
-* Wed 20 Mar 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.10-1
+* Wed Mar 20 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.10-1
 - Homogenise TXT and GTK UI and factorise shared code
 
-* Mon 04 Mar 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.9-1
+* Mon Mar 04 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.9-1
 - Add a "Show Certificate" button when confirming Trust Anchor.
 
-* Wed 27 Feb 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.8-1
+* Wed Feb 27 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.8-1
 - Fix window being too wide when confirming Trust Anchors
 - Update source URL
 - Improve how keyring is handled for non-desktop environments.
 - Support decorated NAIs when confirming Trust Anchors
 
-* Sat 02 Feb 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.7
+* Sat Feb 02 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.7
 - Build source packages
 - Make use of GCR to provide secure memory when using libsecret
 
-* Sun 27 Jan 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.6-0
+* Sun Jan 27 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.6-0
 - Fix regression with libsecret handling that precluded editing Id Cards.
 
-* Mon 21 Jan 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.5-0
+* Mon Jan 21 2019 Jisc <moonshot@jisc.ac.uk> - 1.1.5-0
 - Include Debian Buster build
 
-* Thu 20 Dec 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.4-0
+* Thu Dec 20 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.4-0
 - Support building with GTK3
 - Support building with libsecret
 
-* Tue 27 Nov 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.3-0
+* Tue Nov 27 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.3-0
 - Package for release
 
-* Tue 11 Sep 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.2-0
+* Tue Sep 11 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.2-0
 - Package for release
 
-* Thu 30 Aug 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.1-0
+* Thu Aug 30 2018 Jisc <moonshot@jisc.ac.uk> - 1.1.1-0
 - Package for release
 
-* Fri 15 Jun 2018 Painless Security <build@painless-security.com> - 1.1.0-1
+* Fri Jun 15 2018 Painless Security <build@painless-security.com> - 1.1.0-1
 - Package for release
 
-* Thu 14 Jun 2018 Painless Security <build@painless-security.com> - 1.1.0.2-1
+* Thu Jun 14 2018 Painless Security <build@painless-security.com> - 1.1.0.2-1
 - Send blank strings when moonshot_get_identity() nai/password are null
 
-* Tue 12 Jun 2018 Painless Security <build@painless-security.com> - 1.1.0.1-1
+* Tue Jun 12 2018 Painless Security <build@painless-security.com> - 1.1.0.1-1
 - Replace dbus-glib and libdbus with GDBus
 - Use dbus-daemon instead of dbus-launch in libmoonshot
 - Give better error messages when DBus connection fails
 
-* Tue 01 Aug 2017 Painless Security <build@painless-security.com> - 1.0.6-2
+* Tue Aug 01 2017 Painless Security <build@painless-security.com> - 1.0.6-2
 - Version number bump
 
-* Tue 25 Jul 2017 Painless Security <build@painless-security.com> - 1.0.5-1
+* Tue Jul 25 2017 Painless Security <build@painless-security.com> - 1.0.5-1
 - Version number bump
 
-* Sun 09 Jul 2017 Sam Hartman <hartmans@debian.org> - 1.0.3-2
+* Sun Jul 09 2017 Sam Hartman <hartmans@debian.org> - 1.0.3-2
 - Upload to debian experimental, Closes: #864957
 
-* Tue 30 May 2017 Painless Security <build@painless-security.com> - 1.0.3-1
+* Tue May 30 2017 Painless Security <build@painless-security.com> - 1.0.3-1
 - Various stability fixes.
 
-* Sat 11 Feb 2017 Painless Security <build@painless-security.com> - 1.0.2-2
+* Sat Feb 11 2017 Painless Security <build@painless-security.com> - 1.0.2-2
 - Updated changelog
 
-* Mon 31 Oct 2016 Dan Breslau <dbreslau@painless-security.com> - 1.0.2-1
+* Mon Oct 31 2016 Dan Breslau <dbreslau@painless-security.com> - 1.0.2-1
 - Updated changelog
 
-* Mon 31 Oct 2016 Dan Breslau <dbreslau@painless-security.com> - 1.0.0-1
+* Mon Oct 31 2016 Dan Breslau <dbreslau@painless-security.com> - 1.0.0-1
 - UI has been redesigned
 - Moonshot now asks user to confirm the server's fingerprint if none is 
   configured, or warns if mismatch.
 
-* Wed 15 Jul 2015 Sam Hartman <hartmans@debian.org> - 0.7.2-1
+* Wed Jul 15 2015 Sam Hartman <hartmans@debian.org> - 0.7.2-1
 - New upstream Version, Closes: #787880
 - Force vala run and support libgee-dev and libgee-0.8-dev so we can
   build wheezy and jessie versions from the same sources.
@@ -205,101 +205,101 @@ Requires: moonshot-ui  = %{version}-%{release}
   actual code change is very simple and will either cause a build
   failure or just work.
 
-* Thu 21 May 2015 Sam Hartman <hartmans@debian.org> - 0.7.1-3
+* Thu May 21 2015 Sam Hartman <hartmans@debian.org> - 0.7.1-3
 - Depend on libgee-0.8-dev, Closes: #784651
 
-* Wed 25 Mar 2015 Sam Hartman <hartmans@debian.org> - 0.7.1-2
+* Wed Mar 25 2015 Sam Hartman <hartmans@debian.org> - 0.7.1-2
 - Merge in upstream change to properly decode base64 certificates with
   whitespace.
 
-* Wed 03 Sep 2014 Sam Hartman <hartmans@debian.org> - 0.7.1-1
+* Wed Sep 03 2014 Sam Hartman <hartmans@debian.org> - 0.7.1-1
 - New upstream version
 - Move dbus launch script to libmoonshot1
 - Because the dbus interface between moonshot-ui and libmoonshot1 may
   not be entirely stable, create versioned dependency.
 - Initial upload to Debian, Closes: #760411
 
-* Fri 23 May 2014 Sam Hartman <hartmans@debian.org> - 0.7-2
+* Fri May 23 2014 Sam Hartman <hartmans@debian.org> - 0.7-2
 - Depend on dbus-x11 for dbus-launch
 
-* Mon 19 May 2014 Sam Hartman <hartmans@debian.org> - 0.7-1
+* Mon May 19 2014 Sam Hartman <hartmans@debian.org> - 0.7-1
 - New upstream version
 
-* Wed 13 Nov 2013 Sam Hartman <hartmans@debian.org> - 0.6-8
+* Wed Nov 13 2013 Sam Hartman <hartmans@debian.org> - 0.6-8
 - Update handling of requests containing passwords and avoid duplicate
   identity
 
-* Tue 29 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-7
+* Tue Oct 29 2013 Sam Hartman <hartmans@debian.org> - 0.6-7
 - Merge in upstream support for flatstore-users
 
-* Tue 29 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-6
+* Tue Oct 29 2013 Sam Hartman <hartmans@debian.org> - 0.6-6
 - Merge upstream bug fixes
 
-* Thu 10 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-5
+* Thu Oct 10 2013 Sam Hartman <hartmans@debian.org> - 0.6-5
 - Install default identity example
 
-* Thu 10 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-4
+* Thu Oct 10 2013 Sam Hartman <hartmans@debian.org> - 0.6-4
 - Add debug info package
 
-* Tue 08 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-3
+* Tue Oct 08 2013 Sam Hartman <hartmans@debian.org> - 0.6-3
 - Include gnome keyring and moonshot-webp fixes
 
-* Thu 03 Oct 2013 Sam Hartman <hartmans@debian.org> - 0.6-2
+* Thu Oct 03 2013 Sam Hartman <hartmans@debian.org> - 0.6-2
 - New upstream version
 - Increment shlibs version for libmoonshot
 
-* Thu 16 May 2013 Kevin Wasserman <krwasserman@painless-security.com> - 0.5.20130510-1.1
+* Thu May 16 2013 Kevin Wasserman <krwasserman@painless-security.com> - 0.5.20130510-1.1
 - New upstream version
 - Fix headless add identity cards
 
-* Fri 10 May 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130510-1
+* Fri May 10 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130510-1
 - New upstream version
 
-* Tue 30 Apr 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-3
+* Tue Apr 30 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-3
 - Fix assertion on no identities
 
-* Tue 30 Apr 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-2
+* Tue Apr 30 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-2
 - Updates to fix assertion failure
 
-* Mon 29 Apr 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-1
+* Mon Apr 29 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130429-1
 - New Upstream version
 
-* Sun 21 Apr 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130421-2
+* Sun Apr 21 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130421-2
 - New upstream version
 - Fix service removal
 - Fix bogus identities
 
-* Tue 26 Mar 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130326-1
+* Tue Mar 26 2013 Sam Hartman <hartmans@debian.org> - 0.5.20130326-1
 - New upstream version
 - Fixes headless operation
 
-* Tue 19 Mar 2013 Sam Hartman <hartmans@debian.org> - 0.0.2.20130319-1
+* Tue Mar 19 2013 Sam Hartman <hartmans@debian.org> - 0.0.2.20130319-1
 - Merge in upstream changes
 - Script for auto dbus launch in headless
 
-* Fri 18 May 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120131-2
+* Fri May 18 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120131-2
 - Update from master branch
 
-* Tue 31 Jan 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120131-1
+* Tue Jan 31 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120131-1
 - New upstream version
 
-* Thu 19 Jan 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120119-1
+* Thu Jan 19 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120119-1
 - New upstream version
 
-* Tue 17 Jan 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120117-1
+* Tue Jan 17 2012 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20120117-1
 - New upstream version
 
-* Tue 13 Sep 2011 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20110913-2
+* Tue Sep 13 2011 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20110913-2
 - Fix shared libraries
 
-* Tue 13 Sep 2011 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20110913-1
+* Tue Sep 13 2011 Sam Hartman <hartmans@project-moonshot.org> - 0.0.2.20110913-1
 - New upstream version
 
-* Mon 04 Jul 2011 Sam Hartman <hartmans@debian.org> - 0.0.2.20110704-1
+* Mon Jul 04 2011 Sam Hartman <hartmans@debian.org> - 0.0.2.20110704-1
 - New Upstream version
 
-* Mon 13 Jun 2011 Sam Hartman <hartmans@debian.org> - 0.0.2.20110621-1
+* Mon Jun 13 2011 Sam Hartman <hartmans@debian.org> - 0.0.2.20110621-1
 - New Upstream release
 
-* Wed 04 May 2011 Sam Hartman <hartmans@debian.org> - 0.0.1.20110504-1
+* Wed May 04 2011 Sam Hartman <hartmans@debian.org> - 0.0.1.20110504-1
 - Initial release
