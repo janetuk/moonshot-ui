@@ -20,7 +20,11 @@ BuildRequires:      dbus-devel
 BuildRequires:      openssl-devel
 BuildRequires:      desktop-file-utils
 BuildRequires:      shared-mime-info
+%if 0%{?el6}
 BuildRequires:      gnome-keyring-devel
+%else
+BuildRequires:      libsecret-devel,gcr-devel
+%endif
 BuildRequires:      vala
 Requires:           desktop-file-utils, shared-mime-info, dbus-x11
 
