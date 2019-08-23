@@ -104,15 +104,30 @@ public class KeyringStore : KeyringStoreBase {
     }
 
     public static bool is_available() {
-        return GnomeKeyring.is_available();
-    }
+        if (!GnomeKeyring.is_available())
+            return false;
 
-    public override bool is_locked() {
-        unowned GnomeKeyring.Info info;
-        GnomeKeyring.Result rv = GnomeKeyring.get_info_sync(null, out info);
-        if (rv != GnomeKeyring.Result.OK)
-            return true;
-        return info.get_is_locked();
+        /* check whether we have a defualt keyring */
+        string default_keyring;
+        GnomeKeyring.Result result = GnomeKeyring.get_default_keyring_sync(out default_keyring);
+        if (result != GnomeKeyring.Result.OK)
+            return false;
+
+        if (default_keyring == null) {
+            result = GnomeKeyring.create_sync("login", null);
+            if (result != GnomeKeyring.Result.OK)
+                return false;
+
+            result = GnomeKeyring.set_default_keyring_sync("login");
+            if (result != GnomeKeyring.Result.OK)
+                return false;
+        }
+
+        result = GnomeKeyring.unlock_sync(null, null);
+        if (result != GnomeKeyring.Result.OK)
+            return false;
+
+        return true;
     }
 }
 

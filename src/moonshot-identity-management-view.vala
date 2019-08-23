@@ -93,8 +93,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.title = _("Moonshot Identity Selector");
         this.set_position(WindowPosition.CENTER);
         set_default_size(WINDOW_WIDTH, WINDOW_HEIGHT);
-        build_ui();
         setup_list_model();
+        build_ui();
         load_id_cards();
         connect_signals();
         report_duplicate_nais();

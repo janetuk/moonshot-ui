@@ -1,4 +1,13 @@
-moonshot-ui (1.1.7.DIST) unstable; urgency=medium
+moonshot-ui (1.1.8.DIST) unstable; urgency=medium
+
+  * Fix window being too wide when confirming Trust Anchors
+  * Update source URL
+  * Improve how keyring is handled for non-desktop environments.
+  * Support decorated NAIs when confirming Trust Anchors
+
+ -- Jisc <moonshot@jisc.ac.uk>  Wed, 27 Feb 2019 00:00:00 +0000
+
+moonshot-ui (1.1.7) unstable; urgency=medium
 
   * Build source packages
   * Make use of GCR to provide secure memory when using libsecret

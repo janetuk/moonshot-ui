@@ -113,7 +113,7 @@ namespace WebProvisioning
             }
 
             stdout.printf(@"Installing IdCard named '$(card.display_name)'\n");
-            bool ret = Moonshot.install_id_card(card.display_name,
+            bool ret = Moonshot.install_id_card_2fa(card.display_name,
                                                 card.username,
                                                 card.password,
                                                 card.issuer,
@@ -125,6 +125,7 @@ namespace WebProvisioning
                                                 card.trust_anchor.subject_alt,
                                                 card.trust_anchor.server_cert,
                                                 force_flat_file_store,
+                                                (int) card.has_2fa,
                                                 out error);
             if (!ret) {
                 stdout.printf("Card was not installed because user rejected it.\n");

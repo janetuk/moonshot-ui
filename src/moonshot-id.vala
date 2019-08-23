@@ -129,7 +129,9 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
 
     internal static string format_datetime_now() {
         DateTime now = new DateTime.now_utc();
-        string dt = now.format("%b %d %T %Y %Z");
+        string? dt = now.format("%b %d %T %Y %Z");
+        if (dt == null || dt == "")
+            dt = "Formatted date not supported on this system";
         return dt;
     }
 
@@ -395,7 +397,8 @@ public class IdCard : Object
         ISSUER,
         RULES,
         SERVICES,
-        TRUST_ANCHOR;
+        TRUST_ANCHOR,
+        HAS2FA;
     }
 
     public int Compare(IdCard other)
@@ -412,6 +415,9 @@ public class IdCard : Object
 
         if (this.issuer != other.issuer)
             diff |= 1 << DiffFlags.ISSUER;
+
+        if (this.has_2fa != other.has_2fa)
+            diff |= 1 << DiffFlags.HAS2FA;
 
         if (CompareRules(this.rules, other.rules)!=0)
             diff |= 1 << DiffFlags.RULES;
