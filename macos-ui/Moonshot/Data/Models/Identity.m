@@ -21,6 +21,7 @@
             self.dateAdded = identityDict[@"dateAdded"];
             self.passwordRemembered = [identityDict[@"passwordRemembered"] boolValue];
             self.has2fa = [identityDict[@"has2fa"] boolValue];
+            self.secondFactor = identityDict[@"secondfactor"];
             self.trustAnchor = identityDict[@"trustAnchor"];
             self.servicesArray = identityDict[@"servicesArray"];
             self.selectionRules = identityDict[@"selectionRules"];
@@ -39,6 +40,7 @@
     [resultDict setObject:self.dateAdded forKey:@"dateAdded"];
     [resultDict setObject:[NSNumber numberWithBool:self.passwordRemembered] forKey:@"passwordRemembered"];
     [resultDict setObject:[NSNumber numberWithBool:self.has2fa] forKey:@"has2fa"];
+    [resultDict setObject:self.secondFactor forKey:@"secondfactor"];
     [resultDict setObject:self.trustAnchor forKey:@"trustAnchor"];
     [resultDict setObject:self.servicesArray forKey:@"servicesArray"];
     [resultDict setObject:self.selectionRules forKey:@"selectionRules"];
@@ -56,6 +58,7 @@
         self.dateAdded = [decoder decodeObjectForKey:@"dateAdded"];
         self.passwordRemembered = [decoder decodeBoolForKey:@"passwordRemembered"];
         self.has2fa = [decoder decodeBoolForKey:@"has2fa"];
+        self.secondFactor = [decoder decodeObjectForKey:@"secondFactor"];
         self.trustAnchor = [decoder decodeObjectForKey:@"trustAnchor"];
         self.servicesArray = [decoder decodeObjectForKey:@"servicesArray"];
         self.selectionRules = [decoder decodeObjectForKey:@"selectionRules"];
@@ -72,6 +75,7 @@
     [encoder encodeObject:self.dateAdded forKey:@"dateAdded"];
     [encoder encodeBool:self.passwordRemembered forKey:@"passwordRemembered"];
     [encoder encodeBool:self.has2fa forKey:@"has2fa"];
+    [encoder encodeObject:self.secondFactor forKey:@"secondFactor"];
     [encoder encodeObject:self.servicesArray forKey:@"servicesArray"];
     [encoder encodeObject:self.selectionRules forKey:@"selectionRules"];
     [encoder encodeObject:self.trustAnchor forKey:@"trustAnchor"];

@@ -24,6 +24,8 @@
 @property (nonatomic, strong) TrustAnchor *trustAnchor;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
 @property (nonatomic, strong) NSMutableArray<SelectionRules *> *selectionRules;
+//this property is only to transport the second factor
+@property (nonatomic, strong) NSString *secondFactor;
 
 - (id)initWithDictionaryObject:(NSDictionary *)identityDict;
 - (id)initWithCoder:(NSCoder *)decoder;

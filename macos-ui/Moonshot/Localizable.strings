@@ -26,6 +26,7 @@
 "Username_Add" = "User Name:";
 "Realm_Add" = "Realm:";
 "Password_Add" = "Password:";
+"Second_Factor" = "Second Factor:";
 "Enterprise_provisioned" = "Enterprise provisioned";
 
 //EDIT IDENTITY

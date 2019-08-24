@@ -178,19 +178,27 @@
 #pragma mark - Get Identity Action
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
     
+	NSLog(@"(void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password");
 	Identity *existingIdentitySelection = [self getExistingIdentitySelectionFor:nai service:service password:password];
-	if (([existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY]) || (existingIdentitySelection && existingIdentitySelection.password.length > 0)) {
+	if (([existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY]) || (existingIdentitySelection && existingIdentitySelection.password.length > 0 && existingIdentitySelection.has2fa == NO)) {
 		NSString *combinedNaiOut = @"";
 		if (existingIdentitySelection.username.length && existingIdentitySelection.realm.length) {
 			combinedNaiOut = [NSString stringWithFormat:@"%@@%@",existingIdentitySelection.username,existingIdentitySelection.realm];
 		}
 		const char *nai_out = [combinedNaiOut UTF8String];
-		const char *password_out = existingIdentitySelection.password == nil ? "" : [existingIdentitySelection.password UTF8String];
+		const char *password_out;
+		if (existingIdentitySelection.has2fa) {
+			NSString *combinedPasswordOut = @"";
+			combinedPasswordOut = [NSString stringWithFormat:@"%@%@",existingIdentitySelection.password,existingIdentitySelection.secondFactor];
+			password_out = [combinedPasswordOut UTF8String];
+		}
+		else {
+			password_out = existingIdentitySelection.password == nil ? "" : [existingIdentitySelection.password UTF8String];
+		}
 		const char *server_certificate_hash_out = existingIdentitySelection.trustAnchor.serverCertificate == nil ? [@"" UTF8String] : [existingIdentitySelection.trustAnchor.serverCertificate UTF8String];
 		const char *ca_certificate_out =  existingIdentitySelection.trustAnchor.caCertificate == nil ? [@"" UTF8String] : [existingIdentitySelection.trustAnchor.caCertificate UTF8String];
 		const char *subject_name_constraint_out =  existingIdentitySelection.trustAnchor.subject == nil ? [@"" UTF8String] : [existingIdentitySelection.trustAnchor.subject UTF8String];
 		const char *subject_alt_name_constraint_out =  existingIdentitySelection.trustAnchor.subjectAlt == nil ? [@"" UTF8String] : [existingIdentitySelection.trustAnchor.subjectAlt UTF8String];
-		const int  has2fa_out = existingIdentitySelection.has2fa;
 		const int  success = [existingIdentitySelection.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
 		
 		dbus_message_append_args(reply,

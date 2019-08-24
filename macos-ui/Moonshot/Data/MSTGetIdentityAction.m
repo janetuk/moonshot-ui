@@ -31,18 +31,25 @@
 }
 
 - (void)selectedIdentity:(Identity *)identity {
+	NSLog(@"(void)selectedIdentity:(Identity *)identity");
 	NSString *combinedNaiOut = @"";
 	if (identity.username.length && identity.realm.length) {
 		combinedNaiOut = [NSString stringWithFormat:@"%@@%@",identity.username,identity.realm];
 	}
     const char *nai_out = [combinedNaiOut UTF8String];
-	const char *password_out = identity.password == nil ? "" : [identity.password UTF8String];
-	
-	const char *server_certificate_hash_out = identity.trustAnchor.serverCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.serverCertificate UTF8String];
+    const char *password_out;
+    if (identity.has2fa) {
+        NSString *combinedPasswordOut = @"";
+        combinedPasswordOut = [NSString stringWithFormat:@"%@%@",identity.password,identity.secondFactor];
+        password_out = [combinedPasswordOut UTF8String];
+    }
+    else {
+        password_out = identity.password == nil ? "" : [identity.password UTF8String];
+    }
+    const char *server_certificate_hash_out = identity.trustAnchor.serverCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.serverCertificate UTF8String];
     const char *ca_certificate_out =  identity.trustAnchor.caCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.caCertificate UTF8String];
     const char *subject_name_constraint_out =  identity.trustAnchor.subject == nil ? [@"" UTF8String] : [identity.trustAnchor.subject UTF8String];
     const char *subject_alt_name_constraint_out =  identity.trustAnchor.subjectAlt == nil ? [@"" UTF8String] : [identity.trustAnchor.subjectAlt UTF8String];
-    const int  has2fa_out = identity.has2fa;
     const int  success = [identity.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
 
     dbus_message_append_args(_reply,

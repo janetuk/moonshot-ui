@@ -42,6 +42,7 @@ static MSTIdentityDataLayer *sharedInstance;
 			noIdentity.passwordRemembered = YES;
 			noIdentity.trustAnchor = nil;
 			noIdentity.has2fa = 0;
+			noIdentity.secondFactor = @"";
 			noIdentity.servicesArray = [[NSMutableArray alloc] init];
 			[mutableItems addObject:noIdentity];
 			[weakSelf addNewIdentity:noIdentity withBlock:nil];

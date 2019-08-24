@@ -167,7 +167,7 @@
     } else {
         Identity *identityObject = [self.identitiesArray objectAtIndex:self.identitySelectorTableView.selectedRow];
         if (![identityObject.displayName isEqualToString: NSLocalizedString(@"No_Identity", @"")]) {
-            if (identityObject.password.length > 0) {
+            if (identityObject.password.length > 0 && identityObject.has2fa == NO) {
                 if (self.getIdentityAction.service) {
                     [self appendUsedService:self.getIdentityAction.service toIdentity:identityObject];
                     [self applySelectedIdentity:identityObject];
