@@ -70,6 +70,8 @@
 		identityObject.password = [xmlObject valueForKey:@"password"] ?: @"";
 		identityObject.trustAnchor = trustAnchorObject;
 		identityObject.realm = [xmlObject valueForKey:@"realm"] ?: @"";
+		NSString *has2fa = [xmlObject valueForKey:@"has2fa"] ?: @"";
+		identityObject.has2fa = ([has2fa isEqualToString:@"yes"] || [has2fa isEqualToString:@"true"]);
 		identityObject.selectionRules = selectionRulesArray ?: [NSMutableArray arrayWithCapacity:0];
 		identityObject.servicesArray = [xmlObject valueForKey:@"services"] ?: [NSMutableArray arrayWithCapacity:0];
 		identityObject.passwordRemembered = identityObject.password.length > 0;

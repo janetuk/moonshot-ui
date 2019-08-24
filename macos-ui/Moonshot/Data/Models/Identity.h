@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *realm;
 @property (nonatomic, assign) BOOL passwordRemembered;
+@property (nonatomic, assign) BOOL has2fa;
 @property (nonatomic, strong) NSDate *dateAdded;
 @property (nonatomic, strong) TrustAnchor *trustAnchor;
 @property (nonatomic, retain) NSMutableArray *servicesArray;

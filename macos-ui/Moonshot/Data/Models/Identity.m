@@ -20,6 +20,7 @@
             self.realm = identityDict[@"realm"];
             self.dateAdded = identityDict[@"dateAdded"];
             self.passwordRemembered = [identityDict[@"passwordRemembered"] boolValue];
+            self.has2fa = [identityDict[@"has2fa"] boolValue];
             self.trustAnchor = identityDict[@"trustAnchor"];
             self.servicesArray = identityDict[@"servicesArray"];
             self.selectionRules = identityDict[@"selectionRules"];
@@ -37,6 +38,7 @@
     [resultDict setObject:self.realm forKey:@"realm"];
     [resultDict setObject:self.dateAdded forKey:@"dateAdded"];
     [resultDict setObject:[NSNumber numberWithBool:self.passwordRemembered] forKey:@"passwordRemembered"];
+    [resultDict setObject:[NSNumber numberWithBool:self.has2fa] forKey:@"has2fa"];
     [resultDict setObject:self.trustAnchor forKey:@"trustAnchor"];
     [resultDict setObject:self.servicesArray forKey:@"servicesArray"];
     [resultDict setObject:self.selectionRules forKey:@"selectionRules"];
@@ -53,6 +55,7 @@
         self.realm = [decoder decodeObjectForKey:@"realm"];
         self.dateAdded = [decoder decodeObjectForKey:@"dateAdded"];
         self.passwordRemembered = [decoder decodeBoolForKey:@"passwordRemembered"];
+        self.has2fa = [decoder decodeBoolForKey:@"has2fa"];
         self.trustAnchor = [decoder decodeObjectForKey:@"trustAnchor"];
         self.servicesArray = [decoder decodeObjectForKey:@"servicesArray"];
         self.selectionRules = [decoder decodeObjectForKey:@"selectionRules"];
@@ -68,7 +71,8 @@
     [encoder encodeObject:self.realm forKey:@"realm"];
     [encoder encodeObject:self.dateAdded forKey:@"dateAdded"];
     [encoder encodeBool:self.passwordRemembered forKey:@"passwordRemembered"];
-	[encoder encodeObject:self.servicesArray forKey:@"servicesArray"];
+    [encoder encodeBool:self.has2fa forKey:@"has2fa"];
+    [encoder encodeObject:self.servicesArray forKey:@"servicesArray"];
     [encoder encodeObject:self.selectionRules forKey:@"selectionRules"];
     [encoder encodeObject:self.trustAnchor forKey:@"trustAnchor"];
 }

@@ -12,6 +12,7 @@
                 <outlet property="cancelButton" destination="Akw-ET-UUU" id="EA1-Im-0Xc"/>
                 <outlet property="displayNameTextField" destination="xi4-gn-mLR" id="nL4-a6-Sd7"/>
                 <outlet property="displayNameValueTextField" destination="d3W-p2-zD7" id="3Jj-wt-gNf"/>
+                <outlet property="has2FAButton" destination="Q3Q-tV-a0d" id="q0s-cU-N2c"/>
                 <outlet property="passwordTextField" destination="LlB-Iu-AEr" id="T0Q-xN-ocm"/>
                 <outlet property="passwordValueTextField" destination="zcJ-dJ-z3h" id="sjJ-bj-yRm"/>
                 <outlet property="realmTextField" destination="odS-l3-LiG" id="7JD-du-N0Q"/>
@@ -155,6 +156,14 @@ Gw
                         <connections>
                             <action selector="rememberPasswordButtonPressed:" target="-2" id="gdP-xI-9OS"/>
                         </connections>
+                    </button>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3Q-tV-a0d">
+                        <rect key="frame" x="204" y="170" width="167" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="cGI-r5-mPv">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
                     </button>
                 </subviews>
             </view>

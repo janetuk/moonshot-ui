@@ -19,6 +19,7 @@
 @property (weak) IBOutlet NSTextField *usernameValueTextField;
 @property (weak) IBOutlet NSSecureTextField *passwordValueTextField;
 @property (weak) IBOutlet NSButton *rememberPasswordButton;
+@property (weak) IBOutlet NSButton *has2FAButton;
 @property (weak) IBOutlet NSButton *cancelButton;
 @property (weak) IBOutlet NSButton *addIdentityButton;
 @end
@@ -52,6 +53,7 @@
 
 - (void)setupButtons {
     [self.rememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
+    [self.has2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
     [self.cancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
     
     if ([[[[NSApplication sharedApplication] keyWindow] contentViewController] isKindOfClass:[MainViewController class]]) {
@@ -82,6 +84,7 @@
         identityObject.realm = self.realmValueTextField.stringValue;
         identityObject.password = self.passwordValueTextField.stringValue;
         identityObject.passwordRemembered = self.rememberPasswordButton.state;
+        identityObject.has2fa = self.has2FAButton.state;
         identityObject.dateAdded = [NSDate date];
         identityObject.servicesArray = [NSMutableArray array];
         identityObject.trustAnchor = nil;

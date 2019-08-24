@@ -32,6 +32,7 @@
 
 //Button Actions
 @property (weak) IBOutlet NSButton *editRememberPasswordButton;
+@property (weak) IBOutlet NSButton *editHas2FAButton;
 @property (weak) IBOutlet NSButton *clearTrustAnchorButton;
 @property (weak) IBOutlet NSButton *editIdentityHelpButton;
 
@@ -129,6 +130,7 @@
         [self.editPasswordValueTextField setStringValue:self.identityToEdit.password];
         [self.editIdentityDateAddedTextField setObjectValue: [NSDate formatDate:self.identityToEdit.dateAdded withFormat:@"HH:mm - dd/MM/yyyy"]];
         [self.editRememberPasswordButton setState:self.identityToEdit.passwordRemembered];
+        [self.editHas2FAButton setState:self.identityToEdit.has2fa];
         [self.trustAnchorValueTextField setStringValue:self.trustAnchorObject ? NSLocalizedString(@"Enterprise_provisioned", @"") : NSLocalizedString(@"None",@"")];
     }
 }
@@ -141,6 +143,7 @@
     [self.editPasswordValueTextField setStringValue:@""];
     [self.editIdentityDateAddedTextField setStringValue:@""];
     [self.editRememberPasswordButton setState:YES];
+    [self.editHas2FAButton setState:NO];
     [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"None",@"")];
     
     [self.editUsernameValueTextField setEnabled:NO];
@@ -148,6 +151,7 @@
     [self.editPasswordValueTextField setEnabled:NO];
     [self.editIdentityDateAddedTextField setEnabled:NO];
     [self.editRememberPasswordButton setEnabled:NO];
+    [self.editHas2FAButton setEnabled:NO];
 }
 
 #pragma mark - Setup Views Visibility
@@ -194,6 +198,7 @@
     [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
     [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
+    [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
     [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
     [self.selectionRulesTitleTextFields setStringValue:NSLocalizedString(@"Selection_Rules", @"")];
 }
@@ -288,6 +293,7 @@
         self.identityToEdit.displayName = self.identityToEdit.displayName;
         self.identityToEdit.username = self.editUsernameValueTextField.stringValue;
         self.identityToEdit.realm = self.editRealmValueTextField.stringValue;
+        self.identityToEdit.has2fa = self.editHas2FAButton.state;
         self.identityToEdit.passwordRemembered = self.editRememberPasswordButton.state;
         if (self.identityToEdit.passwordRemembered) {
             self.identityToEdit.password = self.editPasswordValueTextField.stringValue;

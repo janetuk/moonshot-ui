@@ -104,6 +104,8 @@ void dbusStartListening()
 			}
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "InstallIdCard")) {
 			NSLog(@"Moonshot.IdentitySelector InstallIdCard");
+        } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "InstallIdCard2fa")) {
+			NSLog(@"Moonshot.IdentitySelector InstallIdCard2fa");
         } else if (dbus_message_is_method_call(msg, "org.janet.Moonshot", "ConfirmCaCertificate")) {
 			NSLog(@"Moonshot.IdentitySelector ConfirmCaCertificate");
 			

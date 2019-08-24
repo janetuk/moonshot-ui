@@ -42,7 +42,8 @@
     const char *ca_certificate_out =  identity.trustAnchor.caCertificate == nil ? [@"" UTF8String] : [identity.trustAnchor.caCertificate UTF8String];
     const char *subject_name_constraint_out =  identity.trustAnchor.subject == nil ? [@"" UTF8String] : [identity.trustAnchor.subject UTF8String];
     const char *subject_alt_name_constraint_out =  identity.trustAnchor.subjectAlt == nil ? [@"" UTF8String] : [identity.trustAnchor.subjectAlt UTF8String];
-	const int  success = [identity.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
+    const int  has2fa_out = identity.has2fa;
+    const int  success = [identity.identityId isEqualToString:MST_NO_IDENTITY] ? 0 : 1;
 
     dbus_message_append_args(_reply,
                              DBUS_TYPE_STRING, &nai_out,

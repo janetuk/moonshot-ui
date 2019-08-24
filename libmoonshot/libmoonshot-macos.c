@@ -442,7 +442,57 @@ int moonshot_install_id_card (const char     *display_name,
                               int            force_flat_file_store,
                               MoonshotError **error)
 {
-      syslog (LOG_NOTICE, "Libmoonshot moonshot_install_id_card");
+  syslog (LOG_NOTICE, "Libmoonshot moonshot_install_id_card");
+  return moonshot_install_id_card_2fa(display_name,
+                                      user_name,
+                                      password,
+                                      realm,
+                                      rules_patterns,
+                                      rules_patterns_length,
+                                      rules_always_confirm,
+                                      rules_always_confirm_length,
+                                      services,
+                                      services_length,
+                                      ca_cert,
+                                      subject,
+                                      subject_alt,
+                                      server_cert,
+                                      force_flat_file_store,
+                                      0,
+                                      error);
+}
+
+
+/**
+ * Install an ID card through the Moonshot DBus service
+ *
+ * There is a mismatch between this libmoonshot API and the
+ * org.janet.Moonshot DBus API. The latter requires many of its inputs
+ * be non-null, whereas this API allows nulls to indicate empty
+ * arguments. Ideally this would be reconciled, probably by updating
+ * the DBus API to make these optional. Until then, null inputs are
+ * converted to empty strings for the DBus method call.
+ *
+ */
+int moonshot_install_id_card_2fa (const char     *display_name,
+                                  const char     *user_name,
+                                  const char     *password,
+                                  const char     *realm,
+                                  char           *rules_patterns[],
+                                  int             rules_patterns_length,
+                                  char           *rules_always_confirm[],
+                                  int             rules_always_confirm_length,
+                                  char           *services[],
+                                  int             services_length,
+                                  const char     *ca_cert,
+                                  const char     *subject,
+                                  const char     *subject_alt,
+                                  const char     *server_cert,
+                                  int            force_flat_file_store,
+                                  int            has2fa,
+                                  MoonshotError **error)
+{
+      syslog (LOG_NOTICE, "Libmoonshot moonshot_install_id_card_2fa");
 
     GError      *g_error = NULL;
     DBusGProxy  *dbus_proxy;
@@ -478,7 +528,7 @@ int moonshot_install_id_card (const char     *display_name,
     services_strv[services_length] = NULL;
 
     dbus_g_proxy_call (dbus_proxy,
-                       "InstallIdCard",
+                       "InstallIdCard2fa",
                        &g_error,
                        G_TYPE_STRING, display_name,
                        G_TYPE_STRING, user_name,
@@ -492,6 +542,7 @@ int moonshot_install_id_card (const char     *display_name,
                        G_TYPE_STRING, subject_alt,
                        G_TYPE_STRING, server_cert,
                        G_TYPE_INT, force_flat_file_store,
+                       G_TYPE_INT, has2fa,
                        G_TYPE_INVALID,
                        G_TYPE_BOOLEAN, &success,
                        G_TYPE_INVALID);

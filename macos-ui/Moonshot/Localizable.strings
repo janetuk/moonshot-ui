@@ -30,6 +30,7 @@
 
 //EDIT IDENTITY
 "Remember_Password" = "Remember password";
+"Has_2FA" = "Requires 2FA";
 "Date_Added" = "Added on:";
 "Trust_Anchor_Edit" = "Trust anchor:";
 "SHA_Fingerprint" = "SHA-256 fingerprint:";

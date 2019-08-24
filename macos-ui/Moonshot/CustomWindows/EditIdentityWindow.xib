@@ -16,6 +16,7 @@
                 <outlet property="constraintTextField" destination="dh4-cq-hRh" id="CPL-gE-Krc"/>
                 <outlet property="constraintValueTextField" destination="bhM-GB-Y08" id="lTQ-rl-siv"/>
                 <outlet property="dateAddedTitleTextField" destination="7zE-sK-2KV" id="YFz-gs-Bdp"/>
+                <outlet property="editHas2FAButton" destination="JRU-1M-gye" id="NWr-nj-KBd"/>
                 <outlet property="editIdentityCancelButton" destination="Cnx-Hb-Is2" id="p6e-V6-hnq"/>
                 <outlet property="editIdentityDateAddedTextField" destination="e0g-LA-3o6" id="BkS-ho-sbv"/>
                 <outlet property="editIdentityDeleteSelectionRulesButton" destination="TT0-HG-Jp4" id="Czj-vU-fSA"/>
@@ -585,6 +586,14 @@ Gw
                             </button>
                         </subviews>
                     </customView>
+                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JRU-1M-gye">
+                        <rect key="frame" x="192" y="544" width="162" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="f" bezelStyle="regularSquare" imagePosition="left" inset="2" id="mih-N3-XTQ">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
             <connections>
