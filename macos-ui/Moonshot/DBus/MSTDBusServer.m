@@ -129,7 +129,7 @@ void dbusStartListening()
 				} else {
 				}
                     AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
-                    [delegate confirmCaCertForIdentityWithName:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm] hash:[NSString stringWithUTF8String:hash_str] connection:connection reply:reply];
+                    [delegate confirmCaCertForIdentityWithName:[NSString stringWithUTF8String:identity_name] realm:[NSString stringWithUTF8String:realm] certData:[NSString stringWithUTF8String:hash_str] connection:connection reply:reply];
 			}
 		} else {
 			NSLog(@"Moonshot.IdentitySelector None");

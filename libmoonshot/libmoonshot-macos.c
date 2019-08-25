@@ -572,7 +572,7 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
     GError     *g_error = NULL;
     int         success = 99;
     int         confirmed = 99;
-    char        hash_str[65];
+    char        hash_str[hash_len * 2 + 1];
     DBusGProxy *dbus_proxy = get_dbus_proxy (error);
     int         out = 0;
     int         i;
@@ -583,12 +583,9 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
 
     g_return_val_if_fail (DBUS_IS_G_PROXY (dbus_proxy), FALSE);
 
-    /* Convert hash byte array to string */
-    out = 0;
-    for (i = 0; i < hash_len; i++) {
-        sprintf(&(hash_str[out]), "%02X", ca_hash[i]);
-        out += 2;
-    }
+  /* Convert hash byte array to string */
+  for (i = 0; i < hash_len; i++)
+    sprintf(&(hash_str[i * 2]), "%02X", ca_hash[i]);
 
     dbus_g_proxy_call_with_timeout (dbus_proxy,
                                     "ConfirmCaCertificate",
@@ -610,5 +607,5 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
         return FALSE;
     }
 
-    return (int) confirmed;
+    return (int)confirmed;
 }

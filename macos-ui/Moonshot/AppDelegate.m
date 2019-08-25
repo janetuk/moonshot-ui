@@ -5,6 +5,7 @@
 //  Created by Elena Jakjoska on 10/13/16.
 //
 
+#import <CommonCrypto/CommonHMAC.h>
 #import "AppDelegate.h"
 #import "AboutWindow.h"
 #import "MSTConstants.h"
@@ -84,7 +85,7 @@
 }
 
 #pragma mark - Set Trust Anchor
-- (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
+- (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm certData:(NSString *)certData connection:(DBusConnection *)connection reply:(DBusMessage *)reply {
 	NSLog(@"confirmCaCertForIdentityWithName %@", name);
 
     Identity *identity = [[MSTIdentityDataLayer sharedInstance] getExistingIdentitySelectionFor:name realm:realm];
@@ -106,12 +107,48 @@
 		return;
 	}
 
+	// hex -> bytes
+	unsigned long i = 0, cert_len = certData.length / 2;
+	const char *hash_string = [certData UTF8String];
+	unsigned char *cert_data_buffer = malloc(cert_len);
+	NSString *hash;
+	for (i = 0; i < cert_len; i++)
+		sscanf(&hash_string[i*2], "%02X", &cert_data_buffer[i]);
+
+	NSData *certByteBuffer = [NSData dataWithBytes:cert_data_buffer length:i];
+	SecCertificateRef thisCert = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)certByteBuffer);
+	free(cert_data_buffer);
+	if (thisCert != NULL) {
+		CFStringRef certSubjectSummary = SecCertificateCopySubjectSummary(thisCert);
+		NSString* subjectSummaryString = [[NSString alloc] initWithString:(__bridge NSString*)certSubjectSummary];
+		NSLog(@"Hash contained certificate: %@", subjectSummaryString);
+		CFRelease(certSubjectSummary);
+		CFDataRef certificateDataRef = SecCertificateCopyData(thisCert);
+		NSData *certificateData = CFBridgingRelease(certificateDataRef);
+		if (certificateDataRef != NULL) {
+			NSLog(@"Got certificate data: %@", subjectSummaryString);
+			NSMutableString *hexString = [NSMutableString stringWithCapacity:(CC_SHA256_DIGEST_LENGTH * 2)];
+			unsigned char *sha256_hash_buffer = malloc(CC_SHA256_DIGEST_LENGTH);
+			CC_SHA256(certificateData.bytes, (CC_LONG)certificateData.length, sha256_hash_buffer);
+			for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; ++i)
+				[hexString appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)sha256_hash_buffer[i]]];
+			free(sha256_hash_buffer);
+			NSLog(@"Certificate %@ SHA-256 fingerprint %@", subjectSummaryString, hexString);
+			hash = [hexString uppercaseString];
+		}
+	} else {
+		NSLog(@"Hash contained: %@", certData);
+		hash = certData;
+	}
+
 	if (identity.trustAnchor.serverCertificate.length > 0) {
 		NSString *trimmedOldHash = [TrustAnchor stringBySanitazingDots:identity.trustAnchor.serverCertificate];
 		NSString *trimmedNewHash = [TrustAnchor stringBySanitazingDots:hash];
 		if ([trimmedOldHash isEqualToString:trimmedNewHash]) {
+		NSLog(@"Certificate fingerprint matched stored trust anchor");
 			success = 1;
 		} else {
+		NSLog(@"Certificate fingerprint did not match stored trust anchor");
 			success = 0;
 		}
 		dbus_message_append_args(reply,

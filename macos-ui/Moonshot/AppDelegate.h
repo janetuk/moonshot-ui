@@ -15,7 +15,7 @@
 
 - (void)initiateIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password connection:(DBusConnection *)connection reply:(DBusMessage *)reply;
 
-- (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm hash:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply;
+- (void)confirmCaCertForIdentityWithName:(NSString *)name realm:(NSString *)realm certData:(NSString *)hash connection:(DBusConnection *)connection reply:(DBusMessage *)reply;
 
 - (void)startListeningForDBusConnections;
 @end
