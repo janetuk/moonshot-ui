@@ -110,7 +110,7 @@
 	// hex -> bytes
 	unsigned long i = 0, cert_len = certData.length / 2;
 	const char *hash_string = [certData UTF8String];
-	unsigned char *cert_data_buffer = malloc(cert_len);
+	unsigned char *cert_data_buffer = malloc(cert_len + sizeof(int));
 	NSString *hash;
 	for (i = 0; i < cert_len; i++)
 		sscanf(&hash_string[i*2], "%02X", &cert_data_buffer[i]);

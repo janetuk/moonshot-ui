@@ -327,10 +327,25 @@ if  OS_MACOS
 ## xcodebuild must be installed
 ## Moonshot.app will be built in moonshot/macos-ui/build/Release
 app-bundle:
-	cd macos-ui && xcodebuild
+#if WITH_APPLE_DEVELOPER_ID_APPLICATION
+#	cd macos-ui/Moonshot.xcodeproj; \
+#	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
+#else
+	cd macos-ui/Moonshot.xcodeproj; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = \"\";/g' project.pbxproj; \
+	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
+#endif
+	cd macos-ui && $(XCODEBUILD)
 
 uninstaller-bundle:
-	cd macos-ui/Uninstaller && xcodebuild
-
+if WITH_APPLE_DEVELOPER_ID_APPLICATION
+	cd "macos-ui/Uninstaller/Uninstall Moonshot.xcodeproj"; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
+else
+	cd "macos-ui/Uninstaller/Uninstall Moonshot.xcodeproj"; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = \"\";/g' project.pbxproj; \
+	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
+endif
+	cd macos-ui/Uninstaller && $(XCODEBUILD)
 
 endif
