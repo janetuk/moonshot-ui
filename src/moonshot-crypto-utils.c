@@ -101,7 +101,7 @@ int parse_hex_certificate(const unsigned char* hex_str,
 {
     // hex -> bytes
     int i = 0, cert_len = strlen(hex_str) / 2;
-    unsigned char *cert = malloc(cert_len);
+    unsigned char *cert = malloc(cert_len + sizeof(int));
     unsigned char *p = cert;
     int result = 0;
     X509_NAME *name = NULL;
