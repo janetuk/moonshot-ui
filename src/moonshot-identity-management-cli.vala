@@ -33,6 +33,9 @@
 using Gee;
 using Newt;
 
+const string WARN_GROUP="WarningDialogs";
+const string PATH_GROUP="Paths";
+
 public class IdentityManagerCli: IdentityManagerInterface, Object {
     static MoonshotLogger logger = get_logger("IdentityManagerCli");
     bool use_flat_file_store = false;
@@ -78,18 +81,18 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private void info_dialog(string title, string msg)
     {
         bool finalize = newt_init();
-        int width = estimate_text_width(msg);
-        int height = estimate_text_height(msg, width) + 2;
+        int text_height, text_width;
+        string message = newtReflowText(msg, 76, 50, 0, out text_width, out text_height);
         newtComponent form, info, button;
-        int flags = Flag.WRAP;
-        if (height > 20) {
-            height = 20;
+        int flags = 0;
+        if (text_height > 20) {
+            text_height = 20;
             flags |= Flag.SCROLL;
         }
-        newtCenteredWindow(width + 2, height, title);
-        info = newtTextbox(1, 0, width, height - 1, flags);
-        newtTextboxSetText(info, msg);
-        button = newtCompactButton((width - 11) / 2, height - 1, "Dismiss");
+        newtCenteredWindow(text_width + 2, text_height + 1, title);
+        info = newtTextbox(0, 0, text_width, text_height, flags);
+        newtTextboxSetText(info, message);
+        button = newtCompactButton((text_width - 11) / 2, text_height, "Dismiss");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, info);
         newtFormAddComponent(form, button);
@@ -105,14 +108,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
         string? password = null;
-        newtCenteredWindow(70, 8, title);
-        info = newtTextbox(1, 0, 68, 5, Flag.WRAP);
-        newtTextboxSetText(info, text);
+        int text_height, text_width;
+        string message = newtReflowText(text, 70, 0, 0, out text_width, out text_height);
+        newtCenteredWindow(70, text_height + 4, title);
+        info = newtTextbox(0, 0, 70, text_height, 0);
+        newtTextboxSetText(info, message);
         int entrylen = show_remember ? 53 : 68;
-        entry = newtEntry(1, 5, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
-        storepwd_chk = newtCheckbox(56, 5, "Remember?", ' ', " *", null);
-        accept = newtCompactButton(20, 7, "Accept");
-        abort = newtCompactButton(45, 7, "Abort");
+        entry = newtEntry(0, text_height + 1, null, entrylen, null, Flag.PASSWORD | Flag.RETURNEXIT | Flag.SCROLL);
+        storepwd_chk = newtCheckbox(56, text_height + 1, "Remember?", ' ', " *", null);
+        accept = newtCompactButton(20, text_height + 3, "Accept");
+        abort = newtCompactButton(45, text_height + 3, "Abort");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, entry);
         if (show_remember)
@@ -138,8 +143,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             return false;
         newtInit();
         newtCls();
-        newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_type().to_string()));
-        newtDrawRootText(-25, -2, "(c) 2017 JISC limited");
+        newtDrawRootText(0, 0, "The Moonshot Text ID selector. Using %s backend".printf(this.identities_manager.get_store_name()));
+        newtDrawRootText(-25, -1, "(c) 2019 Jisc limited");
         newt_initiated = true;
         return true;
     }
@@ -153,25 +158,36 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     }
 
     /* Shows a YES/NO dialog. NEWT needs to be initialised */
-    private bool yesno_dialog(string title, string  message, bool default_yes) {
+    private bool yesno_dialog(string title, string msg, bool default_yes) {
+        if (get_bool_setting(WARN_GROUP, title, false)) {
+            logger.trace(@"confirm: Settings group $WARN_GROUP has 'true' for key $title; skipping dialog and returning true.");
+            return true;
+        }
         bool finalize = newt_init();
         bool result = false;
-        int height = estimate_text_height(message, 66) + 2;
-        newtComponent form, info, yes_btn, no_btn, chosen;
-        newtCenteredWindow(66, height, title);
-        info = newtTextbox(1, 0, 65, height - 1, Flag.WRAP);
+        int text_height, text_width;
+        string message = newtReflowText(msg, 78, 30, 0, out text_width, out text_height);
+        newtComponent form, info, yes_btn, no_btn, remember_chk, chosen;
+        newtCenteredWindow(text_width, text_height + 4, title);
+        info = newtTextbox(0, 0, text_width, text_height, 0);
         newtTextboxSetText(info, message);
-        no_btn = newtCompactButton(20, height - 1, "No");
-        yes_btn = newtCompactButton(39, height - 1, "Yes");
+        remember_chk = newtCheckbox(0, text_height + 1, _("Do not show this message again"), ' ', " *", null);
+        no_btn = newtCompactButton(text_width / 2 - 10, text_height + 3, "No");
+        yes_btn = newtCompactButton(text_width / 2 + 5, text_height + 3, "Yes");
         form = newtForm(null, null, 0);
         newtFormAddComponent(form, info);
+        newtFormAddComponent(form, remember_chk);
         newtFormAddComponent(form, no_btn);
         newtFormAddComponent(form, yes_btn);
         if (!default_yes)
             newtFormSetCurrent(form, no_btn);
         chosen = newtRunForm(form);
-        if (chosen == yes_btn)
+        if (chosen == yes_btn) {
             result = true;
+            if (newtCheckboxGetValue(remember_chk) == '*') {
+                set_bool_setting(WARN_GROUP, title, true);
+            }
+        }
         newtFormDestroy(form);
         newtPopWindow();
         newt_finish(finalize);
@@ -394,13 +410,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         bool rv = false;
         newtComponent form, listbox, chosen;
-        int height = include_send ? 4: 3;
+        int height = include_send ? 5: 3;
         newtCenteredWindow(15, height, "Action");
         form = newtForm(null, null, 0);
-        listbox = newtListbox(1, 0, height, Flag.RETURNEXIT);
-        newtListboxSetWidth(listbox, 13);
-        if (include_send)
+        listbox = newtListbox(0, 0, height, Flag.RETURNEXIT);
+        newtListboxSetWidth(listbox, 15);
+        if (include_send) {
             newtListboxAppendEntry(listbox, "Send", (void *) "Send");
+            newtListboxAppendEntry(listbox, "Send & forget", (void *) "SendForget");
+        }
         newtListboxAppendEntry(listbox, "Edit", (void *) "Edit");
         newtListboxAppendEntry(listbox, "Remove", (void *) "Remove");
         newtListboxAppendEntry(listbox, "Back", (void *) "Back");
@@ -411,6 +429,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             string? option = (string?) newtListboxGetCurrent(listbox);
             if (option == "Send") {
                 send_id_card_confirmation_dialog(id_card, remember);
+                rv = true;
+            }
+            else if (option == "SendForget") {
+                send_id_card_confirmation_dialog(id_card, false);
                 rv = true;
             }
             else if (option == "Edit")
@@ -427,7 +449,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private string select_file_dialog() {
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
-        string directory = GLib.Environment.get_current_dir();
+        string directory = get_string_setting(PATH_GROUP, "last_import_folder", GLib.Environment.get_home_dir());
         string? result = null;
         do {
             bool finalize = newt_init();
@@ -471,6 +493,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 if (FileUtils.test(element.data, FileTest.IS_DIR))
                     directory = element.data;
                 else {
+                    set_string_setting(PATH_GROUP, "last_import_folder", directory);
+
                     result = element.data;
                     exit_loop = true;
                 }

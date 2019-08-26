@@ -26,6 +26,7 @@ BuildRequires:      openssl-devel
 BuildRequires:      desktop-file-utils
 BuildRequires:      shared-mime-info
 BuildRequires:      vala
+BuildRequires:      keyutils-libs-devel
 Requires:           desktop-file-utils, shared-mime-info, dbus-x11
 
 %description

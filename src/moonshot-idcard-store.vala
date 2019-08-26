@@ -35,25 +35,13 @@ public interface IIdentityCardStore : Object {
     public enum StoreType {
         FLAT_FILE,
         KEYRING;
-
-        public string to_string() {
-            switch (this) {
-                case FLAT_FILE:
-                    return "FLAT_FILE";
-
-                case KEYRING:
-                    return "KEYRING";
-
-                default:
-                    return "UNKNOWN";
-            }
-        }
     }
 
     public abstract void add_card(IdCard card);
     public abstract bool remove_card(IdCard card);
     public abstract IdCard? update_card(IdCard card);
     public abstract StoreType get_store_type();
+    public abstract string get_store_name();
     public abstract Gee.List<IdCard> get_card_list();
 }
 

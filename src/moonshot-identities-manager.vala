@@ -327,6 +327,10 @@ public class IdentityManagerModel : Object {
         return store.get_store_type();
     }
 
+    public string get_store_name() {
+        return store.get_store_name();
+    }
+
     public bool HasNonTrivialIdentities() {
         foreach (IdCard card in this.store.get_card_list()) {
             // The 'NoIdentity' card is non-trivial if it has services or rules.
