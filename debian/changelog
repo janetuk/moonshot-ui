@@ -1,3 +1,10 @@
+moonshot-ui (1.2.2.DIST) unstable; urgency=medium
+
+  * Use a key derivation function for the ENCRYPTED_FLAT_FILE backend
+  * Update README.cli
+
+ -- Jisc <moonshot@jisc.ac.uk>  Fri, 3 May 2019 00:00:00 +0000
+
 moonshot-ui (1.2.1.DIST) unstable; urgency=medium
 
   * Fix memory issue.
