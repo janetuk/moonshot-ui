@@ -416,7 +416,8 @@ static void dbus_proxy_notify(gpointer data, GObject *where_the_object_was)
   MoonshotDBusProxy *proxy = (MoonshotDBusProxy *) data;
 
   /* Ensure we were called with the right object! */
-  g_return_if_fail((gpointer) proxy->dbus_proxy ==  (gpointer) where_the_object_was);
+  /* proxy->dbus_proxy might be NULL if dbus_kill_server was executed */
+  // g_return_if_fail((gpointer) proxy->dbus_proxy ==  (gpointer) where_the_object_was);
 
   dbus_disconnect(proxy->connection);
   proxy->dbus_proxy = NULL;
@@ -492,11 +493,10 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
   else if (dbus_connection_uses_session_bus(shared_proxy.connection))
     g_object_ref(shared_proxy.dbus_proxy);
 
-  /* else set a weak ref so we get a callback when the object is freed and we disconnect from the DBUS */
-  else
-    g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy),
-                      dbus_proxy_notify,
-                      &shared_proxy);
+  /* In any case, if were weren't using the seession bus set a weak ref so we get a callback when the object is
+     freed and we disconnect from the DBUS */
+  if (!dbus_connection_uses_session_bus(shared_proxy.connection))
+    g_object_weak_ref(G_OBJECT(shared_proxy.dbus_proxy), dbus_proxy_notify, &shared_proxy);
 
 cleanup:
   g_static_mutex_unlock (&init_lock);

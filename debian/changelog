@@ -1,3 +1,10 @@
+moonshot-ui (1.2.5.DIST) unstable; urgency=medium
+
+  * Make sure we disconnect from DBUS when we started the server and the DBUS
+    session.
+
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 3 Jun 2019 00:00:00 +0000
+
 moonshot-ui (1.2.4.DIST) unstable; urgency=medium
 
   * Allow using the TEXT UI without explicitly launching a DBUS session. This
