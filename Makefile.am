@@ -14,7 +14,7 @@ bin_PROGRAMS = \
          src/moonshot-idcard-generator
 endif
 
-dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-txt-ui enable-moonshot-txt-ui-pam
+dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-txt-ui-gnome-keyring
 dist_doc_DATA = README.cli
 dist_moonshotsysconf_DATA=flatstore-users
 
