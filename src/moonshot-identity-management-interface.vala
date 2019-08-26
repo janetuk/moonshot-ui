@@ -55,19 +55,19 @@ public interface IdentityManagerInterface : Object {
                 dialog = yesno_dialog(
                     "Install ID Card",
                     "Would you like to update ID Card '%s' using nai '%s'?".printf(prev_id.display_name, prev_id.nai),
-                    true);
+                    false);
             } else {
                 dialog = yesno_dialog(
                     "Install ID Card",
                     "Would you like to replace ID Card '%s' using nai '%s' with the new ID Card '%s'?".printf(
                         prev_id.display_name, prev_id.nai, id_card.display_name),
-                    true);
+                    false);
             }
         } else {
             dialog = yesno_dialog(
                 "Install ID Card",
                 "Would you like to add '%s' ID Card to the ID Card Organizer?".printf(id_card.display_name),
-                true);
+                false);
         }
 
         if (dialog) {
@@ -79,7 +79,7 @@ public interface IdentityManagerInterface : Object {
         }
     }
 
-    internal bool id_matches_search(IdCard id_card, string entry_text, SList<IdCard>? candidates)
+    internal bool id_matches_search(IdCard? id_card, string entry_text, SList<IdCard>? candidates)
     {
         if (id_card == null)
             return false;

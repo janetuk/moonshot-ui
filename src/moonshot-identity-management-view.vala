@@ -127,7 +127,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private bool visible_func(TreeModel model, TreeIter iter)
     {
-        IdCard id_card;
+        IdCard? id_card;
 
         model.get(iter, Columns.IDCARD_COL, out id_card);
 
@@ -433,7 +433,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private string? password_dialog(string title, string text, bool show_remember, out bool remember)
     {
-        var dialog = new AddPasswordDialog(text, true);
+        var dialog = new AddPasswordDialog(text, show_remember);
         var result = dialog.run();
         remember = dialog.remember;
         string passwd = dialog.password;
