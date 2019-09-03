@@ -98,6 +98,9 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
+* Tue Sep 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.7-1
+- TBD
+
 * Tue Sep 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
 - Do not prompt for adding credentials with moonshot-webp unless -i flag is
   provided.
