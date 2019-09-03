@@ -98,8 +98,9 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
-* Mon Jun 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
-- TBD
+* Tue Sep 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
+- Do not prompt for adding credentials with moonshot-webp unless -i flag is
+  provided.
 
 * Mon Jun 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.5-1
 - Make sure we disconnect from DBUS when we started the server and the DBUS
