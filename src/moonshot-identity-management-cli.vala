@@ -376,7 +376,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == passwd_btn) {
                 info_dialog("Cleartext password",
-                            "Your cleartext password is:\n<%s>".printf(newtEntryGetValue(passwd_entry)));
+                            "Your cleartext password is:\n%s".printf(newtEntryGetValue(passwd_entry)));
                 focus = passwd_btn;
             }
             else
