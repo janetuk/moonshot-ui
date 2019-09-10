@@ -144,7 +144,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtInit();
         newtCls();
         newtDrawRootText(0, 0, "The Moonshot Text ID selector");
-        newtDrawRootText(-this.get_copyright().length, -1, this.get_copyright());
+        newtDrawRootText(-this.copyright().length, -1, this.copyright());
         newt_initiated = true;
         return true;
     }
@@ -290,13 +290,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             newtCheckboxSetValue(mfa_chk, '*');
         cert_label = newtLabel(1, 5, "Trust anchor:");
         var ta_type = id_card.trust_anchor.get_anchor_type();
-        string ta_type_name = (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT ? "Server certificate"
-                               : (ta_type == TrustAnchor.TrustAnchorType.CA_CERT ? "CA certificate" : "None"));
-        if (id_card.trust_anchor.is_expired())
-            ta_type_name += " [EXPIRED]";
-
         cert_entry = newtTextbox(15, 5, 36, 1, 0);
-        newtTextboxSetText(cert_entry, ta_type_name);
+        newtTextboxSetText(cert_entry, IdentityManagerInterface.ta_type_name(id_card));
         newtComponentTakesFocus(cert_entry, false);
         cert_btn = newtCompactButton(60, 5, "Clear");
         show_btn = newtCompactButton(68, 5, "Show");
@@ -771,7 +766,7 @@ XXXX  XXXXXXXX  XXXXX      XXXXXXXX      XXXXX  XXXXX   XXXX
                   XXXXXXXXXXXXXXXXXXXXXXXX
                          XXXXXXXXXX""";
 
-        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, this.get_license()));
+        info_dialog("Moonshot project Text UI", "%s\n\n%s".printf(logo, this.license()));
     }
 
     private void send_id_card_confirmation_dialog(IdCard? id_card, bool remember) {

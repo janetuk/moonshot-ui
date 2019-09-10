@@ -486,13 +486,13 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         AboutDialog about = new AboutDialog();
         about.set_logo_icon_name("moonshot");
         about.set_comments(_("Moonshot project UI\n Using GTK%d and %s backend".printf(Gtk.MAJOR_VERSION, this.identities_manager.get_store_name())));
-        about.set_copyright(this.get_copyright());
+        about.set_copyright(this.copyright());
         about.set_website(Config.PACKAGE_URL);
         about.set_website_label(_("Visit the Moonshot project web site"));
 
         // Note: The package version is configured at the top of moonshot/ui/configure.ac
         about.set_version(Config.PACKAGE_VERSION);
-        about.set_license(this.get_license());
+        about.set_license(this.license());
         about.set_modal(true);
         about.set_transient_for(this);
         about.response.connect((a, b) => {about.destroy();});

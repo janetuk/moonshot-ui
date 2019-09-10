@@ -15,7 +15,8 @@ public interface IdentityManagerInterface : Object {
     internal abstract void info_dialog(string title, string msg);
     internal abstract bool yesno_dialog(string title, string msg, bool default_true);
     internal abstract string? password_dialog(string title, string text, bool show_remember, out bool remember);
-    internal string get_license() {
+
+    internal string license() {
         return """
 Copyright (c) 2011, %d JANET(UK)
 All rights reserved.
@@ -49,8 +50,18 @@ SUCH DAMAGE.
 """.printf(LATEST_EDIT_YEAR);
     }
 
-    internal string get_copyright() {
+    internal string copyright() {
         return "Copyright (c) 2011, %d Jisc".printf(LATEST_EDIT_YEAR);
+    }
+
+    internal static string ta_type_name(IdCard id) {
+        var ta_type = id.trust_anchor.get_anchor_type();
+        string ta_type_name = (ta_type == TrustAnchor.TrustAnchorType.SERVER_CERT ? _("Certificate fingerprint")
+                               : (ta_type == TrustAnchor.TrustAnchorType.CA_CERT ? _("Enterprise provisioned") : _("None")));
+        if (id.trust_anchor.is_expired())
+            ta_type_name += " [EXPIRED]";
+
+        return ta_type_name;
     }
 
     /* Reports whether there are identities with ideantical NAI */
