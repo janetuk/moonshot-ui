@@ -519,7 +519,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
 
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn, export_btn,
-                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn;
+                      edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn,
+                      backendname;
         bool exit_loop = false;
         int offset = 0;
         string filter = "";
@@ -551,6 +552,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         export_btn = newtCompactButton(68, 14, "Export");
         about_btn = newtCompactButton(68, 16, "About");
         exit_btn = newtCompactButton(68, 18, "Exit");
+        backendname = newtTextbox(1, 19, 50, 1, 0);
+        newtTextboxSetText(backendname, "Using %s backend".printf(this.identities_manager.get_store_name()));
+        newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
         newtFormAddComponent(form, filter_btn);
