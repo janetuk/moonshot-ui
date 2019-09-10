@@ -280,23 +280,23 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         realm_label = newtLabel(1, 3, "Realm:");
         realm_entry = newtEntry(15, 3, id_card.issuer, 60, null, Flag.SCROLL);
         passwd_label = newtLabel(1, 4, "Password:");
-        passwd_entry = newtEntry(15, 4, id_card.password, 30, null, Flag.PASSWORD | Flag.SCROLL);
-        storepwd_chk = newtCheckbox(46, 4, "Remember?", ' ', " *", null);
-        mfa_chk = newtCheckbox(60, 4, "2FA?", ' ', " *", null);
+        passwd_entry = newtEntry(15, 4, id_card.password, 53, null, Flag.PASSWORD | Flag.SCROLL);
         passwd_btn = newtCompactButton(68, 4, "Show");
+        storepwd_chk = newtCheckbox(15, 5, "Remember password", ' ', " *", null);
+        mfa_chk = newtCheckbox(40, 5, "Requires 2FA", ' ', " *", null);
         if (id_card.store_password)
             newtCheckboxSetValue(storepwd_chk, '*');
         if (id_card.has_2fa)
             newtCheckboxSetValue(mfa_chk, '*');
-        cert_label = newtLabel(1, 5, "Trust anchor:");
+        cert_label = newtLabel(1, 6, "Trust anchor:");
         var ta_type = id_card.trust_anchor.get_anchor_type();
-        cert_entry = newtTextbox(15, 5, 36, 1, 0);
+        cert_entry = newtTextbox(15, 6, 36, 1, 0);
         newtTextboxSetText(cert_entry, IdentityManagerInterface.ta_type_name(id_card));
         newtComponentTakesFocus(cert_entry, false);
-        cert_btn = newtCompactButton(60, 5, "Clear");
-        show_btn = newtCompactButton(68, 5, "Show");
-        services_label = newtLabel(1, 6, "FILL ME");
-        listbox = newtListbox(1, 7, 9, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+        cert_btn = newtCompactButton(60, 6, "Clear");
+        show_btn = newtCompactButton(68, 6, "Show");
+        services_label = newtLabel(1, 7, "");
+        listbox = newtListbox(1, 8, 9, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 64);
         remove_btn = newtCompactButton(66, 9, "Remove");
         edit_btn = newtCompactButton(20, 17, "Update");
@@ -310,9 +310,9 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, realm_entry);
         newtFormAddComponent(form, passwd_label);
         newtFormAddComponent(form, passwd_entry);
+        newtFormAddComponent(form, passwd_btn);
         newtFormAddComponent(form, storepwd_chk);
         newtFormAddComponent(form, mfa_chk);
-        newtFormAddComponent(form, passwd_btn);
         newtFormAddComponent(form, cert_label);
         newtFormAddComponent(form, cert_entry);
         newtFormAddComponent(form, cert_btn);
