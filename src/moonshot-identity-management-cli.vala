@@ -144,7 +144,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtInit();
         newtCls();
         newtDrawRootText(0, 0, "The Moonshot Text ID selector");
-        newtDrawRootText(-this.copyright().length, -1, this.copyright());
+        newtDrawRootText(-(int) this.copyright().length, -1, this.copyright());
         newt_initiated = true;
         return true;
     }
