@@ -49,6 +49,7 @@ before_script:
   tags:
     - moonshot
   script:
+    - cp $APKBUILD APKBUILD.in
     - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD.in
     - cp vapi/libsecret-1.vapi.dis vapi/libsecret-1.vapi
     - adduser -D tmpuser -s /bin/sh
@@ -113,9 +114,26 @@ ubuntu18:
 
 alpine38:
   image: $DOCKER_REGISTRY_URL/alpine38:latest
+  variables:
+    APKBUILD: APKBUILD.in.alpine38
   <<: *alpinecommon
 
 alpine38_armhf:
   image: $DOCKER_REGISTRY_URL/alpine38_arm:latest
   when: manual
+  variables:
+    APKBUILD: APKBUILD.in.alpine38
+  <<: *alpinecommon
+
+alpine310:
+  image: $DOCKER_REGISTRY_URL/alpine310:latest
+  variables:
+    APKBUILD: APKBUILD.in.alpine310
+  <<: *alpinecommon
+
+alpine310_armhf:
+  image: $DOCKER_REGISTRY_URL/alpine310_arm:latest
+  when: manual
+  variables:
+    APKBUILD: APKBUILD.in.alpine310
   <<: *alpinecommon
