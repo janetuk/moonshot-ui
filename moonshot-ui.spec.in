@@ -98,6 +98,10 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
+* Thu Sep 19 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.7-1
+- Re-layout some of the TEXT UI dialogs
+- Build for Alpine 3.9 and Raspbian 10
+
 * Tue Sep 03 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.6-1
 - Do not prompt for adding credentials with moonshot-webp unless -i flag is
   provided.

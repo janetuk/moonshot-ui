@@ -1,3 +1,10 @@
+moonshot-ui (1.2.7.DIST) unstable; urgency=medium
+
+  * Re-layout some of the TEXT UI dialogs
+  * Build for Alpine 3.9 and Raspbian 10
+
+ -- Jisc <moonshot@jisc.ac.uk>  Thu, 19 Sep 2019 00:00:00 +0000
+
 moonshot-ui (1.2.6.DIST) unstable; urgency=medium
 
   * Do not prompt for adding credentials with moonshot-webp unless -i flag is
