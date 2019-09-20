@@ -98,8 +98,8 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
-* Thu Sep 19 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.8-1
-- TBD
+* Fri Sep 20 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.8-1
+- Minor fixes tot he TXT UI
 
 * Thu Sep 19 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.7-1
 - Re-layout some of the TEXT UI dialogs
