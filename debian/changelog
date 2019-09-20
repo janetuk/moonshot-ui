@@ -1,3 +1,9 @@
+moonshot-ui (1.2.8.DIST) unstable; urgency=medium
+
+  * Minor fixes tot he TXT UI
+
+ -- Jisc <moonshot@jisc.ac.uk>  Fri, 20 Sep 2019 00:00:00 +0000
+
 moonshot-ui (1.2.7.DIST) unstable; urgency=medium
 
   * Re-layout some of the TEXT UI dialogs

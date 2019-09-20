@@ -143,7 +143,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             return false;
         newtInit();
         newtCls();
-        newtDrawRootText(0, 0, "The Moonshot Text ID selector");
+        newtDrawRootText(0, 0, "The Moonshot Text ID selector (v%s)".printf(Config.PACKAGE_VERSION));
         newtDrawRootText(-(int) this.copyright().length, -1, this.copyright());
         newt_initiated = true;
         return true;
@@ -537,7 +537,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         doc = newtLabel(1, offset, "Select your identity:");
         filter_entry = newtEntry(22, offset, filter, 35, null, Flag.RETURNEXIT | Flag.SCROLL);
         filter_btn = newtCompactButton(57, offset, "Filter");
-        listbox = newtListbox(1, offset + 1, 18 - offset, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
+        listbox = newtListbox(1, offset + 1, 18 - offset * 2, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
         add_btn = newtCompactButton(68, offset + 2, "Add");
         import_btn = newtCompactButton(68, offset + 4, "Import");
@@ -550,7 +550,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         backendname = newtTextbox(1, 19, 50, 1, 0);
         newtTextboxSetText(backendname, "Using %s backend".printf(this.identities_manager.get_store_name()));
         newtFormAddComponent(form, backendname);
-        remember_chk = newtCheckbox(1, 19, "Remember my identity choice for this service", '*', " *", null);
+        remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
         newtFormAddComponent(form, filter_btn);
         newtFormAddComponent(form, listbox);
