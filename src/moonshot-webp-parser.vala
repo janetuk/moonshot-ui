@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
 */
 using Moonshot;
+using GLib;
 
 namespace WebProvisioning
 {
@@ -41,6 +42,7 @@ namespace WebProvisioning
 
         int arg_index = -1;
         int force_flat_file_store = 0;
+        bool allow_interactive = false;
         bool bad_switch = false;
         for (arg_index = 1; arg_index < args.length; arg_index++) {
             string arg = args[arg_index];
@@ -52,6 +54,9 @@ namespace WebProvisioning
                 case 'f':
                     force_flat_file_store = 1;
                     break;
+                case 'i':
+                    allow_interactive = true;
+                    break;
                 default:
                     bad_switch = true;
                     break;
@@ -62,7 +67,7 @@ namespace WebProvisioning
         }
         if (bad_switch || (arg_index != args.length - 1))
         {
-            stdout.printf(_("Usage %s [-f] WEB_PROVISIONING_FILE\n -f: add identities to flat file store.\n"), args[0]);
+            stdout.printf(_("Usage %s [-f] WEB_PROVISIONING_FILE\n  -i: allows interactive dialogs\n -f: add identities to flat file store.\n"), args[0]);
             return -1;
         }
         string webp_file = args[arg_index];
@@ -80,6 +85,10 @@ namespace WebProvisioning
         }
 
         logger.trace(@"Have $(webp.cards.length) IdCards");
+
+        if (!allow_interactive)
+            GLib.Environment.set_variable("MOONSHOT_NO_CLI", "1", true);
+
         foreach (IdCard card in webp.cards)
         {
 

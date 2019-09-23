@@ -483,51 +483,16 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private void on_about_action()
     {
-        string copyright = "Copyright (c) 2011, %d JANET".printf(LATEST_EDIT_YEAR);
-
-        string license =
-        """
-Copyright (c) 2011, %d JANET(UK)
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions
-are met:
-
-1. Redistributions of source code must retain the above copyright
-   notice, this list of conditions and the following disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright
-   notice, this list of conditions and the following disclaimer in the
-   documentation and/or other materials provided with the distribution.
-
-3. Neither the name of JANET(UK) nor the names of its contributors
-   may be used to endorse or promote products derived from this software
-   without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
-OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGE.
-""".printf(LATEST_EDIT_YEAR);
-
         AboutDialog about = new AboutDialog();
         about.set_logo_icon_name("moonshot");
         about.set_comments(_("Moonshot project UI\n Using GTK%d and %s backend".printf(Gtk.MAJOR_VERSION, this.identities_manager.get_store_name())));
-        about.set_copyright(copyright);
+        about.set_copyright(this.copyright());
         about.set_website(Config.PACKAGE_URL);
         about.set_website_label(_("Visit the Moonshot project web site"));
 
         // Note: The package version is configured at the top of moonshot/ui/configure.ac
         about.set_version(Config.PACKAGE_VERSION);
-        about.set_license(license);
+        about.set_license(this.license());
         about.set_modal(true);
         about.set_transient_for(this);
         about.response.connect((a, b) => {about.destroy();});

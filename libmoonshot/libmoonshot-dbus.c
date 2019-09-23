@@ -346,8 +346,9 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
     start it ourselves. Spawn a CLI Moonshot server when:
       1) There is no DISPLAY environment variable.
       2) We are in control of stdin and stdout (ie. we are running in the foreground).
+      3) There is no MOONSHOT_NO_CLI environment variable.
   */
-  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin))) {
+  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && getenv("MOONSHOT_NO_CLI") == NULL) {
       gboolean result = FALSE;
       flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
       gchar **envp = NULL;
