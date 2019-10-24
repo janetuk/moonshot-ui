@@ -575,8 +575,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             foreach (IdCard id_card in card_list) {
                 if (filter != "" && !id_matches_search(id_card, filter, null))
                     continue;
-                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
+                string text = "%s%s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED] " : "",
                                                   id_card.display_name, id_card.nai);
+                if (request != null && id_card.is_no_identity())
+                    text = _("Do not use a Moonshot identity for this service");
+
                 newtListboxAppendEntry(listbox, text, id_card);
 
                 // select the previously selected ID card, if available
