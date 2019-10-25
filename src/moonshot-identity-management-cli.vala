@@ -679,8 +679,17 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else {
                 // we need to send NULL identity to gracefully exit properly from the send_identity callback
-                send_id_card_confirmation_dialog(null, false);
                 exit_loop = true;
+                if (request != null) {
+                    exit_loop = yesno_dialog("Exit without selecting an identity",
+                                             "Do you wish to exit without selecting an identity for service?:\n * %s\n\n".printf(request.service)
+                                             + "If you do, Moonshot will not be used for this access, but you will still be prompted for future atempts.\n\n"
+                                             + "If you want to prevent Moonshot from prompting you in the future for this service, please select 'No' "
+                                             + "and send the ID named 'Do not use a Moonshot identity for this service' instead.",
+                                             false);
+                }
+                if (exit_loop)
+                    send_id_card_confirmation_dialog(null, false);
             }
         } while (!exit_loop);
         newtFormDestroy(form);
