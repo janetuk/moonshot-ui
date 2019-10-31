@@ -157,7 +157,6 @@ public class IdentityManagerApp {
     public static UiMode get_mode() {
         // get the mode from the environment variable
         string mode = GLib.Environment.get_variable("MOONSHOT_UI_MODE");
-        logger.trace("get_mode: MOONSHOT_UI_MODE is %s".printf(mode));
 
         // if the variable is not set, get it from the configuration file
         if (mode == null)
