@@ -32,12 +32,38 @@
 using Gee;
 using Gtk;
 
+const string MAIN_GROUP="Main";
+
+
 #if IPC_DBUS
 [DBus (name = "org.janet.Moonshot")]
 interface IIdentityManager : GLib.Object {
   public abstract bool show_ui() throws IOError;
 }
 #endif
+
+public enum UiMode {
+    INTERACTIVE,
+    NON_INTERACTIVE,
+    DISABLED;
+
+    public string to_string() {
+        switch (this) {
+            case INTERACTIVE:
+                return "INTERACTIVE";
+
+            case NON_INTERACTIVE:
+                return "NON_INTERACTIVE";
+
+            case DISABLED:
+                return "DISABLED";
+
+            default:
+                assert_not_reached();
+        }
+    }
+
+}
 
 public extern unowned string GetVersion();
 
@@ -128,6 +154,23 @@ public class IdentityManagerApp {
         }
     }
 
+    public static UiMode get_mode() {
+        // get the mode from the environment variable
+        string mode = GLib.Environment.get_variable("MOONSHOT_UI_MODE");
+        logger.trace("get_mode: MOONSHOT_UI_MODE is %s".printf(mode));
+
+        // if the variable is not set, get it from the configuration file
+        if (mode == null)
+            mode = get_string_setting(MAIN_GROUP, "moonshot_ui_mode", "INTERACTIVE");
+        mode = mode.up();
+        if (mode == "NON_INTERACTIVE")
+            return UiMode.NON_INTERACTIVE;
+        else if (mode == "DISABLED")
+            return UiMode.DISABLED;
+        else
+            return UiMode.INTERACTIVE;
+    }
+
     public void select_identity(IdentityRequest request) {
         logger.trace("select_identity: request.nai=%s".printf(request.nai ?? "[null]"));
 
@@ -137,7 +180,10 @@ public class IdentityManagerApp {
             identity = default_id_card;
         }
 
-        if (identity == null)
+        // get the UI mode
+        UiMode mode = get_mode();
+
+        if (identity == null && mode != UiMode.DISABLED)
         {
             bool has_nai = request.nai != null && request.nai != "";
             bool has_srv = request.service != null && request.service != "";
@@ -214,7 +260,7 @@ public class IdentityManagerApp {
                 }
             }
 
-            if (confirm && (view != null))
+            if (confirm && (view != null) && mode == UiMode.INTERACTIVE)
             {
                 view.queue_identity_request(request);
                 if (!explicitly_launched)
@@ -347,6 +393,8 @@ static bool explicitly_launched = true;
 static bool use_flat_file_store = false;
 static bool cli_enabled = false;
 static bool version = false;
+static string? set_mode = null;
+static bool get_mode = false;
 
 const GLib.OptionEntry[] options = {
     {"dbus-launched", 0, GLib.OptionFlags.REVERSE, GLib.OptionArg.NONE,
@@ -357,6 +405,10 @@ const GLib.OptionEntry[] options = {
      ref cli_enabled, "enable the command line interface (text-based)", null},
     {"flat-file-store", 'f', 0, GLib.OptionArg.NONE,
      ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
+    {"get-mode", 'g', 0, GLib.OptionArg.NONE,
+     ref get_mode, "get the current UI mode", null},
+    {"set-mode", 0, 0, GLib.OptionArg.STRING,
+     ref set_mode, "set the UI mode (INTERACTIVE, NON_INTERACTIVE, DISABLED)", "MODE"},
     {null}
 };
 
@@ -420,8 +472,30 @@ public static int main(string[] args) {
 #endif
 
     if (version) {
-         stdout.printf(_("Moonshot UI version %s\n"), GetVersion());
-         return 0;
+        stdout.printf(_("Moonshot UI version %s\n"), GetVersion());
+        return 0;
+    }
+
+    if (get_mode) {
+        stdout.printf(_("UI is configured in mode %s\n"), IdentityManagerApp.get_mode().to_string());
+        return 0;
+    }
+
+    if (set_mode != null) {
+        set_mode = set_mode.up();
+        if (set_mode.has_prefix("INT"))
+            set_mode = "INTERACTIVE";
+        else if (set_mode.has_prefix("NON"))
+            set_mode = "NON_INTERACTIVE";
+        else if (set_mode.has_prefix("DIS"))
+            set_mode = "DISABLED";
+        else {
+            stdout.printf(_("Invalid mode selected: %s\n"), set_mode);
+            return -1;
+        }
+        set_string_setting(MAIN_GROUP, "moonshot_ui_mode", set_mode);
+        stdout.printf(_("Moonshot UI has been configured in %s mode\n"), set_mode);
+        return 0;
     }
 
     //TODO?? Do we need to call Intl.setlocale(LocaleCategory.MESSAGES, "");

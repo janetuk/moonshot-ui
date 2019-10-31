@@ -585,8 +585,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         export_btn = newtCompactButton(68, 14, "Export");
         about_btn = newtCompactButton(68, 16, "About");
         exit_btn = newtCompactButton(68, 18, "Exit");
-        backendname = newtTextbox(1, 19, 50, 1, 0);
-        newtTextboxSetText(backendname, "Using %s backend".printf(this.identities_manager.get_store_name()));
+        backendname = newtTextbox(1, 19, 60, 1, 0);
+        newtTextboxSetText(backendname, _("Using %s backend. UI mode is %s.".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
         newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
