@@ -406,7 +406,7 @@ const GLib.OptionEntry[] options = {
      ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
     {"get-mode", 'g', 0, GLib.OptionArg.NONE,
      ref get_mode, "get the current UI mode", null},
-    {"set-mode", 0, 0, GLib.OptionArg.STRING,
+    {"set-mode", 's', 0, GLib.OptionArg.STRING,
      ref set_mode, "set the UI mode (INTERACTIVE, NON_INTERACTIVE, DISABLED)", "MODE"},
     {null}
 };
