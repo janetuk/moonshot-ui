@@ -271,7 +271,7 @@ public class IdentityManagerApp {
         // callback because we may be being called from a 'yield')
         GLib.Idle.add(
             () => {
-                if (view != null) {
+                if (view != null && identity != null) {
                     logger.trace("select_identity (Idle handler): calling check_add_password");
                     identity = view.check_add_password(identity, request, model);
                 }
