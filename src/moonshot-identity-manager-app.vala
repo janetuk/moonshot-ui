@@ -45,7 +45,8 @@ interface IIdentityManager : GLib.Object {
 public enum UiMode {
     INTERACTIVE,
     NON_INTERACTIVE,
-    DISABLED;
+    DISABLED,
+    MAX;
 
     public string to_string() {
         switch (this) {
