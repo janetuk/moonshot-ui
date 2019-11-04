@@ -659,7 +659,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         row++;
 
         statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. UI mode is %s.".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
+        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is %s.".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
 
         var main_vbox = new_vbox(0);
 

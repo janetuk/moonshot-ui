@@ -157,11 +157,11 @@ public class IdentityManagerApp {
 
     public static UiMode get_mode() {
         // get the mode from the environment variable
-        string mode = GLib.Environment.get_variable("MOONSHOT_UI_MODE");
+        string mode = GLib.Environment.get_variable("MOONSHOT_MODE");
 
         // if the variable is not set, get it from the configuration file
         if (mode == null)
-            mode = get_string_setting(MAIN_GROUP, "moonshot_ui_mode", "INTERACTIVE");
+            mode = get_string_setting(MAIN_GROUP, "moonshot_mode", "INTERACTIVE");
         mode = mode.up();
         if (mode == "NON_INTERACTIVE")
             return UiMode.NON_INTERACTIVE;
@@ -180,7 +180,7 @@ public class IdentityManagerApp {
             identity = default_id_card;
         }
 
-        // get the UI mode
+        // get the mode
         UiMode mode = get_mode();
 
         if (identity == null && mode != UiMode.DISABLED)
@@ -406,9 +406,9 @@ const GLib.OptionEntry[] options = {
     {"flat-file-store", 'f', 0, GLib.OptionArg.NONE,
      ref use_flat_file_store, "force use of flat file identity store (used by default only for headless operation)", null},
     {"get-mode", 'g', 0, GLib.OptionArg.NONE,
-     ref get_mode, "get the current UI mode", null},
+     ref get_mode, "get the current mode of operation", null},
     {"set-mode", 's', 0, GLib.OptionArg.STRING,
-     ref set_mode, "set the UI mode (INTERACTIVE, NON_INTERACTIVE, DISABLED)", "MODE"},
+     ref set_mode, "set the mode of operation (INTERACTIVE, NON_INTERACTIVE, DISABLED)", "MODE"},
     {null}
 };
 
@@ -477,7 +477,7 @@ public static int main(string[] args) {
     }
 
     if (get_mode) {
-        stdout.printf(_("UI is configured in mode %s\n"), IdentityManagerApp.get_mode().to_string());
+        stdout.printf(_("Moonshot is configured in mode: %s\n"), IdentityManagerApp.get_mode().to_string());
         return 0;
     }
 
@@ -493,7 +493,7 @@ public static int main(string[] args) {
             stdout.printf(_("Invalid mode selected: %s\n"), set_mode);
             return -1;
         }
-        set_string_setting(MAIN_GROUP, "moonshot_ui_mode", set_mode);
+        set_string_setting(MAIN_GROUP, "moonshot_mode", set_mode);
         stdout.printf(_("Moonshot UI has been configured in %s mode\n"), set_mode);
         return 0;
     }

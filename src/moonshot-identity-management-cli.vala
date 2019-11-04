@@ -655,7 +655,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     newtListboxSetCurrentByKey(listbox, id_card);
             }
 
-            newtTextboxSetText(backendname, _("Using %s backend. UI mode is %s".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
+            newtTextboxSetText(backendname, _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
             newtFormSetCurrent(form, focus);
             chosen = newtRunForm(form);
             focus = listbox;
