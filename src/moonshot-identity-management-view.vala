@@ -67,7 +67,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private IdCard selected_card = null;
 
     private string import_directory = null;
-    private Gtk.ComboBoxText modebox = null;
+    private Gtk.ComboBox modebox = null;
 
     private enum Columns
     {
@@ -358,11 +358,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     }
 
     private void mode_changed_cb(Gtk.ComboBox combo) {
-        ComboBoxText combotxt = (ComboBoxText) combo;
+        UiMode mode = (UiMode) combo.get_active();
         info_dialog("Mode change",
-                    _("You are about to change the Moonshot mode of operation to '%s'.\n".printf(combotxt.get_active_text()))
+                    _("You are about to change the Moonshot mode of operation to '%s'.\n".printf(mode.to_string()))
                     + "Please, make sure you understand the implications of a mode change.");
-        set_string_setting(MAIN_GROUP, "moonshot_mode", combotxt.get_active_text());
+        set_string_setting(MAIN_GROUP, "moonshot_mode", mode.to_string());
     }
 
     private void remove_identity_cb(IdCard id_card)
@@ -667,24 +667,27 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
+#if VALA_0_12
         Gtk.HBox statusbox = new Gtk.HBox(false, 0);
+#else
+        Gtk.HBox statusbox = new Gtk.HBox(true, 0);
+#endif
         statusbar = new Gtk.Statusbar();
         statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is".printf(this.identities_manager.get_store_name())));
 
         // Create combo for the Mode
-        modebox = new Gtk.ComboBoxText();
-        modebox.append_text("INTERACTIVE");
-        modebox.append_text("NON_INTERACTIVE");
-        modebox.append_text("DISABLED");
         UiMode mode = parent_app.get_mode();
-        if (mode == UiMode.NON_INTERACTIVE)
-            modebox.set_active(1);
-        else if (mode == UiMode.DISABLED)
-            modebox.set_active(2);
-        else
-            modebox.set_active(0);
+        Gtk.ListStore liststore = new Gtk.ListStore (1, typeof (string));
+        foreach (UiMode x in UiMode.all())
+            liststore.insert_with_values(null, -1, 0, x.to_string(), -1, null);
+        modebox = new Gtk.ComboBox.with_model(liststore);
+        modebox.set_active(mode);
         modebox.changed.connect(this.mode_changed_cb);
-        statusbox.pack_start(statusbar, false, false, 0);
+        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
+        modebox.pack_start (cell, false);
+        modebox.set_attributes (cell, "text", 0);
+
+        statusbox.pack_start(statusbar, false, true, 0);
         statusbox.pack_start(modebox, false, false, 0);
 
 

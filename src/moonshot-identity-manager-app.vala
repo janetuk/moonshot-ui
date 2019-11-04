@@ -64,6 +64,10 @@ public enum UiMode {
         }
     }
 
+    public static UiMode[] all() {
+        return { INTERACTIVE, NON_INTERACTIVE, DISABLED };
+     }
+
 }
 
 public extern unowned string GetVersion();
