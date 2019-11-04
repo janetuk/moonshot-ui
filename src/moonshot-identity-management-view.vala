@@ -708,8 +708,10 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
                                                    "<span font-weight='heavy'>" + _("Do you wish to exit without selecting an identity for the %s service?") + "</span>\n\n",
                                                    this.request_queue.peek_head().service)
                                                + _("If you do, Moonshot will not be used for this access, but you will still be prompted for future atempts.") + "\n\n"
-                                               + _("If you want to prevent Moonshot from prompting you in the future for this service, please select 'No' and send the ID named '")
-                                               + _("Do not use a Moonshot identity for this service") + _("' instead."),
+                                               + _("If you want to prevent Moonshot from prompting you in the future for <b>this</b> service, please select 'No' and send the ID named '")
+                                               + _("Do not use a Moonshot identity for this service") + _("' instead.") + "\n\n"
+                                               + "If you want to prevent Moonshot from prompting you in the future for <b>any</b> service, please set the "
+                                               + "NON_INTERACTIVE or DISABLED mode before exiting.",
                                                 "close_moonshot_window_new");
             if (!result) {
                 // Prevent other handlers from handling this event; this keeps the window open.
