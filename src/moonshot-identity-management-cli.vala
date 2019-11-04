@@ -479,6 +479,35 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
+    private bool set_mode_menu() {
+        bool finalize = newt_init();
+        bool rv = false;
+        newtComponent form, listbox, chosen;
+        newtCenteredWindow(15, 4, "Mode");
+        form = newtForm(null, null, 0);
+        listbox = newtListbox(0, 0, 4, Flag.RETURNEXIT);
+        newtListboxAppendEntry(listbox, "INTERACTIVE", (void *) "INTERACTIVE");
+        newtListboxAppendEntry(listbox, "NON_INTERACTIVE", (void *) "NON_INTERACTIVE");
+        newtListboxAppendEntry(listbox, "DISABLED", (void *) "DISABLED");
+        newtListboxAppendEntry(listbox, "Back", (void *) "Back");
+        UiMode current_mode = parent_app.get_mode();
+        if (current_mode == UiMode.NON_INTERACTIVE)
+            newtListboxSetCurrentByKey(listbox, "NON_INTERACTIVE");
+        else if (current_mode == UiMode.DISABLED)
+            newtListboxSetCurrentByKey(listbox, "DISABLED");
+        newtFormAddComponent(form, listbox);
+        chosen = newtRunForm(form);
+        if (chosen == listbox){
+            string? option = (string?) newtListboxGetCurrent(listbox);
+            if (option != "Back")
+                set_string_setting(MAIN_GROUP, "moonshot_mode", option);
+        }
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
+        return rv;
+    }
+
     private string select_file_dialog() {
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
@@ -656,9 +685,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 about_dialog();
             }
             else if (chosen == mode_btn) {
-                UiMode current_mode = parent_app.get_mode();
-                current_mode = (current_mode + 1) % UiMode.MAX;
-                set_string_setting(MAIN_GROUP, "moonshot_ui_mode", current_mode.to_string());
+                set_mode_menu();
                 focus = mode_btn;
             }
             else if (chosen == export_btn) {
