@@ -67,6 +67,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private IdCard selected_card = null;
 
     private string import_directory = null;
+    private Gtk.ComboBoxText modebox = null;
 
     private enum Columns
     {
@@ -354,6 +355,14 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             }
             while (filter.iter_next(ref iter));
         }
+    }
+
+    private void mode_changed_cb(Gtk.ComboBox combo) {
+        ComboBoxText combotxt = (ComboBoxText) combo;
+        info_dialog("Mode change",
+                    _("You are about to change the Moonshot mode of operation to '%s'.\n".printf(combotxt.get_active_text()))
+                    + "Please, make sure you understand the implications of a mode change.");
+        set_string_setting(MAIN_GROUP, "moonshot_mode", combotxt.get_active_text());
     }
 
     private void remove_identity_cb(IdCard id_card)
@@ -658,8 +667,26 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
+        Gtk.HBox statusbox = new Gtk.HBox(false, 0);
         statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is %s.".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
+        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is".printf(this.identities_manager.get_store_name())));
+
+        // Create combo for the Mode
+        modebox = new Gtk.ComboBoxText();
+        modebox.append_text("INTERACTIVE");
+        modebox.append_text("NON_INTERACTIVE");
+        modebox.append_text("DISABLED");
+        UiMode mode = parent_app.get_mode();
+        if (mode == UiMode.NON_INTERACTIVE)
+            modebox.set_active(1);
+        else if (mode == UiMode.DISABLED)
+            modebox.set_active(2);
+        else
+            modebox.set_active(0);
+        modebox.changed.connect(this.mode_changed_cb);
+        statusbox.pack_start(statusbar, false, false, 0);
+        statusbox.pack_start(modebox, false, false, 0);
+
 
         var main_vbox = new_vbox(0);
 
@@ -668,7 +695,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         set_bg_color(menubar);
         main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
-        main_vbox.pack_start(statusbar, false, true, 0);
+        main_vbox.pack_start(statusbox, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();
