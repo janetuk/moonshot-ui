@@ -136,6 +136,35 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return password;
     }
 
+    /* Shows a generic single entry request dialog. */
+    private string? entry_dialog(string title, string text)
+    {
+        bool finalize = newt_init();
+        newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
+        string? result = null;
+        int text_height, text_width;
+        string message = newtReflowText(text, 70, 0, 0, out text_width, out text_height);
+        newtCenteredWindow(70, text_height + 4, title);
+        info = newtTextbox(0, 0, 70, text_height, 0);
+        newtTextboxSetText(info, message);
+        entry = newtEntry(0, text_height + 1, null, 68, null, Flag.RETURNEXIT | Flag.SCROLL);
+        accept = newtCompactButton(20, text_height + 3, "Accept");
+        abort = newtCompactButton(45, text_height + 3, "Abort");
+        form = newtForm(null, null, 0);
+        newtFormAddComponent(form, entry);
+        newtFormAddComponent(form, info);
+        newtFormAddComponent(form, accept);
+        newtFormAddComponent(form, abort);
+        chosen = newtRunForm(form);
+        result = newtEntryGetValue(entry);
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
+        if (chosen == abort || result == "")
+            return null;
+        return result;
+    }
+
     /* Initialise NEWT environment */
     private bool newt_init()
     {
@@ -265,7 +294,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
-                listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
+                listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk, add_btn;
         weak newtComponent focus;
         bool exit = false;
         Gee.List<string> services = new ArrayList<string>();
@@ -298,7 +327,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         services_label = newtLabel(1, 7, "");
         listbox = newtListbox(1, 8, 9, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 64);
-        remove_btn = newtCompactButton(66, 9, "Remove");
+        add_btn = newtCompactButton(66, 9, "Add");
+        remove_btn = newtCompactButton(66, 10, "Remove");
         edit_btn = newtCompactButton(20, 17, "Update");
         cancel_btn = newtCompactButton(50, 17, "Cancel");
 
@@ -319,6 +349,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, show_btn);
         newtFormAddComponent(form, services_label);
         newtFormAddComponent(form, listbox);
+        newtFormAddComponent(form, add_btn);
         newtFormAddComponent(form, remove_btn);
         newtFormAddComponent(form, edit_btn);
         newtFormAddComponent(form, cancel_btn);
@@ -347,6 +378,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                        + "Are you sure you want to do this?", false);
                     if (remove)
                         services.remove_at(index);
+                }
+                focus = listbox;
+            }
+            else if (chosen == add_btn) {
+                string? result = entry_dialog("Add service", "Add the name of the service you want to be associated to this identity");
+                if (result != null) {
+                    services.insert(0, result);
                 }
                 focus = listbox;
             }
