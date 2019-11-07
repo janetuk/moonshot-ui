@@ -382,7 +382,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                 focus = listbox;
             }
             else if (chosen == add_btn) {
-                string? result = entry_dialog("Add service", "Add the name of the service you want to be associated to this identity");
+                string? result = entry_dialog("Add service", _("Add the name of the service you want to associate to this identity"));
                 if (result != null) {
                     services.insert(0, result);
                 }

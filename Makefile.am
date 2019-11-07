@@ -75,6 +75,7 @@ src_moonshot_SOURCES = \
         src/moonshot-server-linux.vala \
         src/moonshot-settings.vala \
         src/moonshot-password-dialog.vala \
+        src/moonshot-service-dialog.vala \
         src/moonshot-provisioning-common.vala \
         src/moonshot-trust-anchor-dialog.vala \
         src/moonshot-utils.vala \
