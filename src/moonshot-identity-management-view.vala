@@ -359,10 +359,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
     private void mode_changed_cb(Gtk.ComboBox combo) {
         UiMode mode = (UiMode) combo.get_active();
-        info_dialog("Mode change",
-                    _("You are about to change the Moonshot mode of operation to '%s'.\n".printf(mode.to_string()))
-                    + "Please, make sure you understand the implications of a mode change.");
-        set_string_setting(MAIN_GROUP, "moonshot_mode", mode.to_string());
+        change_mode(mode.to_string());
     }
 
     private void remove_identity_cb(IdCard id_card)

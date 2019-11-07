@@ -499,13 +499,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         chosen = newtRunForm(form);
         if (chosen == listbox){
             string? option = (string?) newtListboxGetCurrent(listbox);
-            if (option != "Back") {
-                info_dialog("Mode change",
-                    _("You are about to change the Moonshot mode of operation to '%s'.\n".printf(option))
-                    + "Please, make sure you understand the implications of a mode change.");
-
-                set_string_setting(MAIN_GROUP, "moonshot_mode", option);
-            }
+            if (option != "Back")
+                change_mode(option);
         }
         newtFormDestroy(form);
         newtPopWindow();
