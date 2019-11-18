@@ -62,7 +62,7 @@ else
 	cp $(abs_srcdir)/Installer/Moonshot.pkg $(abs_srcdir)/$@
 endif
 
-Installer/local.tar.gz: Installer/local filemanifest.txt
+Installer/local.tar.gz: filemanifest.txt
 	cd /usr/local && sudo tar -zcvf $(abs_srcdir)/$@ $$(cat $(abs_srcdir)/filemanifest.txt)
 
 Installer/LatestBuild/Moonshot.app: build/Release/Moonshot.app
