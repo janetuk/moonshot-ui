@@ -63,9 +63,7 @@ else
 endif
 
 Installer/local.tar.gz: Installer/local filemanifest.txt
-	sudo chown -R `whoami` $(abs_srcdir)/$<
-	cd $(abs_srcdir)/$< && for i in $$(cat $(abs_srcdir)/filemanifest.txt); do srcfile="/usr/local/$$i"; echo "$$srcfile"; if test -d "$$srcfile"; then sudo install -d "$$i"; else sudo install "$$srcfile" "$$i"; fi; done
-	cd $(abs_srcdir)/$< && tar -zcvf $(abs_srcdir)/$@ ./
+	cd /usr/local && sudo tar -zcvf $(abs_srcdir)/$@ $$(cat $(abs_srcdir)/filemanifest.txt)
 
 Installer/LatestBuild/Moonshot.app: build/Release/Moonshot.app
 	mkdir -p $(abs_srcdir)/Installer/LatestBuild/
@@ -98,9 +96,6 @@ else
 	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
 endif
 	cd $(abs_srcdir)/Uninstaller && $(XCODEBUILD)
-
-Installer/local:
-	mkdir -p $@
 
 clean:
 	cd $(abs_srcdir) && rm -rff $(CLEAN_INPUTS) Installer/LatestBuild/* Installer/local* Installer/Moonshot/*
