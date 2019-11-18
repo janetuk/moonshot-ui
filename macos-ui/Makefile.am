@@ -63,10 +63,8 @@ else
 endif
 
 Installer/local.tar.gz: Installer/local filemanifest.txt
-	sudo cp -R /usr/local/moonshot $(abs_srcdir)/$<
 	sudo chown -R `whoami` $(abs_srcdir)/$<
-	cd $(abs_srcdir)/$< && for i in $$(find . \( -type f -o -type l \)) ; do if [ -z "$$(fgrep $$i $(abs_srcdir)/filemanifest.txt)" ]; then sudo rm "$$i"; fi; done
-	cd $(abs_srcdir)/$< && for i in $$(find . -type d |awk '{ print length, $$0 }' |sort -nr -s |cut -d" " -f2-) ; do if [ -z "$$(fgrep $$i $(abs_srcdir)/filemanifest.txt)" ]; then rmdir "$$i"; fi; done
+	cd $(abs_srcdir)/$< && for i in $$(cat $(abs_srcdir)/filemanifest.txt); do srcfile="/usr/local/$$i"; echo "$$srcfile"; if test -d "$$srcfile"; then sudo install -d "$$i"; else sudo install "$$srcfile" "$$i"; fi; done
 	cd $(abs_srcdir)/$< && tar -zcvf $(abs_srcdir)/$@ ./
 
 Installer/LatestBuild/Moonshot.app: build/Release/Moonshot.app
