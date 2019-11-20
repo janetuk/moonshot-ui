@@ -63,7 +63,7 @@ else
 endif
 
 Installer/local.tar.gz: filemanifest.txt
-	cd /usr/local && sudo tar -zcvf $(abs_srcdir)/$@ $$(cat $(abs_srcdir)/filemanifest.txt)
+	sudo tar -C /usr/local -zcvf $(abs_srcdir)/$@ $$(cat $(abs_srcdir)/filemanifest.txt)
 
 Installer/LatestBuild/Moonshot.app: build/Release/Moonshot.app
 	mkdir -p $(abs_srcdir)/Installer/LatestBuild/
