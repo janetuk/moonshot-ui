@@ -41,7 +41,6 @@
     unsigned char *p = cert;
     unsigned char hashdata[32];
     int cert_len = (int) data.length;
-    NSLog(@"DATA LENGTH IS %d", cert_len);
     
     // SHA256 fingerprint
     CC_SHA256(cert, cert_len, hashdata);
@@ -60,11 +59,25 @@
     unsigned char cert_text[4096];
     BIO* out_bio = BIO_new(BIO_s_mem());
     if (X509_print(out_bio, x)) {
-        int write = BIO_read(out_bio, cert_text, 4096);
+        int write = BIO_read(out_bio, cert_text, 4095);
         cert_text[write]='\0';
     }
     BIO_free(out_bio);
     [self setTextsummary:[NSString stringWithUTF8String:(const char*) cert_text]];
+
+
+    out_bio = BIO_new(BIO_s_mem());
+    ASN1_TIME* time = X509_get_notAfter(x);
+
+    unsigned char datebuf[4096];
+    if (ASN1_TIME_print(out_bio, time)) {
+        int write = BIO_read(out_bio, datebuf, 4095);
+        datebuf[write]='\0';
+    }
+    BIO_free(out_bio);
+    [self setExpirationDate:[NSString stringWithUTF8String:(const char*) datebuf]];
+    [self setIsExpired:(X509_cmp_current_time(time) < 0)];
+
 cleanup:
     X509_free(x);
     return self;

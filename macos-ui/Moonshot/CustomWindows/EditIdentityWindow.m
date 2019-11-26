@@ -45,8 +45,6 @@
 @property (weak) IBOutlet NSTextField *subjectValueTextField;
 @property (weak) IBOutlet NSTextField *expirationDateTextField;
 @property (weak) IBOutlet NSTextField *expirationDateValueTextField;
-@property (weak) IBOutlet NSTextField *constraintTextField;
-@property (weak) IBOutlet NSTextField *constraintValueTextField;
 @property (weak) IBOutlet NSView *topSeparator;
 @property (weak) IBOutlet NSView *bottomSeparator;
 @property (weak) IBOutlet NSButton *exportCertificateButton;
@@ -137,7 +135,7 @@
     }
 }
 
-#pragma mark - Load No Identity Data
+#pragma mark - Load No Identity Data
 
 - (void)loadNoIdentityData {
     [self.editUsernameValueTextField setStringValue:@"No Identity"];
@@ -165,7 +163,8 @@
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
         [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
         [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
-        [self.expirationDateValueTextField setStringValue:@""];
+        X509Cert* cert = [[X509Cert alloc] initWithB64String:self.trustAnchorObject.caCertificate];
+        [self.expirationDateValueTextField setStringValue:cert.expirationDate];
     } else if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
@@ -197,7 +196,6 @@
     [self.caCertificateTextField setStringValue:NSLocalizedString(@"CA_Certificate", @"")];
     [self.subjectTextField setStringValue:NSLocalizedString(@"Subject", @"")];
     [self.expirationDateTextField setStringValue:NSLocalizedString(@"Expiration_Date", @"")];
-    [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
     [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
