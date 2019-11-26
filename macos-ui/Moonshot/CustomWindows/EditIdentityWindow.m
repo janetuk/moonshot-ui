@@ -157,18 +157,18 @@
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
+    if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
+        [self.certificateView setHidden:NO];
+        [self.shaFingerprintView setHidden:YES];
+        [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
+        [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
+        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
+        [self.expirationDateValueTextField setStringValue:@""];
+    } else if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
 		[self.shaFingerprintValueTextField setStringValue:[TrustAnchor stringByAddingDots:self.trustAnchorObject.serverCertificate]];
-	} else if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
-		[self.certificateView setHidden:NO];
-		[self.shaFingerprintView setHidden:YES];
-		[self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
-        [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
-        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
-        [self.expirationDateValueTextField setStringValue:@""];
 	} else {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:YES];
