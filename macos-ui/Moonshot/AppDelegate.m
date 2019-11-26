@@ -15,6 +15,7 @@
 #import "Identity.h"
 #import "MSTIdentityDataLayer.h"
 #import "TrustAnchorWindow.h"
+#import "X509Cert.h"
 
 @interface AppDelegate ()<TrustAnchorWindowDelegate>
 
@@ -71,7 +72,7 @@
     self.isIdentityManagerLaunched = YES;
 }
 
-- (void)setTrustAnchorControllerForIdentity:(Identity *)identity hashStr:(NSString *)hashStr withReply:(DBusMessage *)reply andConnection:(DBusConnection *)connection {
+- (void)setTrustAnchorControllerForIdentity:(Identity *)identity hashStr:(NSString *)hashStr certInfo:(NSString*)certInfo withReply:(DBusMessage *)reply andConnection:(DBusConnection *)connection {
     NSStoryboard *storyBoard = [NSStoryboard storyboardWithName:@"Main" bundle:nil];
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"TrustAnchor"];
     ((TrustAnchorWindow *)_viewController).delegate = self;
@@ -79,6 +80,7 @@
     ((TrustAnchorWindow *)_viewController).reply = reply;
     ((TrustAnchorWindow *)_viewController).connection = connection;
 	((TrustAnchorWindow *)_viewController).hashStr = hashStr;
+    ((TrustAnchorWindow *)_viewController).certInfo = certInfo;
 
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Trust Anchor", @"")];
@@ -106,39 +108,12 @@
 		[NSApp terminate:delegate];
 		return;
 	}
-
-	// hex -> bytes
-	unsigned long i = 0, cert_len = certData.length / 2;
-	const char *hash_string = [certData UTF8String];
-	unsigned char *cert_data_buffer = malloc(cert_len + sizeof(int));
-	NSString *hash;
-	for (i = 0; i < cert_len; i++)
-		sscanf(&hash_string[i*2], "%02X", &cert_data_buffer[i]);
-
-	NSData *certByteBuffer = [NSData dataWithBytes:cert_data_buffer length:i];
-	SecCertificateRef thisCert = SecCertificateCreateWithData(kCFAllocatorDefault, (__bridge CFDataRef)certByteBuffer);
-	free(cert_data_buffer);
-	if (thisCert != NULL) {
-		CFStringRef certSubjectSummary = SecCertificateCopySubjectSummary(thisCert);
-		NSString* subjectSummaryString = [[NSString alloc] initWithString:(__bridge NSString*)certSubjectSummary];
-		NSLog(@"Hash contained certificate: %@", subjectSummaryString);
-		CFRelease(certSubjectSummary);
-		CFDataRef certificateDataRef = SecCertificateCopyData(thisCert);
-		NSData *certificateData = CFBridgingRelease(certificateDataRef);
-		if (certificateDataRef != NULL) {
-			NSLog(@"Got certificate data: %@", subjectSummaryString);
-			NSMutableString *hexString = [NSMutableString stringWithCapacity:(CC_SHA256_DIGEST_LENGTH * 2)];
-			unsigned char *sha256_hash_buffer = malloc(CC_SHA256_DIGEST_LENGTH);
-			CC_SHA256(certificateData.bytes, (CC_LONG)certificateData.length, sha256_hash_buffer);
-			for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; ++i)
-				[hexString appendString:[NSString stringWithFormat:@"%02lx", (unsigned long)sha256_hash_buffer[i]]];
-			free(sha256_hash_buffer);
-			NSLog(@"Certificate %@ SHA-256 fingerprint %@", subjectSummaryString, hexString);
-			hash = [hexString uppercaseString];
-		}
-	} else {
-		NSLog(@"Hash contained: %@", certData);
-		hash = certData;
+    NSString* hash = certData;
+    NSString* info = nil;
+	if (certData.length != 32) {
+        X509Cert* cert = [[X509Cert alloc]initWithHexString:certData];
+        hash = cert.hexfingerprint;
+        info = cert.textsummary;
 	}
 
 	if (identity.trustAnchor.serverCertificate.length > 0) {
@@ -167,7 +142,7 @@
 		}
 
 		dispatch_async(dispatch_get_main_queue(), ^{
-			[self setTrustAnchorControllerForIdentity:identity hashStr:hash withReply:reply andConnection:connection];
+            [self setTrustAnchorControllerForIdentity:identity hashStr:hash certInfo:info withReply:reply andConnection:connection];
 		});
 	}
 }

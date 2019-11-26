@@ -95,6 +95,9 @@
 		F345F50720862F110018A31D /* TrustAnchorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F345F50520862F110018A31D /* TrustAnchorWindow.xib */; };
 		F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */ = {isa = PBXBuildFile; fileRef = F37FC0021FF5093A00779054 /* SelectionRules.m */; };
 		F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */ = {isa = PBXBuildFile; fileRef = F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */; };
+		FA35D511238D1D2100BF0B51 /* libcrypto.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FA35D510238D1D2100BF0B51 /* libcrypto.1.1.dylib */; };
+		FA35D513238D1DB900BF0B51 /* libssl.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FA35D512238D1DB700BF0B51 /* libssl.1.1.dylib */; };
+		FA35D516238D232D00BF0B51 /* X509Cert.m in Sources */ = {isa = PBXBuildFile; fileRef = FA35D515238D232D00BF0B51 /* X509Cert.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -237,6 +240,11 @@
 		F37FC0021FF5093A00779054 /* SelectionRules.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectionRules.m; sourceTree = "<group>"; };
 		F39FDA901FF69AA300BCDEFC /* TrustAnchor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustAnchor.h; sourceTree = "<group>"; };
 		F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrustAnchor.m; sourceTree = "<group>"; };
+		FA35D50E238D1CB600BF0B51 /* usr */ = {isa = PBXFileReference; lastKnownFileType = folder; name = usr; path = "../../../../../Volumes/OS X Base System/usr"; sourceTree = "<group>"; };
+		FA35D510238D1D2100BF0B51 /* libcrypto.1.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.1.1.dylib; path = ../../../../../usr/local/moonshot/lib/libcrypto.1.1.dylib; sourceTree = "<group>"; };
+		FA35D512238D1DB700BF0B51 /* libssl.1.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.1.1.dylib; path = ../../../../../usr/local/moonshot/lib/libssl.1.1.dylib; sourceTree = "<group>"; };
+		FA35D514238D232D00BF0B51 /* X509Cert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = X509Cert.h; sourceTree = "<group>"; };
+		FA35D515238D232D00BF0B51 /* X509Cert.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = X509Cert.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -244,7 +252,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA35D513238D1DB900BF0B51 /* libssl.1.1.dylib in Frameworks */,
 				2CE02DC020C03C5E003AEF64 /* libdbus-1.3.dylib in Frameworks */,
+				FA35D511238D1D2100BF0B51 /* libcrypto.1.1.dylib in Frameworks */,
 				78A6643A1DF6F945006BA1F4 /* Security.framework in Frameworks */,
 				78A664381DF6F93F006BA1F4 /* Cocoa.framework in Frameworks */,
 			);
@@ -434,6 +444,8 @@
 		78A330B11DAF7CB500702060 /* Moonshot */ = {
 			isa = PBXGroup;
 			children = (
+				FA35D514238D232D00BF0B51 /* X509Cert.h */,
+				FA35D515238D232D00BF0B51 /* X509Cert.m */,
 				2CDD83861FC3B4730095A799 /* DBus */,
 				2CE492461F621BC800F294D5 /* AppleScript */,
 				78AA8C6F1E11359700718276 /* Moonshot.entitlements */,
@@ -487,6 +499,9 @@
 		78A664361DF6F93F006BA1F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA35D512238D1DB700BF0B51 /* libssl.1.1.dylib */,
+				FA35D510238D1D2100BF0B51 /* libcrypto.1.1.dylib */,
+				FA35D50E238D1CB600BF0B51 /* usr */,
 				2C26F89E20BE2ED000A60A67 /* libdbus-1.dylib */,
 				2CDD837B1FC35CA70095A799 /* libdbus-1.3.dylib */,
 				2C022BEF20BD961400F5059D /* libdbus-1.3.dylib */,
@@ -574,7 +589,7 @@
 				TargetAttributes = {
 					78A330AE1DAF7CB500702060 = {
 						CreatedOnToolsVersion = 8.0;
-						DevelopmentTeam = APPLE_DEVELOPER_TEAM;
+						DevelopmentTeam = "";
 						LastSwiftMigration = 0810;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
@@ -721,6 +736,7 @@
 				7899E79E1DBF517600E4542E /* AddIdentityWindow.m in Sources */,
 				78C73D921DBF8BE300D2BEFB /* EditIdentityWindow.m in Sources */,
 				2C77EE11200EBB6D00F4EE9D /* MSTIdentityImporter.m in Sources */,
+				FA35D516238D232D00BF0B51 /* X509Cert.m in Sources */,
 				F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */,
 				F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */,
 				7812FF361DD0DEBF00F23D89 /* NSDate+NSDateFormatter.m in Sources */,
@@ -885,13 +901,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/moonshot/include/dbus-1.0",
 					"/usr/local/moonshot/lib/dbus-1.0/include",
+					/usr/local/moonshot/include,
 				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -916,13 +933,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Moonshot/Moonshot.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
+				DEVELOPMENT_TEAM = "";
 				HEADER_SEARCH_PATHS = (
 					"/usr/local/moonshot/include/dbus-1.0",
 					"/usr/local/moonshot/lib/dbus-1.0/include",
+					/usr/local/moonshot/include,
 				);
 				INFOPLIST_FILE = Moonshot/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
