@@ -13,6 +13,7 @@
 #import "NSWindow+Utilities.h"
 #import "SelectionRules.h"
 #import "MSTConstants.h"
+#import "X509Cert.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 
@@ -49,6 +50,7 @@
 @property (weak) IBOutlet NSView *topSeparator;
 @property (weak) IBOutlet NSView *bottomSeparator;
 @property (weak) IBOutlet NSButton *exportCertificateButton;
+@property (weak) IBOutlet NSButton *showCertificateButton;
 
 //Fingerprint View
 @property (strong) IBOutlet NSView *shaFingerprintView;
@@ -210,6 +212,7 @@
     [self.editIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
     [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
     [self.exportCertificateButton setTitle:NSLocalizedString(@"Export_Certificate", @"")];
+    [self.showCertificateButton setTitle:NSLocalizedString(@"Show_Certificate", @"")];
 }
 
 #pragma mark - Setup TableView Header
@@ -346,6 +349,21 @@
 												  attributes:nil];
 		}
 	}];
+}
+
+- (IBAction)showCertificateButtonPressed:(id)sender {
+    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.identityToEdit.trustAnchor.caCertificate];
+    NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
+    [accessory setString:cert.textsummary];
+    [accessory setFont:[NSFont userFixedPitchFontOfSize:0]];
+    [accessory setEditable:NO];
+    NSScrollView *scroll = [[NSScrollView alloc]initWithFrame:NSMakeRect(0,0,500,300)];
+    [scroll setDocumentView:accessory];
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = @"Server's certificate text";
+    [alert setInformativeText:@"Please, note that the information shown here could be easily forged. Always check the fingerprint!"];
+    alert.accessoryView = scroll;
+    [alert runModal];
 }
 
 #pragma mark - NSTextFieldDelegate

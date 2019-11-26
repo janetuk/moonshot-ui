@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface X509Cert : NSObject
 - (id) initWithHexString: (NSString*) hexstring;
+- (id) initWithB64String: (NSString*) b64string;
+- (id) initWithDerData: (NSData*) derdata;
 @property NSString* hexfingerprint;
 @property NSString* textsummary;
 @end

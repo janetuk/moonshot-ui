@@ -47,6 +47,7 @@
 "Service" = "Service";
 "Yes" = "Yes";
 "Export_Certificate" = "Export Certificate";
+"Show_Certificate" = "Show Certificate";
 
 //TRUST ANCHOR
 "Trust_Anchor_Title" = "Trust Anchor";
