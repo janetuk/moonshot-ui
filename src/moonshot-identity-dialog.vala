@@ -239,8 +239,6 @@ class IdentityDialog : Dialog
 
         Box trust_anchor_box = new_hbox(0);
         string ta_label_text = ta_label_prefix + IdentityManagerInterface.ta_type_name(id);
-        if (id.trust_anchor.is_expired())
-            ta_label_text += " " + _("[EXPIRED]");
 
         Label ta_label = new Label(ta_label_text);
         ta_label.set_alignment(0, 0.5f);
