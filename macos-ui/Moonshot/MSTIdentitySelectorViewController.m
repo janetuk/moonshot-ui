@@ -221,9 +221,9 @@
     [[self.view window] endSheet:window];
 }
 
-- (void)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+- (BOOL)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
     __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
+    return [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
             [weakSelf getSavedIdentities];
             [[weakSelf.view window] endSheet:window];

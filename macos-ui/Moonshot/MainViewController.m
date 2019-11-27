@@ -311,14 +311,21 @@
 
     if (clicked == NSFileHandlingPanelOKButton) {
         for (NSURL *url in [panel URLs]) {
+            __block int actually_added = 0;
+            NSMutableArray* skipped = [[NSMutableArray alloc] init];
 			self.identityImporter = [[MSTIdentityImporter alloc] init];
 			__weak typeof (self) weakSelf = self;
 			[self.identityImporter importIdentitiesFromFile:url withBlock:^(NSArray<Identity *> *items) {
 				if (items.count > 0) {
 					for (Identity *identityObject in items) {
-						[weakSelf addIdentity:identityObject forWindow:self.view.window];
+						if ([weakSelf addIdentity:identityObject forWindow:self.view.window])
+                            actually_added++;
+                        else {
+                            [skipped addObject:identityObject.displayName];
+                            // Skipped identities
+                        }
 					}
-					[weakSelf showSuccessParsingAlert:(int)items.count];
+					[weakSelf showSuccessParsingAlert:(int)actually_added skippedIds:skipped];
 				} else {
 					[weakSelf showErrorParsingAlert];
 				}
@@ -352,8 +359,8 @@
     [[self.view window] endSheet:window];
 }
 
-- (void)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
-    [self addIdentity:identity forWindow:window];
+- (BOOL)addIdentityWindow:(NSWindow *)window wantsToAddIdentity:(Identity *)identity rememberPassword:(BOOL)rememberPassword {
+    return [self addIdentity:identity forWindow:window];
 }
 
 #pragma mark - EditIdentityWindowDelegate
@@ -450,9 +457,9 @@
 
 #pragma mark - Add Identity
 
-- (void)addIdentity:(Identity *)identity forWindow:(NSWindow *)window {
+- (BOOL)addIdentity:(Identity *)identity forWindow:(NSWindow *)window {
     __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
+   return [[MSTIdentityDataLayer sharedInstance] addNewIdentity:identity withBlock:^(NSError *error) {
         if (!error) {
             [weakSelf getSavedIdentities];
             [weakSelf.deleteIdentityButton setEnabled:NO];
@@ -509,8 +516,16 @@
     }];
 }
 
-- (void)showSuccessParsingAlert:(int)importedItemsCount {
-    NSString *informativeText = (importedItemsCount > 1) ? [NSString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info", @""), importedItemsCount] : [NSString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info_One", @""), importedItemsCount];
+- (void)showSuccessParsingAlert:(int)importedItemsCount skippedIds:(NSArray*)skippedIds {
+    NSMutableString *informativeText = (importedItemsCount != 1) ? [NSMutableString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info", @""), importedItemsCount] : [NSMutableString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info_One", @""), importedItemsCount];
+    
+    if ([skippedIds count] > 0) {
+        [informativeText appendFormat:@"\n\nThe following identities were skipped since they already exist:"];
+        for (NSString* skipped in skippedIds)
+            [informativeText appendFormat:@"\n * %@", skipped];
+        [informativeText appendFormat:@"\n\nIf you want to add them, please remove the existing ones first."];
+    }
+    
     [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Success_Parsing_XML_Message", @"") informativeText:informativeText alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:

@@ -15,7 +15,7 @@ static const NSString  *MSTIdentityNoIndentityID = @"MSTIdentityNoIndentityID";
 + (MSTIdentityDataLayer *)sharedInstance;
 
 - (void)getAllIdentitiesWithBlock:(void (^)(NSArray <Identity *> *items))block;
-- (void)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
+- (BOOL)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
 - (void)removeIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block;
 - (Identity *)getExistingIdentitySelectionFor:(NSString *)nai service:(NSString *)service password:(NSString *)password;

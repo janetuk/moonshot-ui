@@ -59,16 +59,23 @@ static MSTIdentityDataLayer *sharedInstance;
     block(items);
 }
 
-- (void)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
+- (BOOL)addNewIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
     __block NSMutableArray *newIdentityArray = [[NSMutableArray alloc] init];
     [self getAllRealIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         newIdentityArray = [items mutableCopy];
     }];
+    
+    // If this identiy is duplicated, do nothing
+    for (Identity* identity in newIdentityArray)
+        if ([identity.username isEqualToString:newIdentity.username] && [identity.realm isEqualToString:newIdentity.realm])
+            return NO;
+    
     [newIdentityArray addObject:newIdentity];
     [self saveObject:newIdentityArray forKey:MST_IDENTITIES];
 	if (block) {
 		block(nil);
 	}
+    return YES;
 }
 
 - (void)editIdentity:(Identity *)newIdentity withBlock:(void (^)(NSError *error))block {
