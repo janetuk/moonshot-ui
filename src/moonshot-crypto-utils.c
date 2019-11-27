@@ -104,7 +104,6 @@ int parse_hex_certificate(const unsigned char* hex_str,
     unsigned char *cert = malloc(cert_len + sizeof(int));
     unsigned char *p = cert;
     int result = 0;
-    X509_NAME *name = NULL;
 
     // make sure we initialise buffers
     sha256_hex_fingerprint[0] = cert_text[0] = '\0';

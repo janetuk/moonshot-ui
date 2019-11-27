@@ -13,6 +13,7 @@
 @property (weak) IBOutlet NSTextField *trustAnchorShaFingerprintTextField;
 @property (weak) IBOutlet NSButton *trustAnchorCancelButton;
 @property (weak) IBOutlet NSButton *trustAnchorConfirmButton;
+@property (weak) IBOutlet NSButton *trustAnchorViewButton;
 @property (weak) IBOutlet NSTextField *trustAnchorInfoTextField;
 @property (weak) IBOutlet NSTextField *trustAnchorUsernameTextField;
 @property (weak) IBOutlet NSTextField *trustAnchorRealmTextField;
@@ -22,6 +23,9 @@
 @end
 
 @implementation TrustAnchorWindow
+{
+    NSString* _certInfo;
+}
 
 #pragma mark - Window Lifecycle
 
@@ -65,10 +69,10 @@
 }
 
 - (void)setupShaTextFieldWithShaFingerprint:(NSString *)fingerprint {
-	if (fingerprint.length > 0) {
-		[self.trustAnchorShaFingerprintTextField setStringValue:[TrustAnchor stringByAddingDots:fingerprint]];
-		[self.trustAnchorShaFingerprintTextField setEnabled:NO];
-	}
+    if (fingerprint.length > 0) {
+        [self.trustAnchorShaFingerprintTextField setStringValue:[TrustAnchor stringByAddingDots:fingerprint]];
+        [self.trustAnchorShaFingerprintTextField setEnabled:NO];
+    }
 }
 
 - (void)setupCheckInfoTextField {
@@ -80,6 +84,7 @@
 - (void)setupButtons {
     [self setupCancelButton];
     [self setupConfirmButton];
+    [self setupCertButton];
 }
 
 - (void)setupCancelButton {
@@ -90,6 +95,9 @@
     self.trustAnchorConfirmButton.title = NSLocalizedString(@"Confirm", @"");
 }
 
+- (void)setupCertButton {
+    self.trustAnchorViewButton.title = @"View server certificate";
+}
 #pragma mark - Button Actions
 
 - (IBAction)trustAnchorCancelButtonPressed:(id)sender {
@@ -102,6 +110,20 @@
     if ([self.delegate respondsToSelector:@selector(didSaveWithSuccess:reply:connection:andCertificate:forIdentity:)]) {
         [self.delegate didSaveWithSuccess:1 reply:self.reply connection:self.connection andCertificate:[TrustAnchor stringBySanitazingDots:self.trustAnchorShaFingerprintTextField.stringValue] forIdentity:self.identity];
     }
+}
+
+- (IBAction)trustAnchorViewButtonPressed:(id)sender {
+    NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
+    [accessory setString:self.certInfo];
+    [accessory setFont:[NSFont userFixedPitchFontOfSize:0]];
+    [accessory setEditable:NO];
+    NSScrollView *scroll = [[NSScrollView alloc]initWithFrame:NSMakeRect(0,0,500,300)];
+    [scroll setDocumentView:accessory];
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = @"Server's certificate text";
+    [alert setInformativeText:@"Please, note that the information shown here could be easily forged. Always check the fingerprint!"];
+    alert.accessoryView = scroll;
+    [alert runModal];
 }
 
 #pragma mark - Terminate Application

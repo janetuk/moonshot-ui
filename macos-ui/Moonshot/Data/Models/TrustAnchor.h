@@ -16,5 +16,6 @@
 
 + (NSString *)stringBySanitazingDots:(NSString *)inputStr;
 + (NSString *)stringByAddingDots:(NSString *)inputStr;
+- (BOOL)isExpired;
 
 @end

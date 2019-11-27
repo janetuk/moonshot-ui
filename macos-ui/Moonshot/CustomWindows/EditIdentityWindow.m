@@ -13,6 +13,7 @@
 #import "NSWindow+Utilities.h"
 #import "SelectionRules.h"
 #import "MSTConstants.h"
+#import "X509Cert.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 
@@ -44,11 +45,10 @@
 @property (weak) IBOutlet NSTextField *subjectValueTextField;
 @property (weak) IBOutlet NSTextField *expirationDateTextField;
 @property (weak) IBOutlet NSTextField *expirationDateValueTextField;
-@property (weak) IBOutlet NSTextField *constraintTextField;
-@property (weak) IBOutlet NSTextField *constraintValueTextField;
 @property (weak) IBOutlet NSView *topSeparator;
 @property (weak) IBOutlet NSView *bottomSeparator;
 @property (weak) IBOutlet NSButton *exportCertificateButton;
+@property (weak) IBOutlet NSButton *showCertificateButton;
 
 //Fingerprint View
 @property (strong) IBOutlet NSView *shaFingerprintView;
@@ -135,7 +135,7 @@
     }
 }
 
-#pragma mark - Load No Identity Data
+#pragma mark - Load No Identity Data
 
 - (void)loadNoIdentityData {
     [self.editUsernameValueTextField setStringValue:@"No Identity"];
@@ -157,18 +157,19 @@
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
+    if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
+        [self.certificateView setHidden:NO];
+        [self.shaFingerprintView setHidden:YES];
+        [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
+        [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
+        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
+        X509Cert* cert = [[X509Cert alloc] initWithB64String:self.trustAnchorObject.caCertificate];
+        [self.expirationDateValueTextField setStringValue:cert.expirationDate];
+    } else if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
 		[self.shaFingerprintValueTextField setStringValue:[TrustAnchor stringByAddingDots:self.trustAnchorObject.serverCertificate]];
-	} else if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
-		[self.certificateView setHidden:NO];
-		[self.shaFingerprintView setHidden:YES];
-		[self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
-        [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
-        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
-        [self.expirationDateValueTextField setStringValue:@""];
 	} else {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:YES];
@@ -195,7 +196,6 @@
     [self.caCertificateTextField setStringValue:NSLocalizedString(@"CA_Certificate", @"")];
     [self.subjectTextField setStringValue:NSLocalizedString(@"Subject", @"")];
     [self.expirationDateTextField setStringValue:NSLocalizedString(@"Expiration_Date", @"")];
-    [self.constraintTextField setStringValue:NSLocalizedString(@"Constraint", @"")];
     [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
@@ -210,6 +210,7 @@
     [self.editIdentityCancelButton setTitle:NSLocalizedString(@"Cancel_Button", @"")];
     [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
     [self.exportCertificateButton setTitle:NSLocalizedString(@"Export_Certificate", @"")];
+    [self.showCertificateButton setTitle:NSLocalizedString(@"Show_Certificate", @"")];
 }
 
 #pragma mark - Setup TableView Header
@@ -346,6 +347,21 @@
 												  attributes:nil];
 		}
 	}];
+}
+
+- (IBAction)showCertificateButtonPressed:(id)sender {
+    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.identityToEdit.trustAnchor.caCertificate];
+    NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
+    [accessory setString:cert.textsummary];
+    [accessory setFont:[NSFont userFixedPitchFontOfSize:0]];
+    [accessory setEditable:NO];
+    NSScrollView *scroll = [[NSScrollView alloc]initWithFrame:NSMakeRect(0,0,500,300)];
+    [scroll setDocumentView:accessory];
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = @"Server's certificate text";
+    [alert setInformativeText:@"Please, note that the information shown here could be easily forged. Always check the fingerprint!"];
+    alert.accessoryView = scroll;
+    [alert runModal];
 }
 
 #pragma mark - NSTextFieldDelegate

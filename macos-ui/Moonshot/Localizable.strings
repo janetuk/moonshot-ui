@@ -47,6 +47,7 @@
 "Service" = "Service";
 "Yes" = "Yes";
 "Export_Certificate" = "Export Certificate";
+"Show_Certificate" = "Show Certificate";
 
 //TRUST ANCHOR
 "Trust_Anchor_Title" = "Trust Anchor";
@@ -54,7 +55,8 @@
 "Trust_Anchor_Info_Text" = "You are using this identity for the first time with the following trust anchor:";
 "Trust_Anchor_Username" = "Username:";
 "Trust_Anchor_Realm" = "Realm:";
-"Trust_Anchor_Sha_Fingerprint_Title" = "Server's trust anchor certificate (SHA - 256 fingerprint):";
+"Trust_Anchor_Sha_Fingerprint_Title" = "Server's trust anchor certificate (SHA-256 fingerprint):";
+"Trust_Anchor_Cert_Info_Title" = "Server's certificate text info:";
 "Trust_Anchor_Check_Info" = "Please check with your realm administrator for the correct fingerprint for your authentication server. if it matches the above fingerprint, confirm the change. If not, then cancel.";
 
 //ABOUT

@@ -6,6 +6,7 @@
 //
 
 #import "TrustAnchor.h"
+#import "X509Cert.h"
 
 @implementation TrustAnchor
 
@@ -58,6 +59,13 @@
 	for (int i = 2; i < resultString.length; i=i+3) {
 		[resultString insertString:@":" atIndex:i];
 	}	return resultString;
+}
+
+- (BOOL) isExpired {
+    if (!self.caCertificate)
+        return NO;
+    X509Cert *cert = [[X509Cert alloc] initWithB64String:self.caCertificate];
+    return cert.isExpired;
 }
 
 @end

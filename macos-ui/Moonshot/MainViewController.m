@@ -170,6 +170,9 @@
             [self.usernameValueTextField setStringValue: identityObject.username];
             [self.realmValueTextField setStringValue: identityObject.realm];
             [self.trustAnchorValueTextField setStringValue:identityObject.trustAnchor ? NSLocalizedString(@"Enterprise_provisioned", @"") : NSLocalizedString(@"None", @"")];
+            if (identityObject.trustAnchor && [identityObject.trustAnchor isExpired]) {
+                [self.trustAnchorValueTextField setStringValue:[NSString stringWithFormat:@"%@ [%@]", NSLocalizedString(@"Enterprise_provisioned", @""),                                                   NSLocalizedString(@"EXPIRED", @"")]];
+            }
             [self.servicesValueTextField setStringValue:[Identity getServicesStringForIdentity:identityObject]];
         }
     }
@@ -209,6 +212,8 @@
     Identity *identityObject = [self.identitiesArray objectAtIndex:row];
     if ([self.identitiesArray count] > 0) {
         cellView.textField.stringValue = identityObject.displayName;
+        if (identityObject.trustAnchor && identityObject.trustAnchor.isExpired)
+            cellView.textField.stringValue = [NSString stringWithFormat:@"[%@] %@", NSLocalizedString(@"EXPIRED", @""), identityObject.displayName];
     } else {
         cellView.textField.stringValue = NSLocalizedString(@"No_Identity", @"");
     }
