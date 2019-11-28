@@ -42,7 +42,6 @@
 #include <glib/gspawn.h>
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
-#include <syslog.h>
 
 /**
  * The entry points to this module are the non-static functions at the end.
@@ -95,7 +94,6 @@ void moonshot_free (void *data)
 static char *moonshot_dbus_launched_argv[] = {
   MOONSHOT_APP, "--dbus-launched", "--cli", NULL
 };
-
 
 /**
  * Read and validate a DBus address from a file descriptor
@@ -262,7 +260,7 @@ static void dbus_disconnect(MoonshotDBusConnection *conn)
   moonshot_free(conn);
 }
 
-char * system_output(char *command) {
+char *system_output(char *command) {
   FILE *fp;
 
   char buf[100];
@@ -359,8 +357,6 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
   return conn;
 }
 
-
-
 /**
  * Create a bus proxy for the moonshot service using an open connection
  *
@@ -406,7 +402,6 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       g_error_free (g_error);
       return NULL;
     }
-
     owner_name = g_dbus_proxy_get_name_owner(g_proxy);
     // if there is no owner name yet, wait a little bit and try to get a proxy again
     if (!owner_name) {
