@@ -379,6 +379,27 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       2) We are in control of stdin and stdout (ie. we are running in the foreground).
       3) There is no MOONSHOT_NO_CLI environment variable.
   */
+  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && getenv("MOONSHOT_NO_CLI") == NULL) {
+      gboolean result = FALSE;
+      flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
+      gchar **envp = NULL;
+      /* If we launched our own bus, make sure the proxy has access to it by setting the appropriate env variable */
+      if (conn->bus) {
+        // Old GLIB does not have g_environ_setenv, so we mimic it
+        envp = g_get_environ();
+        guint length = g_strv_length(envp);
+        envp = g_renew (gchar *, envp, length + 2);
+        envp[length] = g_strdup_printf ("%s=%s", "DBUS_SESSION_BUS_ADDRESS", conn->bus->address);
+        envp[length + 1] = NULL;
+      }
+      result = g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, envp,  0, NULL, NULL,
+                                        &(conn->service_pid), NULL, NULL, NULL, NULL);
+      g_strfreev(envp);
+      if (!result) {
+        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
+        return NULL;
+      }
+  }
 
   /* This will autostart the service if it is not already running. */
   do {
