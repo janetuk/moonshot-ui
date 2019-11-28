@@ -68,6 +68,12 @@
  * waiting for calls.
  */
 
+void alexlog(char* m) {
+  FILE* f = fopen("/tmp/moonshot.log", "a");
+  fprintf(f, "%s\n", m);
+  fclose(f);
+}
+
 char * system_output(char *command) {
     FILE *fp;
 
@@ -177,9 +183,8 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
 
 #ifdef __APPLE__
     system_output("osascript -e 'tell application \"/Applications/Moonshot.app\"\nwake_up\nend tell'");
-    sleep(2.0);
 #endif
-
+    alexlog("STARTING 1");
     g_return_val_if_fail (*error == NULL, NULL);
 
     dbus_error_init (&dbus_error);
@@ -195,6 +200,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
         return NULL;
     }
 #ifdef IPC_DBUS_GLIB
+      alexlog("STARTING 1bis");
     if (getenv("DISPLAY")==NULL) {
         connection = dbus_launch_moonshot();
         if (connection == NULL) {
@@ -205,9 +211,12 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
     } else
 #endif
     {
+      alexlog("STARTING 2");
+
         connection = dbus_g_bus_get (DBUS_BUS_SESSION, &g_error);
 
         if (g_error_matches(g_error, DBUS_GERROR, DBUS_GERROR_NOT_SUPPORTED)) {
+          alexlog("STARTING 3");
             /*Generally this means autolaunch failed because probably DISPLAY is unset*/
             connection = dbus_launch_moonshot();
             if (connection != NULL) {
@@ -216,6 +225,7 @@ static DBusGProxy *dbus_connect (MoonshotError **error)
             }
         }
         if (g_error != NULL) {
+          alexlog("STARTING 4");
             *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR,
                                          "DBus error: %s",
                                          g_error->message);

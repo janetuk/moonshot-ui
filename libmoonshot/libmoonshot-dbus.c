@@ -42,7 +42,11 @@
 #include <glib/gspawn.h>
 #include "libmoonshot.h"
 #include "libmoonshot-common.h"
+#include <syslog.h>
 
+#include <sys/types.h>
+#include <string.h> 
+#include <ctype.h>
 /**
  * The entry points to this module are the non-static functions at the end.
  *
@@ -94,6 +98,13 @@ void moonshot_free (void *data)
 static char *moonshot_dbus_launched_argv[] = {
   MOONSHOT_APP, "--dbus-launched", "--cli", NULL
 };
+
+
+void alexlog(char* m) {
+  FILE* f = fopen("/tmp/moonshot.log", "a");
+  fprintf(f, "%s\n", m);
+  fclose(f);
+}
 
 /**
  * Read and validate a DBus address from a file descriptor
@@ -177,6 +188,8 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
 {
   MoonshotDBusBus *bus;
   GError *g_error = NULL;
+  alexlog("dbus_launch_bus");
+  alexlog(MOONSHOT_DBUS_DAEMON);
   gchar *dbus_daemon_argv[] = {
     MOONSHOT_DBUS_DAEMON,
     "--nofork",
@@ -260,6 +273,38 @@ static void dbus_disconnect(MoonshotDBusConnection *conn)
   moonshot_free(conn);
 }
 
+
+char * system_output(char *command) {
+    FILE *fp;
+
+  char buf[100];
+  char *str = NULL;
+  char *temp = NULL;
+  unsigned int size = 1;  // start with size of 1 to make room for null terminator
+  unsigned int strlength;
+
+  fp = popen(command, "r");
+
+    if (fp == NULL) {
+        printf("Failed to run command\n" );
+        return 0;
+    }
+
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
+      strlength = strlen(buf);
+      temp = realloc(str, size + strlength);  // allocate room for the buf that gets appended
+      if (temp == NULL) {
+        // allocation error
+      } else {
+        str = temp;
+      }
+      strcpy(str + size - 1, buf);     // append buffer to str
+      size += strlength; 
+  }
+     pclose(fp);
+    return str;
+}
+
 /**
  * Open a connection to a DBus session bus, starting one if necessary
  *
@@ -271,6 +316,7 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
   MoonshotDBusConnection *conn = NULL;
   GError          *g_error = NULL;
 
+  alexlog("dbus_connect 1");
   g_return_val_if_fail (*error == NULL, NULL);
 
   if (is_setid()) {
@@ -278,6 +324,7 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
                                  "Cannot use IPC while setid");
     return NULL;
   }
+  alexlog("dbus_connect 2");
 
   conn = g_new0(MoonshotDBusConnection, 1);
   if (conn == NULL) {
@@ -286,12 +333,17 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
     return NULL;
   }
 
+  alexlog("dbus_connect 3");
+
   /* Try to open an existing session bus. */
   conn->connection = g_bus_get_sync(G_BUS_TYPE_SESSION,
                                     NULL, /* no cancellable */
                                    &g_error);
 
   if (conn->connection == NULL) {
+
+    alexlog("DBUS error connecting to bus");
+    alexlog(g_error->message);
     /* That failed. Try to start our own session bus and connect. */
     g_error_free(g_error); /* ignore that error */
     g_error = NULL;
@@ -322,9 +374,13 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
     }
   }
 
+  alexlog("dbus_connect 5");
+
   /* we now have an open connection to a bus */
   return conn;
 }
+
+
 
 /**
  * Create a bus proxy for the moonshot service using an open connection
@@ -337,7 +393,7 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
 {
   GDBusProxy *g_proxy = NULL;
   GError     *g_error = NULL;
-  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_NONE;
+  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES;
   gchar*     owner_name = NULL;
   int        retries = 0;
   /*
@@ -348,33 +404,15 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       2) We are in control of stdin and stdout (ie. we are running in the foreground).
       3) There is no MOONSHOT_NO_CLI environment variable.
   */
-  if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && getenv("MOONSHOT_NO_CLI") == NULL) {
-      gboolean result = FALSE;
-      flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
-      gchar **envp = NULL;
-      /* If we launched our own bus, make sure the proxy has access to it by setting the appropriate env variable */
-      if (conn->bus) {
-        // Old GLIB does not have g_environ_setenv, so we mimic it
-        envp = g_get_environ();
-        guint length = g_strv_length(envp);
-        envp = g_renew (gchar *, envp, length + 2);
-        envp[length] = g_strdup_printf ("%s=%s", "DBUS_SESSION_BUS_ADDRESS", conn->bus->address);
-        envp[length + 1] = NULL;
-      }
-      result = g_spawn_async_with_pipes(NULL, moonshot_dbus_launched_argv, envp,  0, NULL, NULL,
-                                        &(conn->service_pid), NULL, NULL, NULL, NULL);
-      g_strfreev(envp);
-      if (!result) {
-        *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
-        return NULL;
-      }
-  }
+
+  alexlog("CREATING PROXY");
 
   /* This will autostart the service if it is not already running. */
   do {
     if (g_proxy) {
       g_object_unref(g_proxy);
     }
+  alexlog("g_dbus_proxy_new_sync!");
 
     g_proxy = g_dbus_proxy_new_sync(conn->connection,
                                     flags,
@@ -392,12 +430,18 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       g_error_free (g_error);
       return NULL;
     }
+
+    alexlog("END g_dbus_proxy_new_sync!");
+    alexlog("g_dbus_proxy_get_name_owner!");
+
     owner_name = g_dbus_proxy_get_name_owner(g_proxy);
+    alexlog("END g_dbus_proxy_get_name_owner!");
     // if there is no owner name yet, wait a little bit and try to get a proxy again
     if (!owner_name) {
       /* we try 20 times before giving up */
       if (retries++ > 20) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
+        alexlog("WAITING TO SPAWN!");
         return NULL;
       }
       usleep(10000);
@@ -463,14 +507,31 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
   static GStaticMutex init_lock = G_STATIC_MUTEX_INIT;
   static MoonshotDBusProxy shared_proxy = {NULL, NULL};
 
+#ifdef __APPLE__
+    alexlog("Libmoonshot get_dbus_proxy");
+    system_output("osascript -e 'tell application \"/Applications/Moonshot.app\"\nwake_up\nend tell'");
+    alexlog("Libmoonshot started");
+  char tmp[1024];
+  snprintf(tmp, 1024, "unix:path=%s", system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET"));
+  tmp[strlen(tmp) - 1] = 0;
+  alexlog(tmp);
+  setenv("DBUS_SESSION_BUS_ADDRESS", tmp, 0);
+  alexlog(getenv("DBUS_SESSION_BUS_ADDRESS"));
+
+  #endif
+  alexlog("Libmoonshot started done");
   /* Mutex protects access to shared_proxy */
   g_static_mutex_lock (&init_lock);
+    alexlog("Libmoonshot got lock");
 
   /* do we already have a live proxy? */
   if (shared_proxy.dbus_proxy != NULL) {
     g_object_ref(shared_proxy.dbus_proxy);
+    alexlog("Libmoonshot got shared proxy");
     goto cleanup;
   }
+
+    alexlog("Libmoonshot get_dbus_proxy 2");
 
   /* get a connection if we don't already have one */
   if (shared_proxy.connection == NULL) {
@@ -480,11 +541,14 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
     if (shared_proxy.connection == NULL)
       goto cleanup;
   }
+    alexlog("Libmoonshot get_dbus_proxy 3");
 
   /* we have a connection, create a proxy */
   shared_proxy.dbus_proxy = dbus_create_proxy(shared_proxy.connection, error); /* sets error if return value is null */
   if (shared_proxy.dbus_proxy == NULL)
     goto cleanup;
+
+    alexlog("Libmoonshot get_dbus_proxy 4");
 
   /* if we spawned the server, make sure we kill it after serving the request */
   if (shared_proxy.connection->service_pid > 0)
