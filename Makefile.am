@@ -207,12 +207,11 @@ in_substitute = sed \
 if  OS_MACOS
 dbus_service_in_file = org.janet.Moonshot.service.mac
 dbus_service_file = $(dbus_service_in_file:.service.mac=.service)
-libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 else
 dbus_service_in_file = org.janet.Moonshot.service.in
 dbus_service_file = $(dbus_service_in_file:.service.in=.service)
-libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 endif
+libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 # DBus bus configuration file, used for launching our own bus when the session bus
 # is not available.
