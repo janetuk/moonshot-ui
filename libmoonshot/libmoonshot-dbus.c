@@ -44,9 +44,6 @@
 #include "libmoonshot-common.h"
 #include <syslog.h>
 
-#include <sys/types.h>
-#include <string.h> 
-#include <ctype.h>
 /**
  * The entry points to this module are the non-static functions at the end.
  *
@@ -99,12 +96,6 @@ static char *moonshot_dbus_launched_argv[] = {
   MOONSHOT_APP, "--dbus-launched", "--cli", NULL
 };
 
-
-void alexlog(char* m) {
-  FILE* f = fopen("/tmp/moonshot.log", "a");
-  fprintf(f, "%s\n", m);
-  fclose(f);
-}
 
 /**
  * Read and validate a DBus address from a file descriptor
@@ -188,8 +179,6 @@ static MoonshotDBusBus *dbus_launch_bus(MoonshotError **error)
 {
   MoonshotDBusBus *bus;
   GError *g_error = NULL;
-  alexlog("dbus_launch_bus");
-  alexlog(MOONSHOT_DBUS_DAEMON);
   gchar *dbus_daemon_argv[] = {
     MOONSHOT_DBUS_DAEMON,
     "--nofork",
@@ -273,9 +262,8 @@ static void dbus_disconnect(MoonshotDBusConnection *conn)
   moonshot_free(conn);
 }
 
-
 char * system_output(char *command) {
-    FILE *fp;
+  FILE *fp;
 
   char buf[100];
   char *str = NULL;
@@ -299,10 +287,10 @@ char * system_output(char *command) {
         str = temp;
       }
       strcpy(str + size - 1, buf);     // append buffer to str
-      size += strlength; 
+      size += strlength;
   }
-     pclose(fp);
-    return str;
+  pclose(fp);
+  return str;
 }
 
 /**
@@ -316,7 +304,6 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
   MoonshotDBusConnection *conn = NULL;
   GError          *g_error = NULL;
 
-  alexlog("dbus_connect 1");
   g_return_val_if_fail (*error == NULL, NULL);
 
   if (is_setid()) {
@@ -324,7 +311,6 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
                                  "Cannot use IPC while setid");
     return NULL;
   }
-  alexlog("dbus_connect 2");
 
   conn = g_new0(MoonshotDBusConnection, 1);
   if (conn == NULL) {
@@ -333,17 +319,12 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
     return NULL;
   }
 
-  alexlog("dbus_connect 3");
-
   /* Try to open an existing session bus. */
   conn->connection = g_bus_get_sync(G_BUS_TYPE_SESSION,
                                     NULL, /* no cancellable */
                                    &g_error);
 
   if (conn->connection == NULL) {
-
-    alexlog("DBUS error connecting to bus");
-    alexlog(g_error->message);
     /* That failed. Try to start our own session bus and connect. */
     g_error_free(g_error); /* ignore that error */
     g_error = NULL;
@@ -374,8 +355,6 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
     }
   }
 
-  alexlog("dbus_connect 5");
-
   /* we now have an open connection to a bus */
   return conn;
 }
@@ -405,14 +384,11 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       3) There is no MOONSHOT_NO_CLI environment variable.
   */
 
-  alexlog("CREATING PROXY");
-
   /* This will autostart the service if it is not already running. */
   do {
     if (g_proxy) {
       g_object_unref(g_proxy);
     }
-  alexlog("g_dbus_proxy_new_sync!");
 
     g_proxy = g_dbus_proxy_new_sync(conn->connection,
                                     flags,
@@ -431,17 +407,12 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       return NULL;
     }
 
-    alexlog("END g_dbus_proxy_new_sync!");
-    alexlog("g_dbus_proxy_get_name_owner!");
-
     owner_name = g_dbus_proxy_get_name_owner(g_proxy);
-    alexlog("END g_dbus_proxy_get_name_owner!");
     // if there is no owner name yet, wait a little bit and try to get a proxy again
     if (!owner_name) {
       /* we try 20 times before giving up */
       if (retries++ > 20) {
         *error = moonshot_error_new (MOONSHOT_ERROR_IPC_ERROR, "There was a problem spawning the moonshot server.");
-        alexlog("WAITING TO SPAWN!");
         return NULL;
       }
       usleep(10000);
@@ -507,31 +478,26 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
   static GStaticMutex init_lock = G_STATIC_MUTEX_INIT;
   static MoonshotDBusProxy shared_proxy = {NULL, NULL};
 
+/* we need this hack to get the DBUS_SESSION_BUS_ADDRESS value out of the launchd DBUS_LAUNCHD_SESSION_BUS_SOCKET
+   due to a GDBUS bug */
 #ifdef __APPLE__
-    alexlog("Libmoonshot get_dbus_proxy");
-    //system_output("osascript -e 'tell application \"/Applications/Moonshot.app\"\nwake_up\nend tell'");
-    alexlog("Libmoonshot started");
-  char tmp[1024];
-  snprintf(tmp, 1024, "unix:path=%s", system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET"));
-  tmp[strlen(tmp) - 1] = 0;
-  alexlog(tmp);
-  setenv("DBUS_SESSION_BUS_ADDRESS", tmp, 0);
-  alexlog(getenv("DBUS_SESSION_BUS_ADDRESS"));
-
-  #endif
-  alexlog("Libmoonshot started done");
+  char *launchd_path = system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET");
+  if (launchd_path != NULL) {
+    char dbus_path[1024];
+    snprintf(dbus_path, 1023, "unix:path=%s", system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET"));
+    dbus_path[strlen(dbus_path) - 1] = 0; // remove the final '\n'
+    setenv("DBUS_SESSION_BUS_ADDRESS", dbus_path, 1);
+    free(launchd_path);
+  }
+#endif
   /* Mutex protects access to shared_proxy */
   g_static_mutex_lock (&init_lock);
-    alexlog("Libmoonshot got lock");
 
   /* do we already have a live proxy? */
   if (shared_proxy.dbus_proxy != NULL) {
     g_object_ref(shared_proxy.dbus_proxy);
-    alexlog("Libmoonshot got shared proxy");
     goto cleanup;
   }
-
-    alexlog("Libmoonshot get_dbus_proxy 2");
 
   /* get a connection if we don't already have one */
   if (shared_proxy.connection == NULL) {
@@ -541,14 +507,11 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
     if (shared_proxy.connection == NULL)
       goto cleanup;
   }
-    alexlog("Libmoonshot get_dbus_proxy 3");
 
   /* we have a connection, create a proxy */
   shared_proxy.dbus_proxy = dbus_create_proxy(shared_proxy.connection, error); /* sets error if return value is null */
   if (shared_proxy.dbus_proxy == NULL)
     goto cleanup;
-
-    alexlog("Libmoonshot get_dbus_proxy 4");
 
   /* if we spawned the server, make sure we kill it after serving the request */
   if (shared_proxy.connection->service_pid > 0)
