@@ -260,6 +260,37 @@ static void dbus_disconnect(MoonshotDBusConnection *conn)
   moonshot_free(conn);
 }
 
+char *system_output(char *command) {
+  FILE *fp;
+
+  char buf[100];
+  char *str = NULL;
+  char *temp = NULL;
+  unsigned int size = 1;  // start with size of 1 to make room for null terminator
+  unsigned int strlength;
+
+  fp = popen(command, "r");
+
+    if (fp == NULL) {
+        printf("Failed to run command\n" );
+        return 0;
+    }
+
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
+      strlength = strlen(buf);
+      temp = realloc(str, size + strlength);  // allocate room for the buf that gets appended
+      if (temp == NULL) {
+        // allocation error
+      } else {
+        str = temp;
+      }
+      strcpy(str + size - 1, buf);     // append buffer to str
+      size += strlength;
+  }
+  pclose(fp);
+  return str;
+}
+
 /**
  * Open a connection to a DBus session bus, starting one if necessary
  *
@@ -337,7 +368,7 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
 {
   GDBusProxy *g_proxy = NULL;
   GError     *g_error = NULL;
-  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_NONE;
+  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES;
   gchar*     owner_name = NULL;
   int        retries = 0;
   /*
@@ -463,6 +494,18 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
   static GStaticMutex init_lock = G_STATIC_MUTEX_INIT;
   static MoonshotDBusProxy shared_proxy = {NULL, NULL};
 
+/* we need this hack to get the DBUS_SESSION_BUS_ADDRESS value out of the launchd DBUS_LAUNCHD_SESSION_BUS_SOCKET
+   due to a GDBUS bug */
+#ifdef __APPLE__
+  char *launchd_path = system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET");
+  if (launchd_path != NULL) {
+    char dbus_path[1024];
+    snprintf(dbus_path, 1023, "unix:path=%s", system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET"));
+    dbus_path[strlen(dbus_path) - 1] = 0; // remove the final '\n'
+    setenv("DBUS_SESSION_BUS_ADDRESS", dbus_path, 1);
+    free(launchd_path);
+  }
+#endif
   /* Mutex protects access to shared_proxy */
   g_static_mutex_lock (&init_lock);
 
