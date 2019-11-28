@@ -509,7 +509,7 @@ static GDBusProxy *get_dbus_proxy (MoonshotError **error)
 
 #ifdef __APPLE__
     alexlog("Libmoonshot get_dbus_proxy");
-    system_output("osascript -e 'tell application \"/Applications/Moonshot.app\"\nwake_up\nend tell'");
+    //system_output("osascript -e 'tell application \"/Applications/Moonshot.app\"\nwake_up\nend tell'");
     alexlog("Libmoonshot started");
   char tmp[1024];
   snprintf(tmp, 1024, "unix:path=%s", system_output("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET"));
