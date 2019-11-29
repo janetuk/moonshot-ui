@@ -4,7 +4,6 @@ EXTRA_DIST = Docs \
              Installer \
              Moonshot \
              Moonshot.xcodeproj \
-             moonshot_mac_util \
              MoonshotTests \
              MoonshotUITests \
              Uninstaller \
