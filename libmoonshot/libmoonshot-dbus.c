@@ -271,6 +271,21 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
   MoonshotDBusConnection *conn = NULL;
   GError          *g_error = NULL;
 
+#if __APPLE__
+/* we need this hack to get the DBUS_SESSION_BUS_ADDRESS value out of the
+   launchd DBUS_LAUNCHD_SESSION_BUS_SOCKET due to a GDBUS bug */
+  char *launchd_path = NULL;
+  if (g_spawn_command_line_sync("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET",
+                                &launchd_path, NULL, NULL, NULL)) {
+    launchd_path[strlen(launchd_path) - 1] = 0; // remove the final '\n'
+    char* dbus_path = g_strdup_printf("unix:path=%s", launchd_path);
+    setenv("DBUS_SESSION_BUS_ADDRESS", dbus_path, 1);
+    free(launchd_path);
+    free(dbus_path);
+  }
+#endif
+
+
   g_return_val_if_fail (*error == NULL, NULL);
 
   if (is_setid()) {
