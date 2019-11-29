@@ -46,13 +46,9 @@ case "$host" in
     macos=yes
     linux=no
 
-    # On macOS, we require dbus-glib-1 for the client library for the time being.
-    CLIENT_IPC_MODULE="dbus-glib-1"
-    SERVER_IPC_MODULE="dbus-glib-1"
-  
-#    # Use gdbus for everything
-#    CLIENT_IPC_MODULE="gio-2.0"
-#    SERVER_IPC_MODULE="gio-2.0"
+  # Use gdbus for everything
+    CLIENT_IPC_MODULE="gio-2.0"
+    SERVER_IPC_MODULE="gio-2.0"
 
     ;;
   *)
@@ -275,7 +271,6 @@ AM_CONDITIONAL([WITH_APPLE_DEVELOPER_ID_APPLICATION], [test "x$APPLE_DEVELOPER_I
 AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
 ### end of macOS ###
 
-AM_CONDITIONAL([IPC_DBUS_GLIB], [test "$SERVER_IPC_MODULE" = "dbus-glib-1"])
 AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
