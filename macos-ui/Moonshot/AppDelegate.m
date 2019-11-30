@@ -158,11 +158,14 @@
                              DBUS_TYPE_INVALID);
     dbus_connection_send(connection, reply, NULL);
     dbus_message_unref(reply);
-	[NSTimer scheduledTimerWithTimeInterval:2.0
-									 target:self
-								   selector:@selector(terminateApp:)
-								   userInfo:nil
-									repeats:NO];
+
+    /* There was a 2s delay to close this window. It seems we can do it immediately instead */
+    [NSApp terminate:self];
+	// [NSTimer scheduledTimerWithTimeInterval:2.0
+	// 								 target:self
+	// 							   selector:@selector(terminateApp:)
+	// 							   userInfo:nil
+	// 								repeats:NO];
 }
 
 - (void)terminateApp:(id)sender {
