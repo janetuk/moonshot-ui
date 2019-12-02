@@ -92,7 +92,6 @@
 		78FA20791DC8E90200BA9A37 /* AboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 78FA20771DC8E90200BA9A37 /* AboutWindow.m */; };
 		78FA207A1DC8E90200BA9A37 /* AboutWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78FA20781DC8E90200BA9A37 /* AboutWindow.xib */; };
 		F345F50620862F110018A31D /* TrustAnchorWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = F345F50420862F110018A31D /* TrustAnchorWindow.m */; };
-		F345F50720862F110018A31D /* TrustAnchorWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = F345F50520862F110018A31D /* TrustAnchorWindow.xib */; };
 		F37FC0031FF5093A00779054 /* SelectionRules.m in Sources */ = {isa = PBXBuildFile; fileRef = F37FC0021FF5093A00779054 /* SelectionRules.m */; };
 		F39FDA921FF69AA300BCDEFC /* TrustAnchor.m in Sources */ = {isa = PBXBuildFile; fileRef = F39FDA911FF69AA300BCDEFC /* TrustAnchor.m */; };
 		FA35D511238D1D2100BF0B51 /* libcrypto.1.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = FA35D510238D1D2100BF0B51 /* libcrypto.1.1.dylib */; };
@@ -235,7 +234,6 @@
 		78FA20781DC8E90200BA9A37 /* AboutWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AboutWindow.xib; sourceTree = "<group>"; };
 		F345F50320862F110018A31D /* TrustAnchorWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustAnchorWindow.h; sourceTree = "<group>"; };
 		F345F50420862F110018A31D /* TrustAnchorWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrustAnchorWindow.m; sourceTree = "<group>"; };
-		F345F50520862F110018A31D /* TrustAnchorWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TrustAnchorWindow.xib; sourceTree = "<group>"; };
 		F37FC0011FF5093A00779054 /* SelectionRules.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelectionRules.h; sourceTree = "<group>"; };
 		F37FC0021FF5093A00779054 /* SelectionRules.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SelectionRules.m; sourceTree = "<group>"; };
 		F39FDA901FF69AA300BCDEFC /* TrustAnchor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrustAnchor.h; sourceTree = "<group>"; };
@@ -415,7 +413,6 @@
 				78FA20781DC8E90200BA9A37 /* AboutWindow.xib */,
 				F345F50320862F110018A31D /* TrustAnchorWindow.h */,
 				F345F50420862F110018A31D /* TrustAnchorWindow.m */,
-				F345F50520862F110018A31D /* TrustAnchorWindow.xib */,
 			);
 			path = CustomWindows;
 			sourceTree = "<group>";
@@ -690,7 +687,6 @@
 				78681DE91DDCBED80015BC88 /* window_frame_.png in Resources */,
 				788BC79B1DDCB24C00885268 /* single_remove_button@3x.png in Resources */,
 				788BC79D1DDCB24C00885268 /* user_info_thumbnail@3x.png in Resources */,
-				F345F50720862F110018A31D /* TrustAnchorWindow.xib in Resources */,
 				788BC7621DDC97DF00885268 /* user_info_large.png in Resources */,
 				788BC7631DDC97DF00885268 /* user_info_thumbnail.png in Resources */,
 				788BC79F1DDCB4C600885268 /* white_space.png in Resources */,
