@@ -285,7 +285,7 @@
 
 - (IBAction)clearTrustAnchorPressed:(id)sender {
 	__weak __typeof__(self) weakSelf = self;
-    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Message", @"") informativeText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Message", @"") informativeText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:
 				[weakSelf clearTrustAnchor];
