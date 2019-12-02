@@ -605,7 +605,7 @@
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Igi-01-rFk">
-                                <rect key="frame" x="417" y="68" width="160" height="32"/>
+                                <rect key="frame" x="443" y="68" width="134" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="yGk-64-gWU">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -624,12 +624,24 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fh0-wO-IZB">
+                                <rect key="frame" x="362" y="68" width="80" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Qbj-Ld-M2R">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="identitySelectorImportButtonPressed:" target="jLB-Oj-ltV" id="0M3-DL-BGI"/>
+                                </connections>
+                            </button>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="identitySelectorConnectButton" destination="Iqf-AZ-Jb8" id="2BO-sz-Nfi"/>
                         <outlet property="identitySelectorCreateIdentityButton" destination="Igi-01-rFk" id="6Ae-SO-liL"/>
                         <outlet property="identitySelectorHelpButton" destination="k9L-C7-5oy" id="AqD-c4-9ad"/>
+                        <outlet property="identitySelectorImportButton" destination="fh0-wO-IZB" id="GZs-dO-fM6"/>
                         <outlet property="identitySelectorRememberChoiceButton" destination="l6F-Ju-Wgo" id="3wp-On-AbJ"/>
                         <outlet property="identitySelectorServiceTitleTextField" destination="JvB-WC-O9C" id="Dhh-EO-Kut"/>
                         <outlet property="identitySelectorServiceValueTextField" destination="cjb-HV-elx" id="mPC-SE-89h"/>

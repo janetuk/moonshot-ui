@@ -10,5 +10,7 @@
 @interface NSWindow (Utilities)
 
 - (void)addAlertWithButtonTitle:(nonnull NSString *)buttonTitle secondButtonTitle:(nonnull NSString *)secondButtonTitle messageText:(nonnull NSString *)message informativeText:(nonnull NSString *)informativeText alertStyle:(NSAlertStyle)alertStyle completionHandler:(void (^ __nullable)(NSModalResponse returnCode))handler;
+- (void)showSuccessParsingAlert:(int)importedItemsCount skippedIds:(NSArray*)skippedIds;
+- (void)showErrorParsingAlert;
 
 @end

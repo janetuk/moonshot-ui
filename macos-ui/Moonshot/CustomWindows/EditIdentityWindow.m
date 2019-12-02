@@ -11,17 +11,11 @@
 #import "NSDate+NSDateFormatter.h"
 #import "MSTIdentityDataLayer.h"
 #import "NSWindow+Utilities.h"
-#import "SelectionRules.h"
 #import "MSTConstants.h"
 #import "X509Cert.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 
-//Selection Rules View
-@property (weak) IBOutlet NSTextField *selectionRulesTitleTextFields;
-@property (weak) IBOutlet NSButton *editIdentityDeleteSelectionRulesButton;
-@property (weak) IBOutlet NSView *selectionRulesView;
-@property (weak) IBOutlet NSTableView *editIdentitySelectionRulesTableView;
 
 //Services View
 @property (weak) IBOutlet NSView *servicesView;
@@ -70,10 +64,7 @@
 @property (weak) IBOutlet NSSecureTextField *editPasswordValueTextField;
 
 @property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
-@property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
-@property (nonatomic, retain) NSMutableArray *selectionRulesArray;
-
 @end
 
 @implementation EditIdentityWindow
@@ -113,15 +104,8 @@
 #pragma mark - Load Saved Data
 
 - (void)loadSavedData {
-    __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
-        if (items) {
-            weakSelf.identitiesArray = [items mutableCopy];
-            weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
-            weakSelf.selectionRulesArray = weakSelf.identityToEdit.selectionRules;
-        }
-    }];
-    
+    self.servicesArray = [[NSMutableArray alloc] initWithArray:self.identityToEdit.servicesArray];
+    self.trustAnchorObject = self.identityToEdit.trustAnchor;
     if ([self.identityToEdit.identityId isEqualToString:MST_NO_IDENTITY]) {
         [self loadNoIdentityData];
     } else {
@@ -157,15 +141,15 @@
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
+    if (self.trustAnchorObject.caCertificate.length > 0) {
         [self.certificateView setHidden:NO];
         [self.shaFingerprintView setHidden:YES];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
         [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
-        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
+        [self.subjectValueTextField setStringValue:self.trustAnchorObject.subject];
         X509Cert* cert = [[X509Cert alloc] initWithB64String:self.trustAnchorObject.caCertificate];
         [self.expirationDateValueTextField setStringValue:cert.expirationDate];
-    } else if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
+    } else if (self.trustAnchorObject.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
@@ -179,8 +163,8 @@
         [self.clearTrustAnchorButton setHidden:YES];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"None",@"")];
         [self.window setFrame:NSMakeRect(self.window.frame.origin.x, self.window.frame.origin.y, self.window.frame.size.width, self.window.frame.size.height - self.certificateView.frame.size.height) display:YES];
-        [self.servicesView setFrame:NSMakeRect(self.servicesView.frame.origin.x,165,self.servicesView.frame.size.width,self.servicesView.frame.size.height)];
-        [self.selectionRulesView setFrame:NSMakeRect(self.selectionRulesView.frame.origin.x,0,self.selectionRulesView.frame.size.width,self.selectionRulesView.frame.size.height)];
+        [self.servicesView setFrame:NSMakeRect(self.servicesView.frame.origin.x, self.servicesView.frame.origin.y + self.certificateView.frame.size.height, self.servicesView.frame.size.width, self.servicesView.frame.size.height)];
+
     }
 }
 
@@ -200,7 +184,6 @@
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
     [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
-    [self.selectionRulesTitleTextFields setStringValue:NSLocalizedString(@"Selection_Rules", @"")];
 }
 
 #pragma mark - Setup Buttons
@@ -217,8 +200,6 @@
 
 - (void)setupTableViewHeaders {
     [self.editIdentityServicesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Service", @"")];
-    [self.editIdentitySelectionRulesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Selection_Pattern", @"")];
-    [self.editIdentitySelectionRulesTableView.tableColumns.lastObject.headerCell setStringValue:NSLocalizedString(@"Selection_Confirmation", @"")];
 }
 
 #pragma mark - Delete Services
@@ -229,40 +210,14 @@
 }
 
 - (void)clearTrustAnchor {
-	self.identityToEdit.trustAnchor = nil;
-	[self loadSavedData];
+	self.trustAnchorObject = nil;
 	[self setupViewsVisibility];
-}
-#pragma mark - Delete Selection Rules
-
-- (void)deleteSelectionRules {
-    [self.selectionRulesArray removeObjectAtIndex:self.editIdentitySelectionRulesTableView.selectedRow];
-    [self.editIdentitySelectionRulesTableView reloadData];
-    [self.editIdentityDeleteSelectionRulesButton setEnabled:NO];
 }
 
 #pragma mark - Button Actions
 
 - (IBAction)singleAction:(id)sender {
     [self.editIdentityDeleteServiceButton setEnabled:YES];
-}
-
-- (IBAction)singleActionSelectionRulesTableView:(id)sender {
-    [self.editIdentityDeleteSelectionRulesButton setEnabled:YES];
-}
-
-- (IBAction)deleteSelectionRulesButtonPressed:(id)sender {
-    __weak __typeof__(self) weakSelf = self;
-    SelectionRules *selectionObject = self.selectionRulesArray[self.editIdentitySelectionRulesTableView.selectedRow];
-    [self.window addAlertWithButtonTitle:NSLocalizedString(@"Delete_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:[NSString stringWithFormat:NSLocalizedString(@"Delete_Selection_Rules_Alert_Message", @""),selectionObject.pattern] informativeText:NSLocalizedString(@"Alert_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-        switch (returnCode) {
-            case NSAlertFirstButtonReturn:
-                [weakSelf deleteSelectionRules];
-                break;
-            default:
-                break;
-        }
-    }];
 }
 
 - (IBAction)deleteServiceButtonPressed:(id)sender {
@@ -303,7 +258,7 @@
         }
         self.identityToEdit.dateAdded = self.identityToEdit.dateAdded;
         self.identityToEdit.servicesArray = self.servicesArray;
-        self.identityToEdit.trustAnchor = self.identityToEdit.trustAnchor;
+        self.identityToEdit.trustAnchor = self.trustAnchorObject;
         [self.delegate editIdentityWindow:self.window wantsToEditIdentity:self.identityToEdit rememberPassword:self.editRememberPasswordButton.state];
     }
 }
@@ -321,7 +276,7 @@
 
 - (IBAction)clearTrustAnchorPressed:(id)sender {
 	__weak __typeof__(self) weakSelf = self;
-    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Message", @"") informativeText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+    [self.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Message", @"") informativeText:NSLocalizedString(@"Alert_Clear_Trust_Anchor_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSAlertFirstButtonReturn:
 				[weakSelf clearTrustAnchor];
@@ -334,7 +289,7 @@
 
 - (IBAction)exportCertificateButtonPressed:(id)sender {
 	NSString *fileName = [NSString stringWithFormat:@"%@.cert", self.identityToEdit.displayName];
-	NSString *fileContent = self.identityToEdit.trustAnchor.caCertificate;
+	NSString *fileContent = self.trustAnchorObject.caCertificate;
 
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setPrompt:@"Export"];
@@ -350,7 +305,7 @@
 }
 
 - (IBAction)showCertificateButtonPressed:(id)sender {
-    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.identityToEdit.trustAnchor.caCertificate];
+    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.trustAnchorObject.caCertificate];
     NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
     [accessory setString:cert.textsummary];
     [accessory setFont:[NSFont userFixedPitchFontOfSize:0]];
@@ -394,7 +349,7 @@
     if (tableView == self.editIdentityServicesTableView) {
         return [self.servicesArray count] ?: 0;
     } else {
-        return [self.selectionRulesArray count] ?: 0;
+        return 0;
     }
 }
 
@@ -406,16 +361,7 @@
         }
         return cellView;
     } else {
-        NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentitySelectionRulesIdentifier" owner:self];
-        if ([self.selectionRulesArray count] > 0) {
-            SelectionRules *rulesObject = [self.selectionRulesArray objectAtIndex:row];
-            if (tableColumn == tableView.tableColumns[0]) {
-                cellView.textField.stringValue = rulesObject.pattern;
-            } else {
-                cellView.textField.stringValue = rulesObject.alwaysConfirm;
-            }
-        }
-        return cellView;
+        return nil;
     }
 }
 
