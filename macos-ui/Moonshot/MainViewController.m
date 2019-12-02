@@ -231,7 +231,6 @@
     self.editIdentityWindow.delegate = self;
     Identity *identityToEdit = [self.identitiesArray objectAtIndex:self.identitiesTableView.selectedRow];
     self.editIdentityWindow.identityToEdit = identityToEdit;
-    self.editIdentityWindow.trustAnchorObject = identityToEdit.trustAnchor;
     [self.view.window beginSheet:self.editIdentityWindow.window  completionHandler:^(NSModalResponse returnCode) {
         switch (returnCode) {
             case NSModalResponseOK:

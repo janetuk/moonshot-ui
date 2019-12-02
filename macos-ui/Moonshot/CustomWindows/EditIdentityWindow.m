@@ -64,7 +64,6 @@
 @property (weak) IBOutlet NSSecureTextField *editPasswordValueTextField;
 
 @property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
-@property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
 @end
 
@@ -105,14 +104,8 @@
 #pragma mark - Load Saved Data
 
 - (void)loadSavedData {
-    __weak __typeof__(self) weakSelf = self;
-    [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
-        if (items) {
-            weakSelf.identitiesArray = [items mutableCopy];
-            weakSelf.servicesArray = [[NSMutableArray alloc] initWithArray:weakSelf.identityToEdit.servicesArray];
-        }
-    }];
-    
+    self.servicesArray = [[NSMutableArray alloc] initWithArray:self.identityToEdit.servicesArray];
+    self.trustAnchorObject = self.identityToEdit.trustAnchor;
     if ([self.identityToEdit.identityId isEqualToString:MST_NO_IDENTITY]) {
         [self loadNoIdentityData];
     } else {
@@ -148,15 +141,15 @@
 #pragma mark - Setup Views Visibility
 
 - (void)setupViewsVisibility {
-    if (self.identityToEdit.trustAnchor.caCertificate.length > 0) {
+    if (self.trustAnchorObject.caCertificate.length > 0) {
         [self.certificateView setHidden:NO];
         [self.shaFingerprintView setHidden:YES];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
         [self.caCertificateValueTextField setStringValue:NSLocalizedString(@"Yes", @"")];
-        [self.subjectValueTextField setStringValue:self.identityToEdit.trustAnchor.subject];
+        [self.subjectValueTextField setStringValue:self.trustAnchorObject.subject];
         X509Cert* cert = [[X509Cert alloc] initWithB64String:self.trustAnchorObject.caCertificate];
         [self.expirationDateValueTextField setStringValue:cert.expirationDate];
-    } else if (self.identityToEdit.trustAnchor.serverCertificate.length > 0) {
+    } else if (self.trustAnchorObject.serverCertificate.length > 0) {
         [self.certificateView setHidden:YES];
         [self.shaFingerprintView setHidden:NO];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"Enterprise_provisioned", @"")];
@@ -217,8 +210,7 @@
 }
 
 - (void)clearTrustAnchor {
-	self.identityToEdit.trustAnchor = nil;
-	[self loadSavedData];
+	self.trustAnchorObject = nil;
 	[self setupViewsVisibility];
 }
 
@@ -266,7 +258,7 @@
         }
         self.identityToEdit.dateAdded = self.identityToEdit.dateAdded;
         self.identityToEdit.servicesArray = self.servicesArray;
-        self.identityToEdit.trustAnchor = self.identityToEdit.trustAnchor;
+        self.identityToEdit.trustAnchor = self.trustAnchorObject;
         [self.delegate editIdentityWindow:self.window wantsToEditIdentity:self.identityToEdit rememberPassword:self.editRememberPasswordButton.state];
     }
 }
@@ -297,7 +289,7 @@
 
 - (IBAction)exportCertificateButtonPressed:(id)sender {
 	NSString *fileName = [NSString stringWithFormat:@"%@.cert", self.identityToEdit.displayName];
-	NSString *fileContent = self.identityToEdit.trustAnchor.caCertificate;
+	NSString *fileContent = self.trustAnchorObject.caCertificate;
 
 	NSSavePanel *savePanel = [NSSavePanel savePanel];
 	[savePanel setPrompt:@"Export"];
@@ -313,7 +305,7 @@
 }
 
 - (IBAction)showCertificateButtonPressed:(id)sender {
-    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.identityToEdit.trustAnchor.caCertificate];
+    X509Cert* cert = [[X509Cert alloc]initWithB64String:self.trustAnchorObject.caCertificate];
     NSTextView *accessory = [[NSTextView alloc] initWithFrame:NSMakeRect(0,0,500,300)];
     [accessory setString:cert.textsummary];
     [accessory setFont:[NSFont userFixedPitchFontOfSize:0]];
