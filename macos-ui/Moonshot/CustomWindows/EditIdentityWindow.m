@@ -109,8 +109,7 @@
     [[MSTIdentityDataLayer sharedInstance] getAllIdentitiesWithBlock:^(NSArray<Identity *> *items) {
         if (items) {
             weakSelf.identitiesArray = [items mutableCopy];
-            weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
-            NSLog(@"SLEECTION RULES: %d", [weakSelf.identityToEdit.selectionRules count]);
+            weakSelf.servicesArray = [[NSMutableArray alloc] initWithArray:weakSelf.identityToEdit.servicesArray];
         }
     }];
     
