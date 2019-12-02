@@ -11,17 +11,11 @@
 #import "NSDate+NSDateFormatter.h"
 #import "MSTIdentityDataLayer.h"
 #import "NSWindow+Utilities.h"
-#import "SelectionRules.h"
 #import "MSTConstants.h"
 #import "X509Cert.h"
 
 @interface EditIdentityWindow ()<NSTextFieldDelegate, NSTableViewDataSource, NSTabViewDelegate>
 
-//Selection Rules View
-@property (weak) IBOutlet NSTextField *selectionRulesTitleTextFields;
-@property (weak) IBOutlet NSButton *editIdentityDeleteSelectionRulesButton;
-@property (weak) IBOutlet NSView *selectionRulesView;
-@property (weak) IBOutlet NSTableView *editIdentitySelectionRulesTableView;
 
 //Services View
 @property (weak) IBOutlet NSView *servicesView;
@@ -72,8 +66,6 @@
 @property (nonatomic, strong) TrustAnchorHelpWindow *helpWindow;
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, retain) NSMutableArray *servicesArray;
-@property (nonatomic, retain) NSMutableArray *selectionRulesArray;
-
 @end
 
 @implementation EditIdentityWindow
@@ -118,7 +110,7 @@
         if (items) {
             weakSelf.identitiesArray = [items mutableCopy];
             weakSelf.servicesArray = weakSelf.identityToEdit.servicesArray;
-            weakSelf.selectionRulesArray = weakSelf.identityToEdit.selectionRules;
+            NSLog(@"SLEECTION RULES: %d", [weakSelf.identityToEdit.selectionRules count]);
         }
     }];
     
@@ -179,8 +171,8 @@
         [self.clearTrustAnchorButton setHidden:YES];
         [self.trustAnchorValueTextField setStringValue:NSLocalizedString(@"None",@"")];
         [self.window setFrame:NSMakeRect(self.window.frame.origin.x, self.window.frame.origin.y, self.window.frame.size.width, self.window.frame.size.height - self.certificateView.frame.size.height) display:YES];
-        [self.servicesView setFrame:NSMakeRect(self.servicesView.frame.origin.x,165,self.servicesView.frame.size.width,self.servicesView.frame.size.height)];
-        [self.selectionRulesView setFrame:NSMakeRect(self.selectionRulesView.frame.origin.x,0,self.selectionRulesView.frame.size.width,self.selectionRulesView.frame.size.height)];
+        [self.servicesView setFrame:NSMakeRect(self.servicesView.frame.origin.x, self.servicesView.frame.origin.y + self.certificateView.frame.size.height, self.servicesView.frame.size.width, self.servicesView.frame.size.height)];
+
     }
 }
 
@@ -200,7 +192,6 @@
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
     [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
-    [self.selectionRulesTitleTextFields setStringValue:NSLocalizedString(@"Selection_Rules", @"")];
 }
 
 #pragma mark - Setup Buttons
@@ -217,8 +208,6 @@
 
 - (void)setupTableViewHeaders {
     [self.editIdentityServicesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Service", @"")];
-    [self.editIdentitySelectionRulesTableView.tableColumns.firstObject.headerCell setStringValue:NSLocalizedString(@"Selection_Pattern", @"")];
-    [self.editIdentitySelectionRulesTableView.tableColumns.lastObject.headerCell setStringValue:NSLocalizedString(@"Selection_Confirmation", @"")];
 }
 
 #pragma mark - Delete Services
@@ -233,36 +222,11 @@
 	[self loadSavedData];
 	[self setupViewsVisibility];
 }
-#pragma mark - Delete Selection Rules
-
-- (void)deleteSelectionRules {
-    [self.selectionRulesArray removeObjectAtIndex:self.editIdentitySelectionRulesTableView.selectedRow];
-    [self.editIdentitySelectionRulesTableView reloadData];
-    [self.editIdentityDeleteSelectionRulesButton setEnabled:NO];
-}
 
 #pragma mark - Button Actions
 
 - (IBAction)singleAction:(id)sender {
     [self.editIdentityDeleteServiceButton setEnabled:YES];
-}
-
-- (IBAction)singleActionSelectionRulesTableView:(id)sender {
-    [self.editIdentityDeleteSelectionRulesButton setEnabled:YES];
-}
-
-- (IBAction)deleteSelectionRulesButtonPressed:(id)sender {
-    __weak __typeof__(self) weakSelf = self;
-    SelectionRules *selectionObject = self.selectionRulesArray[self.editIdentitySelectionRulesTableView.selectedRow];
-    [self.window addAlertWithButtonTitle:NSLocalizedString(@"Delete_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:[NSString stringWithFormat:NSLocalizedString(@"Delete_Selection_Rules_Alert_Message", @""),selectionObject.pattern] informativeText:NSLocalizedString(@"Alert_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-        switch (returnCode) {
-            case NSAlertFirstButtonReturn:
-                [weakSelf deleteSelectionRules];
-                break;
-            default:
-                break;
-        }
-    }];
 }
 
 - (IBAction)deleteServiceButtonPressed:(id)sender {
@@ -394,7 +358,7 @@
     if (tableView == self.editIdentityServicesTableView) {
         return [self.servicesArray count] ?: 0;
     } else {
-        return [self.selectionRulesArray count] ?: 0;
+        return 0;
     }
 }
 
@@ -406,16 +370,7 @@
         }
         return cellView;
     } else {
-        NSTableCellView *cellView = [tableView makeViewWithIdentifier:@"editIdentitySelectionRulesIdentifier" owner:self];
-        if ([self.selectionRulesArray count] > 0) {
-            SelectionRules *rulesObject = [self.selectionRulesArray objectAtIndex:row];
-            if (tableColumn == tableView.tableColumns[0]) {
-                cellView.textField.stringValue = rulesObject.pattern;
-            } else {
-                cellView.textField.stringValue = rulesObject.alwaysConfirm;
-            }
-        }
-        return cellView;
+        return nil;
     }
 }
 
