@@ -324,9 +324,9 @@
                             // Skipped identities
                         }
 					}
-					[weakSelf showSuccessParsingAlert:(int)actually_added skippedIds:skipped];
+					[weakSelf.view.window showSuccessParsingAlert:(int)actually_added skippedIds:skipped];
 				} else {
-					[weakSelf showErrorParsingAlert];
+					[weakSelf.view.window showErrorParsingAlert];
 				}
 			}];
         }
@@ -499,39 +499,4 @@
     }];
 }
 
-
-#pragma mark - Parsing Alerts
-- (void)showErrorParsingAlert {
-    [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"Read_More_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Error_Parsing_XML_Message", @"") informativeText:NSLocalizedString(@"Alert_Error_Parsing_XML_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-        switch (returnCode) {
-            case NSAlertFirstButtonReturn:
-                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:NSLocalizedString(@"Wiki_URL", @"")]];
-                break;
-            case NSAlertSecondButtonReturn:
-                break;
-            default:
-                break;
-        }
-    }];
-}
-
-- (void)showSuccessParsingAlert:(int)importedItemsCount skippedIds:(NSArray*)skippedIds {
-    NSMutableString *informativeText = (importedItemsCount != 1) ? [NSMutableString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info", @""), importedItemsCount] : [NSMutableString stringWithFormat:NSLocalizedString(@"Alert_Success_Parsing_XML_Info_One", @""), importedItemsCount];
-    
-    if ([skippedIds count] > 0) {
-        [informativeText appendFormat:@"\n\nThe following identities were skipped since they already exist:"];
-        for (NSString* skipped in skippedIds)
-            [informativeText appendFormat:@"\n * %@", skipped];
-        [informativeText appendFormat:@"\n\nIf you want to add them, please remove the existing ones first."];
-    }
-    
-    [self.view.window addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:@"" messageText:NSLocalizedString(@"Alert_Success_Parsing_XML_Message", @"") informativeText:informativeText alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
-        switch (returnCode) {
-            case NSAlertFirstButtonReturn:
-                break;
-            default:
-                break;
-        }
-    }];
-}
 @end

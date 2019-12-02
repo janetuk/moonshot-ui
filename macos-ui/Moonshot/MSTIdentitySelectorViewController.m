@@ -14,6 +14,7 @@
 #import "AppDelegate.h"
 #import "Identity+Utilities.h"
 #import "MSTConstants.h"
+#import "MSTIdentityImporter.h"
 
 @interface MSTIdentitySelectorViewController ()<AddIdentityWindowDelegate, ConnectIdentityWindowDelegate>
 
@@ -28,6 +29,8 @@
 @property (weak) IBOutlet NSButton *identitySelectorHelpButton;
 @property (weak) IBOutlet NSButton *identitySelectorCreateIdentityButton;
 @property (weak) IBOutlet NSButton *identitySelectorConnectButton;
+@property (weak) IBOutlet NSButton *identitySelectorImportButton;
+
 
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) ConnectIdentityWindow *connectIdentityWindow;
@@ -67,6 +70,7 @@
     [self.identitySelectorRememberChoiceButton setTitle:NSLocalizedString(@"Remember_Identity_Choice_Button", @"")];
     [self.identitySelectorCreateIdentityButton setTitle:NSLocalizedString(@"Create_Identity_Button", @"")];
     [self.identitySelectorConnectButton setTitle:NSLocalizedString(@"Connect_Identity_Button", @"")];
+    [self.identitySelectorImportButton setTitle:NSLocalizedString(@"Import_Button", @"")];
 }
 
 #pragma mark - Setup TableView Header
@@ -152,6 +156,39 @@
                 break;
         }
     }];
+}
+
+- (IBAction)identitySelectorImportButtonPressed:(id)sender {
+    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    [panel setPrompt:@"Select"];
+    [panel setCanChooseFiles:YES];
+    [panel setCanChooseDirectories:YES];
+    [panel setAllowedFileTypes:[NSArray arrayWithObject:@"xml"]];
+    [panel setDirectoryURL:[NSURL fileURLWithPath:[@"~/Documents" stringByExpandingTildeInPath] isDirectory:YES]];
+    NSInteger clicked = [panel runModal];
+    if (clicked == NSFileHandlingPanelOKButton) {
+        for (NSURL *url in [panel URLs]) {
+            __block int actually_added = 0;
+            NSMutableArray* skipped = [[NSMutableArray alloc] init];
+            MSTIdentityImporter* identityImporter = [[MSTIdentityImporter alloc] init];
+            __weak typeof (self) weakSelf = self;
+            [identityImporter importIdentitiesFromFile:url withBlock:^(NSArray<Identity *> *items) {
+                if (items.count > 0) {
+                    for (Identity *identityObject in items) {
+                        if ([weakSelf addIdentityWindow:self.view.window wantsToAddIdentity:identityObject rememberPassword:YES])
+                            actually_added++;
+                        else {
+                            [skipped addObject:identityObject.displayName];
+                            // Skipped identities
+                        }
+                    }
+                    [weakSelf.view.window showSuccessParsingAlert:(int)actually_added skippedIds:skipped];
+                } else {
+                    [weakSelf.view.window showErrorParsingAlert];
+                }
+            }];
+        }
+    }
 }
 
 - (IBAction)identitySelectorConnectButtonPressed:(id)sender {
