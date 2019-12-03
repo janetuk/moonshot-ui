@@ -61,6 +61,7 @@
     _viewController = [storyBoard instantiateControllerWithIdentifier:@"MSTIdentitySelectorViewController"];
     ((MSTIdentitySelectorViewController *)_viewController).getIdentityAction = getIdentityAction;
     [[[NSApplication sharedApplication] windows][0] setContentViewController:_viewController];
+    [[[NSApplication sharedApplication] windows][0] setDelegate:_viewController];
     [[[NSApplication sharedApplication] windows][0]  setTitle:NSLocalizedString(@"Identity_Selector_Window_Title", @"")];
 }
 
