@@ -8,6 +8,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="EditIdentityWindow">
             <connections>
+                <outlet property="addServiceValueTextField" destination="pWZ-cE-hyF" id="owy-y0-9m3"/>
                 <outlet property="bottomSeparator" destination="byQ-96-IFd" id="pvJ-pP-KYB"/>
                 <outlet property="caCertificateTextField" destination="5Xe-T8-zpo" id="KUK-aM-q1A"/>
                 <outlet property="caCertificateValueTextField" destination="yma-Fy-0Q2" id="qI4-vQ-h9n"/>
@@ -15,6 +16,7 @@
                 <outlet property="clearTrustAnchorButton" destination="u3O-KQ-cT0" id="HFq-Qi-ayf"/>
                 <outlet property="dateAddedTitleTextField" destination="7zE-sK-2KV" id="YFz-gs-Bdp"/>
                 <outlet property="editHas2FAButton" destination="JRU-1M-gye" id="NWr-nj-KBd"/>
+                <outlet property="editIdentityAddServiceButton" destination="nHJ-bb-PCO" id="O8M-2X-cJE"/>
                 <outlet property="editIdentityCancelButton" destination="Cnx-Hb-Is2" id="p6e-V6-hnq"/>
                 <outlet property="editIdentityDateAddedTextField" destination="e0g-LA-3o6" id="BkS-ho-sbv"/>
                 <outlet property="editIdentityDeleteServiceButton" destination="UHc-XB-fi6" id="xLf-YM-xka"/>
@@ -318,7 +320,7 @@ Gw
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qYt-OM-YZI">
                                 <rect key="frame" x="18" y="161" width="90" height="24"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="Y8R-1q-Xsl">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Services:" id="Y8R-1q-Xsl">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -412,6 +414,33 @@ Gw
                                     <action selector="deleteServiceButtonPressed:" target="-2" id="Tnr-lH-iB5"/>
                                 </connections>
                             </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nHJ-bb-PCO">
+                                <rect key="frame" x="366" y="159" width="65" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="SQV-J4-mMv">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="editIdentityAddServiceButtonPressed:" target="-2" id="bTL-1m-q7b"/>
+                                </connections>
+                            </button>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" allowsCharacterPickerTouchBarItem="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pWZ-cE-hyF">
+                                <rect key="frame" x="172" y="166" width="192" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="left" drawsBackground="YES" usesSingleLineMode="YES" id="PSF-Em-LVu">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="addServiceTextFieldPressed:" target="-2" id="PUF-uR-MSO"/>
+                                    <outlet property="delegate" destination="-2" id="3Ap-7V-OJv"/>
+                                </connections>
+                            </textField>
                         </subviews>
                     </customView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="u3O-KQ-cT0">
