@@ -16,7 +16,7 @@
 #import "MSTConstants.h"
 #import "MSTIdentityImporter.h"
 
-@interface MSTIdentitySelectorViewController ()<AddIdentityWindowDelegate, ConnectIdentityWindowDelegate>
+@interface MSTIdentitySelectorViewController ()<AddIdentityWindowDelegate, ConnectIdentityWindowDelegate, NSWindowDelegate>
 
 //Content View
 @property (weak) IBOutlet NSTableView *identitySelectorTableView;
@@ -295,4 +295,19 @@
         [self.getIdentityAction selectedIdentity:identity];
     }];
 }
+
+- (BOOL)windowShouldClose:(NSWindow *)sender {
+    __weak __typeof__(self) weakSelf = self;
+    [[self.view window] addAlertWithButtonTitle:NSLocalizedString(@"OK_Button", @"") secondButtonTitle:NSLocalizedString(@"Cancel_Button", @"") messageText:NSLocalizedString(@"Alert_Exit_Message", @"") informativeText:NSLocalizedString(@"Alert_Exit_Info", @"") alertStyle:NSWarningAlertStyle completionHandler:^(NSModalResponse returnCode) {
+        switch (returnCode) {
+            case NSAlertFirstButtonReturn:
+                [NSApp terminate:weakSelf.view];
+                break;
+            default:
+                break;
+        }
+    }];
+    return NO;
+}
+
 @end

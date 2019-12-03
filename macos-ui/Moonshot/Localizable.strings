@@ -113,6 +113,8 @@
 "Alert_Success_Parsing_XML_Info_One" = "You successfully imported %d identity.";
 "Alert_Clear_Trust_Anchor_Message" = "Clear Trust Anchor";
 "Alert_Clear_Trust_Anchor_Info" = "Are you sure you want to clear Trust Anchor data?";
+"Alert_Exit_Message" = "Do you wish to exit without selecting an identity for this service?";
+"Alert_Exit_Info" = "If you do, Moonshot will not be used for this access, but you will still be prompted for future atempts. If you want to prevent Moonshot from prompting you in the future for this service, please select 'Cancel' and send the ID named 'No Identity' instead.";
 
 
 
