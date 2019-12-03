@@ -20,8 +20,10 @@
 //Services View
 @property (weak) IBOutlet NSView *servicesView;
 @property (weak) IBOutlet NSTextField *servicesTitleTextField;
+@property (weak) IBOutlet NSTextField *addServiceValueTextField;
 @property (weak) IBOutlet NSTableView *editIdentityServicesTableView;
 @property (weak) IBOutlet NSButton *editIdentityDeleteServiceButton;
+@property (weak) IBOutlet NSButton *editIdentityAddServiceButton;
 @property (weak) IBOutlet NSButton *editIdentityCancelButton;
 @property (weak) IBOutlet NSButton *editIdentitySaveButton;
 
@@ -183,7 +185,7 @@
     [self.shaFingerprintTextField setStringValue:NSLocalizedString(@"SHA_Fingerprint", @"")];
     [self.editRememberPasswordButton setTitle:NSLocalizedString(@"Remember_Password", @"")];
     [self.editHas2FAButton setTitle:NSLocalizedString(@"Has_2FA", @"")];
-    [self.servicesTitleTextField setStringValue:NSLocalizedString(@"Services_Edit", @"")];
+    [self updateServicesCount];
 }
 
 #pragma mark - Setup Buttons
@@ -194,6 +196,7 @@
     [self.editIdentitySaveButton setTitle:NSLocalizedString(@"Save_Changes_Button", @"")];
     [self.exportCertificateButton setTitle:NSLocalizedString(@"Export_Certificate", @"")];
     [self.showCertificateButton setTitle:NSLocalizedString(@"Show_Certificate", @"")];
+    [self.editIdentityAddServiceButton setTitle:NSLocalizedString(@"Add", @"")];
 }
 
 #pragma mark - Setup TableView Header
@@ -207,6 +210,7 @@
     [self.servicesArray removeObjectAtIndex:self.editIdentityServicesTableView.selectedRow];
     [self.editIdentityServicesTableView reloadData];
     [self.editIdentityDeleteServiceButton setEnabled:NO];
+    [self updateServicesCount];
 }
 
 - (void)clearTrustAnchor {
@@ -241,6 +245,28 @@
             [self.editIdentitySaveButton setEnabled:YES];
     } else
         [self.editIdentitySaveButton setEnabled:NO];
+}
+
+- (void) addService {
+    if (![self.addServiceValueTextField.stringValue isEqualToString:@""]) {
+        [self.servicesArray addObject:self.addServiceValueTextField.stringValue];
+        self.addServiceValueTextField.stringValue = @"";
+        [self.editIdentityServicesTableView reloadData];
+    }
+    [self updateServicesCount];
+}
+
+-(void) updateServicesCount {
+    NSString *result = [NSString stringWithFormat:@"%@ (%ld)", NSLocalizedString(@"Services_Edit", @""), [self.servicesArray count]];
+    [self.servicesTitleTextField setStringValue:result];
+}
+
+-(IBAction)editIdentityAddServiceButtonPressed:(id)sender {
+    [self addService];
+}
+
+-(IBAction)addServiceTextFieldPressed:(id)sender {
+    [self addService];
 }
 
 - (IBAction)saveChangesButtonPressed:(id)sender {

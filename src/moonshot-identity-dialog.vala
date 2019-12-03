@@ -417,6 +417,13 @@ class IdentityDialog : Dialog
         }
     }
 
+    private void refresh_services_model(Gtk.ListStore model, Label label) {
+        label.set_text(_("Services: (%d)").printf(services.size));
+        model.clear();
+        foreach (string service in services)
+            model.insert_with_values(null, -1, 0, service, -1);
+    }
+
     private Box make_services_vbox()
     {
         logger.trace("make_services_vbox");
@@ -425,36 +432,34 @@ class IdentityDialog : Dialog
         var services_vscroll = new ScrolledWindow(null, null);
         services_vscroll.set_policy(PolicyType.NEVER, PolicyType.AUTOMATIC);
         services_vscroll.set_shadow_type(ShadowType.IN);
-        services_vscroll.set_size_request(0, 60);
+        services_vscroll.set_size_request(0, 100);
         services_vscroll.add_with_viewport(services_vbox_alignment);
 
 #if VALA_0_12
         var remove_button = new Button.from_stock(Stock.REMOVE);
+        var add_button = new Button.from_stock(Stock.ADD);
 #else
         var remove_button = new Button.from_stock(STOCK_REMOVE);
+        var add_button = new Button.from_stock(STOCK_ADD);
 #endif
-        remove_button.set_sensitive(false);
 
-
-        var services_table = new Table(card.services.size, 1, false);
-        services_table.set_row_spacings(1);
-        services_table.set_col_spacings(0);
-        set_bg_color(services_table);
+        var services_model = new Gtk.ListStore (1, typeof (string));
+        var services_view = new Gtk.TreeView();
+        services_view.set_model(services_model);
+        services_view.headers_visible = false;
+        var cell = new Gtk.CellRendererText();
+        services_view.insert_column_with_attributes (-1, "Services", cell, "text", 0);
 
         var table_button_hbox = new_hbox(6);
         table_button_hbox.pack_start(services_vscroll, true, true, 4);
 
         // Hack to prevent the button from growing vertically
         Box fixed_height = new_vbox(0);
+        fixed_height.pack_start(add_button, false, false, 0);
         fixed_height.pack_start(remove_button, false, false, 0);
         table_button_hbox.pack_start(fixed_height, false, false, 0);
 
-        // A table doesn't have a background color, so put it in an EventBox, and
-        // set the EventBox's background color instead.
-        EventBox table_bg = new EventBox();
-        set_bg_color(table_bg);
-        table_bg.add(services_table);
-        services_vbox_alignment.add(table_bg);
+        services_vbox_alignment.add(services_view);
 
         var services_vbox_title = new Label(_("Services:"));
         services_vbox_title.set_alignment(0, 0.5f);
@@ -463,71 +468,40 @@ class IdentityDialog : Dialog
         services_vbox.pack_start(services_vbox_title, false, false, 0);
         services_vbox.pack_start(table_button_hbox, true, true, 0);
 
-        int i = 0;
-        foreach (string service in services)
-        {
-            var label = new Label(service);
-            label.set_alignment((float) 0, (float) 0);
-            label.xpad = 3;
-
-            EventBox event_box = new EventBox();
-            event_box.modify_bg(StateType.NORMAL, white);
-            event_box.add(label);
-            event_box.button_press_event.connect(() =>
-                {
-                    var state = label.get_state();
-                    logger.trace("button_press_callback: Label state=" + state.to_string() + " setting bg to " + white.to_string());
-
-                    if (selected_item == label)
-                    {
-                        // Deselect
-                        selected_item.parent.modify_bg(state, white);
-                        selected_item = null;
-                        remove_button.set_sensitive(false);
-                    }
-                    else
-                    {
-                        if (selected_item != null)
-                        {
-                            // Deselect
-                            selected_item.parent.modify_bg(state, white);
-                            selected_item = null;
-                        }
-
-                        // Select
-                        selected_item = label;
-                        selected_item.parent.modify_bg(state, selected_color);
-                        remove_button.set_sensitive(true);
-                    }
-                    return false;
-                });
-
-            services_table.attach_defaults(event_box, 0, 1, i, i+1);
-            i++;
-        }
-
+        refresh_services_model(services_model, services_vbox_title);
         remove_button.clicked.connect((remove_button) =>
             {
-                var result = WarningDialog.confirm(this,
+                Gtk.TreeIter iter;
+                string service = null;
+                var selection = services_view.get_selection();
+                if (selection.get_selected(null, out iter)) {
+                    services_model.get(iter, 0, out service);
+                    var result = WarningDialog.confirm(this,
                                                    Markup.printf_escaped(
                                                        "<span font-weight='heavy'>"
                                                        + _("You are about to remove the service\n'%s'.")
                                                        + "</span>",
-                                                       selected_item.label)
+                                                       service)
                                                    + _("\n\nAre you sure you want to do this?"),
                                                    "delete_service");
 
-                if (result)
-                {
-                    if (card != null) {
-                        services.remove(selected_item.label);
-                        services_table.remove(selected_item.parent);
-                        selected_item = null;
-                        remove_button.set_sensitive(false);
+                    if (result && card != null) {
+                        services.remove(service);
+                        refresh_services_model(services_model, services_vbox_title);
                     }
                 }
-
             });
+
+        add_button.clicked.connect((add_button) => {
+            var dialog = new AddServiceDialog(this);
+            var result = dialog.run();
+            var service = dialog.service;
+            if (result == ResponseType.OK && service != "") {
+                services.add(service);
+                refresh_services_model(services_model, services_vbox_title);
+            }
+            dialog.destroy();
+        });
 
         return services_vbox;
     }
