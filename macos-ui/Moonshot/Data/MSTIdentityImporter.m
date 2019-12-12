@@ -150,7 +150,52 @@
 	self.parsingError = parser.parserError;
 }
 
+- (NSData *)exportIdentities:(NSArray*) identitiesArray {
+    NSXMLElement *root = (NSXMLElement *)[NSXMLNode elementWithName:@"identities"];
+    for (Identity* identity in identitiesArray) {
+        if (![identity.identityId isEqualToString:@"NOIDENTITY"]) {
+            NSXMLElement *identity_elem = (NSXMLElement *)[NSXMLNode elementWithName:@"identity"];
+            [identity_elem addChild:[NSXMLNode elementWithName:@"display-name" stringValue:identity.displayName]];
+            [identity_elem addChild:[NSXMLNode elementWithName:@"user" stringValue:identity.username]];
+            [identity_elem addChild:[NSXMLNode elementWithName:@"realm" stringValue:identity.realm]];
+            [identity_elem addChild:[NSXMLNode elementWithName:@"password" stringValue:identity.password]];
+            [identity_elem addChild:[NSXMLNode elementWithName:@"has2fa" stringValue:identity.has2fa ? @"true" : @"false"]];
 
+            // services
+            NSXMLElement *services_elem = (NSXMLElement *)[NSXMLNode elementWithName:@"services"];
+            for (NSString* service in identity.servicesArray)
+                [services_elem addChild:[NSXMLNode elementWithName:@"service" stringValue:service]];
+            [identity_elem addChild:services_elem];
 
+            // selection rules
+            NSXMLElement *rules_elem = (NSXMLElement *)[NSXMLNode elementWithName:@"selection-rules"];
+            for (SelectionRules* rule in identity.selectionRules) {
+                NSXMLElement *rule_elem = (NSXMLElement *)[NSXMLNode elementWithName:@"rules"];
+                [rule_elem addChild:[NSXMLNode elementWithName:@"pattern" stringValue:rule.pattern]];
+                [rule_elem addChild:[NSXMLNode elementWithName:@"always-confirm" stringValue:rule.alwaysConfirm]];
+                [rules_elem addChild:rule_elem];
+            }
+            [identity_elem addChild:rules_elem];
+
+            // trust anchor
+            NSXMLElement *ta_elem = (NSXMLElement *)[NSXMLNode elementWithName:@"trust-anchor"];
+            if (identity.trustAnchor.caCertificate.length > 0)
+                [ta_elem addChild:[NSXMLNode elementWithName:@"ca-cert" stringValue:identity.trustAnchor.caCertificate]];
+            if (identity.trustAnchor.subject.length > 0)
+                [ta_elem addChild:[NSXMLNode elementWithName:@"subject" stringValue:identity.trustAnchor.subject]];
+            if (identity.trustAnchor.subjectAlt.length > 0)
+                [ta_elem addChild:[NSXMLNode elementWithName:@"subject-alt" stringValue:identity.trustAnchor.subjectAlt]];
+            if (identity.trustAnchor.serverCertificate.length > 0)
+                [ta_elem addChild:[NSXMLNode elementWithName:@"server-cert" stringValue:identity.trustAnchor.serverCertificate]];
+            [identity_elem addChild:ta_elem];
+
+            [root addChild:identity_elem];
+        }
+    }
+    NSXMLDocument *xmlDoc = [[NSXMLDocument alloc] initWithRootElement:root];
+    [xmlDoc setVersion:@"1.0"];
+    [xmlDoc setCharacterEncoding:@"UTF-8"];
+    return [xmlDoc XMLDataWithOptions:NSXMLNodePrettyPrint];;
+}
 
 @end

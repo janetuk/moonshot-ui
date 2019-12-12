@@ -37,6 +37,7 @@
 @property (weak) IBOutlet NSButton *addIdentityButton;
 @property (weak) IBOutlet NSButton *deleteIdentityButton;
 @property (weak) IBOutlet NSButton *importButton;
+@property (weak) IBOutlet NSButton *exportButton;
 @property (weak) IBOutlet NSButton *infoButton;
 
 //Details View
@@ -90,6 +91,7 @@
     [self setupContentView];
     [self setupDetailsView];
     [self setupImportButton];
+    [self setupExportButton];
     [self setupTableViewHeader];
     [self setupUserImageView];
     [self setupBackgroundImageView];
@@ -128,6 +130,10 @@
 
 - (void)setupImportButton {
     [self.importButton setTitle:NSLocalizedString(@"Import_Button", @"")];
+}
+
+- (void)setupExportButton {
+    [self.exportButton setTitle:NSLocalizedString(@"Export_Button", @"")];
 }
 
 #pragma mark - Setup User ImageView
@@ -296,6 +302,24 @@
 
 - (IBAction)infoButtonPressed:(id)sender {
     [self showInfoAlert];
+}
+
+- (IBAction)exportButtonPressed:(id)sender {
+    NSString *fileName = @"credentials.xml";
+
+    // Build identity file contents
+    MSTIdentityImporter *exporter = [[MSTIdentityImporter alloc] init];
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    [savePanel setPrompt:@"Export"];
+    [savePanel setNameFieldStringValue:fileName];
+    [savePanel beginWithCompletionHandler:^(NSInteger result) {
+        if (result == NSFileHandlingPanelOKButton) {
+            NSURL *saveURL = [savePanel URL];
+            [[NSFileManager defaultManager] createFileAtPath:[saveURL path]
+                                                    contents:[exporter exportIdentities:self.identitiesArray]
+                                                  attributes:nil];
+        }
+    }];
 }
 
 - (IBAction)importButtonPressed:(id)sender {

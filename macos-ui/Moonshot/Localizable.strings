@@ -81,6 +81,7 @@
 "Add_Identity_Button" = "Add Identity";
 "Create_Identity_Button" = "Create";
 "Import_Button" = "Import";
+"Export_Button" = "Export";
 "Clear_Trust_Anchor_Button" = "Clear Trust Anchor";
 "Create_Identity_Button" = "Create Identity";
 "Connect_Identity_Button" = "Connect";

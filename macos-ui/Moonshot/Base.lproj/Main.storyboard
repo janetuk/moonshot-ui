@@ -312,25 +312,14 @@
                                         </tableHeaderView>
                                     </scrollView>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wNo-8M-Z71">
-                                        <rect key="frame" x="550" y="16" width="81" height="32"/>
+                                        <rect key="frame" x="476" y="16" width="81" height="32"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="push" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lir-GG-xuS">
+                                        <buttonCell key="cell" type="push" title="Import" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Lir-GG-xuS">
                                             <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
                                             <font key="font" metaFont="system"/>
                                         </buttonCell>
                                         <connections>
                                             <action selector="importButtonPressed:" target="XfG-lQ-9wD" id="NNB-Nu-dYa"/>
-                                        </connections>
-                                    </button>
-                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EsW-YK-7rz">
-                                        <rect key="frame" x="531" y="25" width="17" height="17"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="info_button" imagePosition="overlaps" alignment="center" alternateImage="info_button_selected" imageScaling="proportionallyDown" inset="2" id="hhN-pi-hXq">
-                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
-                                            <font key="font" metaFont="system"/>
-                                        </buttonCell>
-                                        <connections>
-                                            <action selector="infoButtonPressed:" target="XfG-lQ-9wD" id="el0-ns-uYB"/>
                                         </connections>
                                     </button>
                                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="o7b-Q3-kgw">
@@ -353,6 +342,28 @@
                                         </buttonCell>
                                         <connections>
                                             <action selector="deleteIdentityButtonPressed:" target="XfG-lQ-9wD" id="PJJ-1j-Rb3"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r8q-nC-ZJE">
+                                        <rect key="frame" x="550" y="16" width="81" height="32"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="push" title="Export" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="bwk-J7-Njf">
+                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="exportButtonPressed:" target="XfG-lQ-9wD" id="sEJ-6J-7fd"/>
+                                        </connections>
+                                    </button>
+                                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="EsW-YK-7rz">
+                                        <rect key="frame" x="460" y="25" width="17" height="17"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="info_button" imagePosition="overlaps" alignment="center" alternateImage="info_button_selected" imageScaling="proportionallyDown" inset="2" id="hhN-pi-hXq">
+                                            <behavior key="behavior" pushIn="YES" changeContents="YES" lightByContents="YES"/>
+                                            <font key="font" metaFont="system"/>
+                                        </buttonCell>
+                                        <connections>
+                                            <action selector="infoButtonPressed:" target="XfG-lQ-9wD" id="el0-ns-uYB"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -385,6 +396,7 @@
                         <outlet property="detailsView" destination="rv6-GW-vCW" id="viI-8V-hnc"/>
                         <outlet property="displayNameTextField" destination="XdV-IX-lUq" id="qyr-9W-lhl"/>
                         <outlet property="editIdentityMenuItem" destination="gBz-Vl-ZFE" id="dnl-jb-VJn"/>
+                        <outlet property="exportButton" destination="r8q-nC-ZJE" id="mv8-xA-zjm"/>
                         <outlet property="identitiesTableView" destination="RVV-fD-YHO" id="muA-LW-F8w"/>
                         <outlet property="importButton" destination="wNo-8M-Z71" id="PWf-j6-d47"/>
                         <outlet property="infoButton" destination="EsW-YK-7rz" id="mHB-AL-UNb"/>
