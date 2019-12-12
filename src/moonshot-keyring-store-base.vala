@@ -183,7 +183,7 @@ public abstract class KeyringStoreBase : Object, IIdentityCardStore {
     protected abstract bool store_id_card(IdCard id_card);
     protected abstract bool remove_id_card(IdCard id_card);
 
-    public KeyringStoreBase() {}
+    protected KeyringStoreBase() {}
 }
 
 #endif
