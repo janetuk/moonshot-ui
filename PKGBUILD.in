@@ -8,11 +8,12 @@ url="https://github.com/janetuk/moonshot-ui"
 arch=("x86_64")
 license=("BSD-3-Clause")
 depends=("dbus" "ttf-dejavu")
-makedepends=("automake" "autoconf" "libtool" "openssl" "gettext" "libgee" "libnewt" "vala" "desktop-file-utils" "dbus-glib" "jansson" "keyutils")
+makedepends=("automake" "autoconf" "libtool" "openssl" "gettext" "libgee" "libnewt" "vala" "desktop-file-utils" "jansson" "keyutils")
+source=("$pkgname-$pkgver.tar.xz")
+md5sums=('SKIP')
 
 build() {
-	cd ..
-	sh autogen.sh
+	cd "$srcdir/$pkgname-$pkgver"
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \
@@ -24,7 +25,7 @@ build() {
 }
 
 package() {
-	cd ..
+	cd "$srcdir/$pkgname-$pkgver"
 	make DESTDIR="$pkgdir" install
 	mkdir -p $pkgdir/usr/share/dbus-1/services/
 	ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $pkgdir/usr/share/dbus-1/services/org.janet.Moonshot.service
