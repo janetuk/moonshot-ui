@@ -57,7 +57,6 @@
 @property (nonatomic, retain) NSMutableArray *identitiesArray;
 @property (nonatomic, strong) AddIdentityWindow *addIdentityWindow;
 @property (nonatomic, strong) EditIdentityWindow *editIdentityWindow;
-@property (nonatomic, strong) MSTIdentityImporter *identityImporter;
 
 @end
 
@@ -336,9 +335,9 @@
         for (NSURL *url in [panel URLs]) {
             __block int actually_added = 0;
             NSMutableArray* skipped = [[NSMutableArray alloc] init];
-			self.identityImporter = [[MSTIdentityImporter alloc] init];
+			MSTIdentityImporter *identityImporter = [[MSTIdentityImporter alloc] init];
 			__weak typeof (self) weakSelf = self;
-			[self.identityImporter importIdentitiesFromFile:url withBlock:^(NSArray<Identity *> *items) {
+			[identityImporter importIdentitiesFromFile:url withBlock:^(NSArray<Identity *> *items) {
 				if (items.count > 0) {
 					for (Identity *identityObject in items) {
 						if ([weakSelf addIdentity:identityObject forWindow:self.view.window])
