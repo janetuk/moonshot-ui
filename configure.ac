@@ -122,6 +122,9 @@ AC_SUBST(GEE_VERSION)
 # Windows/Linux: Use libnewt
 PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
 
+# Windows/Linux: Use libxml2
+PKG_CHECK_MODULES([LIB_XML2], [libxml-2.0])
+
 # For all platforms: Use libkeyutils
 AC_CHECK_HEADERS([keyutils.h])
 AC_CHECK_LIB(keyutils, request_key, [], [
