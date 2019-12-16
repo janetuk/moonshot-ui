@@ -96,12 +96,12 @@ src_moonshot_keyring_tool_SOURCES = src/moonshot-keyring-tool.vala
 src_moonshot_idcard_generator_SOURCES = src/moonshot-idcard-generator.c
 
 
-src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix --pkg libxml-2.0 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libxml-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
@@ -142,11 +142,11 @@ endif
 
 if OS_LINUX
 
-AM_CPPFLAGS += $(KEYRING_CFLAGS)
+AM_CPPFLAGS += $(KEYRING_CFLAGS) $(LIB_XML2_CFLAGS)
 AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
-src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
+src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto $(LIB_NEWT_LIBS) $(LIB_XML2_LIBS) -lkeyutils
 src_moonshot_keyring_tool_LDFLAGS += $(KEYRING_LIBS)
-src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
+src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto $(LIB_NEWT_LIBS) $(LIB_XML2_LIBS) -lkeyutils
 src_moonshot_idcard_generator_LDFLAGS += -lcrypto
 
 ## Installing mime type data
