@@ -1,3 +1,9 @@
+moonshot-ui (1.2.11.DIST) unstable; urgency=medium
+
+  * TBD
+
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 27 Jan 2020 00:00:00 +0000
+
 moonshot-ui (1.2.10.DIST) unstable; urgency=medium
 
   * Improved exit dialog when decided not to send an ID
