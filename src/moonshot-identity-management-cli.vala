@@ -479,6 +479,35 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
+    private bool set_mode_menu() {
+        bool finalize = newt_init();
+        bool rv = false;
+        newtComponent form, listbox, chosen;
+        newtCenteredWindow(15, 4, "Mode");
+        form = newtForm(null, null, 0);
+        listbox = newtListbox(0, 0, 4, Flag.RETURNEXIT);
+        newtListboxAppendEntry(listbox, "INTERACTIVE", (void *) "INTERACTIVE");
+        newtListboxAppendEntry(listbox, "NON_INTERACTIVE", (void *) "NON_INTERACTIVE");
+        newtListboxAppendEntry(listbox, "DISABLED", (void *) "DISABLED");
+        newtListboxAppendEntry(listbox, "Back", (void *) "Back");
+        UiMode current_mode = parent_app.get_mode();
+        if (current_mode == UiMode.NON_INTERACTIVE)
+            newtListboxSetCurrentByKey(listbox, "NON_INTERACTIVE");
+        else if (current_mode == UiMode.DISABLED)
+            newtListboxSetCurrentByKey(listbox, "DISABLED");
+        newtFormAddComponent(form, listbox);
+        chosen = newtRunForm(form);
+        if (chosen == listbox){
+            string? option = (string?) newtListboxGetCurrent(listbox);
+            if (option != "Back")
+                change_mode(option);
+        }
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
+        return rv;
+    }
+
     private string select_file_dialog() {
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
@@ -553,7 +582,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn, export_btn,
                       edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn,
-                      backendname;
+                      backendname, mode_btn;
         bool exit_loop = false;
         int offset = 0;
         string filter = "";
@@ -577,16 +606,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         filter_btn = newtCompactButton(57, offset, "Filter");
         listbox = newtListbox(1, offset + 1, 18 - offset * 2, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
-        add_btn = newtCompactButton(68, offset + 2, "Add");
-        import_btn = newtCompactButton(68, offset + 4, "Import");
-        edit_btn = newtCompactButton(68, offset + 6, "Edit");
-        remove_btn = newtCompactButton(68, offset + 8, "Remove");
-        send_btn = newtCompactButton(68, offset + 10, "Send");
-        export_btn = newtCompactButton(68, 14, "Export");
-        about_btn = newtCompactButton(68, 16, "About");
-        exit_btn = newtCompactButton(68, 18, "Exit");
-        backendname = newtTextbox(1, 19, 50, 1, 0);
-        newtTextboxSetText(backendname, "Using %s backend".printf(this.identities_manager.get_store_name()));
+        add_btn = newtCompactButton(67, 2, "Add");
+        import_btn = newtCompactButton(67, 4, "Import");
+        edit_btn = newtCompactButton(67, 6, "Edit");
+        remove_btn = newtCompactButton(67, 8, "Remove");
+        send_btn = newtCompactButton(67, 10, "Send");
+        export_btn = newtCompactButton(67, 13, "Export");
+        mode_btn = newtCompactButton(67, 15, "Set Mode");
+        about_btn = newtCompactButton(67, 17, "About");
+        exit_btn = newtCompactButton(67, 19, "Exit");
+        backendname = newtTextbox(1, 19, 60, 1, 0);
         newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
@@ -602,6 +631,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (request != null)
             newtFormAddComponent(form, send_btn);
         newtFormAddComponent(form, export_btn);
+        newtFormAddComponent(form, mode_btn);
         newtFormAddComponent(form, about_btn);
         newtFormAddComponent(form, exit_btn);
 
@@ -625,6 +655,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     newtListboxSetCurrentByKey(listbox, id_card);
             }
 
+            newtTextboxSetText(backendname, _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
             newtFormSetCurrent(form, focus);
             chosen = newtRunForm(form);
             focus = listbox;
@@ -652,6 +683,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else if (chosen == about_btn) {
                 about_dialog();
+            }
+            else if (chosen == mode_btn) {
+                set_mode_menu();
+                focus = mode_btn;
             }
             else if (chosen == export_btn) {
                 string filename = "/tmp/credentials.xml";

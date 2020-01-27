@@ -249,4 +249,24 @@ SUCH DAMAGE.
 
         return retval;
     }
+
+    internal void change_mode(string new_mode) {
+        string doc = "";
+        if (new_mode == "INTERACTIVE")
+            doc = "In this mode, Moonshot will check whether one of the stored identities is suitable "
+                + "for the requested authentication, and use it if found. If no suitable identity is found, it will "
+                + "prompt the user to select one. This is the default mode of operation.";
+        else if (new_mode == "NON_INTERACTIVE")
+            doc = "In this mode, Moonshot will check whether one of the stored identities is suitable "
+                + "for the requested authentication, and use it if found. However, if no suitable identity is found, "
+                + "it automatically dismisses using Moonshot without prompting the user.";
+        else
+            doc = "In this mode, Moonshot will not be used for authentication, even if there are identities suitable for the "
+                + "requested service.";
+
+        info_dialog("Mode change",
+            _("You are about to change the Moonshot mode of operation to '%s'.\n\n%s".printf(new_mode, doc)));
+        set_string_setting(MAIN_GROUP, "moonshot_mode", new_mode);
+
+    }
 }
