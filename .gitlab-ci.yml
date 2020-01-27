@@ -14,7 +14,7 @@ before_script:
   tags:
     - moonshot
   script:
-    - sed -i "s/DIST/$CI_JOB_NAME/g" debian/changelog
+    - sed -i "s/DIST/$CI_JOB_NAME.$CI_PIPELINE_ID/g" debian/changelog
     - debuild -us -uc
     - mkdir build
     - cp ../*.deb ../*.dsc ../*tar* build
@@ -30,6 +30,7 @@ before_script:
   tags:
     - moonshot
   script:
+    - sed -i "s/\(.\)%{?dist}/\1.$CI_PIPELINE_ID%{?dist}/g" moonshot-ui.spec.in
     - sh autogen.sh
     - make dist
     - mkdir -p SOURCES
@@ -49,6 +50,7 @@ before_script:
     - moonshot
   script:
     - cp $APKBUILD APKBUILD.in
+    - sed -i "s/pkgrel=0/pkgrel=$CI_PIPELINE_ID/g" APKBUILD.in
     - cp vapi/libsecret-1.vapi.dis vapi/libsecret-1.vapi
     - adduser -D tmpuser -s /bin/sh
     - adduser tmpuser abuild
@@ -93,14 +95,17 @@ debian10:
 
 raspbian8:
   image: $DOCKER_REGISTRY_URL/raspbian8:latest
+  when: manual
   <<: *debiancommon
 
 raspbian9:
   image: $DOCKER_REGISTRY_URL/raspbian9:latest
+  when: manual
   <<: *debiancommon
 
 raspbian10:
   image: $DOCKER_REGISTRY_URL/raspbian10:latest
+  when: manual
   <<: *debiancommon
 
 ubuntu16:
@@ -119,6 +124,7 @@ alpine38:
 
 alpine38_armhf:
   image: $DOCKER_REGISTRY_URL/alpine38_arm:latest
+  when: manual
   variables:
     APKBUILD: APKBUILD.in.alpine38
   <<: *alpinecommon
@@ -131,6 +137,7 @@ alpine39:
 
 alpine39_armhf:
   image: $DOCKER_REGISTRY_URL/alpine39_arm:latest
+  when: manual
   variables:
     APKBUILD: APKBUILD.in.alpine39
   <<: *alpinecommon

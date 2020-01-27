@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.2.9],
+        [1.2.10],
         [moonshot@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -46,13 +46,9 @@ case "$host" in
     macos=yes
     linux=no
 
-    # Use gdbus for everything
+  # Use gdbus for everything
     CLIENT_IPC_MODULE="gio-2.0"
-	SERVER_IPC_MODULE="gio-2.0"
-
-	PKG_CHECK_MODULES([MAC],
-			[gtk-mac-integration >= 1.0.1]
-	)
+    SERVER_IPC_MODULE="gio-2.0"
 
     ;;
   *)
@@ -76,8 +72,16 @@ case "$host" in
     ;;
 esac
 
+### if not on macOS ###
+# On Windows/Linux we use ATK, GTK, LOG4VALA and LIBGEE
+if test "$macos" = "no"; then
 
-# For all platforms: Use Gtk+3.0 if available; else revert to Gtk+2.0
+  # Windows/Linux: Use ATK 1.2 or higher
+  PKG_CHECK_MODULES([ATK], 
+      [atk >= 1.20]
+  )
+
+# Windows/Linux: Use Gtk+3.0 if available; else revert to Gtk+2.0
 PKG_CHECK_MODULES([GTK],
         [gtk+-3.0 >= 3.1],
         [GTK_VERSION="gtk+-3.0"],
@@ -89,7 +93,7 @@ PKG_CHECK_MODULES([GTK],
 AC_SUBST(GTK_VERSION)
 
 
-# For all platforms: If Log4Vala is enabled, then Use Log4Vala 0.2 if available; else revert to 0.1
+# Windows/Linux: If Log4Vala is enabled, then Use Log4Vala 0.2 if available; else revert to 0.1
 if [test x$log4vala = xtrue]; then
 PKG_CHECK_MODULES([LOG4VALA],
         [log4vala-0.2],
@@ -103,7 +107,7 @@ AC_SUBST(LOG4VALA_VERSION)
 fi
 
 
-# For all platforms: Use gee-0.8 if available; else revert to gee-1.0
+# Windows/Linux: Use gee-0.8 if available; else revert to gee-1.0
 # (yes, gee-0.8 is an upgrade from gee-1.0!)
 PKG_CHECK_MODULES([LIB_GEE],
         [gee-0.8 >= 0.10.5],
@@ -115,8 +119,11 @@ PKG_CHECK_MODULES([LIB_GEE],
 )
 AC_SUBST(GEE_VERSION)
 
-# For all platforms: Use libnewt
+# Windows/Linux: Use libnewt
 PKG_CHECK_MODULES([LIB_NEWT], [libnewt >= 0.52])
+
+# Windows/Linux: Use libxml2
+PKG_CHECK_MODULES([LIB_XML2], [libxml-2.0])
 
 # For all platforms: Use libkeyutils
 AC_CHECK_HEADERS([keyutils.h])
@@ -135,6 +142,139 @@ AC_ARG_ENABLE([log4vala],
 esac],[log4vala=false])
 AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
 
+else
+  ## On macOS, find xcodebuild! ##
+  # locate currently selected Xcode path
+  AC_MSG_CHECKING(Xcode location)
+  if test "x$XCODE_SELECT" != "x"; then
+    DEVELOPER_DIR=`$XCODE_SELECT -print-path`
+  fi
+  if test -z "$DEVELOPER_DIR" -o ! -d "$DEVELOPER_DIR" ; then
+      if test -d /Applications/Xcode.app/Contents/Developer ; then
+          DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
+      else
+          DEVELOPER_DIR=/Developer
+      fi
+  fi
+  AC_MSG_RESULT([$DEVELOPER_DIR])
+  AC_SUBST(DEVELOPER_DIR)
+
+  case "$DEVELOPER_DIR" in
+    *Xcode.app/Contents/Developer)
+      XCODEPLIST_BASE=`dirname $DEVELOPER_DIR`/version
+      ;;
+    *)
+      XCODEPLIST_BASE=$DEVELOPER_DIR/Applications/Xcode.app/Contents/version
+      ;;
+  esac
+  XCODEPLIST=${XCODEPLIST_BASE}.plist
+  if test -r "$XCODEPLIST"; then
+    AC_MSG_CHECKING(Xcode version)
+    if test "x$DEFAULTS" != "x"; then
+      XCODE_VERSION=`$DEFAULTS read $XCODEPLIST_BASE CFBundleShortVersionString`
+    else
+      XCODE_VERSION=`tr -d '\r\n' < $XCODEPLIST | sed -e 's/.*<key>CFBundleShortVersionString<\/key>.<string>\([[0-9.]]*\)<\/string>.*/\1/'`
+    fi
+    AC_MSG_RESULT([$XCODE_VERSION])
+  fi
+
+  case "$XCODE_VERSION" in
+    1.*|2.[[0-1]]*)
+      AC_MSG_WARN([This version of Xcode Tools is not supported])
+      AC_MSG_WARN([Please upgrade at https://developer.apple.com/downloads/])
+      ;;
+    2.[[2-3]]*|3.[[0]]*)
+      AC_MSG_WARN([This version of Xcode Tools is out of date])
+      AC_MSG_WARN([Please consider upgrading as some ports fail compiling])
+      ;;
+    2.*|3.*|4.*|5.*|6.*|7.*|8.*|9.*|10.*)
+      dnl Supported version
+      ;;
+    *)
+      ;;
+  esac
+
+  AC_PATH_PROG(XCODEBUILD, [xcodebuild], [no])
+  if test "$XCODEBUILD" = "no"; then
+    AC_MSG_ERROR([
+*** Could not find the Xcode Build binary. Please install Xcode.])
+  fi
+
+AC_MSG_CHECKING(for Apple Developer Team ID)
+APPLE_DEVELOPER_TEAM_ID=
+APPLE_DEVELOPER_ID_INSTALLER=
+APPLE_DEVELOPER_ID_APPLICATION=
+found_apple_developer_id="no"
+AC_ARG_WITH(apple_developer_id,
+    AC_HELP_STRING([--with-apple-developer-id],
+       [Use specified Apple Developer Team ID, set to 'no' for none]),
+    [use_apple_developer_id="$withval"],
+    [use_apple_developer_id=])
+
+  # We don't want to set an Apple Developer ID
+  if test "x$use_apple_developer_id" = "xno"; then
+    AC_MSG_WARN([
+----------------------------------------------------------------------
+  Disabling Apple Developer Team ID.
+
+  This may mean that the Moonshot app and uninstaller will not be
+  signed and may not be able to run on target systems.
+----------------------------------------------------------------------
+    ])
+  else
+    # Ok, there is no Developer ID cert on the system or the one set on the command-line does not exist on this system
+    if test "x$(security find-identity -v login.keychain |grep 'Developer ID' |grep "$use_apple_developer_id" |grep -c -v 'valid identities')" = "x0"; then
+      AC_MSG_RESULT($found_apple_developer_id)
+      if test "x$use_apple_developer_id" = "x"; then
+        AC_MSG_WARN([
+----------------------------------------------------------------------
+  Cannot find a Apple Developer Team ID. Disabling signing.
+
+  This may mean that the Moonshot app and uninstaller will not be
+  signed and may not be able to run on target systems.
+----------------------------------------------------------------------
+        ])
+      else
+        AC_MSG_WARN([
+----------------------------------------------------------------------
+  Cannot find your specified Apple Developer Team ID.
+
+  Please check that a Developer ID Application and a Developer ID 
+  Installer certificate matching your given ID are installed.
+----------------------------------------------------------------------
+        ])
+      fi
+    else
+      # We have a valid Developer ID set, or we haven't set one but there is a valid Developer ID installed
+      found_apple_developer_id="yes"
+      AC_MSG_RESULT($found_apple_developer_id)
+      if test "x$use_apple_developer_id" = "x"; then
+        # We take the first one listed
+        apple_developer_id=$(security find-identity -v login.keychain |grep 'Developer ID' |head -1 |cut -f 2 -d\")
+        use_apple_developer_id=$(echo $apple_developer_id |cut -f 2 -d\( |cut -f 1 -d\))
+        AC_MSG_WARN([Setting Apple Developer ID to "$use_apple_developer_id". This may not be correct!])
+      else
+        AC_MSG_NOTICE([Apple Developer ID is "$use_apple_developer_id".])
+      fi
+      # We list the Apple Developer ID, and then find the Application and Installer certificates for this ID
+      APPLE_DEVELOPER_TEAM_ID=$use_apple_developer_id
+      APPLE_DEVELOPER_ID_INSTALLER=$(security find-identity -v login.keychain |grep "$use_apple_developer_id" |grep 'Developer ID Installer' |cut -f 2 -d\")
+      AC_MSG_NOTICE([Setting Apple Developer ID Installer to "$APPLE_DEVELOPER_ID_INSTALLER".])
+      APPLE_DEVELOPER_ID_APPLICATION=$(security find-identity -v login.keychain |grep "$use_apple_developer_id" |grep 'Developer ID Application' |cut -f 2 -d\")
+      AC_MSG_NOTICE([Setting Apple Developer ID Application to "$APPLE_DEVELOPER_ID_APPLICATION".])
+    fi
+  fi
+  AC_SUBST(APPLE_DEVELOPER_TEAM_ID)
+  AC_SUBST(APPLE_DEVELOPER_ID_INSTALLER)
+  AC_SUBST(APPLE_DEVELOPER_ID_APPLICATION)
+fi
+# To make autotools happy
+AM_CONDITIONAL([WITH_APPLE_DEVELOPER_ID_INSTALLER], [test "x$APPLE_DEVELOPER_ID_INSTALLER" != "x"])
+AM_CONDITIONAL([WITH_APPLE_DEVELOPER_ID_APPLICATION], [test "x$APPLE_DEVELOPER_ID_APPLICATION" != "x"])
+AM_CONDITIONAL([LOG4VALA], [test x$log4vala = xtrue])
+### end of macOS ###
+
+AM_CONDITIONAL([IPC_GDBUS], [test "$SERVER_IPC_MODULE" = "gio-2.0"])
 
 AM_CONDITIONAL([OS_LINUX], [test "$linux" = "yes"])
 AM_CONDITIONAL([OS_WIN32], [test "$win32" = "yes"])
@@ -143,6 +283,8 @@ AM_CONDITIONAL([OS_MACOS], [test "$macos" = "yes"])
 AM_CONDITIONAL([IPC_MSRPC], [test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"])
 AM_CONDITIONAL([IPC_DBUS], [test "$SERVER_IPC_MODULE" != "msrpc-glib2-1.0"])
 
+
+# On Windows/Linux we use ATK, GTK, LOG4VALA and LIBGEE
 vala_version=`$VALAC --version | sed 's/Vala  *//'`
 AS_VERSION_COMPARE(["$vala_version"], [0.11.1],
   [gio_vapi_uses_arrays="no"],
@@ -155,7 +297,6 @@ if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   AC_PATH_MSRPC_MINGW([0.1.0], :,
     AC_MSG_ERROR([
 *** msrpc-mingw 0.1.0 or better is required.]))
-
   AC_PATH_PROG([MIDL], [midl], no,
                [/c/Program\ Files/Microsoft\ SDKs/Windows/v7.0/Bin$PATH_SEPARATOR$PATH])
   if test "$MIDL" = "no"; then
@@ -168,6 +309,7 @@ if test "$SERVER_IPC_MODULE" = "msrpc-glib2-1.0"; then
   fi
 fi
 
+### If on Windows ###
 if test "$win32" = "yes"; then
   # Other Windows-specific tools
 
@@ -183,7 +325,6 @@ if test "$win32" = "yes"; then
 *** outside the PATH.])
   fi
 
-
   # ImageMagick for the 'make icons' target. Note that
   # c:/windows/system32/convert.exe is nothing to do with ImageMagick.
   AC_PATH_PROG([IMAGEMAGICK_CONVERT], [convert], no,
@@ -195,7 +336,6 @@ if test "$win32" = "yes"; then
 *** 'make icons' target. Use the IMAGEMAGICK_CONVERT environment
 *** variable to pass its location if this is outside the PATH.])
   fi
-
 
   # Windows Installer XML tools
   AC_PATH_PROG([WIX_CANDLE], [candle], no,
@@ -211,7 +351,9 @@ if test "$win32" = "yes"; then
 *** the PATH.])
   fi
 fi
+### end of Windows ###
 
+### If on Linux ###
 if test "$linux" = "yes"; then
   AC_PATH_PROG([UPDATE_MIME_DATABASE], [update-mime-database], [no])
   if test "$UPDATE_MIME_DATABASE" = "no"; then
@@ -226,6 +368,7 @@ if test "$linux" = "yes"; then
 *** tool. Web provisioning files could not be automatically installed.])
   fi
 fi
+### end of Linux ###
 
 AM_COND_IF([IPC_DBUS],
            [AC_ARG_VAR(DBUS_DAEMON, [Location of dbus-daemon executable])
@@ -250,14 +393,13 @@ AC_SUBST(MOONSHOT_WEBP)
 
 # Dependencies
 PKG_CHECK_MODULES(moonshot,[
-        atk >= 1.20
         glib-2.0 >= 2.26
         gobject-2.0 >= 2.26
         libssl
+        $ATK
         $GTK_VERSION
         $GEE_VERSION
         $SERVER_IPC_MODULE
-		$MAC
 ])
 
 PKG_CHECK_MODULES(libmoonshot,[
@@ -273,6 +415,7 @@ AC_DEFINE([GETTEXT_PACKAGE],[PACKAGE_TARNAME],[Define to the gettext package nam
 
 AC_CONFIG_FILES([
         Makefile
+        macos-ui/Makefile
         po/Makefile.in
         moonshot.desktop
         moonshot-webp.desktop

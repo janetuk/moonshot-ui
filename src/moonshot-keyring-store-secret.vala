@@ -43,8 +43,7 @@ private Collection? find_secret_collection()
         secret_collection = Collection.for_alias_sync(service, COLLECTION_DEFAULT, CollectionFlags.NONE);
         /* If the default collection does not exist, try to create one called "login" */
         if (secret_collection == null) {
-            secret_collection = Collection.create_sync(service, "login", "default",
-                                                       CollectionCreateFlags.COLLECTION_CREATE_NONE);
+            secret_collection = Collection.create_sync(service, "login", "default", 0);
         }
         List<DBusProxy> objects = new List<DBusProxy>();
         objects.append(secret_collection);

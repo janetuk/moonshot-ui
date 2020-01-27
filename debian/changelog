@@ -1,3 +1,12 @@
+moonshot-ui (1.2.10.DIST) unstable; urgency=medium
+
+  * Improved exit dialog when decided not to send an ID
+  * Merged MacOSX UI code
+  * Use libxml2 for the ID exporter
+  * Implement "UI interativity modes"
+
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 27 Jan 2020 00:00:00 +0000
+
 moonshot-ui (1.2.9.DIST) unstable; urgency=medium
 
   * Added CI for CentOS 8

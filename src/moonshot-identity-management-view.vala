@@ -67,6 +67,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private IdCard selected_card = null;
 
     private string import_directory = null;
+    private Gtk.ComboBox modebox = null;
 
     private enum Columns
     {
@@ -354,6 +355,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             }
             while (filter.iter_next(ref iter));
         }
+    }
+
+    private void mode_changed_cb(Gtk.ComboBox combo) {
+        UiMode mode = (UiMode) combo.get_active();
+        change_mode(mode.to_string());
     }
 
     private void remove_identity_cb(IdCard id_card)
@@ -658,8 +664,29 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
+#if VALA_0_12
+        Gtk.HBox statusbox = new Gtk.HBox(false, 0);
+#else
+        Gtk.HBox statusbox = new Gtk.HBox(true, 0);
+#endif
         statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend".printf(this.identities_manager.get_store_name())));
+        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is".printf(this.identities_manager.get_store_name())));
+
+        // Create combo for the Mode
+        UiMode mode = parent_app.get_mode();
+        Gtk.ListStore liststore = new Gtk.ListStore (1, typeof (string));
+        foreach (UiMode x in UiMode.all())
+            liststore.insert_with_values(null, -1, 0, x.to_string(), -1, null);
+        modebox = new Gtk.ComboBox.with_model(liststore);
+        modebox.set_active(mode);
+        modebox.changed.connect(this.mode_changed_cb);
+        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
+        modebox.pack_start (cell, false);
+        modebox.set_attributes (cell, "text", 0);
+
+        statusbox.pack_start(statusbar, false, true, 0);
+        statusbox.pack_start(modebox, false, false, 0);
+
 
         var main_vbox = new_vbox(0);
 
@@ -668,7 +695,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         set_bg_color(menubar);
         main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
-        main_vbox.pack_start(statusbar, false, true, 0);
+        main_vbox.pack_start(statusbox, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();
@@ -705,11 +732,15 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         if (selection_in_progress()) {
             var result = WarningDialog.confirm(this,
                                                Markup.printf_escaped(
-                                                   "<span font-weight='heavy'>" + _("Do you wish to use the %s service?") + "</span>",
+                                                   "<span font-weight='heavy'>" + _("Do you wish to exit without selecting an identity for the %s service?") + "</span>\n\n",
                                                    this.request_queue.peek_head().service)
-                                               + "\n\n" + _("Select Yes to select an ID for this service, or No to cancel"),
-                                               "close_moonshot_window");
-            if (result) {
+                                               + _("If you do, Moonshot will not be used for this access, but you will still be prompted for future atempts.") + "\n\n"
+                                               + _("If you want to prevent Moonshot from prompting you in the future for <b>this</b> service, please select 'No' and send the ID named '")
+                                               + _("Do not use a Moonshot identity for this service") + _("' instead.") + "\n\n"
+                                               + "If you want to prevent Moonshot from prompting you in the future for <b>any</b> service, please set the "
+                                               + "NON_INTERACTIVE or DISABLED mode before exiting.",
+                                                "close_moonshot_window_new");
+            if (!result) {
                 // Prevent other handlers from handling this event; this keeps the window open.
                 return true;
             }

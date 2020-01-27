@@ -1,16 +1,18 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = po
+SUBDIRS = po macos-ui
 
 moonshotsysconfdir=${sysconfdir}/moonshot
 
 lib_LTLIBRARIES = libmoonshot/libmoonshot.la
 
+if !OS_MACOS
 bin_PROGRAMS = \
          src/moonshot \
          src/moonshot-webp \
          src/moonshot-keyring-tool \
          src/moonshot-idcard-generator
+endif
 
 dist_pkgdata_DATA = webprovisioning/default-identity.msht enable-moonshot-txt-ui-gnome-keyring
 dist_doc_DATA = README.cli
@@ -61,8 +63,8 @@ src_moonshot_SOURCES = \
         src/moonshot-identity-management-cli.vala \
         src/moonshot-local-flat-file-store.vala \
         src/moonshot-keyring-store-base.vala \
-	src/moonshot-keyring-store-gnome.vala \
-	src/moonshot-keyring-store-secret.vala \
+        src/moonshot-keyring-store-gnome.vala \
+        src/moonshot-keyring-store-secret.vala \
         src/moonshot-idcard-store.vala \
         src/moonshot-id.vala \
         src/moonshot-identity-dialog.vala \
@@ -73,6 +75,7 @@ src_moonshot_SOURCES = \
         src/moonshot-server-linux.vala \
         src/moonshot-settings.vala \
         src/moonshot-password-dialog.vala \
+        src/moonshot-service-dialog.vala \
         src/moonshot-provisioning-common.vala \
         src/moonshot-trust-anchor-dialog.vala \
         src/moonshot-utils.vala \
@@ -93,12 +96,12 @@ src_moonshot_keyring_tool_SOURCES = src/moonshot-keyring-tool.vala
 src_moonshot_idcard_generator_SOURCES = src/moonshot-idcard-generator.c
 
 
-src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix $(AM_VALAFLAGS)
+src_moonshot_VALAFLAGS = --pkg $(GTK_VERSION) --pkg $(GEE_VERSION) --pkg libnewt --pkg posix --pkg libxml-2.0 $(AM_VALAFLAGS)
 src_moonshot_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_LDADD = $(moonshot_LIBS)
 src_moonshot_LDFLAGS = -g -O0 $(MOONSHOT_LOG_LIBS)
 
-src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libmoonshot $(AM_VALAFLAGS)
+src_moonshot_webp_VALAFLAGS = --vapidir=$(top_srcdir)/libmoonshot  --pkg $(GEE_VERSION) --pkg libxml-2.0 --pkg libmoonshot $(AM_VALAFLAGS)
 src_moonshot_webp_CPPFLAGS = $(moonshot_CFLAGS) $(AM_CPPFLAGS)
 src_moonshot_webp_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonshot/libmoonshot.la
 src_moonshot_webp_LDFLAGS = $(MOONSHOT_LOG_LIBS)
@@ -113,7 +116,6 @@ src_moonshot_idcard_generator_LDADD = $(moonshot_LIBS) ${top_builddir}/libmoonsh
 src_moonshot_idcard_generator_LDFLAGS = $(MOONSHOT_LOG_LIBS)
 
 if OS_WIN32
-
 
 src_moonshot_CFLAGS = -mwindows
 src_moonshot_webp_CFLAGS = -mconsole
@@ -130,21 +132,21 @@ libmoonshot/libmoonshot.lib: libmoonshot/libmoonshot.def
 
 endif
 
-if  OS_MACOS
+if OS_MACOS
 
-AM_CPPFLAGS += -DOS_MACOS $(MAC_CFLAGS)
-AM_VALAFLAGS += --define=OS_MACOS --pkg gtk-mac-integration
-moonshot_LIBS += $(MAC_LIBS)
-src_moonshot_LDADD += $(MAC_LIBS)
+AM_CPPFLAGS = 
+AM_VALAFLAGS = 
+moonshot_LIBS = 
+src_moonshot_LDADD = 
 endif
 
 if OS_LINUX
 
-AM_CPPFLAGS += $(KEYRING_CFLAGS)
+AM_CPPFLAGS += $(KEYRING_CFLAGS) $(LIB_XML2_CFLAGS)
 AM_VALAFLAGS += $(KEYRING_VALAFLAGS)
-src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
+src_moonshot_LDADD += $(KEYRING_LIBS) -lcrypto $(LIB_NEWT_LIBS) $(LIB_XML2_LIBS) -lkeyutils
 src_moonshot_keyring_tool_LDFLAGS += $(KEYRING_LIBS)
-src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto -lnewt -lkeyutils
+src_moonshot_webp_LDFLAGS += $(KEYRING_LIBS) -lcrypto $(LIB_NEWT_LIBS) $(LIB_XML2_LIBS) -lkeyutils
 src_moonshot_idcard_generator_LDFLAGS += -lcrypto
 
 ## Installing mime type data
@@ -184,7 +186,6 @@ libmoonshot/moonshot-msrpc_c.c: libmoonshot/moonshot-msrpc.h
 libmoonshot_libmoonshot_la_SOURCES += \
         libmoonshot/libmoonshot-msrpc.c
 
-
 nodist_src_moonshot_SOURCES = \
         libmoonshot/moonshot-msrpc_s.c
 
@@ -206,11 +207,12 @@ in_substitute = sed \
 # the packaging scripts.
 if  OS_MACOS
 dbus_service_in_file = org.janet.Moonshot.service.mac
-dbus_service_file = $(dbusservice_in_file:.service.mac=.service)
+dbus_service_file = $(dbus_service_in_file:.service.mac=.service)
 else
 dbus_service_in_file = org.janet.Moonshot.service.in
 dbus_service_file = $(dbus_service_in_file:.service.in=.service)
 endif
+libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
 
 # DBus bus configuration file, used for launching our own bus when the session bus
 # is not available.
@@ -228,8 +230,6 @@ dist_dbuscfg_DATA = $(dbus_service_file) $(dbus_bus_file)
 AM_CPPFLAGS += -DMOONSHOT_DBUS_BUS_CONF='"$(pkgdatadir)/dbus/org.janet.Moonshot.conf"' \
                -DMOONSHOT_DBUS_DAEMON='"@DBUS_DAEMON@"'
 
-libmoonshot_libmoonshot_la_SOURCES += libmoonshot/libmoonshot-dbus.c
-
 CLEANFILES = $(dist_dbuscfg_DATA)  src_moonshot_vala.stamp src_moonshot_vala.stamp-t
 
 AM_VALAFLAGS += \
@@ -237,6 +237,7 @@ AM_VALAFLAGS += \
 	--define=IPC_GDBUS \
 	--define=IPC_DBUS
 endif
+
 if GIO_VAPI_USES_ARRAYS
 AM_VALAFLAGS += --define=GIO_VAPI_USES_ARRAYS
 endif
@@ -315,22 +316,36 @@ endif
 if  OS_MACOS
 ## Mac-specific targets
 
-## 1. Icons.
-
-icons:
-	mkdir -p share/icons
-	cp mac/icons/process-stop.png share/icons
-	cp mac/icons/edit-find.png share/icons
-	cp mac/icons/avatar-default.png share/icons
+## 1. Icons. 
+#icons:
+#	mkdir -p share/icons
+#	cp mac/icons/process-stop.png share/icons
+#	cp mac/icons/edit-find.png share/icons
+#	cp mac/icons/avatar-default.png share/icons
 
 ## 2. App bundle
-## gtk-app-bundler must be installed
-## moonshot-ui.app will be built in moonshot/mac-client-installer/moonshot-ui/
+## xcodebuild must be installed
+## Moonshot.app will be built in moonshot/macos-ui/build/Release
 app-bundle:
-	gtk-mac-bundler ./mac/moonshot-ui.bundle
+#if WITH_APPLE_DEVELOPER_ID_APPLICATION
+#	cd macos-ui/Moonshot.xcodeproj; \
+#	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
+#else
+	cd macos-ui/Moonshot.xcodeproj; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = \"\";/g' project.pbxproj; \
+	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
+#endif
+	cd macos-ui && $(XCODEBUILD)
 
-## 3: Installer Package
-
-installerdir = $(HOME)/moonshot/mac-client-installer
+uninstaller-bundle:
+if WITH_APPLE_DEVELOPER_ID_APPLICATION
+	cd "macos-ui/Uninstaller/Uninstall Moonshot.xcodeproj"; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = $(APPLE_DEVELOPER_TEAM_ID);/g' project.pbxproj;
+else
+	cd "macos-ui/Uninstaller/Uninstall Moonshot.xcodeproj"; \
+	sed -i '' 's/ = APPLE_DEVELOPER_TEAM;/ = \"\";/g' project.pbxproj; \
+	sed -i '' 's/CODE_SIGN_IDENTITY = "Developer ID Application";/CODE_SIGN_IDENTITY = "";/g' project.pbxproj
+endif
+	cd macos-ui/Uninstaller && $(XCODEBUILD)
 
 endif

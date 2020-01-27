@@ -44,10 +44,11 @@ int main (int argc, char *argv[])
          *ca_certificate,
          *subject_name_constraint,
          *subject_alt_name_constraint;
+    char *servicename = argc > 1 ? argv[1] : "email@project-moonshot.org";
 
     success = moonshot_get_identity ("",
                                      "",
-                                     "email@project-moonshot.org",
+                                     servicename,
                                      &nai,
                                      &password,
                                      &server_certificate_hash,

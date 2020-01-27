@@ -136,6 +136,35 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return password;
     }
 
+    /* Shows a generic single entry request dialog. */
+    private string? entry_dialog(string title, string text)
+    {
+        bool finalize = newt_init();
+        newtComponent form, entry, info, accept, abort, chosen, storepwd_chk;
+        string? result = null;
+        int text_height, text_width;
+        string message = newtReflowText(text, 70, 0, 0, out text_width, out text_height);
+        newtCenteredWindow(70, text_height + 4, title);
+        info = newtTextbox(0, 0, 70, text_height, 0);
+        newtTextboxSetText(info, message);
+        entry = newtEntry(0, text_height + 1, null, 68, null, Flag.RETURNEXIT | Flag.SCROLL);
+        accept = newtCompactButton(20, text_height + 3, "Accept");
+        abort = newtCompactButton(45, text_height + 3, "Abort");
+        form = newtForm(null, null, 0);
+        newtFormAddComponent(form, entry);
+        newtFormAddComponent(form, info);
+        newtFormAddComponent(form, accept);
+        newtFormAddComponent(form, abort);
+        chosen = newtRunForm(form);
+        result = newtEntryGetValue(entry);
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
+        if (chosen == abort || result == "")
+            return null;
+        return result;
+    }
+
     /* Initialise NEWT environment */
     private bool newt_init()
     {
@@ -265,7 +294,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         bool finalize = newt_init();
         newtComponent form, disp_entry, user_entry, realm_entry, passwd_entry, cert_entry, disp_label, user_label,
                 passwd_label, passwd_btn, realm_label, cert_label, services_label, edit_btn, cancel_btn, remove_btn,
-                listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk;
+                listbox, cert_btn, chosen, storepwd_chk, show_btn, mfa_chk, add_btn;
         weak newtComponent focus;
         bool exit = false;
         Gee.List<string> services = new ArrayList<string>();
@@ -298,7 +327,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         services_label = newtLabel(1, 7, "");
         listbox = newtListbox(1, 8, 9, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 64);
-        remove_btn = newtCompactButton(66, 9, "Remove");
+        add_btn = newtCompactButton(66, 9, "Add");
+        remove_btn = newtCompactButton(66, 10, "Remove");
         edit_btn = newtCompactButton(20, 17, "Update");
         cancel_btn = newtCompactButton(50, 17, "Cancel");
 
@@ -319,6 +349,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, show_btn);
         newtFormAddComponent(form, services_label);
         newtFormAddComponent(form, listbox);
+        newtFormAddComponent(form, add_btn);
         newtFormAddComponent(form, remove_btn);
         newtFormAddComponent(form, edit_btn);
         newtFormAddComponent(form, cancel_btn);
@@ -347,6 +378,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                                        + "Are you sure you want to do this?", false);
                     if (remove)
                         services.remove_at(index);
+                }
+                focus = listbox;
+            }
+            else if (chosen == add_btn) {
+                string? result = entry_dialog("Add service", _("Add the name of the service you want to associate to this identity"));
+                if (result != null) {
+                    services.insert(0, result);
                 }
                 focus = listbox;
             }
@@ -441,6 +479,35 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         return rv;
     }
 
+    private bool set_mode_menu() {
+        bool finalize = newt_init();
+        bool rv = false;
+        newtComponent form, listbox, chosen;
+        newtCenteredWindow(15, 4, "Mode");
+        form = newtForm(null, null, 0);
+        listbox = newtListbox(0, 0, 4, Flag.RETURNEXIT);
+        newtListboxAppendEntry(listbox, "INTERACTIVE", (void *) "INTERACTIVE");
+        newtListboxAppendEntry(listbox, "NON_INTERACTIVE", (void *) "NON_INTERACTIVE");
+        newtListboxAppendEntry(listbox, "DISABLED", (void *) "DISABLED");
+        newtListboxAppendEntry(listbox, "Back", (void *) "Back");
+        UiMode current_mode = parent_app.get_mode();
+        if (current_mode == UiMode.NON_INTERACTIVE)
+            newtListboxSetCurrentByKey(listbox, "NON_INTERACTIVE");
+        else if (current_mode == UiMode.DISABLED)
+            newtListboxSetCurrentByKey(listbox, "DISABLED");
+        newtFormAddComponent(form, listbox);
+        chosen = newtRunForm(form);
+        if (chosen == listbox){
+            string? option = (string?) newtListboxGetCurrent(listbox);
+            if (option != "Back")
+                change_mode(option);
+        }
+        newtFormDestroy(form);
+        newtPopWindow();
+        newt_finish(finalize);
+        return rv;
+    }
+
     private string select_file_dialog() {
         newtComponent form, listbox, cancel_btn, chosen;
         bool exit_loop = false;
@@ -515,7 +582,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
     private void select_id_card_dialog() {
         newtComponent form, add_btn, listbox, exit_btn, chosen, about_btn, import_btn, export_btn,
                       edit_btn, remove_btn, send_btn, remember_chk, doc, filter_entry, filter_btn,
-                      backendname;
+                      backendname, mode_btn;
         bool exit_loop = false;
         int offset = 0;
         string filter = "";
@@ -539,16 +606,16 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         filter_btn = newtCompactButton(57, offset, "Filter");
         listbox = newtListbox(1, offset + 1, 18 - offset * 2, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
-        add_btn = newtCompactButton(68, offset + 2, "Add");
-        import_btn = newtCompactButton(68, offset + 4, "Import");
-        edit_btn = newtCompactButton(68, offset + 6, "Edit");
-        remove_btn = newtCompactButton(68, offset + 8, "Remove");
-        send_btn = newtCompactButton(68, offset + 10, "Send");
-        export_btn = newtCompactButton(68, 14, "Export");
-        about_btn = newtCompactButton(68, 16, "About");
-        exit_btn = newtCompactButton(68, 18, "Exit");
-        backendname = newtTextbox(1, 19, 50, 1, 0);
-        newtTextboxSetText(backendname, "Using %s backend".printf(this.identities_manager.get_store_name()));
+        add_btn = newtCompactButton(67, 2, "Add");
+        import_btn = newtCompactButton(67, 4, "Import");
+        edit_btn = newtCompactButton(67, 6, "Edit");
+        remove_btn = newtCompactButton(67, 8, "Remove");
+        send_btn = newtCompactButton(67, 10, "Send");
+        export_btn = newtCompactButton(67, 13, "Export");
+        mode_btn = newtCompactButton(67, 15, "Set Mode");
+        about_btn = newtCompactButton(67, 17, "About");
+        exit_btn = newtCompactButton(67, 19, "Exit");
+        backendname = newtTextbox(1, 19, 60, 1, 0);
         newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
         newtFormAddComponent(form, filter_entry);
@@ -564,6 +631,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (request != null)
             newtFormAddComponent(form, send_btn);
         newtFormAddComponent(form, export_btn);
+        newtFormAddComponent(form, mode_btn);
         newtFormAddComponent(form, about_btn);
         newtFormAddComponent(form, exit_btn);
 
@@ -575,8 +643,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             foreach (IdCard id_card in card_list) {
                 if (filter != "" && !id_matches_search(id_card, filter, null))
                     continue;
-                string text = "%s %s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED]" : "",
+                string text = "%s%s (%s)".printf(id_card.trust_anchor.is_expired() ? "[EXPIRED] " : "",
                                                   id_card.display_name, id_card.nai);
+                if (request != null && id_card.is_no_identity())
+                    text = _("Do not use a Moonshot identity for this service");
+
                 newtListboxAppendEntry(listbox, text, id_card);
 
                 // select the previously selected ID card, if available
@@ -584,6 +655,7 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
                     newtListboxSetCurrentByKey(listbox, id_card);
             }
 
+            newtTextboxSetText(backendname, _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
             newtFormSetCurrent(form, focus);
             chosen = newtRunForm(form);
             focus = listbox;
@@ -612,6 +684,10 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             else if (chosen == about_btn) {
                 about_dialog();
             }
+            else if (chosen == mode_btn) {
+                set_mode_menu();
+                focus = mode_btn;
+            }
             else if (chosen == export_btn) {
                 string filename = "/tmp/credentials.xml";
                 bool overwrite = true;
@@ -638,8 +714,19 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
             }
             else {
                 // we need to send NULL identity to gracefully exit properly from the send_identity callback
-                send_id_card_confirmation_dialog(null, false);
                 exit_loop = true;
+                if (request != null) {
+                    exit_loop = yesno_dialog("Exit without selecting an identity",
+                                             "Do you wish to exit without selecting an identity for service?:\n * %s\n\n".printf(request.service)
+                                             + "If you do, Moonshot will not be used for this access, but you will still be prompted for future atempts.\n\n"
+                                             + "If you want to prevent Moonshot from prompting you in the future for *this* service, please select 'No' "
+                                             + "and send the ID named 'Do not use a Moonshot identity for this service' instead.\n\n"
+                                             + "If you want to prevent Moonshot from prompting you in the future for *any* service, please set the "
+                                             + "NON_INTERACTIVE or DISABLED mode before exiting.",
+                                             false);
+                }
+                if (exit_loop)
+                    send_id_card_confirmation_dialog(null, false);
             }
         } while (!exit_loop);
         newtFormDestroy(form);

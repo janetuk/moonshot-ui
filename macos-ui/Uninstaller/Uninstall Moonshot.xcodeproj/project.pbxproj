@@ -1,0 +1,340 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2C7254132162DC43007443BA /* UninstallViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C7254122162DC43007443BA /* UninstallViewController.m */; };
+		2C72541A2164299B007443BA /* BLAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C7254182164299B007443BA /* BLAuthentication.m */; };
+		2C7525D62162C9460085F206 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C7525D52162C9460085F206 /* AppDelegate.m */; };
+		2C7525D82162C9490085F206 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C7525D72162C9490085F206 /* Assets.xcassets */; };
+		2C7525DB2162C9490085F206 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2C7525D92162C9490085F206 /* MainMenu.xib */; };
+		2C7525DE2162C9490085F206 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C7525DD2162C9490085F206 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2C7254112162DC43007443BA /* UninstallViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UninstallViewController.h; sourceTree = "<group>"; };
+		2C7254122162DC43007443BA /* UninstallViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UninstallViewController.m; sourceTree = "<group>"; };
+		2C7254182164299B007443BA /* BLAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLAuthentication.m; sourceTree = "<group>"; };
+		2C7254192164299B007443BA /* BLAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLAuthentication.h; sourceTree = "<group>"; };
+		2C7525D12162C9460085F206 /* Uninstall Moonshot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Uninstall Moonshot.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C7525D42162C9460085F206 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2C7525D52162C9460085F206 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2C7525D72162C9490085F206 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2C7525DA2162C9490085F206 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2C7525DC2162C9490085F206 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C7525DD2162C9490085F206 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2C7525DF2162C9490085F206 /* Moonshot_Uninstaller.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moonshot_Uninstaller.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2C7525CE2162C9460085F206 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2C7525C82162C9460085F206 = {
+			isa = PBXGroup;
+			children = (
+				2C7525D32162C9460085F206 /* Moonshot Uninstaller */,
+				2C7525D22162C9460085F206 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2C7525D22162C9460085F206 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C7525D12162C9460085F206 /* Uninstall Moonshot.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2C7525D32162C9460085F206 /* Moonshot Uninstaller */ = {
+			isa = PBXGroup;
+			children = (
+				2C7254192164299B007443BA /* BLAuthentication.h */,
+				2C7254182164299B007443BA /* BLAuthentication.m */,
+				2C7525D42162C9460085F206 /* AppDelegate.h */,
+				2C7525D52162C9460085F206 /* AppDelegate.m */,
+				2C7525D72162C9490085F206 /* Assets.xcassets */,
+				2C7525D92162C9490085F206 /* MainMenu.xib */,
+				2C7525DC2162C9490085F206 /* Info.plist */,
+				2C7525DD2162C9490085F206 /* main.m */,
+				2C7525DF2162C9490085F206 /* Moonshot_Uninstaller.entitlements */,
+				2C7254112162DC43007443BA /* UninstallViewController.h */,
+				2C7254122162DC43007443BA /* UninstallViewController.m */,
+			);
+			path = "Moonshot Uninstaller";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C7525D02162C9460085F206 /* Uninstall Moonshot */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C7525E22162C9490085F206 /* Build configuration list for PBXNativeTarget "Uninstall Moonshot" */;
+			buildPhases = (
+				2C7525CD2162C9460085F206 /* Sources */,
+				2C7525CE2162C9460085F206 /* Frameworks */,
+				2C7525CF2162C9460085F206 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Uninstall Moonshot";
+			productName = "Moonshot Uninstaller";
+			productReference = 2C7525D12162C9460085F206 /* Uninstall Moonshot.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2C7525C92162C9460085F206 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1000;
+				ORGANIZATIONNAME = JISC;
+				TargetAttributes = {
+					2C7525D02162C9460085F206 = {
+						CreatedOnToolsVersion = 10.0;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = 2C7525CC2162C9460085F206 /* Build configuration list for PBXProject "Uninstall Moonshot" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 2C7525C82162C9460085F206;
+			productRefGroup = 2C7525D22162C9460085F206 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C7525D02162C9460085F206 /* Uninstall Moonshot */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2C7525CF2162C9460085F206 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C7525D82162C9490085F206 /* Assets.xcassets in Resources */,
+				2C7525DB2162C9490085F206 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C7525CD2162C9460085F206 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C7525DE2162C9490085F206 /* main.m in Sources */,
+				2C7525D62162C9460085F206 /* AppDelegate.m in Sources */,
+				2C7254132162DC43007443BA /* UninstallViewController.m in Sources */,
+				2C72541A2164299B007443BA /* BLAuthentication.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2C7525D92162C9490085F206 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C7525DA2162C9490085F206 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2C7525E02162C9490085F206 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		2C7525E12162C9490085F206 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		2C7525E32162C9490085F206 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Moonshot Uninstaller/Moonshot_Uninstaller.entitlements";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
+				INFOPLIST_FILE = "Moonshot Uninstaller/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jisc.moonshot.uninstaller;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Debug;
+		};
+		2C7525E42162C9490085F206 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Moonshot Uninstaller/Moonshot_Uninstaller.entitlements";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = APPLE_DEVELOPER_TEAM;
+				INFOPLIST_FILE = "Moonshot Uninstaller/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = org.jisc.moonshot.uninstaller;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C7525CC2162C9460085F206 /* Build configuration list for PBXProject "Uninstall Moonshot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C7525E02162C9490085F206 /* Debug */,
+				2C7525E12162C9490085F206 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C7525E22162C9490085F206 /* Build configuration list for PBXNativeTarget "Uninstall Moonshot" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C7525E32162C9490085F206 /* Debug */,
+				2C7525E42162C9490085F206 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2C7525C92162C9460085F206 /* Project object */;
+}

@@ -271,6 +271,21 @@ static MoonshotDBusConnection *dbus_connect(MoonshotError **error)
   MoonshotDBusConnection *conn = NULL;
   GError          *g_error = NULL;
 
+#if __APPLE__
+/* we need this hack to get the DBUS_SESSION_BUS_ADDRESS value out of the
+   launchd DBUS_LAUNCHD_SESSION_BUS_SOCKET due to a GDBUS bug */
+  char *launchd_path = NULL;
+  if (g_spawn_command_line_sync("launchctl getenv DBUS_LAUNCHD_SESSION_BUS_SOCKET",
+                                &launchd_path, NULL, NULL, NULL)) {
+    launchd_path[strlen(launchd_path) - 1] = 0; // remove the final '\n'
+    char* dbus_path = g_strdup_printf("unix:path=%s", launchd_path);
+    setenv("DBUS_SESSION_BUS_ADDRESS", dbus_path, 1);
+    free(launchd_path);
+    free(dbus_path);
+  }
+#endif
+
+
   g_return_val_if_fail (*error == NULL, NULL);
 
   if (is_setid()) {
@@ -337,7 +352,10 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
 {
   GDBusProxy *g_proxy = NULL;
   GError     *g_error = NULL;
-  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_NONE;
+  /* For some reason, using G_DBUS_PROXY_FLAGS_NONE makes it take a very long time
+     on MacOS. Changing it to G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES works fine
+     in all the systems */
+  GDBusProxyFlags flags = G_DBUS_PROXY_FLAGS_DO_NOT_LOAD_PROPERTIES;
   gchar*     owner_name = NULL;
   int        retries = 0;
   /*
@@ -348,6 +366,7 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
       2) We are in control of stdin and stdout (ie. we are running in the foreground).
       3) There is no MOONSHOT_NO_CLI environment variable.
   */
+#if !__APPLE__
   if (getenv("DISPLAY") == NULL && isatty(fileno(stdout)) && isatty(fileno(stdin)) && getenv("MOONSHOT_NO_CLI") == NULL) {
       gboolean result = FALSE;
       flags = G_DBUS_PROXY_FLAGS_DO_NOT_AUTO_START;
@@ -369,7 +388,7 @@ static GDBusProxy *dbus_create_proxy(MoonshotDBusConnection *conn, MoonshotError
         return NULL;
       }
   }
-
+#endif
   /* This will autostart the service if it is not already running. */
   do {
     if (g_proxy) {
@@ -845,7 +864,6 @@ int moonshot_confirm_ca_certificate (const char           *identity_name,
   int         confirmed = 0;
   char        hash_str[hash_len * 2 + 1];
   GDBusProxy *dbus_proxy = get_dbus_proxy (error);
-  int         out = 0;
   int         i;
   GVariant   *result = NULL;
 

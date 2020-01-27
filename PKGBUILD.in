@@ -8,13 +8,12 @@ url="https://github.com/janetuk/moonshot-ui"
 arch=("x86_64")
 license=("BSD-3-Clause")
 depends=("dbus" "ttf-dejavu")
-makedepends=("automake" "autoconf" "libtool" "openssl" "gettext" "libgee" "libnewt" "vala" "desktop-file-utils" "dbus-glib" "jansson" "keyutils")
-source=("https://github.com/janetuk/moonshot-ui/archive/${pkgver}.tar.gz")
+makedepends=("automake" "autoconf" "libtool" "openssl" "gettext" "libgee" "libnewt" "vala" "desktop-file-utils" "jansson" "keyutils")
+source=("$pkgname-$pkgver.tar.xz")
 md5sums=('SKIP')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
-	sh autogen.sh
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \

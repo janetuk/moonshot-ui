@@ -31,6 +31,7 @@
 */
 
 using Markup;
+using Xml;
 
 namespace WebProvisioning
 {
@@ -306,72 +307,42 @@ namespace WebProvisioning
 
     public class Writer : Object
     {
-        protected static string write_identity(IdCard card) {
-            string result = "  <identity>\n";
-            result += "    <display-name>%s</display-name>\n".printf(escape_text(card.display_name));
-            result += "    <user>%s</user>\n".printf(escape_text(card.username));
-            result += "    <password>%s</password>\n".printf(escape_text(card.password));
-            result += "    <realm>%s</realm>\n".printf(escape_text(card.issuer));
-            result += "    <has2fa>%s</has2fa>\n".printf(card.has_2fa ? "true" : "false");
-            if (card.services.size > 0) {
-                result += "    <services>\n";
-                foreach (string service in card.services)
-                    result += "      <service>%s</service>\n".printf(escape_text(service));
-                result += "    </services>\n";
-            }
-            if (card.rules.length > 0) {
-                result += "    <selection-rules>\n";
-                for(int i = 0; i < card.rules.length; i++) {
-                    Rule rule = card.rules[i];
-                    result += "      <rule>\n";
-                    result += "        <pattern>%s</pattern>\n".printf(escape_text(rule.pattern));
-                    result += "        <always-confirm>%s</always-confirm>\n".printf(rule.always_confirm);
-                    result += "      </rule>\n";
-                }
-                result += "    </selection-rules>\n";
-            }
-            result += "    <trust-anchor>\n";
-            if (card.trust_anchor.ca_cert != "") {
-                result += "      <ca-cert>\n";
-                result += card.trust_anchor.ca_cert + "\n";
-                result += "      </ca-cert>\n";
-            }
-            if (card.trust_anchor.subject != "")
-                result += "      <subject>%s</subject>\n".printf(escape_text(card.trust_anchor.subject));
-            if (card.trust_anchor.subject_alt != "")
-                result += "      <subject-alt>%s</subject-alt>\n".printf(escape_text(card.trust_anchor.subject_alt));
-            if (card.trust_anchor.server_cert != "")
-                result += "      <server-cert>%s</server-cert>\n".printf(card.trust_anchor.server_cert);
-            result += "    </trust-anchor>\n";
-            result += "  </identity>\n";
-            return result;
-        }
-
-        public static string write(Gee.List<IdCard> cards) {
-            string result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-            result += "<identities>\n";
-            foreach (IdCard card in cards) {
-                if (!card.is_no_identity())
-                    result += write_identity(card);
-            }
-            result += "</identities>\n";
-            return result;
-        }
-
         public static bool store(string filename, Gee.List<IdCard> cards) {
-            string result = write(cards);
-            try {
-                FileStream stream = FileStream.open(filename, "wt");
-                if (stream == null)
-                    return false;
-                // workaround old VALA error
-                var towrite = result.data;
-                stream.write(towrite, 1);
+            Xml.Doc* doc = new Xml.Doc("1.0");
+            Xml.Node* root = new Xml.Node(null, "identities");
+            doc->set_root_element (root);
+
+            foreach (IdCard card in cards) {
+                if (!card.is_no_identity()) {
+                    Xml.Node* identity_elem = root->new_child(null, "identity");
+                    identity_elem->new_text_child(null, "display-name", card.display_name);
+                    identity_elem->new_text_child(null, "user", card.username);
+                    identity_elem->new_text_child(null, "realm", card.issuer);
+                    identity_elem->new_text_child(null, "password", card.password);
+                    identity_elem->new_text_child(null, "has2fa", card.has_2fa ? "true" : "false");
+                    Xml.Node* services_elem = identity_elem->new_child(null, "services");
+                    foreach (string service in card.services)
+                        services_elem->new_text_child(null, "service", service);
+                    Xml.Node* rules_elem = identity_elem->new_child(null, "selection-rules");
+                    for(int i = 0; i < card.rules.length; i++) {
+                        Rule rule = card.rules[i];
+                        Xml.Node* rule_elem = rules_elem->new_child(null, "rule");
+                        rule_elem->new_text_child(null, "pattern", rule.pattern);
+                        rule_elem->new_text_child(null, "always-confirm", rule.always_confirm);
+                    }
+                    Xml.Node* ta_elem = identity_elem->new_child(null, "trust-anchor");
+                    if (card.trust_anchor.ca_cert != "")
+                        identity_elem->new_text_child(null, "ca-cert", card.trust_anchor.ca_cert);
+                    if (card.trust_anchor.ca_cert != "")
+                        identity_elem->new_text_child(null, "subject", card.trust_anchor.subject);
+                    if (card.trust_anchor.ca_cert != "")
+                        identity_elem->new_text_child(null, "subject-alt", card.trust_anchor.subject_alt);
+                    if (card.trust_anchor.ca_cert != "")
+                        identity_elem->new_text_child(null, "server-cert", card.trust_anchor.server_cert);
+                }
             }
-            catch (GLib.Error e)  {
-                stdout.printf("Error:  %s\n", e.message);
-                return false;
-            }
+            doc->save_format_file (filename, 1);
+            delete doc;
             return true;
         }
     }
