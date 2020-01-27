@@ -98,6 +98,12 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
+* Mon Jan 27 2020 Jisc <moonshot@jisc.ac.uk> - 1.2.10-1
+- Improved exit dialog when decided not to send an ID
+- Merged MacOSX UI code
+- Use libxml2 for the ID exporter
+- Implement "UI interativity modes"
+
 * Tue Oct 15 2019 Jisc <moonshot@jisc.ac.uk> - 1.2.9-1
 - Added CI for CentOS 8
 
