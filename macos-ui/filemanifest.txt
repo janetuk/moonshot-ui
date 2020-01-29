@@ -10,6 +10,7 @@
 ./moonshot/bin/dbus-test-tool
 ./moonshot/bin/dbus-update-activation-environment
 ./moonshot/bin/dbus-uuidgen
+./moonshot/bin/moonshot_tester
 ./moonshot/bin/event_rpcgen.py
 ./moonshot/bin/gdbus
 ./moonshot/bin/gdbus-codegen
