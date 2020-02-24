@@ -15,8 +15,7 @@
 "Wiki_URL" = "https://wiki.moonshot.ja.net/display/TR/moonshot-webp+XML+Format";
 
 //IDENTITY SELECTOR
-"Select_Identity_Title" = "Select your identity";
-"Requested_Identity_Title" = "Identity requested for service:";
+"Select_Identity_Title" = "Select your identity for service:";
 "Enter_Password" = "Enter the password for %@";
 "User_Nai" = "User (NAI):";
 "Identity_Selector_Window_Title" = "Moonshot - Identity Selector";
