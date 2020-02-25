@@ -93,10 +93,9 @@ class IdCardWidget : Box
     private bool button_press_cb(EventButton event)
     {
         if (event.button == 1) {
-            if (is_selected)
-                unselect();
-            else
-                select();
+            select();
+            if (event.type == EventType.DOUBLE_BUTTON_PRESS)
+                edited();
         }
         else if (event.button == 3) {
             Gtk.Menu menu = new Gtk.Menu();
