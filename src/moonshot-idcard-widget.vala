@@ -94,7 +94,7 @@ class IdCardWidget : Box
     {
         if (event.button == 1) {
             select();
-            if (event.type == EventType.DOUBLE_BUTTON_PRESS)
+            if (event.type == EventType.@2BUTTON_PRESS)
                 edited();
         }
         else if (event.button == 3) {
@@ -190,7 +190,7 @@ class IdCardWidget : Box
         details.pack_start(services_hbox);
 
         hbox = new_hbox(6);
-        var image = new Image.from_pixbuf(get_pixbuf(id_card));
+        var image = new Gtk.Image.from_pixbuf(get_pixbuf(id_card));
         if (this.id_card.is_no_identity()) {
             image.clear();
             image.set_padding(8, 8);
