@@ -92,8 +92,8 @@ class IdCardWidget : Box
 
     private bool button_press_cb(EventButton event)
     {
+        select();
         if (event.button == 1) {
-            select();
             if (event.type == EventType.@2BUTTON_PRESS)
                 edited();
         }
