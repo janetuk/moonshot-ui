@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
 */
 using Gtk;
+using Gdk;
 
 class IdCardWidget : Box
 {
@@ -43,7 +44,7 @@ class IdCardWidget : Box
     private Box main_vbox;
     private Box hbox;
     private EventBox event_box;
-    private bool   is_selected = false;
+    private bool is_selected = false;
     private Arrow arrow;
 
     private Box details;
@@ -56,6 +57,8 @@ class IdCardWidget : Box
 
     public signal void expanded();
     public signal void collapsed();
+    public signal void edited();
+    public signal void removed();
 
     internal void select()
     {
@@ -87,13 +90,26 @@ class IdCardWidget : Box
         arrow.set(ArrowType.RIGHT, ARROW_SHADOW);
     }
 
-    private bool button_press_cb()
+    private bool button_press_cb(EventButton event)
     {
-        if (is_selected)
-            unselect();
-        else
-            select();
-
+        if (event.button == 1) {
+            if (is_selected)
+                unselect();
+            else
+                select();
+        }
+        else if (event.button == 3) {
+            Gtk.Menu menu = new Gtk.Menu();
+            menu.attach_to_widget (this, null);
+            Gtk.MenuItem menu_item = new Gtk.MenuItem.with_label("Edit Identity");
+            menu_item.activate.connect( (e) => {edited();});
+            menu.add (menu_item);
+            menu_item = new Gtk.MenuItem.with_label("Remove Identity");
+            menu_item.activate.connect( (e) => {removed();});
+            menu.add (menu_item);
+            menu.show_all ();
+            menu.popup (null, null, null, event.button, event.time);
+        }
         return false;
     }
 

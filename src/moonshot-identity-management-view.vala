@@ -232,6 +232,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         this.custom_vbox.add_id_card_widget(id_card_widget);
         id_card_widget.expanded.connect(this.widget_selected_cb);
         id_card_widget.collapsed.connect(this.widget_unselected_cb);
+        id_card_widget.edited.connect(this.widget_edit_cb);
+        id_card_widget.removed.connect(this.widget_remove_cb);
 
         if (this.selected_card != null && this.selected_card.nai == id_card.nai) {
             logger.trace(@"add_id_card_widget: Expanding selected idcard widget");
@@ -247,6 +249,16 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
             // at preventing duplicate NAIs.
             this.selected_card = id_card;
         }
+    }
+
+    private void widget_edit_cb(IdCardWidget id_card_widget)
+    {
+        this.edit_identity_cb(id_card_widget.id_card);
+    }
+
+    private void widget_remove_cb(IdCardWidget id_card_widget)
+    {
+        this.remove_identity_cb(id_card_widget.id_card);
     }
 
     private void widget_selected_cb(IdCardWidget id_card_widget)
