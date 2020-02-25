@@ -129,7 +129,7 @@ class IdCardWidget : Box
     {
         var display_name = (manager_view.selection_in_progress() && this.id_card.is_no_identity()
                             ? _("Do not use a Moonshot identity for this service") : this.id_card.display_name);
-        var label_text = Markup.printf_escaped("<span rise='8000'><big>%s</big></span>", display_name);
+        var label_text = Markup.printf_escaped("<b>%s</b>", display_name);
 
         label.set_markup(label_text);
     }
@@ -178,8 +178,7 @@ class IdCardWidget : Box
         var image = new Image.from_pixbuf(get_pixbuf(id_card));
         if (this.id_card.is_no_identity()) {
             image.clear();
-            // Use padding to make the image size =  48x48 (size = 2x padding)
-            image.set_padding(24, 24);
+            image.set_padding(8, 8);
         }
         hbox.pack_start(image, false, false, 0);
         hbox.pack_start(details_wrapper, true, true, 0);
