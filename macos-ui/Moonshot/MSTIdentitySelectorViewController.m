@@ -21,7 +21,6 @@
 //Content View
 @property (weak) IBOutlet NSTableView *identitySelectorTableView;
 @property (weak) IBOutlet NSTextField *identitySelectorTitleTextField;
-@property (weak) IBOutlet NSTextField *identitySelectorServiceTitleTextField;
 @property (weak) IBOutlet NSTextField *identitySelectorServiceValueTextField;
 
 //Button Actions
@@ -60,7 +59,6 @@
 
 - (void)setupTextFields {
     [self.identitySelectorTitleTextField setStringValue:NSLocalizedString(@"Select_Identity_Title", @"")];
-    [self.identitySelectorServiceTitleTextField setStringValue:NSLocalizedString(@"Requested_Identity_Title", @"")];
     [self.identitySelectorServiceValueTextField setStringValue:self.getIdentityAction.service];
 }
 
