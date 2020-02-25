@@ -53,7 +53,7 @@ public bool gtk_available = false;
 
 public Gdk.Pixbuf? get_pixbuf(IdCard id)
 {
-    return find_icon("avatar-default", 48);
+    return find_icon("avatar-default", 16);
 }
 
 public Gdk.Pixbuf? find_icon(string name, int size)

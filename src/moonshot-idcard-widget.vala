@@ -30,6 +30,7 @@
  * SUCH DAMAGE.
 */
 using Gtk;
+using Gdk;
 
 class IdCardWidget : Box
 {
@@ -43,7 +44,7 @@ class IdCardWidget : Box
     private Box main_vbox;
     private Box hbox;
     private EventBox event_box;
-    private bool   is_selected = false;
+    private bool is_selected = false;
     private Arrow arrow;
 
     private Box details;
@@ -56,6 +57,8 @@ class IdCardWidget : Box
 
     public signal void expanded();
     public signal void collapsed();
+    public signal void edited();
+    public signal void removed();
 
     internal void select()
     {
@@ -87,13 +90,25 @@ class IdCardWidget : Box
         arrow.set(ArrowType.RIGHT, ARROW_SHADOW);
     }
 
-    private bool button_press_cb()
+    private bool button_press_cb(EventButton event)
     {
-        if (is_selected)
-            unselect();
-        else
-            select();
-
+        select();
+        if (event.button == 1) {
+            if (event.type == EventType.@2BUTTON_PRESS)
+                edited();
+        }
+        else if (event.button == 3) {
+            Gtk.Menu menu = new Gtk.Menu();
+            menu.attach_to_widget (this, null);
+            Gtk.MenuItem menu_item = new Gtk.MenuItem.with_label("Edit Identity");
+            menu_item.activate.connect( (e) => {edited();});
+            menu.add (menu_item);
+            menu_item = new Gtk.MenuItem.with_label("Remove Identity");
+            menu_item.activate.connect( (e) => {removed();});
+            menu.add (menu_item);
+            menu.show_all ();
+            menu.popup (null, null, null, event.button, event.time);
+        }
         return false;
     }
 
@@ -129,7 +144,7 @@ class IdCardWidget : Box
     {
         var display_name = (manager_view.selection_in_progress() && this.id_card.is_no_identity()
                             ? _("Do not use a Moonshot identity for this service") : this.id_card.display_name);
-        var label_text = Markup.printf_escaped("<span rise='8000'><big>%s</big></span>", display_name);
+        var label_text = Markup.printf_escaped("<b>%s</b>", display_name);
 
         label.set_markup(label_text);
     }
@@ -175,11 +190,10 @@ class IdCardWidget : Box
         details.pack_start(services_hbox);
 
         hbox = new_hbox(6);
-        var image = new Image.from_pixbuf(get_pixbuf(id_card));
+        var image = new Gtk.Image.from_pixbuf(get_pixbuf(id_card));
         if (this.id_card.is_no_identity()) {
             image.clear();
-            // Use padding to make the image size =  48x48 (size = 2x padding)
-            image.set_padding(24, 24);
+            image.set_padding(8, 8);
         }
         hbox.pack_start(image, false, false, 0);
         hbox.pack_start(details_wrapper, true, true, 0);
