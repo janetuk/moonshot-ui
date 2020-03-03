@@ -116,6 +116,10 @@ ubuntu18:
   image: $DOCKER_REGISTRY_URL/ubuntu18:latest
   <<: *debiancommon
 
+ubuntu20:
+  image: $DOCKER_REGISTRY_URL/ubuntu20:latest
+  <<: *debiancommon
+
 alpine38:
   image: $DOCKER_REGISTRY_URL/alpine38:latest
   variables:
