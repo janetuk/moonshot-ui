@@ -98,6 +98,12 @@ Requires: moonshot-ui  = %{version}-%{release}
 %exclude %{_libdir}/*.la
 
 %changelog
+* Thu Mar 5 2020 Jisc <moonshot@jisc.ac.uk> - 1.2.11-1
+- Improved layout of the MacOSX selection ID dialog
+- GTK UI now supports right-clicking and double-clicking
+  an ID
+- Reduced the size of the GTK ID list
+
 * Mon Jan 27 2020 Jisc <moonshot@jisc.ac.uk> - 1.2.10-1
 - Improved exit dialog when decided not to send an ID
 - Merged MacOSX UI code

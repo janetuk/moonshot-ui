@@ -111,6 +111,10 @@ ubuntu18:
   image: $DOCKER_REGISTRY_URL/ubuntu18:latest
   <<: *debiancommon
 
+ubuntu20:
+  image: $DOCKER_REGISTRY_URL/ubuntu20:latest
+  <<: *debiancommon
+
 alpine38:
   image: $DOCKER_REGISTRY_URL/alpine38:latest
   variables:
@@ -131,6 +135,18 @@ alpine39:
 
 alpine39_armhf:
   image: $DOCKER_REGISTRY_URL/alpine39_arm:latest
+  variables:
+    APKBUILD: APKBUILD.in.alpine39
+  <<: *alpinecommon
+
+alpine311:
+  image: $DOCKER_REGISTRY_URL/alpine311:latest
+  variables:
+    APKBUILD: APKBUILD.in.alpine39
+  <<: *alpinecommon
+
+alpine311_armhf:
+  image: $DOCKER_REGISTRY_URL/alpine311_arm:latest
   variables:
     APKBUILD: APKBUILD.in.alpine39
   <<: *alpinecommon

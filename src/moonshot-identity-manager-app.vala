@@ -264,12 +264,15 @@ public class IdentityManagerApp {
                 }
             }
 
-            if (confirm && (view != null) && mode == UiMode.INTERACTIVE)
-            {
+            if (confirm && (view != null) && mode == UiMode.INTERACTIVE) {
                 view.queue_identity_request(request);
                 if (!explicitly_launched)
                     show();
                 return;
+            } else {
+                logger.debug("select_identity. Not showing UI because confirm=%d view=%d mode=%s".printf((int) confirm,
+                                                                                                         (int) view,
+                                                                                                         mode.to_string()));
             }
         }
         // Send back the identity (we can't directly run the

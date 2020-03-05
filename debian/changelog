@@ -1,3 +1,12 @@
+moonshot-ui (1.2.11.DIST) unstable; urgency=medium
+
+  * Improved layout of the MacOSX selection ID dialog
+  * GTK UI now supports right-clicking and double-clicking
+    an ID
+  * Reduced the size of the GTK ID list
+
+ -- Jisc <moonshot@jisc.ac.uk>  Thu, 5 Mar 2020 00:00:00 +0000
+
 moonshot-ui (1.2.10.DIST) unstable; urgency=medium
 
   * Improved exit dialog when decided not to send an ID
