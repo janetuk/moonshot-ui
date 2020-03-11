@@ -1,6 +1,5 @@
 ./moonshot/bin/c_rehash
 ./moonshot/bin/dbus_check.sh
-./moonshot/bin/dbus-binding-tool
 ./moonshot/bin/dbus-cleanup-sockets
 ./moonshot/bin/dbus-daemon
 ./moonshot/bin/dbus-launch
