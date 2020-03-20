@@ -391,7 +391,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         clear_selection_prompts();
 
         var prompting_service = new Label(null);
-        prompting_service.set_markup(_("Identity requested for service: <b>%s</b>").printf(service));
+        prompting_service.set_markup(_("Identity requested for service: \n  <b>%s</b>").printf(service));
         // left-align
         prompting_service.set_alignment(0, (float )0.5);
         prompting_service.set_padding(12, 6);
@@ -617,7 +617,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         search_vbox.pack_start(full_search_label, false, false, 0);
 
         // Overlap with the service_prompt_box
-        top_table.attach(search_vbox, 3, num_cols - button_width, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
+        top_table.attach(search_vbox, num_cols / 2, num_cols - button_width, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
+        top_table.attach(service_prompt_vbox, 0, num_cols / 2, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
         row++;
 
         this.custom_vbox = new CustomVBox(this, false, 2);
@@ -705,7 +706,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-        main_vbox.pack_start(service_prompt_vbox, false, false, 0);
+        // main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
         main_vbox.pack_start(statusbox, false, false, 0);
 
