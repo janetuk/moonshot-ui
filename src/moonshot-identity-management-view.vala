@@ -643,11 +643,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(add_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
-        var import_button = new Button.with_label(_("Import"));
-        import_button.clicked.connect((w) => {import_identities_cb();});
-        top_table.attach(make_rigid(import_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row++;
-
         this.edit_button = new Button.with_label(_("Edit"));
         edit_button.clicked.connect((w) => {edit_identity_cb(this.selected_card);});
         edit_button.set_sensitive(false);
@@ -658,7 +653,17 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_card);});
         remove_button.set_sensitive(false);
         top_table.attach(make_rigid(remove_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 5;
+
+        var import_button = new Button.with_label(_("Import"));
+        import_button.clicked.connect((w) => {import_identities_cb();});
+        top_table.attach(make_rigid(import_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
+
+        var export_button = new Button.with_label(_("Export"));
+        export_button.clicked.connect((w) => {export_identities_cb();});
+        top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 5;
 
         // push the send button down another row.
         this.send_button = new Button.with_label(_("Send"));
@@ -666,16 +671,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row++;
-
-        // push the send button down another row.
-        row++;
-        row++;
-        row++;
-        var export_button = new Button.with_label(_("Export"));
-        export_button.clicked.connect((w) => {export_identities_cb();});
-        top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row++;
 
 #if VALA_0_12
         Gtk.HBox statusbox = new Gtk.HBox(false, 0);
