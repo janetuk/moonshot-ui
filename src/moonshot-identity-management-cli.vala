@@ -210,6 +210,8 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, yes_btn);
         if (!default_yes)
             newtFormSetCurrent(form, no_btn);
+        else
+            newtFormSetCurrent(form, yes_btn);
         chosen = newtRunForm(form);
         if (chosen == yes_btn) {
             result = true;
