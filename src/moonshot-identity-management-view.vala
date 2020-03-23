@@ -727,7 +727,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         statusbar = new Gtk.Label("");
         statusbar.set_alignment(0, 0);
         refresh_status();
-        top_table.attach(statusbar, 0, num_cols - button_width, row, row + 1, fill, fill, 0, 0);
+        top_table.attach(statusbar, 0, num_cols - button_width, row, row + 1, fill, fill, 6, 2);
 
 
         var main_vbox = new_vbox(0);
