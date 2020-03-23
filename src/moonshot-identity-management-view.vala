@@ -375,8 +375,15 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     }
 
     private void mode_changed_cb() {
+#if VALA_0_12
+        var ok = Stock.OK;
+        var cancel = Stock.CANCEL;
+#else
+        var ok = STOCK_OK;
+        var cancel = STOCK_CANCEL;
+#endif
         var dialog = new Gtk.Dialog.with_buttons("Set mode", this, DialogFlags.MODAL,
-                                                  _("OK"), ResponseType.OK, _("Cancel"), ResponseType.CANCEL, null);
+                                                  cancel, ResponseType.CANCEL, ok, ResponseType.OK, null);
         unowned Box content_area = (Box) dialog.get_content_area ();
         var box = new_vbox(6);
         content_area.pack_start (box);
