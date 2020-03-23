@@ -55,7 +55,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
-    private Gtk.Statusbar statusbar;
+    private Gtk.Label statusbar;
 
     internal IdentityManagerModel identities_manager;
     private unowned SList<IdCard> candidates;
@@ -369,6 +369,11 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
     }
 
+    private void refresh_status() {
+        statusbar.set_markup(_("Using <b>%s</b> backend. Mode is <b>%s</b>".printf(
+            this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
+    }
+
     private void mode_changed_cb() {
         var dialog = new Gtk.Dialog.with_buttons("Set mode", this, DialogFlags.MODAL,
                                                   _("OK"), ResponseType.OK, _("Cancel"), ResponseType.CANCEL, null);
@@ -398,10 +403,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 
         if (response == ResponseType.OK && mode.to_string() != new_mode) {
             change_mode(new_mode);
-            statusbar.push(statusbar.get_context_id("Status"),
-                           _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(),
-                                                                   parent_app.get_mode().to_string())));
-
+            refresh_status();
         }
 
     }
@@ -708,19 +710,17 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
 
 #if VALA_0_12
         Gtk.HBox statusbox = new Gtk.HBox(false, 0);
 #else
         Gtk.HBox statusbox = new Gtk.HBox(true, 0);
 #endif
-        statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"),
-                       _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(),
-                                                               parent_app.get_mode().to_string())));
-
-
-        // statusbox.pack_start(statusbar, false, true, 0);
+        statusbar = new Gtk.Label("");
+        statusbar.set_alignment(0, 0);
+        refresh_status();
+        top_table.attach(statusbar, 0, num_cols - button_width, row, row + 1, fill, fill, 0, 0);
 
 
         var main_vbox = new_vbox(0);
@@ -728,9 +728,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-        // main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
-        main_vbox.pack_start(statusbar, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();
