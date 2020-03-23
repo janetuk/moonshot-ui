@@ -264,9 +264,10 @@ SUCH DAMAGE.
             doc = "In this mode, Moonshot will not be used for authentication, even if there are identities suitable for the "
                 + "requested service.";
 
-        info_dialog("Mode change",
-            _("You are about to change the Moonshot mode of operation to '%s'.\n\n%s".printf(new_mode, doc)));
-        set_string_setting(MAIN_GROUP, "moonshot_mode", new_mode);
-
+        doc += "\n\nAre you sure you want to change the UI mode?";
+        bool response = yesno_dialog("Mode change",
+            _("You are about to change the Moonshot mode of operation to '%s'.\n\n%s".printf(new_mode, doc)), false);
+        if (response)
+            set_string_setting(MAIN_GROUP, "moonshot_mode", new_mode);
     }
 }
