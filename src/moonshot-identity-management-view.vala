@@ -369,9 +369,41 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
     }
 
-    private void mode_changed_cb(Gtk.ComboBox combo) {
-        UiMode mode = (UiMode) combo.get_active();
-        change_mode(mode.to_string());
+    private void mode_changed_cb() {
+        var dialog = new Gtk.Dialog.with_buttons("Set mode", this, DialogFlags.MODAL,
+                                                  _("OK"), ResponseType.OK, _("Cancel"), ResponseType.CANCEL, null);
+        unowned Box content_area = (Box) dialog.get_content_area ();
+        var box = new_vbox(6);
+        content_area.pack_start (box);
+        var label = new Gtk.Label ("Select the UI mode:");
+        box.add(label);
+
+        UiMode mode = parent_app.get_mode();
+        string new_mode = mode.to_string();
+
+        unowned SList<RadioButton>? group = null;
+        foreach (UiMode x in UiMode.all()) {
+            var radiobutton = new RadioButton.with_label(group, x.to_string());
+            group = radiobutton.get_group();
+            radiobutton.set_label(x.to_string());
+            radiobutton.toggled.connect( (radio) => {new_mode = radio.label;});
+            box.add(radiobutton);
+            if (mode == x)
+                radiobutton.active = true;
+        }
+
+        dialog.show_all();
+        int response = dialog.run();
+        dialog.destroy();
+
+        if (response == ResponseType.OK && mode.to_string() != new_mode) {
+            change_mode(new_mode);
+            statusbar.push(statusbar.get_context_id("Status"),
+                           _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(),
+                                                                   parent_app.get_mode().to_string())));
+
+        }
+
     }
 
     private void remove_identity_cb(IdCard id_card)
@@ -653,7 +685,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_card);});
         remove_button.set_sensitive(false);
         top_table.attach(make_rigid(remove_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row += 5;
+        row += 4;
 
         var import_button = new Button.with_label(_("Import"));
         import_button.clicked.connect((w) => {import_identities_cb();});
@@ -663,7 +695,12 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         var export_button = new Button.with_label(_("Export"));
         export_button.clicked.connect((w) => {export_identities_cb();});
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row += 5;
+        row += 4;
+
+        var change_mode = new Button.with_label(_("Change mode"));
+        change_mode.clicked.connect((w) => {mode_changed_cb();});
+        top_table.attach(make_rigid(change_mode), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 4;
 
         // push the send button down another row.
         this.send_button = new Button.with_label(_("Send"));
@@ -678,22 +715,12 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         Gtk.HBox statusbox = new Gtk.HBox(true, 0);
 #endif
         statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is".printf(this.identities_manager.get_store_name())));
+        statusbar.push(statusbar.get_context_id("Status"),
+                       _("Using %s backend. Mode is %s".printf(this.identities_manager.get_store_name(),
+                                                               parent_app.get_mode().to_string())));
 
-        // Create combo for the Mode
-        UiMode mode = parent_app.get_mode();
-        Gtk.ListStore liststore = new Gtk.ListStore (1, typeof (string));
-        foreach (UiMode x in UiMode.all())
-            liststore.insert_with_values(null, -1, 0, x.to_string(), -1, null);
-        modebox = new Gtk.ComboBox.with_model(liststore);
-        modebox.set_active(mode);
-        modebox.changed.connect(this.mode_changed_cb);
-        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
-        modebox.pack_start (cell, false);
-        modebox.set_attributes (cell, "text", 0);
 
-        statusbox.pack_start(statusbar, false, true, 0);
-        statusbox.pack_start(modebox, false, false, 0);
+        // statusbox.pack_start(statusbar, false, true, 0);
 
 
         var main_vbox = new_vbox(0);
@@ -703,7 +730,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         set_bg_color(menubar);
         // main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
-        main_vbox.pack_start(statusbox, false, false, 0);
+        main_vbox.pack_start(statusbar, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();
