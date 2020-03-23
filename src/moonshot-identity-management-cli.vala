@@ -609,14 +609,14 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         listbox = newtListbox(1, offset + 1, 18 - offset * 2, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
         add_btn = newtCompactButton(67, 2, "Add");
-        import_btn = newtCompactButton(67, 4, "Import");
-        edit_btn = newtCompactButton(67, 6, "Edit");
-        remove_btn = newtCompactButton(67, 8, "Remove");
-        send_btn = newtCompactButton(67, 10, "Send");
-        export_btn = newtCompactButton(67, 13, "Export");
-        mode_btn = newtCompactButton(67, 15, "Set Mode");
-        about_btn = newtCompactButton(67, 17, "About");
-        exit_btn = newtCompactButton(67, 19, "Exit");
+        edit_btn = newtCompactButton(67, 4, "Edit");
+        remove_btn = newtCompactButton(67, 6, "Remove");
+        import_btn = newtCompactButton(67, 9, "Import");
+        export_btn = newtCompactButton(67, 11, "Export");
+        mode_btn = newtCompactButton(67, request != null ? 13: 14, "Set Mode");
+        send_btn = newtCompactButton(67, 16, "Send");
+        about_btn = newtCompactButton(62, 19, "About");
+        exit_btn = newtCompactButton(70, 19, "Exit");
         backendname = newtTextbox(1, 19, 60, 1, 0);
         newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
@@ -627,13 +627,13 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         if (request != null)
             newtFormAddComponent(form, remember_chk);
         newtFormAddComponent(form, add_btn);
-        newtFormAddComponent(form, import_btn);
         newtFormAddComponent(form, edit_btn);
         newtFormAddComponent(form, remove_btn);
-        if (request != null)
-            newtFormAddComponent(form, send_btn);
+        newtFormAddComponent(form, import_btn);
         newtFormAddComponent(form, export_btn);
         newtFormAddComponent(form, mode_btn);
+        if (request != null)
+            newtFormAddComponent(form, send_btn);
         newtFormAddComponent(form, about_btn);
         newtFormAddComponent(form, exit_btn);
 
