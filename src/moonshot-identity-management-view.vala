@@ -708,7 +708,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row += 4;
 
-        var change_mode = new Button.with_label(_("Change mode"));
+        var change_mode = new Button.with_label(_("Set mode"));
         change_mode.clicked.connect((w) => {mode_changed_cb();});
         top_table.attach(make_rigid(change_mode), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row += 4;
