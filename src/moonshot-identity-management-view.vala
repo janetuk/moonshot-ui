@@ -674,11 +674,6 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         id_scrollwin.add_with_viewport(viewport);
         top_table.attach(id_scrollwin, 0, num_cols - 1, row, num_rows - 1, fill_and_expand, fill_and_expand, 6, 0);
 
-        // Right below id_scrollwin:
-        remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
-        remember_identity_binding.active = true;
-        top_table.attach(remember_identity_binding, 0, num_cols - 1, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
-
         var add_button = new Button.with_label(_("Add"));
         add_button.clicked.connect((w) => {add_identity_cb();});
         top_table.attach(make_rigid(add_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
@@ -717,6 +712,12 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
+
+        // Right below id_scrollwin:
+        remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
+        remember_identity_binding.active = true;
+        top_table.attach(remember_identity_binding, 0, num_cols - 1, row, row + 1, fill_and_expand, fill_and_expand, 3, 0);
         row++;
 
 #if VALA_0_12
