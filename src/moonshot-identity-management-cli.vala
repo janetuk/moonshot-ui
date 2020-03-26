@@ -608,15 +608,15 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         filter_btn = newtCompactButton(57, offset, "Filter");
         listbox = newtListbox(1, offset + 1, 18 - offset * 2, Flag.SCROLL | Flag.BORDER | Flag.RETURNEXIT);
         newtListboxSetWidth(listbox, 66);
-        add_btn = newtCompactButton(67, 2, "Add");
+        add_btn = newtCompactButton(67, 3, "Add");
         edit_btn = newtCompactButton(67, 4, "Edit");
-        remove_btn = newtCompactButton(67, 6, "Remove");
+        remove_btn = newtCompactButton(67, 5, "Remove");
+        send_btn = newtCompactButton(67, 6, "Send");
         import_btn = newtCompactButton(67, 9, "Import");
-        export_btn = newtCompactButton(67, 11, "Export");
-        mode_btn = newtCompactButton(67, request != null ? 13: 14, "Set Mode");
-        send_btn = newtCompactButton(67, 16, "Send");
-        about_btn = newtCompactButton(62, 19, "About");
-        exit_btn = newtCompactButton(70, 19, "Exit");
+        export_btn = newtCompactButton(67, 10, "Export");
+        mode_btn = newtCompactButton(67, 13, "Set Mode");
+        about_btn = newtCompactButton(67, 16, "About");
+        exit_btn = newtCompactButton(67, 17, "Exit");
         backendname = newtTextbox(1, 19, 60, 1, 0);
         newtFormAddComponent(form, backendname);
         remember_chk = newtCheckbox(1, 18, "Remember my identity choice for this service", '*', " *", null);
@@ -629,11 +629,11 @@ public class IdentityManagerCli: IdentityManagerInterface, Object {
         newtFormAddComponent(form, add_btn);
         newtFormAddComponent(form, edit_btn);
         newtFormAddComponent(form, remove_btn);
+        if (request != null)
+            newtFormAddComponent(form, send_btn);
         newtFormAddComponent(form, import_btn);
         newtFormAddComponent(form, export_btn);
         newtFormAddComponent(form, mode_btn);
-        if (request != null)
-            newtFormAddComponent(form, send_btn);
         newtFormAddComponent(form, about_btn);
         newtFormAddComponent(form, exit_btn);
 

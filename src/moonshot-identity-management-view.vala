@@ -689,6 +689,13 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         remove_button.clicked.connect((w) => {remove_identity_cb(this.selected_card);});
         remove_button.set_sensitive(false);
         top_table.attach(make_rigid(remove_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row++;
+
+        // push the send button down another row.
+        this.send_button = new Button.with_label(_("Send"));
+        send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
+        send_button.set_sensitive(false);
+        top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row += 4;
 
         var import_button = new Button.with_label(_("Import"));
@@ -706,18 +713,10 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         top_table.attach(make_rigid(change_mode), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row += 4;
 
-        // push the send button down another row.
-        this.send_button = new Button.with_label(_("Send"));
-        send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
-        // send_button.set_visible(false);
-        send_button.set_sensitive(false);
-        top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row++;
-
         // Right below id_scrollwin:
         remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
         remember_identity_binding.active = true;
-        top_table.attach(remember_identity_binding, 0, num_cols - 1, row, row + 1, fill_and_expand, fill_and_expand, 3, 0);
+        top_table.attach(remember_identity_binding, 0, num_cols - 3, row, row + 1, fill_and_expand, fill_and_expand, 3, 0);
         row++;
 
 #if VALA_0_12
