@@ -1,8 +1,9 @@
-moonshot-ui (1.2.12.DIST) unstable; urgency=medium
+moonshot-ui (1.3.0.DIST) unstable; urgency=medium
 
-  * TBD
+  * Switch to semantic versioning.
+  * Re-layout UI elements.
 
- -- Jisc <moonshot@jisc.ac.uk>  Thu, 5 Mar 2020 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Mon, 30 Mar 2020 00:00:00 +0000
 
 moonshot-ui (1.2.11.DIST) unstable; urgency=medium
 
