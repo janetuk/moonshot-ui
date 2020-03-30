@@ -55,7 +55,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
     private Gtk.ListStore* listmodel;
     private TreeModelFilter filter;
 
-    private Gtk.Statusbar statusbar;
+    private Gtk.Label statusbar;
 
     internal IdentityManagerModel identities_manager;
     private unowned SList<IdCard> candidates;
@@ -369,9 +369,50 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         }
     }
 
-    private void mode_changed_cb(Gtk.ComboBox combo) {
-        UiMode mode = (UiMode) combo.get_active();
-        change_mode(mode.to_string());
+    private void refresh_status() {
+        statusbar.set_markup(_("Using <b>%s</b> backend. Mode is <b>%s</b>".printf(
+            this.identities_manager.get_store_name(), parent_app.get_mode().to_string())));
+    }
+
+    private void mode_changed_cb() {
+#if VALA_0_12
+        var ok = Stock.OK;
+        var cancel = Stock.CANCEL;
+#else
+        var ok = STOCK_OK;
+        var cancel = STOCK_CANCEL;
+#endif
+        var dialog = new Gtk.Dialog.with_buttons("Set mode", this, DialogFlags.MODAL,
+                                                  cancel, ResponseType.CANCEL, ok, ResponseType.OK, null);
+        unowned Box content_area = (Box) dialog.get_content_area ();
+        var box = new_vbox(6);
+        content_area.pack_start (box);
+        var label = new Gtk.Label ("Select the UI mode:");
+        box.add(label);
+
+        UiMode mode = parent_app.get_mode();
+        string new_mode = mode.to_string();
+
+        unowned SList<RadioButton>? group = null;
+        foreach (UiMode x in UiMode.all()) {
+            var radiobutton = new RadioButton.with_label(group, x.to_string());
+            group = radiobutton.get_group();
+            radiobutton.set_label(x.to_string());
+            radiobutton.toggled.connect( (radio) => {new_mode = radio.label;});
+            box.add(radiobutton);
+            if (mode == x)
+                radiobutton.active = true;
+        }
+
+        dialog.show_all();
+        int response = dialog.run();
+        dialog.destroy();
+
+        if (response == ResponseType.OK && mode.to_string() != new_mode) {
+            change_mode(new_mode);
+            refresh_status();
+        }
+
     }
 
     private void remove_identity_cb(IdCard id_card)
@@ -391,7 +432,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         clear_selection_prompts();
 
         var prompting_service = new Label(null);
-        prompting_service.set_markup(_("Identity requested for service: <b>%s</b>").printf(service));
+        prompting_service.set_markup(_("Identity requested for service: \n  <b>%s</b>").printf(service));
         // left-align
         prompting_service.set_alignment(0, (float )0.5);
         prompting_service.set_padding(12, 6);
@@ -617,7 +658,8 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         search_vbox.pack_start(full_search_label, false, false, 0);
 
         // Overlap with the service_prompt_box
-        top_table.attach(search_vbox, 3, num_cols - button_width, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
+        top_table.attach(search_vbox, num_cols / 2, num_cols - button_width, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
+        top_table.attach(service_prompt_vbox, 0, num_cols / 2, row, row + 1, fill_and_expand, fill_and_expand, 2, 0);
         row++;
 
         this.custom_vbox = new CustomVBox(this, false, 2);
@@ -632,19 +674,9 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         id_scrollwin.add_with_viewport(viewport);
         top_table.attach(id_scrollwin, 0, num_cols - 1, row, num_rows - 1, fill_and_expand, fill_and_expand, 6, 0);
 
-        // Right below id_scrollwin:
-        remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
-        remember_identity_binding.active = true;
-        top_table.attach(remember_identity_binding, 0, num_cols - 1, num_rows - 1, num_rows, fill_and_expand, fill_and_expand, 3, 0);
-
         var add_button = new Button.with_label(_("Add"));
         add_button.clicked.connect((w) => {add_identity_cb();});
         top_table.attach(make_rigid(add_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
-        row++;
-
-        var import_button = new Button.with_label(_("Import"));
-        import_button.clicked.connect((w) => {import_identities_cb();});
-        top_table.attach(make_rigid(import_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
         this.edit_button = new Button.with_label(_("Edit"));
@@ -662,18 +694,29 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         // push the send button down another row.
         this.send_button = new Button.with_label(_("Send"));
         send_button.clicked.connect((w) => {send_identity_cb(this.selected_card);});
-        // send_button.set_visible(false);
         send_button.set_sensitive(false);
         top_table.attach(make_rigid(send_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 4;
+
+        var import_button = new Button.with_label(_("Import"));
+        import_button.clicked.connect((w) => {import_identities_cb();});
+        top_table.attach(make_rigid(import_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
         row++;
 
-        // push the send button down another row.
-        row++;
-        row++;
-        row++;
         var export_button = new Button.with_label(_("Export"));
         export_button.clicked.connect((w) => {export_identities_cb();});
         top_table.attach(make_rigid(export_button), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 4;
+
+        var change_mode = new Button.with_label(_("Set mode"));
+        change_mode.clicked.connect((w) => {mode_changed_cb();});
+        top_table.attach(make_rigid(change_mode), num_cols - button_width, num_cols, row, row + 1, fill, fill, 0, 0);
+        row += 4;
+
+        // Right below id_scrollwin:
+        remember_identity_binding = new CheckButton.with_label(_("Remember my identity choice for this service"));
+        remember_identity_binding.active = true;
+        top_table.attach(remember_identity_binding, 0, num_cols - 3, row, row + 1, fill_and_expand, fill_and_expand, 3, 0);
         row++;
 
 #if VALA_0_12
@@ -681,23 +724,10 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
 #else
         Gtk.HBox statusbox = new Gtk.HBox(true, 0);
 #endif
-        statusbar = new Gtk.Statusbar();
-        statusbar.push(statusbar.get_context_id("Status"), _("Using %s backend. Mode is".printf(this.identities_manager.get_store_name())));
-
-        // Create combo for the Mode
-        UiMode mode = parent_app.get_mode();
-        Gtk.ListStore liststore = new Gtk.ListStore (1, typeof (string));
-        foreach (UiMode x in UiMode.all())
-            liststore.insert_with_values(null, -1, 0, x.to_string(), -1, null);
-        modebox = new Gtk.ComboBox.with_model(liststore);
-        modebox.set_active(mode);
-        modebox.changed.connect(this.mode_changed_cb);
-        Gtk.CellRendererText cell = new Gtk.CellRendererText ();
-        modebox.pack_start (cell, false);
-        modebox.set_attributes (cell, "text", 0);
-
-        statusbox.pack_start(statusbar, false, true, 0);
-        statusbox.pack_start(modebox, false, false, 0);
+        statusbar = new Gtk.Label("");
+        statusbar.set_alignment(0, 0);
+        refresh_status();
+        top_table.attach(statusbar, 0, num_cols - button_width, row, row + 1, fill, fill, 6, 2);
 
 
         var main_vbox = new_vbox(0);
@@ -705,9 +735,7 @@ public class IdentityManagerView : Window, IdentityManagerInterface {
         var menubar = this.ui_manager.get_widget("/MenuBar");
         main_vbox.pack_start(menubar, false, false, 0);
         set_bg_color(menubar);
-        main_vbox.pack_start(service_prompt_vbox, false, false, 0);
         main_vbox.pack_start(top_table, true, true, 0);
-        main_vbox.pack_start(statusbox, false, false, 0);
 
         add(main_vbox);
         main_vbox.show_all();

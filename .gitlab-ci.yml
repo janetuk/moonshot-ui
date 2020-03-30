@@ -61,7 +61,7 @@ before_script:
     - sudo -u tmpuser abuild-keygen -an
     - sudo -u tmpuser abuild -r
     - mkdir apks
-    - mv /home/tmpuser/packages/moonshot/* apks
+    - mv /home/tmpuser/packages/*/* apks
   artifacts:
     expire_in: 6 months
     paths:

@@ -118,8 +118,11 @@ public class IdentityManagerApp {
 #endif
 
         IIdentityCardStore.StoreType store_type;
-        if (headless || use_flat_file_store || !keyring_available)
+        if (headless || use_flat_file_store || !keyring_available) {
+            logger.trace("Choosing FLAT_FILE store: headless=%d, use_flat_file_store=%d, keyring_available=%d".printf(
+                (int) headless, (int) use_flat_file_store, (int) keyring_available));
             store_type = IIdentityCardStore.StoreType.FLAT_FILE;
+        }
         else
             store_type = IIdentityCardStore.StoreType.KEYRING;
 
