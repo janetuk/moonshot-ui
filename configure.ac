@@ -22,12 +22,16 @@ LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 AC_CHECK_FUNCS_ONCE(geteuid getpwuid)
 
+VALA_REQUIRED_VERSION=0.9
+
 # Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])
 AC_PROG_CC
 AC_PROG_LN_S
 AM_PROG_CC_C_O
-AM_PROG_VALAC([0.9])
+AM_PROG_VALAC([${VALA_REQUIRED_VERSION}],
+              [],
+              [AC_MSG_ERROR([*** Valac compiler not found or too old])])
 
 # Platform checks
 AC_CANONICAL_HOST
