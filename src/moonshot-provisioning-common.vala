@@ -332,13 +332,13 @@ namespace WebProvisioning
                     }
                     Xml.Node* ta_elem = identity_elem->new_child(null, "trust-anchor");
                     if (card.trust_anchor.ca_cert != "")
-                        identity_elem->new_text_child(null, "ca-cert", card.trust_anchor.ca_cert);
-                    if (card.trust_anchor.ca_cert != "")
-                        identity_elem->new_text_child(null, "subject", card.trust_anchor.subject);
-                    if (card.trust_anchor.ca_cert != "")
-                        identity_elem->new_text_child(null, "subject-alt", card.trust_anchor.subject_alt);
-                    if (card.trust_anchor.ca_cert != "")
-                        identity_elem->new_text_child(null, "server-cert", card.trust_anchor.server_cert);
+                        ta_elem->new_text_child(null, "ca-cert", card.trust_anchor.ca_cert);
+                    if (card.trust_anchor.subject != "")
+                        ta_elem->new_text_child(null, "subject", card.trust_anchor.subject);
+                    if (card.trust_anchor.subject_alt != "")
+                        ta_elem->new_text_child(null, "subject-alt", card.trust_anchor.subject_alt);
+                    if (card.trust_anchor.server_cert != "")
+                        ta_elem->new_text_child(null, "server-cert", card.trust_anchor.server_cert);
                 }
             }
             doc->save_format_file (filename, 1);
