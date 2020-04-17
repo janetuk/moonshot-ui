@@ -9,11 +9,10 @@ arch=("x86_64")
 license=("BSD-3-Clause")
 depends=("dbus" "ttf-dejavu")
 makedepends=("automake" "autoconf" "libtool" "openssl" "gettext" "libgee" "libnewt" "vala" "desktop-file-utils" "jansson" "keyutils")
-source=("$pkgname-$pkgver.tar.xz")
-md5sums=('SKIP')
 
 build() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd ..
+	sh autogen.sh
 	./configure \
 		--build=$CBUILD \
 		--host=$CHOST \
@@ -25,7 +24,7 @@ build() {
 }
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd ..
 	make DESTDIR="$pkgdir" install
 	mkdir -p $pkgdir/usr/share/dbus-1/services/
 	ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $pkgdir/usr/share/dbus-1/services/org.janet.Moonshot.service
