@@ -1,8 +1,8 @@
 moonshot-ui (1.3.1.DIST) unstable; urgency=medium
 
-  * TBD
+  * Fix credential export
 
- -- Jisc <moonshot@jisc.ac.uk>  Mon, 30 Mar 2020 00:00:00 +0000
+ -- Jisc <moonshot@jisc.ac.uk>  Wed, 22 Apr 2020 00:00:00 +0000
 
 moonshot-ui (1.3.0.DIST) unstable; urgency=medium
 
