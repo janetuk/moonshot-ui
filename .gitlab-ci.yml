@@ -4,9 +4,6 @@ variables:
 stages:
 - build
 
-before_script:
-  - rm -fr build SOURCES RPMS apks
-
 .debiancommon: &debiancommon
   stage: build
   except:
@@ -17,7 +14,7 @@ before_script:
     - sed -i "s/DIST/$CI_JOB_NAME.$CI_PIPELINE_ID/g" debian/changelog
     - debuild -us -uc
     - mkdir build
-    - cp ../*.deb ../*.dsc ../*tar* build
+    - mv ../*.deb ../*.dsc ../*tar* build
   artifacts:
     expire_in: 6 months
     paths:
