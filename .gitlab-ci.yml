@@ -77,21 +77,12 @@ centos8:
   image: $DOCKER_REGISTRY_URL/centos8:latest
   <<: *centoscommon
 
-debian8:
-  image: $DOCKER_REGISTRY_URL/debian8:latest
-  <<: *debiancommon
-
 debian9:
   image: $DOCKER_REGISTRY_URL/debian9:latest
   <<: *debiancommon
 
 debian10:
   image: $DOCKER_REGISTRY_URL/debian10:latest
-  <<: *debiancommon
-
-raspbian8:
-  image: $DOCKER_REGISTRY_URL/raspbian8:latest
-  when: manual
   <<: *debiancommon
 
 raspbian9:
