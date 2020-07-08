@@ -4,15 +4,19 @@ This UI version comes with support for text interface. In order to make
 use of it with either the ENCRYPTED_FLAT_FILE or the LIBSECRET/GNOME_KEYRING
 backends, some conditions need to be met:
 
-1) For the ENCRYPTED_FLAT_FILE backend, a key named "moonshot-ui" must be
-   defined in the kernel session keyring.
+1) For the ENCRYPTED_FLAT_FILE backend, an authentication an encryption key
+   must be defined. This can be achieved by using one of two approaches:
+   a) A key named "moonshot-ui" is defined in the kernel session keyring.
+      This can be easily achieved by using the keyctl command, where $PASSWD is
+      the encryption key:
+      - Option 1: key is provided directly in the command line:
+        "keyctl add user moonshot-ui $PASSWD @s"
+      - Option 2: key is introduced interactively (use Ctrl+D to finish):
+        "keyctl padd user moonshot-ui @s"
 
-   This can be easily achieved by using the keyctl command, where $PASSWD is
-   the encryption key:
-   - Option 1: key is provided directly in the command line:
-      "keyctl add user moonshot-ui $PASSWD @s"
-   - Option 2: key is introduced interactively (use Ctrl+D to finish):
-      "keyctl padd user moonshot-ui @s"
+   b) The environment variable MOONSHOT_UI_PWD is set.
+
+   When both a) and b) are used at the same time, b) is used.
 
    When the key is found, the UI will use it as the master password to decrypt
    the AES-GCM encrypted credential file, located in
