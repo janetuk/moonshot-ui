@@ -347,10 +347,17 @@ long data_decrypt(unsigned char *ciphertext, long ciphertext_len,
 
 long get_encryption_key(char* buffer, int buflen)
 {
+    // try reading the environment variable
+    char* envkey = getenv("MOONSHOT_UI_PWD");
     key_serial_t key;
-    long len = -1;
+
+    if (envkey != NULL) {
+        strncpy(buffer, envkey, buflen);
+        return strlen(envkey);
+    }
+    // if the env variable is not set, try with the keyring
     key = request_key("user", "moonshot-ui", NULL, KEY_SPEC_SESSION_KEYRING);
-    if (key == -1)
-        return -1;
-    return keyctl_read(key, buffer, buflen);
+    if (key > 0)
+        return keyctl_read(key, buffer, buflen);
+    return -1;
 }
