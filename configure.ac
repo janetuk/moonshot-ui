@@ -18,7 +18,7 @@ AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
-AM_PROG_AR
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
