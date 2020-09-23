@@ -96,12 +96,11 @@ public class TrustAnchorConfirmationRequest : GLib.Object {
             return false;
         }
 
-        // Disabled. If we are asked to verify a fingerprint, we MUST do it even if the AnchorType is not SERVER_CERT
-        // if (!(card.trust_anchor.is_empty() || card.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT)) {
-        //     logger.warn(@"execute: Trust anchor type for NAI $nai is not empty or SERVER_CERT; returning true.");
-        //     return_confirmation(true);
-        //     return false;
-        // }
+        if (!(card.trust_anchor.is_empty() || card.trust_anchor.get_anchor_type() == TrustAnchor.TrustAnchorType.SERVER_CERT)) {
+            logger.warn(@"execute: Trust anchor type for NAI $nai is not empty or SERVER_CERT; returning true.");
+            return_confirmation(true);
+            return false;
+        }
 
         logger.trace("execute: expected cert='%s'; fingerprint='%s'".printf(card.trust_anchor.server_cert, fingerprint));
         if (card.trust_anchor.server_cert.up() == fingerprint.up()) {
