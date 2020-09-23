@@ -119,8 +119,8 @@ openssl to produce this format.  Alternatively, base64 encode a DER format certi
     }
 
     public TrustAnchorType get_anchor_type() {
-        return (ca_cert != "" && (subject != "" || subject_alt != "") ? TrustAnchorType.CA_CERT:
-                (server_cert != "" ? TrustAnchorType.SERVER_CERT: TrustAnchorType.EMPTY));
+        return (server_cert != "" ? TrustAnchorType.SERVER_CERT
+                : (ca_cert != "" ? TrustAnchorType.CA_CERT : TrustAnchorType.EMPTY));
     }
 
     internal void set_datetime_added(string datetime) {
