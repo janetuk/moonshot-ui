@@ -1,6 +1,6 @@
 AC_PREREQ([2.63])
 AC_INIT([Moonshot-ui],
-        [1.3.2],
+        [1.3.3],
         [moonshot@jiscmail.ac.uk],
         [moonshot-ui],
         [http://www.project-moonshot.org/])
@@ -18,16 +18,22 @@ AM_INIT_AUTOMAKE([1.11 -Wall foreign subdir-objects tar-pax no-dist-gzip dist-xz
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
+m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
+
 LT_PREREQ([2.2])
 LT_INIT([win32-dll])
 AC_CHECK_FUNCS_ONCE(geteuid getpwuid)
+
+VALA_REQUIRED_VERSION=0.9
 
 # Checks for programs.
 PKG_PROG_PKG_CONFIG([0.23])
 AC_PROG_CC
 AC_PROG_LN_S
 AM_PROG_CC_C_O
-AM_PROG_VALAC([0.9])
+AM_PROG_VALAC([${VALA_REQUIRED_VERSION}],
+              [],
+              [AC_MSG_ERROR([*** Valac compiler not found or too old])])
 
 # Platform checks
 AC_CANONICAL_HOST
