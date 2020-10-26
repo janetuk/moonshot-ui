@@ -121,11 +121,14 @@
 		NSString *trimmedOldHash = [TrustAnchor stringBySanitazingDots:identity.trustAnchor.serverCertificate];
 		NSString *trimmedNewHash = [TrustAnchor stringBySanitazingDots:hash];
 		if ([trimmedOldHash isEqualToString:trimmedNewHash]) {
-		NSLog(@"Certificate fingerprint matched stored trust anchor");
+        		NSLog(@"Certificate fingerprint matched stored trust anchor");
 			success = 1;
 		} else {
-		NSLog(@"Certificate fingerprint did not match stored trust anchor");
-			success = 0;
+                        NSLog(@"Certificate fingerprint did not match stored trust anchor");
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                                [self setTrustAnchorControllerForIdentity:identity hashStr:hash certInfo:info withReply:reply andConnection:connection];
+                        });
+                        return;
 		}
 		dbus_message_append_args(reply,
 								 DBUS_TYPE_INT32, &success,
