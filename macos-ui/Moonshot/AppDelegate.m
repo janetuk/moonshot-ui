@@ -121,11 +121,14 @@
 		NSString *trimmedOldHash = [TrustAnchor stringBySanitazingDots:identity.trustAnchor.serverCertificate];
 		NSString *trimmedNewHash = [TrustAnchor stringBySanitazingDots:hash];
 		if ([trimmedOldHash isEqualToString:trimmedNewHash]) {
-		NSLog(@"Certificate fingerprint matched stored trust anchor");
+        		NSLog(@"Certificate fingerprint matched stored trust anchor");
 			success = 1;
 		} else {
-		NSLog(@"Certificate fingerprint did not match stored trust anchor");
-			success = 0;
+                        NSLog(@"Certificate fingerprint did not match stored trust anchor");
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                                [self setTrustAnchorControllerForIdentity:identity hashStr:hash certInfo:info withReply:reply andConnection:connection];
+                        });
+                        return;
 		}
 		dbus_message_append_args(reply,
 								 DBUS_TYPE_INT32, &success,
@@ -138,6 +141,21 @@
 		[NSApp terminate:delegate];
 
 	} else {
+        // If there is a caCert, we can assume this has been validated by mech_eap and hence return success
+        if (identity.trustAnchor.caCertificate.length > 0) {
+            success = 1;
+            dbus_message_append_args(reply,
+                                     DBUS_TYPE_INT32, &success,
+                                     DBUS_TYPE_BOOLEAN, &success,
+                                     DBUS_TYPE_INVALID);
+
+            dbus_connection_send(connection, reply, NULL);
+            dbus_message_unref(reply);
+            AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+            [NSApp terminate:delegate];
+            return;
+        }
+
 		if (identity.trustAnchor == nil) {
 			identity.trustAnchor = [[TrustAnchor alloc] init];
 		}
