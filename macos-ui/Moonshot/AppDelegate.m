@@ -138,6 +138,21 @@
 		[NSApp terminate:delegate];
 
 	} else {
+        // If there is a caCert, we can assume this has been validated by mech_eap and hence return success
+        if (identity.trustAnchor.caCertificate.length > 0) {
+            success = 1;
+            dbus_message_append_args(reply,
+                                     DBUS_TYPE_INT32, &success,
+                                     DBUS_TYPE_BOOLEAN, &success,
+                                     DBUS_TYPE_INVALID);
+
+            dbus_connection_send(connection, reply, NULL);
+            dbus_message_unref(reply);
+            AppDelegate *delegate = (AppDelegate *)[[NSApplication sharedApplication] delegate];
+            [NSApp terminate:delegate];
+            return;
+        }
+
 		if (identity.trustAnchor == nil) {
 			identity.trustAnchor = [[TrustAnchor alloc] init];
 		}
