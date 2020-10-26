@@ -31,9 +31,6 @@ PKG_PROG_PKG_CONFIG([0.23])
 AC_PROG_CC
 AC_PROG_LN_S
 AM_PROG_CC_C_O
-AM_PROG_VALAC([${VALA_REQUIRED_VERSION}],
-              [],
-              [AC_MSG_ERROR([*** Valac compiler not found or too old])])
 
 # Platform checks
 AC_CANONICAL_HOST
@@ -81,6 +78,10 @@ esac
 ### if not on macOS ###
 # On Windows/Linux we use ATK, GTK, LOG4VALA and LIBGEE
 if test "$macos" = "no"; then
+
+  AM_PROG_VALAC([${VALA_REQUIRED_VERSION}],
+              [],
+              [AC_MSG_ERROR([*** Valac compiler not found or too old])])
 
   # Windows/Linux: Use ATK 1.2 or higher
   PKG_CHECK_MODULES([ATK], 
