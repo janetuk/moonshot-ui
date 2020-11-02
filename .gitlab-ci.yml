@@ -107,15 +107,6 @@ ubuntu20:
   image: $DOCKER_REGISTRY_URL/ubuntu20:latest
   <<: *debiancommon
 
-alpine39:
-  image: $DOCKER_REGISTRY_URL/alpine39:latest
-  <<: *alpinecommon
-
-alpine39_armhf:
-  image: $DOCKER_REGISTRY_URL/alpine39_arm:latest
-  when: manual
-  <<: *alpinecommon
-
 alpine311:
   image: $DOCKER_REGISTRY_URL/alpine311:latest
   <<: *alpinecommon
