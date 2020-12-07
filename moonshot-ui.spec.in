@@ -48,9 +48,6 @@ mkdir -p $RPM_BUILD_ROOT%{_datadir}/dbus-1/services
 ln -s ../../moonshot-ui/dbus/org.janet.Moonshot.service $RPM_BUILD_ROOT%{_datadir}/dbus-1/services/org.janet.Moonshot.service
 
 %check
-%if 0%{?el6}
-# make check fails in Centos 6
-%else
 make check
 %endif
 

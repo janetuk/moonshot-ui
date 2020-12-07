@@ -65,10 +65,6 @@ stages:
     paths:
         - apks/*/*.apk
 
-centos6:
-  image: $DOCKER_REGISTRY_URL/centos6:latest
-  <<: *centoscommon
-
 centos7:
   image: $DOCKER_REGISTRY_URL/centos7:latest
   <<: *centoscommon

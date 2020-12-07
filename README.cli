@@ -55,11 +55,3 @@ automatically be created by PAM if it does not exist.
 In this case, the "gnome-keyring-daemon --unlock" described above is not
 required, although it would still be required to start the daemon manually.
 
-Known issues of GNOME keyring with CentOS 6
------------------------------------------
-In CentOS 6 the keyring will not be unlocked neither with the "--unlock"
-parameter nor using the PAM method. This is due to a misbehaviour of GNOME
-keyring in these distribution and has nothing to do with Moonshot.
-
-As a work around, we ship a tool called "moonshot-keyring-tool" that can be
-used for that purpose.
