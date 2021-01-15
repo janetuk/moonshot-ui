@@ -111,3 +111,12 @@ alpine311_armhf:
   image: $DOCKER_REGISTRY_URL/alpine311_arm:latest
   when: manual
   <<: *alpinecommon
+
+alpine313:
+  image: $DOCKER_REGISTRY_URL/alpine313:latest
+  <<: *alpinecommon
+
+alpine313_armhf:
+  image: $DOCKER_REGISTRY_URL/alpine313_arm:latest
+  when: manual
+  <<: *alpinecommon
