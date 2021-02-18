@@ -82,10 +82,14 @@ debian10:
 raspbian9:
   image: $DOCKER_REGISTRY_URL/raspbian9:latest
   <<: *debiancommon
+  tags:
+    - arm
 
 raspbian10:
   image: $DOCKER_REGISTRY_URL/raspbian10:latest
   <<: *debiancommon
+  tags:
+    - arm
 
 ubuntu16:
   image: $DOCKER_REGISTRY_URL/ubuntu16:latest
@@ -106,6 +110,8 @@ alpine311:
 alpine311_armhf:
   image: $DOCKER_REGISTRY_URL/alpine311_arm:latest
   <<: *alpinecommon
+  tags:
+    - arm
 
 alpine313:
   image: $DOCKER_REGISTRY_URL/alpine313:latest
@@ -114,3 +120,5 @@ alpine313:
 alpine313_armhf:
   image: $DOCKER_REGISTRY_URL/alpine313_arm:latest
   <<: *alpinecommon
+  tags:
+    - arm
