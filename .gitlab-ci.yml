@@ -91,7 +91,6 @@ raspbian10:
 
 raspbian11:
   image: $DOCKER_REGISTRY_URL/raspbian11:latest
-  when: manual
   <<: *debiancommon
   tags:
     - arm
