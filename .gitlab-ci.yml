@@ -108,23 +108,23 @@ ubuntu20:
   image: $DOCKER_REGISTRY_URL/ubuntu20:latest
   <<: *debiancommon
 
-alpine311:
-  image: $DOCKER_REGISTRY_URL/alpine311:latest
-  <<: *alpinecommon
-
-alpine311_armhf:
-  image: $DOCKER_REGISTRY_URL/alpine311_arm:latest
-  when: manual
-  <<: *alpinecommon
-  tags:
-    - arm
-
 alpine313:
   image: $DOCKER_REGISTRY_URL/alpine313:latest
   <<: *alpinecommon
 
 alpine313_armhf:
   image: $DOCKER_REGISTRY_URL/alpine313_arm:latest
+  when: manual
+  <<: *alpinecommon
+  tags:
+    - arm
+
+alpine315:
+  image: $DOCKER_REGISTRY_URL/alpine315:latest
+  <<: *alpinecommon
+
+alpine315_armhf:
+  image: $DOCKER_REGISTRY_URL/alpine315_arm:latest
   when: manual
   <<: *alpinecommon
   tags:
